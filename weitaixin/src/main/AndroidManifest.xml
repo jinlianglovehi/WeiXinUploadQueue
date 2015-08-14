@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cn.ihealthbaby.weitaixin" >
+
+    <application
+        android:name=".WeiTaiXinApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon" >
+        <activity android:name=".MainActivity" >
+        </activity>
+        <activity android:name=".ui.demo.BluetoothActivity" >
+        </activity>
+        <activity android:name=".ui.demo.DeviceListActivity" >
+        </activity>
+
+        <service android:name=".library.data.bluetooth.mode.spp.BluetoothService" />
+
+        <activity android:name=".ui.demo.ColorActivity" >
+        </activity>
+        <activity android:name=".ui.demo.ViewActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.monitor.MonitorActivity"
+            android:label="@string/title_activity_monitor" >
+        </activity>
+        <activity
+            android:name=".ui.monitor.CurveDetialActivity"
+            android:label="@string/title_activity_curve_detial" >
+        </activity>
+    </application>
+
+</manifest>

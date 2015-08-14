@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--bisic color-->
+    <color name="white0">#FFFFFFFF</color>
+    <color name="gray1">#FFE5E5E5</color>
+    <color name="gray2">#FFD8D8D8</color>
+    <color name="gray3">#FF999696</color>
+    <color name="gray4">#FFB8B8B8</color>
+    <color name="gray5">#FFF7F7F7</color>
+    <color name="gray6">#FFEFEFEF</color>
+    <color name="black0">#FF222222</color>
+    <!--主色调-->
+    <color name="green0">#FF01CF97</color>
+    <color name="green1">#FF24AA42</color>
+    <color name="green2">#FF3AD9AE</color>
+    <!--background-->
+    <color name="background_white">@color/white0</color>
+    <color name="background_gray">@color/gray6</color>
+    <!--function color-->
+
+
+    <color name="title">@color/gray6</color>
+    <color name="title_back_arrow">@color/black0</color>
+
+    <color name="button_login">@color/green0</color>
+    <!--font color-->
+    <color name="font_title">@color/black0</color>
+    <color name="font_hint">@color/gray4</color>
+    <color name="font_white_on_green">@color/white0</color>
+    <color name="font_black">@color/black0</color>
+    <color name="font_green_on_white">@color/green1</color>
+    <color name="font_gray_on_white">@color/gray3</color>
+
+
+    <!--line color-->
+    <color name="line_gray">@color/gray1</color>
+
+
+</resources>
