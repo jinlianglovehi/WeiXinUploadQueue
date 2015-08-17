@@ -1,0 +1,96 @@
+package cn.ihealthbaby.weitaixin.activity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
+import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.net.Business;
+import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
+
+
+public class SetSystemActivity extends BaseActivity {
+
+    @Bind(R.id.back) RelativeLayout back;
+    @Bind(R.id.title_text) TextView title_text;
+    @Bind(R.id.function) TextView function;
+    //
+    @Bind(R.id.ll_set_system_01) RelativeLayout ll_set_system_01;
+    @Bind(R.id.ll_set_system_02) RelativeLayout ll_set_system_02;
+    @Bind(R.id.ll_set_system_03) RelativeLayout ll_set_system_03;
+    @Bind(R.id.ll_set_system_04) RelativeLayout ll_set_system_04;
+    @Bind(R.id.ll_set_system_05) RelativeLayout ll_set_system_05;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_set_system);
+
+        ButterKnife.bind(this);
+
+        title_text.setText("系统设置");
+    }
+
+    @OnClick(R.id.back)
+    public void onBack( ) {
+        this.finish();
+    }
+
+
+    @OnClick(R.id.ll_set_system_01)
+    public void ll_set_system_01() {
+
+    }
+
+    @OnClick(R.id.ll_set_system_02)
+    public void ll_set_system_02() {
+        Intent intent=new Intent(getApplicationContext(),SetSystemResetPasswordActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.ll_set_system_03)
+    public void ll_set_system_03() {
+        Intent intent=new Intent(getApplicationContext(),SetSystemSuggestionActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.ll_set_system_04)
+    public void ll_set_system_04() {
+
+    }
+
+
+    @OnClick(R.id.ll_set_system_05)
+    public void ll_set_system_05( ) {
+
+        logout();
+    }
+
+    ApiManager apiManager;
+    public void logout(){
+        apiManager=ApiManager.getInstance();
+        apiManager.accountApi.logout(new DefaultCallback<Void>(getApplicationContext(), new Business<Void>() {
+            @Override
+            public void handleData(Void data) throws Exception {
+                WeiTaiXinApplication.getInstance().isLogin=false;
+//              ToastUtil.show(getApplicationContext(),"退出登录");
+                WeiTaiXinApplication.accountToken=null;
+                WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
+                Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }));
+    }
+
+}
+
+
+

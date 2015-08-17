@@ -1,0 +1,134 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/gray5"
+    tools:context="cn.ihealthbaby.weitaixin.ui.RegistActivity">
+
+    <include layout="@layout/layout_title" />
+
+    <EditText
+        android:id="@+id/et_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/frame_selector"
+        android:hint="请输入正确的手机号"
+        android:maxLength="11"
+        android:numeric="integer"
+        android:textColorHint="@color/black1"
+        android:textColor="@color/black1"
+        android:padding="14dp"
+        android:phoneNumber="true"
+        android:singleLine="true"
+        android:textSize="@dimen/font_normal" />
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/black1"
+        android:textColor="@color/black1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/frame_selector"
+        android:hint="请输入密码"
+        android:maxLength="20"
+        android:padding="14dp"
+        android:inputType="textPassword"
+        android:password="true"
+        android:singleLine="true"
+        android:textSize="@dimen/font_normal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_mark_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:layout_weight="1"
+            android:maxLength="6"
+            android:textColorHint="@color/black1"
+            android:textColor="@color/black1"
+            android:background="@drawable/frame_selector"
+            android:hint="请输入验证码"
+            android:numeric="integer"
+            android:padding="14dp"
+            android:singleLine="true"
+            android:textSize="@dimen/font_normal" />
+
+        <TextView
+            android:id="@+id/tv_mark_num_text"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/frame_selector"
+            android:gravity="center"
+            android:padding="14dp"
+            android:textColor="@color/button_login"
+            android:singleLine="true"
+            android:text="发送验证码"
+            android:textSize="@dimen/font_normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_agree_register"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/regist_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            android:text="我已阅读并接受"
+            android:textSize="@dimen/font_normal14" />
+
+        <TextView
+            android:id="@+id/tv_rule_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:singleLine="true"
+            android:text="《微胎心注册条款》"
+            android:textColor="@color/button_login"
+            android:textSize="@dimen/font_normal14" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_regist_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/frame_regist_action_selector"
+        android:gravity="center"
+        android:padding="16dp"
+        android:singleLine="true"
+        android:text="确定"
+        android:textColor="@drawable/text_color_selector"
+        android:textSize="@dimen/font_normal" />
+</LinearLayout>

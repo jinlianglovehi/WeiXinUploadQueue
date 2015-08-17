@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="@color/white0"
+        android:layout_marginTop="4dp"
+        android:padding="14dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_suggestion_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="top|left"
+            android:hint="这一刻你的想法..."
+            android:lines="8"
+            android:maxLength="2000"
+            android:textColor="@color/black1"
+            android:textColorHint="@color/black1"
+            android:textSize="@dimen/font_normal" />
+
+        <TextView
+            android:id="@+id/tv_sugg_text_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right|bottom"
+            android:paddingRight="30dp"
+            android:text="0/2000"
+            android:textColor="@color/gray7"
+            android:textSize="@dimen/font_normal" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_send_suggestion_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_id"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/frame_regist_action_selector"
+        android:gravity="center"
+        android:padding="16dp"
+        android:singleLine="true"
+        android:text="发给微胎心"
+        android:textColor="@drawable/text_color_selector"
+        android:textSize="@dimen/font_normal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="你的意见 会让我们做到更好！"
+        android:textColor="@color/gray7"
+        android:textSize="@dimen/font_normal" />
+
+
+</LinearLayout>

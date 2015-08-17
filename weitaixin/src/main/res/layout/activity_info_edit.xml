@@ -1,73 +1,99 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@color/gray5"
+    android:layout_height="match_parent"
     tools:context="cn.ihealthbaby.weitaixin.ui.LoginActivity">
 
     <include
         android:id="@+id/head_title_id"
         layout="@layout/layout_title" />
 
+
+    <cn.ihealthbaby.weitaixin.view.RoundImageView
+        android:id="@+id/iv_head_icon_info"
+        android:layout_below="@id/head_title_id"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/camera_icon" />
+
     <RelativeLayout
         android:id="@+id/rl_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/head_title_id"
+        android:layout_below="@id/iv_head_icon_info"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/frame_selector">
 
         <EditText
-            android:id="@+id/et_phone_number_login"
+            android:id="@+id/et_name_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:background="@null"
             android:gravity="center"
-            android:hint="请输入手机号"
             android:textColorHint="@color/black1"
             android:textColor="@color/black1"
-            android:maxLength="11"
-            android:numeric="integer"
-            android:padding="14dp"
-            android:text="13766666666"
-            android:phoneNumber="true"
+            android:hint="请输入名字"
+            android:padding="16dp"
+            android:singleLine="true"
+            android:maxLength="10"
+            android:textSize="@dimen/font_normal" />
+
+        <View
+            android:id="@+id/view_line_info"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/et_name_info"
+            android:background="#6c6c6c" />
+
+        <TextView
+            android:id="@+id/et_birthdate_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_line_info"
+            android:layout_centerHorizontal="true"
+            android:background="@null"
+            android:textColorHint="@color/black1"
+            android:textColor="@color/black1"
+            android:gravity="center"
+            android:hint="你的出生日期"
+            android:padding="16dp"
             android:singleLine="true"
             android:textSize="@dimen/font_normal" />
 
         <View
-            android:id="@+id/view_line_login"
+            android:id="@+id/view_line2_info"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/et_phone_number_login"
+            android:layout_below="@id/et_birthdate_info"
             android:background="#6c6c6c" />
 
-        <EditText
-            android:id="@+id/et_password_login"
+        <TextView
+            android:id="@+id/et_date_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/view_line_login"
+            android:layout_below="@id/view_line2_info"
+            android:layout_centerHorizontal="true"
             android:textColorHint="@color/black1"
             android:textColor="@color/black1"
-            android:layout_centerHorizontal="true"
             android:background="@null"
-            android:text="123456"
             android:gravity="center"
-            android:hint="请输入密码"
-            android:inputType="textPassword"
-            android:maxLength="20"
+            android:hint="预产日期(提高监测准确性)"
             android:padding="16dp"
-            android:password="true"
             android:singleLine="true"
             android:textSize="@dimen/font_normal" />
+
     </RelativeLayout>
 
 
     <TextView
-        android:id="@+id/tv_login_action"
+        android:id="@+id/tv_info_edit_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_id"
@@ -78,32 +104,8 @@
         android:gravity="center"
         android:padding="16dp"
         android:singleLine="true"
-        android:text="登录"
+        android:text="确定"
         android:textColor="@drawable/text_color_selector"
-        android:textSize="@dimen/font_normal" />
-
-    <TextView
-        android:id="@+id/tv_regist_action_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/tv_login_action"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="80dp"
-        android:text="注册"
-        android:textColor="@drawable/text_color_gray3_selector"
-        android:textSize="@dimen/font_normal" />
-
-    <TextView
-        android:id="@+id/tv_regist_mark_action_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/tv_login_action"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="80dp"
-        android:text="注册码登录"
-        android:textColor="@drawable/text_color_gray3_selector"
         android:textSize="@dimen/font_normal" />
 
 </RelativeLayout>

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!---->
+    <color name="background_navigation_bar">#FFE5E5E5</color>
+    <color name="font_color">#FF4A4A4A</color>
+
     <!--bisic color-->
     <color name="white0">#FFFFFFFF</color>
     <color name="gray1">#FFE5E5E5</color>
@@ -8,7 +13,10 @@
     <color name="gray4">#FFB8B8B8</color>
     <color name="gray5">#FFF7F7F7</color>
     <color name="gray6">#FFEFEFEF</color>
+    <color name="gray7">#FFA9A9A9</color>
     <color name="black0">#FF222222</color>
+    <color name="black1">#FF000000</color>
+    <color name="red0">#FFFE0058</color>
     <!--主色调-->
     <color name="green0">#FF01CF97</color>
     <color name="green1">#FF24AA42</color>

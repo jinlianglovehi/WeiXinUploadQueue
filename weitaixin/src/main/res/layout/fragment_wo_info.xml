@@ -1,0 +1,217 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5"
+    tools:context="cn.ihealthbaby.weitaixin.ui.LoginActivity">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_head_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="14dp"
+        android:layout_below="@id/head_title_id"
+        android:layout_marginTop="4dp"
+        android:background="@color/white0">
+
+        <ImageView
+            android:id="@+id/iv_wo_head_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/camera_icon" />
+
+        <TextView
+            android:id="@+id/tv_wo_head_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_wo_head_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:text="张丽丽"
+            android:textColor="@color/black0"
+            android:textSize="@dimen/font_normal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_wo_head_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_wo_head_breed_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="已孕：24周5天"
+                android:textColor="@color/gray3"
+                android:textSize="@dimen/font_normal" />
+
+
+            <TextView
+                android:id="@+id/tv_wo_head_deliveryTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:singleLine="true"
+                android:text="预产：9月27日"
+                android:textColor="@color/gray3"
+                android:textSize="@dimen/font_normal" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_wo_head_arrow_right"
+            android:layout_width="10dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_1"
+        style="@style/wo_info_item"
+        android:layout_below="@id/rl_head_img"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_message" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            android:text="我的消息"
+            android:textColor="@drawable/text_color_hei_selector"
+            android:textSize="@dimen/font_normal" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_msg_icon"
+            android:visibility="visible" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_2"
+        style="@style/wo_info_item"
+        android:layout_below="@id/ll_1"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_gold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            android:text="我的金库"
+            android:textColor="@drawable/text_color_hei_selector"
+            android:textSize="@dimen/font_normal" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_3"
+        style="@style/wo_info_item"
+        android:layout_below="@id/ll_2"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_system_set" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            android:text="系统设置"
+            android:textColor="@drawable/text_color_hei_selector"
+            android:textSize="@dimen/font_normal" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_4"
+        style="@style/wo_info_item"
+        android:layout_below="@id/ll_3"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_grade" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            android:text="高危评分"
+            android:textColor="@drawable/text_color_hei_selector"
+            android:textSize="@dimen/font_normal" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+</RelativeLayout>
