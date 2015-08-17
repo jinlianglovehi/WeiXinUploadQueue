@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -13,13 +14,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.ChangePasswordForm;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 
 public class SetSystemResetPasswordActivity extends BaseActivity {
@@ -36,6 +41,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
     @Bind(R.id.tv_reset_password_action_reset) TextView tv_reset_password_action_reset;
 
     public Handler mHandler=new Handler();
+    private Dialog dialog;
 
 
     @Override
@@ -73,6 +79,8 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
             }
 
             try{
+                dialog=new CustomDialog().createDialog1(this,"验证码发送中...");
+                dialog.show();
                 getAuthCode();
                 new Thread(new Runnable() {
                     @Override
@@ -89,6 +97,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                                         tv_mark_num_text_reset.setText("发送验证码");
                                         isSend = true;
                                         countTime = 10;
+                                        dialog.dismiss();
                                     }
                                 }
                             });
@@ -104,29 +113,32 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                 tv_mark_num_text_reset.setText("发送验证码");
                 isSend = true;
                 countTime = 10;
+                dialog.dismiss();
             }
         }
     }
 
 
-    private DefaultCallback<Boolean> callableAuthCode;
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode(){
-        callableAuthCode = new DefaultCallback<Boolean>(getApplicationContext(), new Business<Boolean>() {
+        ApiManager.getInstance().accountApi.getAuthCode(WeiTaiXinApplication.getInstance().phone_number, 2, new HttpClientAdapter.Callback<Boolean>() {
             @Override
-            public void handleData(Boolean data) throws Exception {
-                if (data){
-                    tv_reset_password_action_reset.setEnabled(true);
+            public void call(Result<Boolean> t) {
+                if (t.isSuccess()) {
+                    Boolean data=t.getData();
+                    if (data){
+                        tv_reset_password_action_reset.setEnabled(true);
+                    }else{
+                        tv_reset_password_action_reset.setEnabled(false);
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg()+"重新获取验证码");
+                    }
+                    ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
                 }else{
-                    tv_reset_password_action_reset.setEnabled(false);
-                    Toast.makeText(SetSystemResetPasswordActivity.this.getApplicationContext(), "重新获取验证码 " + data, Toast.LENGTH_LONG).show();
+                    ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
                 }
-                System.out.println("data: "+data);
-                Toast.makeText(SetSystemResetPasswordActivity.this.getApplicationContext(), "data: " + data, Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         });
-
-        ApiManager.getInstance().accountApi.getAuthCode(WeiTaiXinApplication.getInstance().phone_number, 2, callableAuthCode);
     }
 
 
@@ -158,17 +170,29 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
         }
 
 
+        dialog=new CustomDialog().createDialog1(this,"密码修改中...");
+        dialog.show();
+
 
         ChangePasswordForm changePasswordForm=new ChangePasswordForm(Integer.parseInt(mark_number),newPassword);
 
-
-        ApiManager.getInstance().accountApi.changePassword(changePasswordForm, new DefaultCallback<Boolean>(getApplicationContext(), new Business<Boolean>() {
+        ApiManager.getInstance().accountApi.changePassword(changePasswordForm, new HttpClientAdapter.Callback<Boolean>() {
             @Override
-            public void handleData(Boolean data) throws Exception {
-                ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "修改密码成功");
-                finish();
+            public void call(Result<Boolean> t) {
+                if (t.isSuccess()) {
+                    Boolean data= t.getData();
+                    if (data) {
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "修改密码成功"+t.getMsg());
+                        finish();
+                    }else{
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
+                    }
+                }else {
+                    ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
+                }
+                dialog.dismiss();
             }
-        }));
+        });
     }
 
 

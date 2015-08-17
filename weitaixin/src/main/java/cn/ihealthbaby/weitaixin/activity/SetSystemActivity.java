@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
@@ -9,11 +10,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 
 public class SetSystemActivity extends BaseActivity {
@@ -27,6 +32,7 @@ public class SetSystemActivity extends BaseActivity {
     @Bind(R.id.ll_set_system_03) RelativeLayout ll_set_system_03;
     @Bind(R.id.ll_set_system_04) RelativeLayout ll_set_system_04;
     @Bind(R.id.ll_set_system_05) RelativeLayout ll_set_system_05;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,25 +75,33 @@ public class SetSystemActivity extends BaseActivity {
 
     @OnClick(R.id.ll_set_system_05)
     public void ll_set_system_05( ) {
-
         logout();
     }
 
     ApiManager apiManager;
     public void logout(){
         apiManager=ApiManager.getInstance();
-        apiManager.accountApi.logout(new DefaultCallback<Void>(getApplicationContext(), new Business<Void>() {
+
+        dialog=new CustomDialog().createDialog1(this,"退出中...");
+        dialog.show();
+
+        apiManager.accountApi.logout(new HttpClientAdapter.Callback<Void>() {
             @Override
-            public void handleData(Void data) throws Exception {
-                WeiTaiXinApplication.getInstance().isLogin=false;
-//              ToastUtil.show(getApplicationContext(),"退出登录");
-                WeiTaiXinApplication.accountToken=null;
-                WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
-                Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
-                startActivity(intent);
-                finish();
+            public void call(Result<Void> t) {
+                if (t.isSuccess()) {
+                    WeiTaiXinApplication.getInstance().isLogin=false;
+//                  ToastUtil.show(getApplicationContext(),"退出登录");
+                    WeiTaiXinApplication.accountToken=null;
+                    WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
+                    Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    ToastUtil.show(getApplicationContext(), t.getMsg());
+                }
+                dialog.dismiss();
             }
-        }));
+        });
     }
 
 }

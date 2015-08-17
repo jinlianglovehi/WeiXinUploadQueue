@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.LoginByPasswordForm;
 import cn.ihealthbaby.client.form.RegForm;
 import cn.ihealthbaby.client.model.User;
@@ -29,6 +32,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class RegistActivity extends BaseActivity {
 
@@ -70,6 +74,7 @@ public class RegistActivity extends BaseActivity {
         this.finish();
     }
 
+    public Dialog dialog;
     public int countTime=10;
     public boolean isSend=true;
     @OnClick(R.id.tv_mark_num_text)
@@ -86,6 +91,8 @@ public class RegistActivity extends BaseActivity {
             }
 
             try{
+                dialog=new CustomDialog().createDialog1(this,"验证码发送中...");
+                dialog.show();
                 getAuthCode();
                 new Thread(new Runnable() {
                     @Override
@@ -102,6 +109,7 @@ public class RegistActivity extends BaseActivity {
                                         tv_mark_num_text.setText("发送验证码");
                                         isSend = true;
                                         countTime = 10;
+                                        dialog.dismiss();
                                     }
                                 }
                             });
@@ -117,15 +125,17 @@ public class RegistActivity extends BaseActivity {
                 tv_mark_num_text.setText("发送验证码");
                 isSend = true;
                 countTime = 10;
+                dialog.dismiss();
             }
         }
     }
 
 
-    private DefaultCallback<Boolean> callableAuthCode;
+//    private DefaultCallback<Boolean> callableAuthCode;
 
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode(){
+/*
         callableAuthCode = new DefaultCallback<Boolean>(getApplicationContext(), new Business<Boolean>() {
             @Override
             public void handleData(Boolean data) throws Exception {
@@ -139,15 +149,33 @@ public class RegistActivity extends BaseActivity {
                 Toast.makeText(RegistActivity.this.getApplicationContext(), "data: "+data ,Toast.LENGTH_LONG).show();
             }
         });
+*/
 
-        instance.accountApi.getAuthCode(phone_number,0,callableAuthCode);
+//        instance.accountApi.getAuthCode(phone_number,0,callableAuthCode);
+        instance.accountApi.getAuthCode(phone_number, 0, new HttpClientAdapter.Callback<Boolean>() {
+            @Override
+            public void call(Result<Boolean> t) {
+                if (t.isSuccess()) {
+                   Boolean data= t.getData();
+                    if (data){
+                        tv_regist_action.setEnabled(true);
+                    }else{
+                        tv_regist_action.setEnabled(false);
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+",请重新获取验证码");
+                    }
+                }else{
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
+                }
+               dialog.dismiss();
+            }
+        });
     }
 
 
     private VolleyAdapter adapter;
     private RegForm regForm;
     private ApiManager instance;
-    private DefaultCallback<User> callable0;
+//    private DefaultCallback<User> callable0;
 
     @OnClick(R.id.tv_regist_action)
     public void tvRegistAction() {
@@ -187,23 +215,42 @@ public class RegistActivity extends BaseActivity {
 
         regForm = new RegForm(phone_number, password, Integer.parseInt(mark_number), "123456789", 1.0d, 1.0d);
 
-        callable0 = new DefaultCallback<User>(getApplicationContext(), new Business<User>() {
+//        callable0 = new DefaultCallback<User>(getApplicationContext(), new Business<User>() {
+//            @Override
+//            public void handleData(User data) throws Exception {
+//                //LogUtil.v(TAG, "handleData::%s", data);
+//                //adapter.setAccountToken(data.getAccountToken());
+//                System.err.println("注册AccountToken： " + data.getAccountToken());
+//                if (data.getAccountToken()!=null) {
+//                    ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
+//                    loginActionOfReg();
+//                }else{
+//                    ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册失败");
+//                }
+//            }
+//        });
+
+        dialog=new CustomDialog().createDialog1(this,"注册中...");
+        dialog.show();
+//        instance.accountApi.register(regForm, callable0);
+        instance.accountApi.register(regForm, new HttpClientAdapter.Callback<User>() {
             @Override
-            public void handleData(User data) throws Exception {
-                //LogUtil.v(TAG, "handleData::%s", data);
-                //adapter.setAccountToken(data.getAccountToken());
-                System.err.println("注册AccountToken： " + data.getAccountToken());
-                if (data.getAccountToken()!=null) {
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
-                    loginActionOfReg();
-                }else{
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册失败");
+            public void call(Result<User> t) {
+                if (t.isSuccess()) {
+                    User data= t.getData();
+                    System.err.println("注册AccountToken： " + data.getAccountToken());
+                    if (data.getAccountToken()!=null) {
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
+                        loginActionOfReg();
+                    }else{
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
+                    }
+                }else {
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
                 }
+                dialog.dismiss();
             }
         });
-
-
-        instance.accountApi.register(regForm, callable0);
     }
 
 
@@ -215,6 +262,7 @@ public class RegistActivity extends BaseActivity {
         ApiManager.init(adapter);
         instance = ApiManager.getInstance();
 
+/*
         callable0 = new DefaultCallback<User>(getApplicationContext(), new Business<User>() {
             @Override
             public void handleData(User data) throws Exception {
@@ -238,8 +286,36 @@ public class RegistActivity extends BaseActivity {
                 }
             }
         });
+*/
 
-        instance.accountApi.loginByPassword(loginForm, callable0);
+
+//        instance.accountApi.loginByPassword(loginForm, callable0);
+        instance.accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
+            @Override
+            public void call(Result<User> t) {
+                if (t.isSuccess()) {
+                    User data=t.getData();
+                    System.err.println("登录AccountToken： " + data.getAccountToken());
+                    if (data.getAccountToken()!=null) {
+//                    ToastUtil.show(RegistActivity.this.getApplicationContext(),"登录成功");
+                        WeiTaiXinApplication.getInstance().isLogin=true;
+                        adapter.setAccountToken(data.getAccountToken());
+                        WeiTaiXinApplication.accountToken=data.getAccountToken();
+                        WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
+                        WeiTaiXinApplication.getInstance().phone_number=phone_number;
+                        WeiTaiXinApplication.user=data;
+
+                        Intent intent=new Intent(RegistActivity.this.getApplicationContext(), InfoEditActivity.class);
+                        startActivity(intent);
+                        RegistActivity.this.finish();
+                    }else{
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
+                    }
+                }else {
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
+                }
+            }
+        });
     }
 
 

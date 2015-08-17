@@ -23,6 +23,7 @@ public class CustomDialog {
 
 	public Dialog createDialog1(Context context, String infor) {
 		Dialog dialog = new Dialog(context, R.style.myDialogTheme);
+		this.isNoCancel=true;
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		View view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null);
 //		view.setLayoutParams(new ViewGroup.LayoutParams(200, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -43,8 +44,13 @@ public class CustomDialog {
 		return dialog;
 	}
 
+	public void dismiss(){
+		if (dialog!=null) {
+			dialog.dismiss();
+			dialog=null;
+		}
+	}
 
-    
 }
 
 

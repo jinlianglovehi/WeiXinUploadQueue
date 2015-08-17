@@ -13,7 +13,7 @@
         android:name=".WeiTaiXinApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:theme="@style/AppTheme"
+        android:theme="@android:style/Theme.Light.NoTitleBar"
         tools:replace="android:icon">
 
         <activity android:name=".fragment.MeMainFragmentActivity">

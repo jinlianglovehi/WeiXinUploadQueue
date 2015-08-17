@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,6 +14,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.LoginByPasswordForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
@@ -24,6 +27,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class LoginActivity extends BaseActivity {
 
@@ -36,6 +40,7 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.tv_login_action) TextView tv_login_action;
     @Bind(R.id.tv_regist_action_login) TextView tv_regist_action_login;
     @Bind(R.id.tv_regist_mark_action_login) TextView tv_regist_mark_action_login;
+    private Dialog dialog;
 
 
     @Override
@@ -55,7 +60,7 @@ public class LoginActivity extends BaseActivity {
     private VolleyAdapter adapter;
     private LoginByPasswordForm loginForm;
     private ApiManager instance;
-    private DefaultCallback<User> callable0;
+//    private DefaultCallback<User> callable0;
 //    private DefaultCallback<UploadModel> callable4;
 
     String phone_number_login;
@@ -94,13 +99,14 @@ public class LoginActivity extends BaseActivity {
             /**
              * 登录请求 登录token
              */
-            callable0 = new DefaultCallback<User>(getApplicationContext(), new Business<User>() {
+            /*callable0 = new DefaultCallback<User>(getApplicationContext(), new Business<User>() {
                 @Override
                 public void handleData(User data) throws Exception {
                     //LogUtil.v(TAG, "handleData::%s", data);
                     //adapter.setAccountToken(data.getAccountToken());
                     System.err.println("登录AccountToken： " + data.getAccountToken());
                     if (data.getAccountToken()!=null) {
+
                         adapter.setAccountToken(data.getAccountToken());
                         WeiTaiXinApplication.accountToken=data.getAccountToken();
                         WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
@@ -115,9 +121,41 @@ public class LoginActivity extends BaseActivity {
                     }
                     isLogin=true;
                 }
-            });
+            });*/
 
-            instance.accountApi.loginByPassword(loginForm, callable0);
+
+            dialog=new CustomDialog().createDialog1(this,"登录中...");
+            dialog.show();
+
+//            instance.accountApi.loginByPassword(loginForm, callable0);
+            instance.accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
+                @Override
+                public void call(Result<User> t) {
+                    //LogUtil.v(TAG, "handleData::%s", data);
+                    //adapter.setAccountToken(data.getAccountToken());
+                    User data=t.getData();
+//                    System.err.println("登录AccountToken： " + data.getAccountToken());
+                    if (t.isSuccess()) {
+                        if (data.getAccountToken()!=null) {
+                            adapter.setAccountToken(data.getAccountToken());
+                            WeiTaiXinApplication.accountToken=data.getAccountToken();
+                            WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
+                            WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
+                            WeiTaiXinApplication.user=data;
+                            System.err.println("User: "+data);
+                            ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
+                            WeiTaiXinApplication.getInstance().isLogin=true;
+                            LoginActivity.this.finish();
+                        }else{
+                            ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
+                        }
+                    }else{
+                        ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
+                    }
+                    isLogin=true;
+                    dialog.dismiss();
+                }
+            });
         }
     }
 

@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+<!--    <style name="AppTheme" parent="Theme.AppCompat">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/black1</item>
-        <!--<item name="android:windowBackground">@color/white0</item>-->
-        <!-- Customize your theme here. -->
-    </style>
+        &lt;!&ndash;<item name="android:windowBackground">@color/white0</item>&ndash;&gt;
+        &lt;!&ndash; Customize your theme here. &ndash;&gt;
+    </style>-->
 
 
     <style name="wo_info_item">
