@@ -15,6 +15,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.activity.LoginActivity;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
 
 /**
  * Created by Think on 2015/8/13.
@@ -56,7 +57,8 @@ public class MeMainFragmentActivity extends BaseActivity {
 
 
     public HomePageFragment homePageFragment;
-    public MonitorFragmentTab2 monitorFragment;
+//    public MonitorFragmentTab2 monitorFragment;
+    public MonitorFragment monitorFragment;
     public RecordFragment recordFragment;
     public SetFragment setFragment;
     public WoInfoFragment woInfoFragment;
@@ -77,8 +79,11 @@ public class MeMainFragmentActivity extends BaseActivity {
         showTab(iv_tab_02);
         if (WeiTaiXinApplication.getInstance().isLogin) {
             if (monitorFragment == null) {
-                monitorFragment = new MonitorFragmentTab2();
+                monitorFragment = new MonitorFragment();
             }
+//            if (monitorFragment == null) {
+//                monitorFragment = new MonitorFragmentTab2();
+//            }
             showFragment(R.id.container, monitorFragment);
         }
     }
