@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+
+    <TextView
+        android:id="@+id/tv_title_system_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="尊敬的用户"
+        android:textColor="@color/black0"
+        android:textSize="@dimen/font30" />
+
+    <TextView
+        android:id="@+id/tv_createtime_system_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:singleLine="true"
+        android:text="2015-06-15"
+        android:textColor="@color/black0"
+        android:textSize="@dimen/font_normal" />
+
+    <TextView
+        android:id="@+id/tv_context_system_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|left"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="15-06-152015-06-152015-06-152015-06-15205-06-152015-06-152015-06-15205-06-152015-06-152015-06-15205-06-152015-06-152015-06-152015-06-152015-06-152015-06-15"
+        android:textColor="@color/black0"
+        android:textSize="@dimen/font_title" />
+
+
+    <TextView
+        android:id="@+id/tv_author_system_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|bottom"
+        android:paddingRight="40dp"
+        android:singleLine="true"
+        android:text="2015-06-15"
+        android:textColor="@color/black0"
+        android:textSize="@dimen/font_title" />
+</LinearLayout>

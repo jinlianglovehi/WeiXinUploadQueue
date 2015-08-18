@@ -22,7 +22,7 @@
             android:layout_marginLeft="40dp"
             android:singleLine="true"
             android:layout_centerVertical="true"
-            android:text="报警设置"
+            android:text="监护设置"
             android:textColor="@drawable/text_color_hei_selector"
             android:textSize="@dimen/font_normal" />
 

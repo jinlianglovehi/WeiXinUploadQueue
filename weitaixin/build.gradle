@@ -32,6 +32,7 @@ android {
 }
 
 dependencies {
+    compile project(':refreshlib')
     compile project(':library')
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }

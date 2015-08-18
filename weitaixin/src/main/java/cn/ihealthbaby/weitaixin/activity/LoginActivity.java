@@ -39,8 +39,12 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.et_password_login) EditText et_password_login;
     @Bind(R.id.tv_login_action) TextView tv_login_action;
     @Bind(R.id.tv_regist_action_login) TextView tv_regist_action_login;
-    @Bind(R.id.tv_regist_mark_action_login) TextView tv_regist_mark_action_login;
+    @Bind(R.id.tv_loginsms_action_login) TextView tv_loginsms_action_login;
+
     private Dialog dialog;
+
+
+// 131 6140 1474 密码 123456
 
 
     @Override
@@ -57,11 +61,8 @@ public class LoginActivity extends BaseActivity {
         this.finish();
     }
 
-    private VolleyAdapter adapter;
     private LoginByPasswordForm loginForm;
     private ApiManager instance;
-//    private DefaultCallback<User> callable0;
-//    private DefaultCallback<UploadModel> callable4;
 
     String phone_number_login;
     private boolean isLogin=true;
@@ -89,60 +90,24 @@ public class LoginActivity extends BaseActivity {
             }
 
 
-            RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(this);
-            adapter = new VolleyAdapter(this, Constants.SERVER_URL, requestQueue);
-            loginForm = new LoginByPasswordForm(phone_number_login, password_login, "123456789", 1.0d, 1.0d);
-            ApiManager.init(adapter);
-            instance = ApiManager.getInstance();
-
-
-            /**
-             * 登录请求 登录token
-             */
-            /*callable0 = new DefaultCallback<User>(getApplicationContext(), new Business<User>() {
-                @Override
-                public void handleData(User data) throws Exception {
-                    //LogUtil.v(TAG, "handleData::%s", data);
-                    //adapter.setAccountToken(data.getAccountToken());
-                    System.err.println("登录AccountToken： " + data.getAccountToken());
-                    if (data.getAccountToken()!=null) {
-
-                        adapter.setAccountToken(data.getAccountToken());
-                        WeiTaiXinApplication.accountToken=data.getAccountToken();
-                        WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                        WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
-                        WeiTaiXinApplication.user=data;
-                        System.err.println("User: "+data);
-                        ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
-                        WeiTaiXinApplication.getInstance().isLogin=true;
-                        LoginActivity.this.finish();
-                    }else{
-                        ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录失败");
-                    }
-                    isLogin=true;
-                }
-            });*/
-
 
             dialog=new CustomDialog().createDialog1(this,"登录中...");
             dialog.show();
 
-//            instance.accountApi.loginByPassword(loginForm, callable0);
+
+            loginForm = new LoginByPasswordForm(phone_number_login, password_login, "123456789", 1.0d, 1.0d);
+            instance = ApiManager.getInstance();
+
             instance.accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
                 @Override
                 public void call(Result<User> t) {
-                    //LogUtil.v(TAG, "handleData::%s", data);
-                    //adapter.setAccountToken(data.getAccountToken());
-                    User data=t.getData();
-//                    System.err.println("登录AccountToken： " + data.getAccountToken());
                     if (t.isSuccess()) {
-                        if (data.getAccountToken()!=null) {
-                            adapter.setAccountToken(data.getAccountToken());
+                        User data=t.getData();
+                        if (data!=null&&data.getAccountToken()!=null) {
                             WeiTaiXinApplication.accountToken=data.getAccountToken();
                             WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
                             WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
                             WeiTaiXinApplication.user=data;
-                            System.err.println("User: "+data);
                             ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
                             WeiTaiXinApplication.getInstance().isLogin=true;
                             LoginActivity.this.finish();
@@ -162,8 +127,15 @@ public class LoginActivity extends BaseActivity {
 
 
     @OnClick(R.id.tv_regist_action_login)
-    public void tv_regist_action_login() {
+    public void tvRegistActionLogin() {
         Intent intent=new Intent(getApplicationContext(), RegistActivity.class);
+        startActivity(intent);
+    }
+
+
+    @OnClick(R.id.tv_loginsms_action_login)
+    public void tvLoginsmsActionLogin() {
+        Intent intent=new Intent(getApplicationContext(), LoginSmsAuthCodeActivity.class);
         startActivity(intent);
     }
 
@@ -175,6 +147,8 @@ public class LoginActivity extends BaseActivity {
             finish();
         }
     }
+
+
 }
 
 

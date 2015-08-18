@@ -33,7 +33,7 @@
             android:maxLength="11"
             android:numeric="integer"
             android:padding="14dp"
-            android:text="13766666666"
+            android:text="13161401474"
             android:phoneNumber="true"
             android:singleLine="true"
             android:textSize="@dimen/font_normal" />
@@ -95,14 +95,14 @@
         android:textSize="@dimen/font_normal" />
 
     <TextView
-        android:id="@+id/tv_regist_mark_action_login"
+        android:id="@+id/tv_loginsms_action_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/tv_login_action"
         android:layout_marginRight="20dp"
         android:layout_marginTop="80dp"
-        android:text="注册码登录"
+        android:text="短信验证码登录"
         android:textColor="@drawable/text_color_gray3_selector"
         android:textSize="@dimen/font_normal" />
 

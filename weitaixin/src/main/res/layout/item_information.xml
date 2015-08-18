@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white0"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+
+    <FrameLayout
+        android:id="@+id/fl_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="6dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="12dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top|right"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/wo_head_arrow_right" />
+
+        <cn.ihealthbaby.weitaixin.view.RoundImageView
+            android:id="@+id/iv_head_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/head_title_id"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/button_monitor_helper" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/fl_head"
+        android:layout_toRightOf="@id/fl_head"
+        android:singleLine="true"
+        android:text="张删"
+        android:textSize="@dimen/font_normal" />
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_toRightOf="@id/fl_head"
+        android:layout_alignBottom="@id/fl_head"
+        android:gravity="center_vertical"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="登dsaddadad录"
+        android:textSize="@dimen/font_normal" />
+
+
+    <TextView
+        android:id="@+id/tv_create_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/fl_head"
+        android:layout_alignParentRight="true"
+        android:singleLine="true"
+        android:text="20分钟"
+        android:paddingRight="20dp"
+        android:textSize="@dimen/font_normal" />
+
+
+</RelativeLayout>
