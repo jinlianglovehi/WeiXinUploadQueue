@@ -34,6 +34,7 @@
         <activity android:name=".activity.WoMessageActivity" />
         <activity android:name=".activity.SetSystemSuggestionActivity" />
         <activity android:name=".activity.SetSystemResetPasswordActivity" />
+        <activity android:name=".activity.SetSystemGuardianActivity" />
         <activity android:name=".activity.LoginSmsAuthCodeActivity" />
         <activity android:name=".activity.WoMessagOfSystemMessageActivity" />
         <activity android:name=".activity.WoMessagOfReplyMessageActivity" />

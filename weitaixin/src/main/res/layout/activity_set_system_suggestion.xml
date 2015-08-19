@@ -27,7 +27,6 @@
             android:lines="8"
             android:maxLength="2000"
             android:textColor="@color/black1"
-            android:textColorHint="@color/black1"
             android:textSize="@dimen/font_normal" />
 
         <TextView

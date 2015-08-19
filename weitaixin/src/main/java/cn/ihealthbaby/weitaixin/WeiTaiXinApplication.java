@@ -27,10 +27,10 @@ public class WeiTaiXinApplication extends Application {
 
 
 	public static WeiTaiXinApplication app;
-	public boolean isLogin=false;
 	public static String accountToken;
 	public static String phone_number;
 	public static User user;
+	public boolean isLogin=false;
 
 
 

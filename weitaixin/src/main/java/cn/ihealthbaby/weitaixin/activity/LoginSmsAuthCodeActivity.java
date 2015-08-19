@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -59,7 +60,7 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
 
         title_text.setText("短信验证码登录");
 //      back.setVisibility(View.INVISIBLE);
-        tv_login_action_smsauthcode.setEnabled(false);
+//        tv_login_action_smsauthcode.setEnabled(false);
     }
 
     @OnClick(R.id.back)
@@ -68,8 +69,11 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
     }
 
 
-    public int countTime=10;
     public boolean isSend=true;
+    public CountDownTimer countDownTimer ;
+    public boolean isHasAuthCode=false;
+
+
     @OnClick(R.id.tv_mark_number_text_smsauthcode)
     public void tv_mark_number_text_smsauthcode() {
         if (isSend) {
@@ -87,40 +91,38 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                 dialog=new CustomDialog().createDialog1(this,"短信验证码发送中...");
                 dialog.show();
                 getAuthCode();
-                new Thread(new Runnable() {
+
+
+
+                countDownTimer=new CountDownTimer(10000,1000) {
                     @Override
-                    public void run() {
-                        while (countTime>0){
-                            countTime--;
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (countTime >= 1) {
-                                        tv_mark_number_text_smsauthcode.setText(countTime + "秒之后重发");
-                                        isSend = false;
-                                    } else {
-                                        tv_mark_number_text_smsauthcode.setText("发送验证码");
-                                        isSend = true;
-                                        countTime = 10;
-                                        dialog.dismiss();
-                                    }
-                                }
-                            });
-                            if(countTime>0)
-                                SystemClock.sleep(1000);
-                        }
-//                    isSend=true;
-//                    countTime=10;
+                    public void onTick(long millisUntilFinished) {
+                        tv_mark_number_text_smsauthcode.setText(millisUntilFinished/1000+"秒之后重发");
+                        isSend = false;
                     }
-                }).start();;
+
+                    @Override
+                    public void onFinish() {
+                        tv_mark_number_text_smsauthcode.setText("发送验证码");
+                        isSend = true;
+                        dialog.dismiss();
+                    }
+                };
+                countDownTimer.start();
+
             }catch (Exception e){
                 e.printStackTrace();
-                tv_mark_number_text_smsauthcode.setText("发送验证码");
-                isSend = true;
-                countTime = 10;
-                dialog.dismiss();
+                cancel();
             }
         }
+    }
+
+
+    public void cancel(){
+        tv_mark_number_text_smsauthcode.setText("发送验证码");
+        isSend = true;
+        countDownTimer.cancel();
+        dialog.dismiss();
     }
 
 
@@ -132,14 +134,16 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                 if (t.isSuccess()) {
                     Boolean data=t.getData();
                     if (data){
-                        tv_login_action_smsauthcode.setEnabled(true);
+                        isHasAuthCode=true;
                     }else{
-                        tv_login_action_smsauthcode.setEnabled(false);
+                        isHasAuthCode=false;
+                        cancel();
                         ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsg()+"重新获取短信验证码");
                     }
-//                    ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsg());
                 }else{
-                    ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsg());
+                    ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile")+"");
+                    isHasAuthCode=false;
+                    cancel();
                 }
                 dialog.dismiss();
             }
@@ -148,18 +152,19 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
 
 
     @OnClick(R.id.tv_login_action_smsauthcode)
-    public void tv_login_action_smsauthcode() {
-        tvLogieActionSmsAuthCode();
+    public void tvLoginActionSmsAuthCode() {
+        if (isHasAuthCode) {
+            tvLogieActionSmsAuthCode();
+        }else{
+            ToastUtil.show(getApplicationContext(), "先获取验证码~~");
+        }
     }
 
 
     public String phone_number;
     public String mark_number;
-    private boolean isLogin=true;
 
     public void tvLogieActionSmsAuthCode() {
-        if (isLogin) {
-            isLogin=false;
             phone_number = et_phone_number_smsauthcode.getText().toString().trim();
             mark_number= et_mark_number_smsauthcode.getText().toString().trim();
             if (TextUtils.isEmpty(phone_number)) {
@@ -180,7 +185,8 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
             }
 
 
-            dialog=new CustomDialog().createDialog1(this, "登录中...");
+            final CustomDialog customDialog= new CustomDialog();
+            final Dialog dialog=customDialog.createDialog1(this,"登录中...");
             dialog.show();
 
 
@@ -188,27 +194,27 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
             ApiManager.getInstance().accountApi.loginByAuthCode(loginByAuthForm, new HttpClientAdapter.Callback<User>() {
                 @Override
                 public void call(Result<User> t) {
-                    if (t.isSuccess()) {
-                        User data = t.getData();
-                        if (data != null && data.getAccountToken() != null) {
-                            WeiTaiXinApplication.accountToken = data.getAccountToken();
-                            WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                            WeiTaiXinApplication.getInstance().phone_number = phone_number;
-                            WeiTaiXinApplication.user = data;
-                            ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), "登录成功");
-                            WeiTaiXinApplication.getInstance().isLogin = true;
-                            LoginSmsAuthCodeActivity.this.finish();
+                    if (customDialog.isNoCancel) {
+                        if (t.isSuccess()) {
+                            User data = t.getData();
+                            if (data != null && data.getAccountToken() != null) {
+                                WeiTaiXinApplication.accountToken = data.getAccountToken();
+                                WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
+                                WeiTaiXinApplication.getInstance().phone_number = phone_number;
+                                WeiTaiXinApplication.user = data;
+                                ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), "登录成功");
+                                WeiTaiXinApplication.getInstance().isLogin = true;
+                                LoginSmsAuthCodeActivity.this.finish();
+                            } else {
+                                ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile")+"");
+                            }
                         } else {
                             ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile")+"");
                         }
-                    } else {
-                        ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile")+"");
                     }
-                    isLogin = true;
                     dialog.dismiss();
                 }
             });
-        }
     }
 
 

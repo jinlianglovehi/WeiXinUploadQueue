@@ -52,7 +52,8 @@ public class SetSystemActivity extends BaseActivity {
 
     @OnClick(R.id.ll_set_system_01)
     public void ll_set_system_01() {
-
+        Intent intent=new Intent(getApplicationContext(),SetSystemGuardianActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.ll_set_system_02)

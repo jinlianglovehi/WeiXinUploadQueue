@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white0"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:singleLine="true"
+        android:text="5秒"
+        android:textColor="@color/gray9"
+        android:textSize="@dimen/font_title" />
+
+    <TextView
+        android:id="@+id/tvState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tvTime"
+        android:singleLine="true"
+        android:text="√"
+        android:textColor="@color/gray9"
+        android:layout_marginLeft="50dp"
+        android:textSize="@dimen/font26" />
+
+
+</RelativeLayout>
