@@ -27,7 +27,7 @@ import cn.ihealthbaby.weitaixin.library.util.Constants;
  */
 public class WeiTaiXinApplication extends Application {
 
-	
+
 	private AbstractHttpClientAdapter adapter;
 
 	public static WeiTaiXinApplication app;
