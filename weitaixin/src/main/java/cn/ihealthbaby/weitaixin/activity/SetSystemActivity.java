@@ -32,6 +32,7 @@ public class SetSystemActivity extends BaseActivity {
     @Bind(R.id.ll_set_system_03) RelativeLayout ll_set_system_03;
     @Bind(R.id.ll_set_system_04) RelativeLayout ll_set_system_04;
     @Bind(R.id.ll_set_system_05) RelativeLayout ll_set_system_05;
+    @Bind(R.id.ll_set_system_06) RelativeLayout ll_set_system_06;
     private Dialog dialog;
 
     @Override
@@ -58,7 +59,7 @@ public class SetSystemActivity extends BaseActivity {
 
     @OnClick(R.id.ll_set_system_02)
     public void ll_set_system_02() {
-        Intent intent=new Intent(getApplicationContext(),SetSystemResetPasswordActivity.class);
+        Intent intent=new Intent(getApplicationContext(), SetSystemResetPasswordActivity.class);
         startActivity(intent);
     }
 
@@ -73,9 +74,14 @@ public class SetSystemActivity extends BaseActivity {
 
     }
 
-
     @OnClick(R.id.ll_set_system_05)
-    public void ll_set_system_05( ) {
+    public void ll_set_system_05() {
+        Intent intent=new Intent(getApplicationContext(),SetSystemUploadActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.ll_set_system_06)
+    public void ll_set_system_06( ) {
         logout();
     }
 

@@ -20,6 +20,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.form.FeedBackForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
@@ -79,36 +80,22 @@ public class SetSystemSuggestionActivity extends BaseActivity {
         dialog.show();
 
 
-//        ApiManager.getInstance()
-
-
-//
-//
-//                loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
-//                    @Override
-//                    public void call(Result<User> t) {
-//                        if (customDialog.isNoCancel) {
-//                            if (t.isSuccess()) {
-//                                User data = t.getData();
-//                                if (data != null && data.getAccountToken() != null) {
-//                                    WeiTaiXinApplication.accountToken = data.getAccountToken();
-//                                    WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-//                                    WeiTaiXinApplication.getInstance().phone_number = phone_number_login;
-//                                    WeiTaiXinApplication.user = data;
-//                                    ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
-//                                    WeiTaiXinApplication.getInstance().isLogin = true;
-//                                    LoginActivity.this.finish();
-//                                } else {
-//                                    ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
-//                                }
-//                            } else {
-//                                ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
-//                            }
-//                        }
-//                        dialog.dismiss();
-//                    }
-//        });
-
+        FeedBackForm form=new FeedBackForm();
+        form.setContext(suggestion);
+        ApiManager.getInstance().feedBackApi.create(form, new HttpClientAdapter.Callback<Void>() {
+            @Override
+            public void call(Result<Void> t) {
+                if (customDialog.isNoCancel) {
+                    if (t.isSuccess()) {
+                        ToastUtil.show(SetSystemSuggestionActivity.this.getApplicationContext(), "提交成功");
+                        SetSystemSuggestionActivity.this.finish();
+                    } else {
+                        ToastUtil.show(SetSystemSuggestionActivity.this.getApplicationContext(), t.getMsg());
+                    }
+                }
+                dialog.dismiss();
+            }
+        });
 
     }
 

@@ -55,7 +55,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     public boolean isDone3=false;
     public boolean isDone4=false;
 
-    Bitmap photo;
+    public Bitmap photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     public MyPoPoWin ppWin;
     @OnClick(R.id.iv_head_icon_info)
-    public void iv_head_icon_info(ImageView iv_head_icon_info) {
+    public void ivHeadIconInfo(ImageView iv_head_icon_info) {
         ppWin = new MyPoPoWin(this);
         ppWin.showAtLocation(iv_head_icon_info);
         ppWin.setListener(this);
@@ -85,16 +85,12 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
     @OnClick(R.id.et_birthdate_info)
-    public void et_birthdate_info() {
-//        ToastUtil.warn(getApplicationContext(),"birthdate");
-//        Toast.makeText(this, "birthdate", Toast.LENGTH_SHORT).show();
+    public void etBirthdateInfo() {
         setDate(false,et_birthdate_info);
     }
 
     @OnClick(R.id.et_date_info)
-    public void et_date_info() {
-//        ToastUtil.warn(getApplicationContext(),"date");
-//        Toast.makeText(this, "date", Toast.LENGTH_SHORT).show();
+    public void etDateInfo() {
         setDate(true, et_date_info);
     }
 
@@ -137,7 +133,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     UploadFileEngine engine;
     Dialog dialog;
     @OnClick(R.id.tv_info_edit_action)
-    public void tv_info_edit_action() {
+    public void tvInfoEditAction() {
         if (!TextUtils.isEmpty(et_name_info.getText().toString().trim())) {
             isDone2=true;
         }
@@ -229,6 +225,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         intent.putExtra("return-data", true);
         startActivityForResult(intent, PHOTORESOULT);
     }
+
 
     public byte[] Bitmap2Bytes(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

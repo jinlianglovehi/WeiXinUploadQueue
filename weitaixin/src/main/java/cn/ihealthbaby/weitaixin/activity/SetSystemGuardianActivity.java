@@ -11,14 +11,17 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.MaxLengthWatcher;
@@ -33,6 +36,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
     @Bind(R.id.cbAutoStart) CheckBox cbAutoStart;
     @Bind(R.id.cbPoliceSet) CheckBox cbPoliceSet;
     @Bind(R.id.lvGuardian) ListView lvGuardian;
+    @Bind(R.id.meLinearLayout) LinearLayout meLinearLayout;
 
 
     @Override
@@ -46,7 +50,51 @@ public class SetSystemGuardianActivity extends BaseActivity {
 //      back.setVisibility(View.INVISIBLE);
         
         initData();
+        initView();
     }
+
+
+    private void initView() {
+        String AutoStart=WeiTaiXinApplication.getInstance().getValue("AutoStart","0");
+        if ("1".equals(AutoStart)) {
+            cbAutoStart.setChecked(true);
+        } else {
+            cbAutoStart.setChecked(false);
+        }
+
+        String PoliceSet=WeiTaiXinApplication.getInstance().getValue("PoliceSet","0");
+        if ("1".equals(PoliceSet)) {
+            cbPoliceSet.setChecked(true);
+            meLinearLayout.setVisibility(View.VISIBLE);
+        } else {
+            cbPoliceSet.setChecked(false);
+            meLinearLayout.setVisibility(View.GONE);
+        }
+
+    }
+
+
+    @OnCheckedChanged(R.id.cbAutoStart)
+    public void cbAutoStart(){
+        if (cbAutoStart.isChecked()) {
+            WeiTaiXinApplication.getInstance().putValue("AutoStart","1");
+        }else{
+            WeiTaiXinApplication.getInstance().putValue("AutoStart","0");
+        }
+    }
+
+
+    @OnCheckedChanged(R.id.cbPoliceSet)
+    public void cbPoliceSet(){
+        if (cbPoliceSet.isChecked()) {
+            WeiTaiXinApplication.getInstance().putValue("PoliceSet","1");
+            meLinearLayout.setVisibility(View.VISIBLE);
+        }else{
+            WeiTaiXinApplication.getInstance().putValue("PoliceSet","0");
+            meLinearLayout.setVisibility(View.GONE);
+        }
+    }
+
 
     MyTimeAdapter myTimeAdapter;
     private void initData() {

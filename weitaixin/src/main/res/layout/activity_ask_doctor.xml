@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+    <LinearLayout
+        android:id="@+id/ll_one"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="@color/white0"
+        android:layout_marginTop="4dp"
+        android:padding="14dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etAskDoctorText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="top|left"
+            android:hint="详情描述，便于医生诊断"
+            android:lines="8"
+            android:maxLength="200"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/font_normal" />
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tvSendDoctorAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_one"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/frame_regist_action_selector"
+        android:gravity="center"
+        android:padding="16dp"
+        android:singleLine="true"
+        android:text="发给医生"
+        android:textColor="@drawable/text_color_selector"
+        android:textSize="@dimen/font_normal" />
+
+    <TextView
+        android:id="@+id/tvOtherInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="共0次，已咨询0次，剩余0次"
+        android:textColor="@color/gray7"
+        android:textSize="@dimen/font_normal" />
+
+
+</LinearLayout>

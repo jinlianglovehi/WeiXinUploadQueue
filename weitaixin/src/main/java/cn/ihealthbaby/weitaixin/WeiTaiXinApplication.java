@@ -1,6 +1,9 @@
 package cn.ihealthbaby.weitaixin;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.android.volley.RequestQueue;
@@ -67,6 +70,25 @@ public class WeiTaiXinApplication extends Application {
 //		mAdapter.setAccountToken(WeiTaiXinApplication.accountToken);
 		ApiManager.init(mAdapter);
 //		ApiManager.getInstance();
+	}
+
+
+
+
+
+
+	public void putValue(String key, String value) {
+		SharedPreferences sp = getSharedPreferences("weitaixin.data",  Activity.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sp.edit();
+		editor.putString(key, value);
+		editor.commit();
+	}
+
+
+	public String getValue(String key, String defValue) {
+		SharedPreferences sp = getSharedPreferences("weitaixin.data", Context.MODE_PRIVATE);
+		String value = sp.getString(key, defValue);
+		return value;
 	}
 
 

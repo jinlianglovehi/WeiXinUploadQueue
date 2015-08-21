@@ -23,16 +23,11 @@ import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
 public class MeMainFragmentActivity extends BaseActivity {
 
 
-    @Bind(R.id.iv_tab_01)
-    ImageView iv_tab_01;
-    @Bind(R.id.iv_tab_02)
-    ImageView iv_tab_02;
-    @Bind(R.id.iv_tab_03)
-    ImageView iv_tab_03;
-    @Bind(R.id.iv_tab_04)
-    ImageView iv_tab_04;
-    @Bind(R.id.container)
-    FrameLayout container;
+    @Bind(R.id.iv_tab_01) ImageView iv_tab_01;
+    @Bind(R.id.iv_tab_02) ImageView iv_tab_02;
+    @Bind(R.id.iv_tab_03) ImageView iv_tab_03;
+    @Bind(R.id.iv_tab_04) ImageView iv_tab_04;
+    @Bind(R.id.container) FrameLayout container;
 
 
     private FragmentManager fragmentManager;
@@ -92,20 +87,25 @@ public class MeMainFragmentActivity extends BaseActivity {
     public void iv_tab_03() {
         showTab(iv_tab_03);
         if (WeiTaiXinApplication.getInstance().isLogin) {
-            if (recordFragment == null) {
-                recordFragment = new RecordFragment();
-            }
+//            if (recordFragment == null) {
+//                recordFragment = new RecordFragment();
+//                System.err.println("Record——Fragment2222");
+//            }
+            recordFragment=RecordFragment.getInstance();
             showFragment(R.id.container, recordFragment);
         }
     }
+
 
     @OnClick(R.id.iv_tab_04)
     public void iv_tab_04() {
         showTab(iv_tab_04);
         if (WeiTaiXinApplication.getInstance().isLogin) {
-            if (woInfoFragment == null) {
-                woInfoFragment = new WoInfoFragment();
-            }
+//            if (woInfoFragment == null) {
+//                woInfoFragment = new WoInfoFragment();
+//                System.err.println("WoInfo——Fragment2222");
+//            }
+            woInfoFragment=WoInfoFragment.getInstance();
             showFragment(R.id.container, woInfoFragment);
         }
     }
@@ -132,7 +132,16 @@ public class MeMainFragmentActivity extends BaseActivity {
     private void showFragment(int container, Fragment fragment/*, int animIn, int animOut*/) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.setCustomAnimations(animIn, animOut);
-        fragmentTransaction.replace(container, fragment);
+//        fragmentTransaction.add(container, fragment);
+
+        if (fragment.isAdded()) {
+            fragmentTransaction.show(fragment);
+        }else{
+            fragmentTransaction.add(container, fragment);
+        }
+
+//        fragmentTransaction.replace(container, fragment);
+//        fragmentTransaction.addToBackStack(null);
 //        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
     }

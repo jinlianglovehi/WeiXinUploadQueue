@@ -37,6 +37,7 @@ import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
+import cn.ihealthbaby.weitaixin.activity.AskDoctorActivity;
 import cn.ihealthbaby.weitaixin.activity.WoMessagOfReplyMessageActivity;
 import cn.ihealthbaby.weitaixin.activity.WoMessagOfSystemMessageActivity;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
@@ -73,6 +74,25 @@ public class RecordFragment extends BaseFragment {
 
     int pageIndex=1, pageSize=5;
 
+
+    private static RecordFragment instance;
+    public static RecordFragment getInstance(){
+        if (instance==null) {
+            instance=new RecordFragment();
+        }
+        return instance;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,24 +103,21 @@ public class RecordFragment extends BaseFragment {
         title_text.setText("记录");
         function.setText("编辑");
 
+        System.err.println("记录--ment22");
         context=getActivity();
         initView();
         pullHeadDatas();
         pullDatas();
-
-
         return view;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        System.err.println("记录onViewCreated--ment22");
     }
+
 
     private void pullHeadDatas() {
         if (WeiTaiXinApplication.getInstance().isLogin&& WeiTaiXinApplication.user!=null) {
@@ -182,15 +199,20 @@ public class RecordFragment extends BaseFragment {
         pullToRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AdviceItem item = (AdviceItem) adapter.getItem(position - 1);
-                // 0 系统消息, 1 医生回复消息  2支付消息
-                int type = 0;
-                if (type == 0) {
-                } else if (type == 1) {
-                } else if (type == 2) {
+                //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
+                AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
+                int status= adviceItem.getStatus();
+                if (status == 0) {
+                    Intent intent=new Intent(getActivity().getApplicationContext(), AskDoctorActivity.class);
+                    intent.putExtra("status",status);
+                    startActivity(intent);
+                } else if (status == 1) {
+
+                } else if (status == 2) {
+
+                } else if (status == 3) {
 
                 }
-                ToastUtil.show(context, (position - 1) + ":" +item.getGestationalWeeks()  + " : " + item.getId());
             }
         });
 

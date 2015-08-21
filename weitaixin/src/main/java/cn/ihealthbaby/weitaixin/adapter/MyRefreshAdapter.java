@@ -77,10 +77,11 @@ public class MyRefreshAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        ImageLoader.getInstance().displayImage(datas.get(position).getPicPath(), viewHolder.iv_head_icon, setDisplayImageOptions());
-        viewHolder.tv_title.setText(datas.get(position).getTitle());
-        viewHolder.tv_message.setText(datas.get(position).getContext());
-        viewHolder.tv_create_time.setText(DateTimeTool.date2Str(datas.get(position).getCreateTime()));
+        Information data=datas.get(position);
+        ImageLoader.getInstance().displayImage(data.getPicPath(), viewHolder.iv_head_icon, setDisplayImageOptions());
+        viewHolder.tv_title.setText(data.getTitle());
+        viewHolder.tv_message.setText(data.getContext());
+        viewHolder.tv_create_time.setText(DateTimeTool.date2Str(data.getCreateTime()));
 
         return convertView;
     }
