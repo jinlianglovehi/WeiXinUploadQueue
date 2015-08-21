@@ -2,8 +2,10 @@ package cn.ihealthbaby.weitaixin.activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.tools.ImageTool;
 import cn.ihealthbaby.weitaixin.tools.UploadFileEngine;
 import cn.ihealthbaby.weitaixin.view.RoundImageView;
 
@@ -55,7 +58,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     public boolean isDone3=false;
     public boolean isDone4=false;
 
-    Bitmap photo;
+    public Bitmap photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +71,14 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         form=new UserInfoForm();
     }
 
-
     @OnClick(R.id.back)
     public void onBack(RelativeLayout view) {
         this.finish();
     }
 
-
     public MyPoPoWin ppWin;
     @OnClick(R.id.iv_head_icon_info)
-    public void iv_head_icon_info(ImageView iv_head_icon_info) {
+    public void ivHeadIconInfo(ImageView iv_head_icon_info) {
         ppWin = new MyPoPoWin(this);
         ppWin.showAtLocation(iv_head_icon_info);
         ppWin.setListener(this);
@@ -85,16 +86,12 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
     @OnClick(R.id.et_birthdate_info)
-    public void et_birthdate_info() {
-//        ToastUtil.warn(getApplicationContext(),"birthdate");
-//        Toast.makeText(this, "birthdate", Toast.LENGTH_SHORT).show();
+    public void etBirthdateInfo() {
         setDate(false,et_birthdate_info);
     }
 
     @OnClick(R.id.et_date_info)
-    public void et_date_info() {
-//        ToastUtil.warn(getApplicationContext(),"date");
-//        Toast.makeText(this, "date", Toast.LENGTH_SHORT).show();
+    public void etDateInfo() {
         setDate(true, et_date_info);
     }
 
@@ -135,20 +132,19 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     UserInfoForm form;
     UploadFileEngine engine;
-    Dialog dialog;
     @OnClick(R.id.tv_info_edit_action)
-    public void tv_info_edit_action() {
+    public void tvInfoEditAction() {
         if (!TextUtils.isEmpty(et_name_info.getText().toString().trim())) {
             isDone2=true;
         }
         if(isDone1&&isDone2&&isDone3&&isDone4){
             form.setName(et_name_info.getText().toString().trim());
             CustomDialog customDialog=new CustomDialog();
-            dialog=customDialog.createDialog1(this, "发送中...");
-            engine=new UploadFileEngine(this,form,dialog);
+            Dialog dialog=customDialog.createDialog1(this, "正在完善个人信息...");
             if(photo!=null) {
                 dialog.show();
-                engine.init(Bitmap2Bytes(photo));
+                engine.customDialog=customDialog;
+                engine.completeInfoAction();
             } else {
                 ToastUtil.show(getApplicationContext(), "头像没有");
             }
@@ -162,78 +158,79 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         switch (flag) {
             case MyPoPoWin.FLAG_TAKE_PHOTO:
 //              Toast.makeText(this, "拍照2", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "ketwangwai_temp.jpg")));
-                startActivityForResult(intent, PHOTOHRAPH);
+                Intent intent_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent_camera, MyPoPoWin.FLAG_TAKE_PHOTO);
                 break;
 
             case MyPoPoWin.FLAG_PICK_PHOTO:
 //              Toast.makeText(this,"从相册中选择2",Toast.LENGTH_SHORT).show();
-                Intent intent_pick = new Intent(Intent.ACTION_PICK, null);
-                intent_pick.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_UNSPECIFIED);
-                startActivityForResult(intent_pick, PHOTOZOOM);
+                String state = Environment.getExternalStorageState();
+                if (state.equals(Environment.MEDIA_MOUNTED)) {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    startActivityForResult(intent, MyPoPoWin.FLAG_PICK_PHOTO);
+                } else {
+                    ToastUtil.show(getApplicationContext(),"请确认已经插入SD卡");
+                }
                 break;
         }
     }
 
-    public static final int NONE = 0;
-    public static final int PHOTOHRAPH = 1;// 拍照
-    public static final int PHOTOZOOM = 2; // 缩放
-    public static final int PHOTORESOULT = 3;// 结果
-    public static final String IMAGE_UNSPECIFIED = "image/*";
+
+    public void upLoadHeadPic(){
+        CustomDialog customDialog=new CustomDialog();
+        Dialog dialog=customDialog.createDialog1(this, "头像上传中...");
+        engine=new UploadFileEngine(this,form,customDialog);
+        if(photo!=null) {
+            dialog.show();
+            engine.init(ImageTool.Bitmap2Bytes(photo));
+        } else {
+            ToastUtil.show(getApplicationContext(), "头像没有");
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == NONE)
-            return;
-        // 拍照
-        if (requestCode == PHOTOHRAPH) {
-            //设置文件保存路径这里放在跟目录下
-            File picture = new File(Environment.getExternalStorageDirectory() + "/ketwangwai_temp.jpg");
-            startPhotoZoom(Uri.fromFile(picture));
-        }
-
         if (data == null)
             return;
 
-        // 读取相册缩放图片
-        if (requestCode == PHOTOZOOM) {
-            startPhotoZoom(data.getData());
-        }
-        // 处理结果
-        if (requestCode == PHOTORESOULT) {
-            Bundle extras = data.getExtras();
-            if (extras != null) {
-                 photo = extras.getParcelable("data");
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);// (0 - 100)压缩文件
-                iv_head_icon_info.setImageBitmap(photo);
-                isDone1=true;
-            }
+        switch (requestCode) {
+            case MyPoPoWin.FLAG_TAKE_PHOTO: //拍照
+                Bundle bundle  = data.getExtras();
+                if (bundle != null) {
+                    Bitmap bitmap = (Bitmap) bundle.get("data");
+                    if(bitmap!=null){
+                        bitmap=ImageTool.compressBitmap(bitmap);
+                        photo=bitmap;
+                        iv_head_icon_info.setImageBitmap(bitmap);
+                        isDone1=true;
+                        upLoadHeadPic();
+                    }
+                }else{
+                    isDone1=false;
+                }
+                break;
 
+            case MyPoPoWin.FLAG_PICK_PHOTO:
+                ContentResolver cr = this.getContentResolver();
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(data.getData()));
+                    if(bitmap!=null){
+                        bitmap=ImageTool.compressBitmap(bitmap);
+                        photo=bitmap;
+                        iv_head_icon_info.setImageBitmap(bitmap);
+                        isDone1=true;
+                        upLoadHeadPic();
+                    }
+                } catch (Exception e) {
+                   e.printStackTrace();
+                    isDone1=false;
+                }
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public void startPhotoZoom(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, IMAGE_UNSPECIFIED);
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 80);
-        intent.putExtra("outputY", 80);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, PHOTORESOULT);
-    }
-
-    public byte[] Bitmap2Bytes(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        return baos.toByteArray();
     }
 
 

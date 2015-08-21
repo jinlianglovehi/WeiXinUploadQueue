@@ -1,7 +1,9 @@
 package cn.ihealthbaby.weitaixin.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -10,12 +12,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.form.FeedBackForm;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.MaxLengthWatcher;
 
 
@@ -58,6 +69,33 @@ public class SetSystemSuggestionActivity extends BaseActivity {
 
     @OnClick(R.id.tv_send_suggestion_action)
     public void tv_send_suggestion_action( ) {
+        String suggestion = et_suggestion_text.getText().toString();
+        if (TextUtils.isEmpty(suggestion)) {
+            ToastUtil.show(getApplicationContext(),"请输入这一刻你的想法...");
+            return;
+        }
+
+        final CustomDialog customDialog = new CustomDialog();
+        final Dialog dialog=customDialog.createDialog1(this,"发送中...");
+        dialog.show();
+
+
+        FeedBackForm form=new FeedBackForm();
+        form.setContext(suggestion);
+        ApiManager.getInstance().feedBackApi.create(form, new HttpClientAdapter.Callback<Void>() {
+            @Override
+            public void call(Result<Void> t) {
+                if (customDialog.isNoCancel) {
+                    if (t.isSuccess()) {
+                        ToastUtil.show(SetSystemSuggestionActivity.this.getApplicationContext(), "提交成功");
+                        SetSystemSuggestionActivity.this.finish();
+                    } else {
+                        ToastUtil.show(SetSystemSuggestionActivity.this.getApplicationContext(), t.getMsg());
+                    }
+                }
+                dialog.dismiss();
+            }
+        });
 
     }
 

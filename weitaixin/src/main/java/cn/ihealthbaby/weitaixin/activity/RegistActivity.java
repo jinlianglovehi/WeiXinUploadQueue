@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -61,7 +62,7 @@ public class RegistActivity extends BaseActivity {
 
         instance = ApiManager.getInstance();
 
-        tv_regist_action.setEnabled(false);
+//      tv_regist_action.setEnabled(false);
     }
 
 
@@ -71,9 +72,10 @@ public class RegistActivity extends BaseActivity {
         this.finish();
     }
 
-    public Dialog dialog;
-    public int countTime=10;
     public boolean isSend=true;
+    public Dialog dialog;
+    public CountDownTimer countDownTimer ;
+
     @OnClick(R.id.tv_mark_num_text)
     public void tvMarkNumText() {
         if (isSend) {
@@ -88,47 +90,35 @@ public class RegistActivity extends BaseActivity {
             }
 
             try{
-                dialog=new CustomDialog().createDialog1(this,"验证码发送中...");
+                dialog=new CustomDialog().createDialog1(this, "验证码发送中...");
                 dialog.show();
                 getAuthCode();
-                new Thread(new Runnable() {
+
+                countDownTimer=new CountDownTimer(10000,1000) {
                     @Override
-                    public void run() {
-                        while (countTime>0){
-                            countTime--;
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (countTime >= 1) {
-                                        tv_mark_num_text.setText(countTime + "秒之后重发");
-                                        isSend = false;
-                                    } else {
-                                        tv_mark_num_text.setText("发送验证码");
-                                        isSend = true;
-                                        countTime = 10;
-                                        dialog.dismiss();
-                                    }
-                                }
-                            });
-                            if(countTime>0)
-                                SystemClock.sleep(1000);
-                        }
-//                    isSend=true;
-//                    countTime=10;
+                    public void onTick(long millisUntilFinished) {
+                        tv_mark_num_text.setText(millisUntilFinished/1000+"秒之后重发");
+                        isSend = false;
                     }
-                }).start();;
+
+                    @Override
+                    public void onFinish() {
+                        tv_mark_num_text.setText("发送验证码");
+                        isSend = true;
+                        dialog.dismiss();
+                    }
+                };
+                countDownTimer.start();
             }catch (Exception e){
                 e.printStackTrace();
-                tv_mark_num_text.setText("发送验证码");
-                isSend = true;
-                countTime = 10;
-                dialog.dismiss();
+                cancel();
             }
         }
     }
 
 
-
+    public boolean isHasAuthCode=false;
+//    public boolean isLogining=false;
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode(){
         instance.accountApi.getAuthCode(phone_number, 0, new HttpClientAdapter.Callback<Boolean>() {
@@ -137,29 +127,40 @@ public class RegistActivity extends BaseActivity {
                 if (t.isSuccess()) {
                     Boolean data = t.getData();
                     if (data) {
-                        tv_regist_action.setEnabled(true);
+                        isHasAuthCode=true;
+//                        tv_regist_action.setEnabled(true);
                     } else {
-                        tv_regist_action.setEnabled(false);
+                        isHasAuthCode=false;
+                        cancel();
+//                        tv_regist_action.setEnabled(false);
                         ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg() + ",请重新获取验证码");
                     }
                 } else {
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile")+"");
+                    isHasAuthCode=false;
+                    cancel();
                 }
                 dialog.dismiss();
             }
         });
     }
 
+    public void cancel(){
+        tv_mark_num_text.setText("发送验证码");
+        isSend = true;
+        countDownTimer.cancel();
+        dialog.dismiss();
+    }
 
     private RegForm regForm;
     private ApiManager instance;
 
     @OnClick(R.id.tv_regist_action)
     public void tvRegistAction() {
-        if (tv_regist_action.isEnabled()) {
+        if (isHasAuthCode) {
             tvRegistAction2();
         }else{
-            ToastUtil.show(getApplicationContext(),"先获取验证码~");
+            ToastUtil.show(getApplicationContext(), "先获取验证码~~");
         }
     }
 
@@ -167,8 +168,8 @@ public class RegistActivity extends BaseActivity {
     public String password;
     public String mark_number;
     public void tvRegistAction2() {
-         phone_number = et_phone_number.getText().toString().trim();
-         password = et_password.getText().toString().trim();
+        phone_number = et_phone_number.getText().toString().trim();
+        password = et_password.getText().toString().trim();
         mark_number= et_mark_number.getText().toString().trim();
         if (TextUtils.isEmpty(phone_number)) {
             ToastUtil.show(getApplicationContext(), "请输入手机号");
@@ -198,22 +199,27 @@ public class RegistActivity extends BaseActivity {
 
 
         regForm = new RegForm(phone_number, password, Integer.parseInt(mark_number), "123456789", 1.0d, 1.0d);
-
-        dialog=new CustomDialog().createDialog1(this,"注册中...");
+        final CustomDialog customDialog= new CustomDialog();
+        final Dialog dialog=customDialog.createDialog1(this,"注册中...");
         dialog.show();
+//      isLogining=true;
         instance.accountApi.register(regForm, new HttpClientAdapter.Callback<User>() {
             @Override
             public void call(Result<User> t) {
-                if (t.isSuccess()) {
-                    User data= t.getData();
-                    if (data!=null&&data.getAccountToken()!=null) {
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
-                        loginActionOfReg();
-                    }else{
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+"注册失败");
+                if (customDialog.isNoCancel) {
+                    if (t.isSuccess()) {
+                        User data= t.getData();
+                        if (data!=null&&data.getAccountToken()!=null) {
+                            ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
+                            loginActionOfReg();
+                        }else{
+                            ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+"注册失败");
+//                        isLogining=false;
+                        }
+                    }else {
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+"失败");
+//                    isLogining=false;
                     }
-                }else {
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+"失败");
                 }
                 dialog.dismiss();
             }
@@ -225,7 +231,6 @@ public class RegistActivity extends BaseActivity {
     public void loginActionOfReg(){
         loginForm = new LoginByPasswordForm(phone_number, password, "123456789", 1.0d, 1.0d);
         instance = ApiManager.getInstance();
-
 
         instance.accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
             @Override
@@ -239,15 +244,17 @@ public class RegistActivity extends BaseActivity {
                         WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
                         WeiTaiXinApplication.getInstance().phone_number=phone_number;
                         WeiTaiXinApplication.user=data;
-
+//                        isLogining=true;
                         Intent intent=new Intent(RegistActivity.this.getApplicationContext(), InfoEditActivity.class);
                         startActivity(intent);
                         RegistActivity.this.finish();
                     }else{
                         ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
+//                        isLogining=false;
                     }
                 }else {
                     ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
+//                    isLogining=false;
                 }
             }
         });

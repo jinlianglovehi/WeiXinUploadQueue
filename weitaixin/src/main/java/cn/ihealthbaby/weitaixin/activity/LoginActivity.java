@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -21,6 +22,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
@@ -41,7 +43,6 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.tv_regist_action_login) TextView tv_regist_action_login;
     @Bind(R.id.tv_loginsms_action_login) TextView tv_loginsms_action_login;
 
-    private Dialog dialog;
 
 
 // 131 6140 1474 密码 123456
@@ -65,11 +66,8 @@ public class LoginActivity extends BaseActivity {
     private ApiManager instance;
 
     String phone_number_login;
-    private boolean isLogin=true;
     @OnClick(R.id.tv_login_action)
-    public void tv_login_action() {
-        if (isLogin) {
-            isLogin=false;
+    public void tvLoginAction() {
             phone_number_login = et_phone_number_login.getText().toString().trim();
             String password_login = et_password_login.getText().toString().trim();
             if (TextUtils.isEmpty(phone_number_login)) {
@@ -90,8 +88,8 @@ public class LoginActivity extends BaseActivity {
             }
 
 
-
-            dialog=new CustomDialog().createDialog1(this,"登录中...");
+            final CustomDialog customDialog = new CustomDialog();
+            final Dialog dialog=customDialog.createDialog1(this,"登录中...");
             dialog.show();
 
 
@@ -101,27 +99,27 @@ public class LoginActivity extends BaseActivity {
             instance.accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
                 @Override
                 public void call(Result<User> t) {
-                    if (t.isSuccess()) {
-                        User data=t.getData();
-                        if (data!=null&&data.getAccountToken()!=null) {
-                            WeiTaiXinApplication.accountToken=data.getAccountToken();
-                            WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                            WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
-                            WeiTaiXinApplication.user=data;
-                            ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
-                            WeiTaiXinApplication.getInstance().isLogin=true;
-                            LoginActivity.this.finish();
+                    if (customDialog.isNoCancel) {
+                        if (t.isSuccess()) {
+                            User data=t.getData();
+                            if (data!=null&&data.getAccountToken()!=null) {
+                                WeiTaiXinApplication.accountToken=data.getAccountToken();
+                                WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
+                                WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
+                                WeiTaiXinApplication.user=data;
+                                ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
+                                WeiTaiXinApplication.getInstance().isLogin=true;
+                                LoginActivity.this.finish();
+                            }else{
+                                ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
+                            }
                         }else{
                             ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
                         }
-                    }else{
-                        ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
                     }
-                    isLogin=true;
                     dialog.dismiss();
                 }
             });
-        }
     }
 
 
@@ -147,7 +145,6 @@ public class LoginActivity extends BaseActivity {
             finish();
         }
     }
-
 
 }
 

@@ -36,3 +36,4 @@ dependencies {
     compile project(':library')
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
+

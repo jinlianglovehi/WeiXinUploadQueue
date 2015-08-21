@@ -12,6 +12,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 
 public class HomePageFragment extends BaseFragment {
@@ -26,6 +27,17 @@ public class HomePageFragment extends BaseFragment {
 
 
     View view;
+
+
+    private static HomePageFragment instance;
+    public static HomePageFragment getInstance(){
+        if (instance==null) {
+            instance=new HomePageFragment();
+        }
+        return instance;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,6 +45,7 @@ public class HomePageFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         init(view);
         back.setVisibility(View.INVISIBLE);
+        LogUtil.e("HomePageFragment+Coco7","HomePageFragment+Null");
         return view;
     }
 

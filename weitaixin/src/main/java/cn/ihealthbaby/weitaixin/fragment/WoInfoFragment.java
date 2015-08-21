@@ -22,19 +22,20 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
+import cn.ihealthbaby.weitaixin.activity.GradedActivity;
 import cn.ihealthbaby.weitaixin.activity.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.activity.SetSystemActivity;
 import cn.ihealthbaby.weitaixin.activity.WoGoldenActivity;
 import cn.ihealthbaby.weitaixin.activity.WoInformationActivity;
 import cn.ihealthbaby.weitaixin.activity.WoMessageActivity;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.view.RoundImageView;
 
 
 public class WoInfoFragment extends BaseFragment {
     private final static String TAG = "WoInfoFragment";
-    private LoginSuccessListener loginSuccessListener;
 
     @Bind(R.id.back)
     RelativeLayout back;
@@ -68,32 +69,52 @@ public class WoInfoFragment extends BaseFragment {
     @Bind(R.id.iv_wo_head_icon)
     RoundImageView iv_wo_head_icon;
 
+
+    private static WoInfoFragment instance;
+    public static WoInfoFragment getInstance(){
+        if (instance==null) {
+            instance=new WoInfoFragment();
+            LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+getInstance");
+        }
+        return instance;
+    }
+
+
+    View view;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_wo_info, null);
+        view = inflater.inflate(R.layout.fragment_wo_info, null);
         ButterKnife.bind(this, view);
-        init(view);
+
         back.setVisibility(View.INVISIBLE);
+        title_text.setText("我的");
+        LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+Null");
+        init();
         return view;
     }
 
-    private void init(View view) {
-        title_text.setText("设置");
+    private void init() {
         setTextHead();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (WeiTaiXinApplication.getInstance().isLogin&& WeiTaiXinApplication.user!=null) {
-            setTextHead();
-            ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
-        }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        System.err.println("我的onViewCreated--ment22");
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        setTextHead();
+//    }
 
     private void setTextHead(){
         if (WeiTaiXinApplication.getInstance().isLogin&& WeiTaiXinApplication.user!=null) {
+            ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
             tv_wo_head_name.setText(WeiTaiXinApplication.user.getName() + "");
             tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(WeiTaiXinApplication.user.getDeliveryTime()));
             tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(WeiTaiXinApplication.user.getDeliveryTime()));
@@ -120,27 +141,16 @@ public class WoInfoFragment extends BaseFragment {
 
     @OnClick(R.id.ll_4)
     public void ll_4() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), InfoEditActivity.class);
+//        Intent intent = new Intent(getActivity().getApplicationContext(), InfoEditActivity.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), GradedActivity.class);
         startActivity(intent);
     }
 
 
     @OnClick(R.id.rl_head_img)
-    public void rl_head_img() {
+    public void rlHeadImg() {
         Intent intent = new Intent(getActivity().getApplicationContext(), WoInformationActivity.class);
         startActivity(intent);
-    }
-
-    public LoginSuccessListener getLoginSuccessListener() {
-        return loginSuccessListener;
-    }
-
-    public void setLoginSuccessListener(LoginSuccessListener listener) {
-        this.loginSuccessListener = listener;
-    }
-
-    public interface LoginSuccessListener {
-        void onLoginSuccess();
     }
 
     @Override
@@ -162,7 +172,6 @@ public class WoInfoFragment extends BaseFragment {
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .displayer(new SimpleBitmapDisplayer())
-//				.displayer(new RoundedBitmapDisplayer(5))
                 .build();
         return options;
     }

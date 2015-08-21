@@ -23,8 +23,8 @@
 
         <ProgressBar
             android:id="@+id/pd_dialog"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center"
             android:indeterminate="false" />
 

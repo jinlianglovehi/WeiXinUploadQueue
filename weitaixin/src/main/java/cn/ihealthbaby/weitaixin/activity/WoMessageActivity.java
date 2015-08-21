@@ -65,6 +65,7 @@ public class WoMessageActivity extends BaseActivity {
         adapter=new MyRefreshAdapter(this,null);
         pullToRefresh.setAdapter(adapter);
         pullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefresh.setScrollingWhileRefreshingEnabled(false);
         init();
 
 

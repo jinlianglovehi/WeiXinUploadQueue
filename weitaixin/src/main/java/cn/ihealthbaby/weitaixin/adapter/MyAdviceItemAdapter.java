@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
@@ -17,34 +16,35 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.ihealthbaby.client.model.Information;
+import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
-import cn.ihealthbaby.weitaixin.view.RoundImageView;
 
 
-public class MyRefreshAdapter extends BaseAdapter {
+public class MyAdviceItemAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<Information> datas;
+    private ArrayList<AdviceItem> datas;
 
     private LayoutInflater mInflater;
+    private String[] strFlag=new String[]{"问医生","等待回复","已回复","需要上传"};
 
-    public MyRefreshAdapter(Context context, ArrayList<Information> datas) {
+
+    public MyAdviceItemAdapter(Context context, ArrayList<AdviceItem> datas) {
         mInflater = LayoutInflater.from(context);
         this.context=context;
         setDatas(datas);
     }
 
-    public void setDatas(ArrayList<Information> datas) {
+    public void setDatas(ArrayList<AdviceItem> datas) {
         if (datas==null) {
-            this.datas=new ArrayList<Information>();
+            this.datas=new ArrayList<AdviceItem>();
         }else{
             this.datas=datas;
         }
     }
 
-    public void addDatas(ArrayList<Information> datas) {
+    public void addDatas(ArrayList<AdviceItem> datas) {
         if (this.datas!=null) {
             this.datas.addAll(datas);
         }
@@ -70,27 +70,38 @@ public class MyRefreshAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_information, null);
+            convertView = mInflater.inflate(R.layout.item_record, null);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+//
+        AdviceItem adviceItem = datas.get(position);
 
-        Information data=datas.get(position);
-        ImageLoader.getInstance().displayImage(data.getPicPath(), viewHolder.iv_head_icon, setDisplayImageOptions());
-        viewHolder.tv_title.setText(data.getTitle());
-        viewHolder.tv_message.setText(data.getContext());
-        viewHolder.tv_create_time.setText(DateTimeTool.date2Str(data.getCreateTime()));
+        String dateStr=adviceItem.getGestationalWeeks();
+        String[] split=dateStr.split("\\+");
+        viewHolder.tvCircleTime1.setText(split[0]);
+        viewHolder.tvCircleTime2.setText(split[1]);
+
+        viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()));//
+        viewHolder.tvDateTime.setText(DateTimeTool.date2StrAndTime(adviceItem.getTestTime())+"");
+        //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
+        viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
+        if (adviceItem.getStatus()==1) {
+            viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle_un);
+        }
 
         return convertView;
     }
 
+
     static class ViewHolder {
-        @Bind(R.id.iv_head_icon) RoundImageView iv_head_icon;
-        @Bind(R.id.tv_title) TextView tv_title;
-        @Bind(R.id.tv_message) TextView tv_message;
-        @Bind(R.id.tv_create_time) TextView tv_create_time;
+        @Bind(R.id.tvCircleTime1) TextView tvCircleTime1;
+        @Bind(R.id.tvCircleTime2) TextView tvCircleTime2;
+        @Bind(R.id.tvTestTimeLong) TextView tvTestTimeLong;
+        @Bind(R.id.tvDateTime) TextView tvDateTime;
+        @Bind(R.id.tvAdviceStatus) TextView tvAdviceStatus;
 
         public ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
@@ -114,5 +125,6 @@ public class MyRefreshAdapter extends BaseAdapter {
                 .build();
         return options;
     }
+
 
 }

@@ -27,14 +27,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/head_title_id"
                 android:paddingBottom="14dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:background="@color/white0"
                 android:visibility="visible">
 
                 <cn.ihealthbaby.weitaixin.view.RoundImageView
                     android:id="@+id/iv_wo_head_icon"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
                     android:scaleType="fitCenter"

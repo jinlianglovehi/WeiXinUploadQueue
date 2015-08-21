@@ -124,8 +124,8 @@ public class MyPoPoWin extends PopupWindow {
         showAtLocation(parent, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
-    public final static int FLAG_TAKE_PHOTO=111;
-    public final static int FLAG_PICK_PHOTO=222;
+    public final static int FLAG_TAKE_PHOTO=111; //拍照
+    public final static int FLAG_PICK_PHOTO=222; //相册
     public interface ISelectPhoto{
         void onSelectPhoto(int flag);
     }
