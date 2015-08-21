@@ -14,6 +14,8 @@ import com.google.gson.JsonParseException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,9 @@ import cn.ihealthbaby.weitaixin.library.data.net.paser.Parser;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
- * Created by liuhongjian on 15/7/23 10:39.
+ * TRACE 请求现在使用兼容模式
+ * @author liuhongjian on 15/7/23 10:39.
+ * @author zuoge85 修改支持patch 请求，使用兼容模式
  */
 public class VolleyAdapter extends AbstractHttpClientAdapter {
 	private final static String TAG = "VolleyAdapter";
@@ -48,9 +52,13 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 		Callback<T> callable = requestParam.getCallable();
 		final List<Map.Entry<String, Object>> form = requestParam.getForm();
 		int method = translate(requestParam.getMethod());
+
+
 		final boolean isPostBody = (method == Request.Method.POST) || (method == Request.Method.PUT) || (method == Request.Method.PATCH);
 		String url = getUrl(method, requestParam.getUri(), form);
 		DefaultErrorListener defaultErrorListener = new DefaultErrorListener(context, TAG);
+
+
 		AbstractReqeust<T> request
 				= new AbstractReqeust<T>(
 						                        method,
@@ -87,14 +95,28 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 
 			@Override
 			public byte[] getBody() throws AuthFailureError {
-				if (isPostBody && form != null && form.size() > 0) {
+				if(requestParam.getMethod().equals("patch")){
+//					_method
+					List<Map.Entry<String, Object>> varForm = form;
+					if (varForm == null) {
+						varForm = new ArrayList<>();
+					}
+					varForm.add(new AbstractMap.SimpleImmutableEntry<>("_method","patch"));
 					try {
-						return encodeParameters(form, getParamsEncoding(), new StringBuilder()).toString().getBytes(getParamsEncoding());
+						return encodeParameters(varForm, getParamsEncoding(), new StringBuilder()).toString().getBytes(getParamsEncoding());
 					} catch (UnsupportedEncodingException e) {
 						throw new RuntimeException("Encoding not supported: " + getParamsEncoding(), e);
 					}
-				} else {
-					return null;
+				} else{
+					if (isPostBody && form != null && form.size() > 0) {
+						try {
+							return encodeParameters(form, getParamsEncoding(), new StringBuilder()).toString().getBytes(getParamsEncoding());
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException("Encoding not supported: " + getParamsEncoding(), e);
+						}
+					} else {
+						return null;
+					}
 				}
 			}
 		};
@@ -161,7 +183,7 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 				method = Request.Method.OPTIONS;
 				break;
 			case "TRACE":
-				method = Request.Method.TRACE;
+				method = Request.Method.POST;
 				break;
 			default:
 				try {
