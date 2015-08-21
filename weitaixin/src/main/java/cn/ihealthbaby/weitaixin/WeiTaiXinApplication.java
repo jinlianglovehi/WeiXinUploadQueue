@@ -26,15 +26,15 @@ import cn.ihealthbaby.weitaixin.library.util.Constants;
  * Created by liuhongjian on 15/7/23 14:09.
  */
 public class WeiTaiXinApplication extends Application {
-	private AbstractHttpClientAdapter adapter;
 
+	
+	private AbstractHttpClientAdapter adapter;
 
 	public static WeiTaiXinApplication app;
 	public static String accountToken;
 	public static String phone_number;
 	public static User user;
-	public boolean isLogin=true;
-
+	public boolean isLogin = false;
 
 
 	@Override
