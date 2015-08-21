@@ -101,7 +101,7 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 					if (varForm == null) {
 						varForm = new ArrayList<>();
 					}
-					varForm.add(new AbstractMap.SimpleImmutableEntry<>("_method","patch"));
+					varForm.add(new AbstractMap.SimpleImmutableEntry<String, Object>("_method","patch"));
 					try {
 						return encodeParameters(varForm, getParamsEncoding(), new StringBuilder()).toString().getBytes(getParamsEncoding());
 					} catch (UnsupportedEncodingException e) {
