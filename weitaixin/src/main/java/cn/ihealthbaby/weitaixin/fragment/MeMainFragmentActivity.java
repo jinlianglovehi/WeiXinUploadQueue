@@ -62,9 +62,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     public void iv_tab_01() {
         showTab(iv_tab_01);
         if (WeiTaiXinApplication.getInstance().isLogin) {
-            if (homePageFragment == null) {
-                homePageFragment = new HomePageFragment();
-            }
+            homePageFragment=HomePageFragment.getInstance();
             showFragment(R.id.container, homePageFragment);
         }
     }
@@ -87,10 +85,6 @@ public class MeMainFragmentActivity extends BaseActivity {
     public void iv_tab_03() {
         showTab(iv_tab_03);
         if (WeiTaiXinApplication.getInstance().isLogin) {
-//            if (recordFragment == null) {
-//                recordFragment = new RecordFragment();
-//                System.err.println("Record——Fragment2222");
-//            }
             recordFragment=RecordFragment.getInstance();
             showFragment(R.id.container, recordFragment);
         }
@@ -101,10 +95,6 @@ public class MeMainFragmentActivity extends BaseActivity {
     public void iv_tab_04() {
         showTab(iv_tab_04);
         if (WeiTaiXinApplication.getInstance().isLogin) {
-//            if (woInfoFragment == null) {
-//                woInfoFragment = new WoInfoFragment();
-//                System.err.println("WoInfo——Fragment2222");
-//            }
             woInfoFragment=WoInfoFragment.getInstance();
             showFragment(R.id.container, woInfoFragment);
         }
@@ -134,13 +124,13 @@ public class MeMainFragmentActivity extends BaseActivity {
         //fragmentTransaction.setCustomAnimations(animIn, animOut);
 //        fragmentTransaction.add(container, fragment);
 
-        if (fragment.isAdded()) {
-            fragmentTransaction.show(fragment);
-        }else{
-            fragmentTransaction.add(container, fragment);
-        }
+//        if (fragment.isAdded()) {
+//            fragmentTransaction.show(fragment);
+//        }else{
+//            fragmentTransaction.add(container, fragment);
+//        }
 
-//        fragmentTransaction.replace(container, fragment);
+        fragmentTransaction.replace(container, fragment);
 //        fragmentTransaction.addToBackStack(null);
 //        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();

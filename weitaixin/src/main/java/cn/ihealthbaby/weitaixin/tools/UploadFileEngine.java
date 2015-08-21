@@ -26,6 +26,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
@@ -58,16 +59,12 @@ public class UploadFileEngine {
         upCompletionHandler = new UpCompletionHandler() {
             @Override
             public void complete(String key, ResponseInfo info, JSONObject response) {
-//                System.err.println("errrrrdata完善"+info);
                 if (info.statusCode==200) {
                     form.setHeadPic(key);
-
-                    System.err.println("form: "+form);
 
                     instance.userApi.completeInfo(form, new HttpClientAdapter.Callback<User>() {
                         @Override
                         public void call(Result<User> t) {
-                            System.err.println("errrrrdata==Result" + t.isSuccess());
                             if (t.isSuccess()) {
                                 System.err.println("errrrrdata完善个人资料成功");
 //                            ToastUtil.show(context.getApplicationContext(),"完善个人资料成功");

@@ -26,6 +26,17 @@ public class HomePageFragment extends BaseFragment {
 
 
     View view;
+
+
+    private static HomePageFragment instance;
+    public static HomePageFragment getInstance(){
+        if (instance==null) {
+            instance=new HomePageFragment();
+        }
+        return instance;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
