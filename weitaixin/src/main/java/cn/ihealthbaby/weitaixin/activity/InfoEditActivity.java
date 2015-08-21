@@ -71,12 +71,10 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         form=new UserInfoForm();
     }
 
-
     @OnClick(R.id.back)
     public void onBack(RelativeLayout view) {
         this.finish();
     }
-
 
     public MyPoPoWin ppWin;
     @OnClick(R.id.iv_head_icon_info)
