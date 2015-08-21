@@ -29,6 +29,7 @@ import cn.ihealthbaby.weitaixin.activity.WoGoldenActivity;
 import cn.ihealthbaby.weitaixin.activity.WoInformationActivity;
 import cn.ihealthbaby.weitaixin.activity.WoMessageActivity;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.view.RoundImageView;
 
@@ -73,25 +74,29 @@ public class WoInfoFragment extends BaseFragment {
     public static WoInfoFragment getInstance(){
         if (instance==null) {
             instance=new WoInfoFragment();
+            LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+getInstance");
         }
         return instance;
     }
 
 
     View view;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_wo_info, null);
         ButterKnife.bind(this, view);
+
         back.setVisibility(View.INVISIBLE);
         title_text.setText("我的");
+        LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+Null");
         init();
         return view;
     }
 
     private void init() {
-        System.err.println("我的--ment22");
         setTextHead();
     }
 

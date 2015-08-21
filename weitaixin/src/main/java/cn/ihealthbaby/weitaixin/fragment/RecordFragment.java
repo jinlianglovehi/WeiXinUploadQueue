@@ -43,6 +43,7 @@ import cn.ihealthbaby.weitaixin.activity.WoMessagOfSystemMessageActivity;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
@@ -79,6 +80,7 @@ public class RecordFragment extends BaseFragment {
     public static RecordFragment getInstance(){
         if (instance==null) {
             instance=new RecordFragment();
+            LogUtil.e("RecordFragment+Coco7", "RecordFragment+getInstance");
         }
         return instance;
     }
@@ -103,7 +105,7 @@ public class RecordFragment extends BaseFragment {
         title_text.setText("记录");
         function.setText("编辑");
 
-        System.err.println("记录--ment22");
+        LogUtil.e("RecordFragment+Coco7", "RecordFragment+Null");
         context=getActivity();
         initView();
         pullHeadDatas();
@@ -111,12 +113,6 @@ public class RecordFragment extends BaseFragment {
         return view;
     }
 
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        System.err.println("记录onViewCreated--ment22");
-    }
 
 
     private void pullHeadDatas() {

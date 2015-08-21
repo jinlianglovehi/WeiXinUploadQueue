@@ -33,7 +33,7 @@ public class WeiTaiXinApplication extends Application {
 	public static String accountToken;
 	public static String phone_number;
 	public static User user;
-	public boolean isLogin=false;
+	public boolean isLogin=true;
 
 
 

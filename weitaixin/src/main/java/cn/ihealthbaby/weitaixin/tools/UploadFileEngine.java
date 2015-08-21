@@ -18,6 +18,7 @@ import java.io.File;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.form.UpdateHeadPicForm;
 import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.client.model.UploadModel;
 import cn.ihealthbaby.client.model.User;
@@ -36,7 +37,7 @@ import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
  */
 public class UploadFileEngine {
 
-    private Dialog dialog;
+    public CustomDialog customDialog;
     private Context context;
     private UpCompletionHandler upCompletionHandler;
     private UpProgressHandler upProgressHandler;
@@ -44,13 +45,14 @@ public class UploadFileEngine {
     private UploadOptions options;
     private DefaultCallback<UploadModel> callable4;
     private UserInfoForm form;
+    private String key;
     ApiManager instance;
 
-    public UploadFileEngine(Context context, UserInfoForm form,Dialog dialog){
+    public UploadFileEngine(Context context, UserInfoForm form,CustomDialog customDialog){
         this.context=context;
-        this.dialog=dialog;
+        this.customDialog=customDialog;
         this.form=form;
-        initApiManager();
+        instance = ApiManager.getInstance();
         initHandler();
     }
 
@@ -60,46 +62,14 @@ public class UploadFileEngine {
             @Override
             public void complete(String key, ResponseInfo info, JSONObject response) {
                 if (info.statusCode==200) {
-                    form.setHeadPic(key);
-
-                    instance.userApi.completeInfo(form, new HttpClientAdapter.Callback<User>() {
-                        @Override
-                        public void call(Result<User> t) {
-                            if (t.isSuccess()) {
-                                System.err.println("errrrrdata完善个人资料成功");
-//                            ToastUtil.show(context.getApplicationContext(),"完善个人资料成功");
-                            } else {
-                                System.err.println("errrrrdata完善个人资料失败");
-//                            ToastUtil.show(context.getApplicationContext(),"完善个人资料失败");
-                            }
-                        }
-                    });
-
-/*
-
-                    instance.userApi.completeInfo(form, new DefaultCallback<User>(context.getApplicationContext(), new Business<User>() {
-                        @Override
-                        public void handleData(User data) throws Exception {
-                            System.err.println("errrrrdata==Result" + data);
-                            if (data!=null) {
-                                System.err.println("errrrrdata完善个人资料成功");
-//                            ToastUtil.show(context.getApplicationContext(),"完善个人资料成功");
-                            } else {
-                                System.err.println("errrrrdata完善个人资料失败");
-//                            ToastUtil.show(context.getApplicationContext(),"完善个人资料失败");
-                            }
-                        }
-                    }));
-*/
-
-
-                    System.err.println("errrrrdata头像上次七牛成功");
+                    UploadFileEngine.this.key=key;
+                    LogUtil.e("errrrrdata", "errrrrdata头像上次七牛成功");
                     ToastUtil.show(context.getApplicationContext(), "头像上次七牛成功");
                 }else{
-                    System.err.println("errrrrdata头像上次七牛失败");
+                    LogUtil.e("errrrrdata","errrrrdata头像上次七牛失败");
                     ToastUtil.show(context.getApplicationContext(), "头像上次七牛失败");
                 }
-                dialog.dismiss();
+                customDialog.dismiss();
             }
         };
         upProgressHandler = new UpProgressHandler() {
@@ -146,24 +116,53 @@ public class UploadFileEngine {
         /**
          * 请求上传key 和 上传token
          */
-        callable4 = new DefaultCallback<UploadModel>(context, new Business<UploadModel>() {
+        instance.uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
             @Override
-            public void handleData(UploadModel data) throws Exception {
-//                System.err.println("errrrrdata: " + data);
-                uploadFile(dataBty, data.getKey(), data.getToken());
+            public void call(Result<UploadModel> t) {
+                if (t.isSuccess()) {
+                    UploadModel data = t.getData();
+                    uploadFile(dataBty, data.getKey(), data.getToken());
+                } else {
+                    ToastUtil.show(context, t.getMsg());
+                }
+                customDialog.dismiss();
             }
         });
-        instance.uploadApi.getUploadToken(1, callable4);
     }
 
 
+    public void completeInfoAction(){
+        form.setHeadPic(key);
+        instance.userApi.completeInfo(form, new HttpClientAdapter.Callback<User>() {
+            @Override
+            public void call(Result<User> t) {
+                if (t.isSuccess()) {
+                    LogUtil.e("errrrrdata", "errrrrdata完善个人资料成功");
+//                            ToastUtil.show(context.getApplicationContext(),"完善个人资料成功");
+                } else {
+                    LogUtil.e("errrrrdata", "errrrrdata完善个人资料失败");
+//                            ToastUtil.show(context.getApplicationContext(),"完善个人资料失败");
+                }
+                customDialog.dismiss();
+            }
+        });
+    }
 
-    public void initApiManager(){
-        RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(context);
-        VolleyAdapter adapter = new VolleyAdapter(context, Constants.SERVER_URL, requestQueue);
-        adapter.setAccountToken(WeiTaiXinApplication.accountToken);
-        ApiManager.init(adapter);
-        instance = ApiManager.getInstance();
+
+    public void updateHeadPicAction(){
+        UpdateHeadPicForm updateHeadPicForm=new UpdateHeadPicForm();
+        updateHeadPicForm.setHeadPicPath(key);
+        instance.userApi.updateHeadPic(updateHeadPicForm, new HttpClientAdapter.Callback<Void>() {
+            @Override
+            public void call(Result<Void> t) {
+                if (t.isSuccess()) {
+                    ToastUtil.show(context.getApplicationContext(), "头像上传成功");
+                } else {
+                    ToastUtil.show(context.getApplicationContext(), "头像上传失败");
+                }
+                customDialog.dismiss();
+            }
+        });
     }
 
 
