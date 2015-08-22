@@ -60,16 +60,24 @@ public class DateTimeTool {
 
 
     public static String getGestationalWeeks(Date deliveryTime) {
+        if (deliveryTime==null) {
+            return "";
+        }
         int getGestationalDay = (int) ((new Date().getTime() / 1000
                 - deliveryTime.getTime() / 1000 + 280 * 24 * 3600) / 3600 / 24);
         int weeks = getGestationalDay / 7;
         int days = getGestationalDay % 7;
         return "孕" + weeks + "周+" + days + "天";
     }
+
     public static void main(String[] args) {
         String s = getGestationalWeeks(new Date(new Date().getTime() + 1000
                 * 3600 * 24 * 6));
         System.out.println(s);
     }
 
+
 }
+
+
+

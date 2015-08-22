@@ -118,42 +118,46 @@ public class GradedActivity extends BaseActivity {
                         ApiList<Question> data = t.getData();
                         questions = data.getList();
                         Question question = questions.get(0);
-                        if(question!=null){
-                            setQuestion(question,1);
-                            isPullQuestion=true;
+                        if (question != null) {
+                            setQuestion(question,0);
+                            isPullQuestion = true;
                         }
-                    }else{
-                        ToastUtil.show(getApplicationContext(),t.getMsg());
-                        isPullQuestion=false;
+                    } else {
+                        ToastUtil.show(getApplicationContext(), t.getMsg());
+                        isPullQuestion = false;
                     }
                 }
-                dialog.dismiss();
+                customDialog.dismiss();
             }
         });
     }
 
-
     private void setQuestion(Question question, int index){
-        if (questions.size()>index) {
-            AnswerForms forms=new AnswerForms();
-            List<AnswerForm> answerForms=new ArrayList<AnswerForm>();
-            forms.setAnswerForms(answerForms);
-            ApiManager.getInstance().riskScoreApi.submitQuestionnaire(forms, new HttpClientAdapter.Callback<RiskScore>() {
-                @Override
-                public void call(Result<RiskScore> t) {
+        this.index=index;
+        tvGradedNumberIndex.setText((index+1)+"");
+        tvGradedText.setText(question.getQuestion()+"");
+    }
+
+    private void submit(){
+        AnswerForms forms=new AnswerForms();
+        forms.setAnswerForms(answerForms);
+        final CustomDialog customDialog = new CustomDialog();
+        final Dialog dialog=customDialog.createDialog1(this,"获取中...");
+        dialog.show();
+        ApiManager.getInstance().riskScoreApi.submitQuestionnaire(forms, new HttpClientAdapter.Callback<RiskScore>() {
+            @Override
+            public void call(Result<RiskScore> t) {
+                if (customDialog.isNoCancel) {
                     if (t.isSuccess()) {
                         RiskScore data = t.getData();
-                        ToastUtil.show(getApplicationContext(),data.getScore());
+                        ToastUtil.show(getApplicationContext(),data.getScore()+"");
                     }else {
-                        ToastUtil.show(getApplicationContext(),t.getMsg());
+                        ToastUtil.show(getApplicationContext(),t.getMsg()+"");
                     }
                 }
-            });
-            return;
-        }
-        this.index=index;
-        tvGradedNumberIndex.setText(index);
-        tvGradedText.setText(question.getQuestion());
+                customDialog.dismiss();
+            }
+        });
     }
 
     @OnClick(R.id.back)
@@ -169,7 +173,13 @@ public class GradedActivity extends BaseActivity {
             answerForms.add(form);
             form.setQuestionId(questions.get(index).getId());
             form.setAnswer(1);
-            setQuestion(questions.get(++index), index);
+
+            ++index;
+            if (questions.size()<=index) {
+                submit();
+            }else{
+                setQuestion(questions.get(index), index);
+            }
         }else{
             ToastUtil.show(getApplicationContext(),"暂时没有问题");
         }
@@ -182,7 +192,13 @@ public class GradedActivity extends BaseActivity {
             answerForms.add(form);
             form.setQuestionId(questions.get(index).getId());
             form.setAnswer(0);
-            setQuestion(questions.get(++index),index);
+
+            ++index;
+            if (questions.size()<=index) {
+                submit();
+            }else{
+                setQuestion(questions.get(index-1), index);
+            }
         }else{
             ToastUtil.show(getApplicationContext(),"暂时没有问题");
         }

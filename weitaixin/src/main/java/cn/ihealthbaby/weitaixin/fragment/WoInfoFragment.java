@@ -68,6 +68,8 @@ public class WoInfoFragment extends BaseFragment {
     TextView tv_wo_head_deliveryTime;
     @Bind(R.id.iv_wo_head_icon)
     RoundImageView iv_wo_head_icon;
+    private View view;
+    private boolean isNoTwo=true;
 
 
     private static WoInfoFragment instance;
@@ -80,40 +82,36 @@ public class WoInfoFragment extends BaseFragment {
     }
 
 
-    View view;
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_wo_info, null);
-        ButterKnife.bind(this, view);
+        if (isNoTwo) {
+            view = inflater.inflate(R.layout.fragment_wo_info, null);
+            ButterKnife.bind(this, view);
 
-        back.setVisibility(View.INVISIBLE);
-        title_text.setText("我的");
+            back.setVisibility(View.INVISIBLE);
+            title_text.setText("我的");
+            init();
+
+            isNoTwo=false;
+        }
         LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+Null");
-        init();
         return view;
     }
 
     private void init() {
+//        setTextHead();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
         setTextHead();
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        System.err.println("我的onViewCreated--ment22");
-    }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        setTextHead();
-//    }
-
     private void setTextHead(){
-        if (WeiTaiXinApplication.getInstance().isLogin&& WeiTaiXinApplication.user!=null) {
+        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.user != null) {
             ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
             tv_wo_head_name.setText(WeiTaiXinApplication.user.getName() + "");
             tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(WeiTaiXinApplication.user.getDeliveryTime()));

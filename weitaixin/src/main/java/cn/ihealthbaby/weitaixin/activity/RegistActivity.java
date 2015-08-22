@@ -31,6 +31,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
@@ -133,9 +134,10 @@ public class RegistActivity extends BaseActivity {
                         isHasAuthCode=false;
                         cancel();
 //                        tv_regist_action.setEnabled(false);
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg() + ",请重新获取验证码");
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + ",请重新获取验证码");
                     }
                 } else {
+                    LogUtil.e("Regist","Regist "+t.getMsgMap());
                     ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile")+"");
                     isHasAuthCode=false;
                     cancel();
@@ -214,11 +216,10 @@ public class RegistActivity extends BaseActivity {
                             loginActionOfReg();
                         }else{
                             ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+"注册失败");
-//                        isLogining=false;
                         }
                     }else {
+                        LogUtil.e("Regist","Regist "+t.getMsgMap());
                         ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+"失败");
-//                    isLogining=false;
                     }
                 }
                 dialog.dismiss();
@@ -244,17 +245,14 @@ public class RegistActivity extends BaseActivity {
                         WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
                         WeiTaiXinApplication.getInstance().phone_number=phone_number;
                         WeiTaiXinApplication.user=data;
-//                        isLogining=true;
                         Intent intent=new Intent(RegistActivity.this.getApplicationContext(), InfoEditActivity.class);
                         startActivity(intent);
                         RegistActivity.this.finish();
                     }else{
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
-//                        isLogining=false;
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account")+"");
                     }
                 }else {
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg());
-//                    isLogining=false;
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account")+"");
                 }
             }
         });

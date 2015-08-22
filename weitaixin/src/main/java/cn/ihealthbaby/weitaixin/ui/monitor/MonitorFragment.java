@@ -226,6 +226,11 @@ public class MonitorFragment extends BaseFragment {
 
 	public String getDeviceName() {
 		// TODO: 15/8/14 登录之后需要保存用户绑定的设备信息
-		return "IHB2LD2525WA";
+		return "IHB2LC9JUHPB";
 	}
+
+
 }
+
+
+

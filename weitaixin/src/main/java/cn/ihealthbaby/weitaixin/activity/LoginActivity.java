@@ -27,6 +27,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
@@ -111,10 +112,10 @@ public class LoginActivity extends BaseActivity {
                                 WeiTaiXinApplication.getInstance().isLogin=true;
                                 LoginActivity.this.finish();
                             }else{
-                                ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
+                                ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account").toString()+"");
                             }
                         }else{
-                            ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsg());
+                            ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account")+"");
                         }
                     }
                     dialog.dismiss();

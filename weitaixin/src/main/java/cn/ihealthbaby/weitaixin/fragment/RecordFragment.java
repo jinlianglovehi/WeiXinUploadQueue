@@ -73,8 +73,9 @@ public class RecordFragment extends BaseFragment {
     private Dialog dialog;
     private Context context;
 
-    int pageIndex=1, pageSize=5;
-
+    private int pageIndex=1, pageSize=5;
+    private View view;
+    private boolean isNoTwo=true;
 
     private static RecordFragment instance;
     public static RecordFragment getInstance(){
@@ -95,21 +96,26 @@ public class RecordFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_record, null);
-        ButterKnife.bind(this, view);
-        back.setVisibility(View.INVISIBLE);
-        function.setVisibility(View.VISIBLE);
-        title_text.setText("记录");
-        function.setText("编辑");
+        if (isNoTwo) {
+            view = inflater.inflate(R.layout.fragment_record, null);
+            ButterKnife.bind(this, view);
+            back.setVisibility(View.INVISIBLE);
+            function.setVisibility(View.VISIBLE);
+            title_text.setText("记录");
+            function.setText("编辑");
 
+            context=getActivity();
+            initView();
+            pullHeadDatas();
+            pullDatas();
+
+            isNoTwo=false;
+        }
         LogUtil.e("RecordFragment+Coco7", "RecordFragment+Null");
-        context=getActivity();
-        initView();
-        pullHeadDatas();
-        pullDatas();
         return view;
     }
 
@@ -216,7 +222,8 @@ public class RecordFragment extends BaseFragment {
 
 
     private void pullDatas() {
-        dialog=new CustomDialog().createDialog1(context,"数据加载中...");
+        final CustomDialog customDialog=new CustomDialog();
+        dialog=customDialog.createDialog1(context,"数据加载中...");
         dialog.show();
 
         ApiManager.getInstance().adviceApi.getAdviceItems(1, 10, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
@@ -230,8 +237,10 @@ public class RecordFragment extends BaseFragment {
                 } else {
                     ToastUtil.show(context, t.getMsg());
                 }
-                pullToRefresh.onRefreshComplete();
-                dialog.dismiss();
+                if (pullToRefresh!=null){
+                    pullToRefresh.onRefreshComplete();
+                }
+                customDialog.dismiss();
             }
         });
     }

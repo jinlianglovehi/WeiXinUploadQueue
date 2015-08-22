@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:singleLine="true"
-            android:text="张丽丽"
+            android:text=""
             android:textColor="@color/black0"
             android:textSize="@dimen/font_normal" />
 
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="已孕：24周5天"
+                android:text=""
                 android:textColor="@color/gray3"
                 android:textSize="@dimen/font_normal" />
 
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:singleLine="true"
-                android:text="预产：9月27日"
+                android:text=""
                 android:textColor="@color/gray3"
                 android:textSize="@dimen/font_normal" />
         </LinearLayout>

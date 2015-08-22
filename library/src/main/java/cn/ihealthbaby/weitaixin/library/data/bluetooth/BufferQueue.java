@@ -53,8 +53,8 @@ public class BufferQueue {
 
 	public void stop() {
 		// TODO: 15/8/12
-		fhrParser.interrupt();
-		soundParser.interrupt();
+		//fhrParser.interrupt();
+		//soundParser.interrupt();
 	}
 
 	public void add(byte[] buffer, int type) {

@@ -48,7 +48,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:singleLine="true"
-                    android:text="张丽丽"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font_normal" />
 
@@ -66,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="已孕：24周5天"
+                        android:text=""
                         android:textColor="@color/gray3"
                         android:textSize="@dimen/font_normal" />
 
@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:singleLine="true"
-                        android:text="预产：9月27日"
+                        android:text=""
                         android:textColor="@color/gray3"
                         android:textSize="@dimen/font_normal" />
                 </LinearLayout>
@@ -121,7 +121,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/iv_arrow_right2"
                     android:singleLine="true"
-                    android:text="我的电话"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font_normal" />
 
@@ -163,7 +163,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/iv_arrow_right"
                     android:singleLine="true"
-                    android:text="1989-09-08"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font_normal" />
 
@@ -213,7 +213,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="19896456456"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font_normal" />
 
@@ -244,7 +244,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="北京海淀"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font_normal" />
 
@@ -275,7 +275,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="海淀区医院"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font_normal" />
 
@@ -306,7 +306,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="张中及 主任"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font_normal" />
 
