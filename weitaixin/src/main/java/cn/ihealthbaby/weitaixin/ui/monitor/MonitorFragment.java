@@ -29,6 +29,7 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.DefaultBluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.PseudoBluetoothService;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.AbstractBluetoothListener;
 
@@ -114,6 +115,7 @@ public class MonitorFragment extends BaseFragment {
 		if (!bluetoothScanner.isEnable()) {
 			bluetoothScanner.enable();
 		} else {
+			LogUtil.e("bluetoothScanner","bluetoothScanner");
 			connectBondedDeviceOrSearch();
 		}
 	}
@@ -206,9 +208,12 @@ public class MonitorFragment extends BaseFragment {
 
 	public void connectBondedDeviceOrSearch() {
 		bondedDevices = adapter.getBondedDevices();
+		LogUtil.e("bluetoothScanner",""+bondedDevices.size());
 		if (bondedDevices != null && bondedDevices.size() > 0) {
 			for (BluetoothDevice device : bondedDevices) {
+				LogUtil.e("bluetoothScanner","devicegetName: "+device.getName());
 				if (getDeviceName().equalsIgnoreCase(device.getName())) {
+					LogUtil.e("bluetoothScanner",""+"pseudoBluetoothService.connect()");
 					pseudoBluetoothService.connect(device, false);
 				}
 			}

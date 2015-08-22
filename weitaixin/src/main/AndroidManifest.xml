@@ -47,9 +47,7 @@
         <activity android:name=".activity.WoMessagOfSystemMessageActivity" />
         <activity android:name=".activity.WoMessagOfReplyMessageActivity" />
         <activity android:name=".ui.demo.ViewActivity" />
-
         <activity android:name=".ui.demo.DeviceListActivity" />
-
 
         <activity
             android:name=".ui.monitor.MonitorActivity"
@@ -57,6 +55,9 @@
         <activity
             android:name=".ui.monitor.CurveDetialActivity"
             android:label="@string/title_activity_curve_detial" />
+
+        <receiver android:name=".library.data.bluetooth.mode.spp.BluetoothReceiver"/>
+
     </application>
 
 </manifest>
