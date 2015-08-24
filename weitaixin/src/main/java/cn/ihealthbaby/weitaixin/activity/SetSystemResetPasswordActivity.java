@@ -140,7 +140,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        });
+        }, TAG);
     }
 
 
@@ -199,7 +199,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        });
+        }, TAG);
     }
 
 

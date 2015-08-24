@@ -26,6 +26,7 @@ public abstract class AbstractReqeust<T> extends Request<Result<T>> {
 
 	@Override
 	protected void deliverResponse(Result<T> response) {
+
 		if (callback != null) {
 			callback.call(response);
 		}

@@ -138,7 +138,7 @@ public class RecordFragment extends BaseFragment {
                 if (t.isSuccess()) {
                     Service data = t.getData();
                     if (data != null) {
-                        tvUsedCount.setText(data.getUsedCount()+"");
+                        tvUsedCount.setText(data.getUsedCount() + "");
                     } else {
                         ToastUtil.show(context, t.getMsg());
                     }
@@ -146,7 +146,7 @@ public class RecordFragment extends BaseFragment {
                     ToastUtil.show(context, t.getMsg());
                 }
             }
-        });
+        }, TAG);
     }
 
 
@@ -174,7 +174,7 @@ public class RecordFragment extends BaseFragment {
                         pageIndex = 1;
                         pullToRefresh.onRefreshComplete();
                     }
-                });
+                }, TAG);
             }
 
             @Override
@@ -194,7 +194,7 @@ public class RecordFragment extends BaseFragment {
                         }
                         pullToRefresh.onRefreshComplete();
                     }
-                });
+                }, TAG);
             }
         });
 
@@ -242,7 +242,7 @@ public class RecordFragment extends BaseFragment {
                 }
                 customDialog.dismiss();
             }
-        });
+        }, TAG);
     }
 
     private void init() {

@@ -36,6 +36,7 @@ import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
  * Created by Think on 2015/8/13.
  */
 public class UploadFileEngine {
+    private  final Object TAG = this;
 
     public CustomDialog customDialog;
     private Context context;
@@ -109,7 +110,7 @@ public class UploadFileEngine {
             }
         });
 
-        instance.uploadApi.getUploadToken(1, callable4);
+        instance.uploadApi.getUploadToken(1, callable4,TAG);
     }
 
     public void init(final byte[] dataBty){
@@ -127,7 +128,7 @@ public class UploadFileEngine {
                 }
                 customDialog.dismiss();
             }
-        });
+        },TAG);
     }
 
 
@@ -145,7 +146,7 @@ public class UploadFileEngine {
                 }
                 customDialog.dismiss();
             }
-        });
+        },TAG);
     }
 
 
@@ -162,7 +163,7 @@ public class UploadFileEngine {
                 }
                 customDialog.dismiss();
             }
-        });
+        },TAG);
     }
 
 

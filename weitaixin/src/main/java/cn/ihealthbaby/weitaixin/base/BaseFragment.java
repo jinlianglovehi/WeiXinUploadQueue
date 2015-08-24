@@ -10,11 +10,11 @@ import com.orhanobut.logger.Logger;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 
 /**
- * Created by liuhongjian on 15/7/24 11:47.
+ * @author liuhongjian on 15/7/24 11:47.
  */
 public class BaseFragment extends Fragment {
     protected RequestQueue requestQueue;
-    protected String TAG = getClass().getName();
+    protected Object TAG = this;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -31,6 +31,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Logger.d("request cancelAll:" + TAG.toString());
         requestQueue.cancelAll(TAG);
     }
 }

@@ -147,7 +147,7 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        });
+        }, TAG);
     }
 
 
@@ -214,7 +214,7 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                     }
                     dialog.dismiss();
                 }
-            });
+            }, TAG);
     }
 
 

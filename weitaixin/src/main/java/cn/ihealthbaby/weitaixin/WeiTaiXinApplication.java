@@ -25,7 +25,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.Connecti
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 
 /**
- * Created by liuhongjian on 15/7/23 14:09.
+ * @author  by liuhongjian on 15/7/23 14:09.
  */
 public class WeiTaiXinApplication extends Application {
 
@@ -132,6 +132,7 @@ public class WeiTaiXinApplication extends Application {
                 .build();
         return options;
     }
+
 
 
 }

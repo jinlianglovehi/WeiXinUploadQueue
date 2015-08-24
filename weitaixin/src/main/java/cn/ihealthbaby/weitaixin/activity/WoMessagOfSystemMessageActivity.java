@@ -73,7 +73,7 @@ public class WoMessagOfSystemMessageActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        });
+        }, TAG);
     }
 
     @OnClick(R.id.back)

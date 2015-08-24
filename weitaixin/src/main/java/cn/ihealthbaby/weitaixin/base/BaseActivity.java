@@ -13,7 +13,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.Connecti
  */
 public abstract class BaseActivity extends Activity {
     protected RequestQueue requestQueue;
-    protected String TAG = getClass().getName();
+    protected Object TAG = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Logger.d("request cancelAll:" + TAG.toString());
         requestQueue.cancelAll(TAG);
     }
 }

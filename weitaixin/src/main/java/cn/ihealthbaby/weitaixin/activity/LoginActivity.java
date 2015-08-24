@@ -120,7 +120,7 @@ public class LoginActivity extends BaseActivity {
                     }
                     dialog.dismiss();
                 }
-            });
+            }, TAG);
     }
 
 

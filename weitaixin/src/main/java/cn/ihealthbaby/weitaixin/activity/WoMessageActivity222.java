@@ -114,7 +114,7 @@ public class WoMessageActivity222 extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        });
+        }, TAG);
     }
 
     @OnClick(R.id.back)

@@ -12,7 +12,7 @@ import android.os.Bundle;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
- * Created by liuhongjian on 15/7/16 11:20.
+ * @author  by liuhongjian on 15/7/16 11:20.
  */
 public class BluetoothReceiver extends BroadcastReceiver {
 	private static final String TAG = "BluetoothReceiver";

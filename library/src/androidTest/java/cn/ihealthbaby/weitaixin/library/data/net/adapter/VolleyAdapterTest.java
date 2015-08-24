@@ -32,7 +32,7 @@ import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
  * Created by liuhongjian on 15/7/24 23:16.
  */
 public class VolleyAdapterTest extends InstrumentationTestCase {
-	private final static String TAG = "VolleyAdapterTest";
+	private final static String TAG = VolleyAdapterTest.class.getName().intern();
 	private ApiManager instance;
 	private Context context;
 	private LoginByPasswordForm loginByPasswordForm;
@@ -73,7 +73,7 @@ public class VolleyAdapterTest extends InstrumentationTestCase {
 
 	public void testRequest() throws Exception {
 		LogUtil.v(TAG, "testRequest::%s", "testRequest");
-		instance.accountApi.loginByPassword(loginByPasswordForm, callable0);
+		instance.accountApi.loginByPassword(loginByPasswordForm, callable0,TAG);
 		signal.await();
 	}
 
@@ -152,7 +152,7 @@ public class VolleyAdapterTest extends InstrumentationTestCase {
 			public void handleData(User data) throws Exception {
 				LogUtil.v(TAG, "handleData::%s", data);
 				adapter.setAccountToken(data.getAccountToken());
-				instance.uploadApi.getUploadToken(1, callable4);
+				instance.uploadApi.getUploadToken(1, callable4,TAG);
 //				UpdateHeadPicForm updateHeadPicForm = new UpdateHeadPicForm("headpic/1/402881fe4e6165af014e6165b38f0066");
 //				instance.userApi.updateHeadPic(updateHeadPicForm, new HttpClientAdapter.Callback<Void>() {
 //					@Override
@@ -164,7 +164,7 @@ public class VolleyAdapterTest extends InstrumentationTestCase {
 	}
 
 	public void testDelete() {
-		instance.testApi.delete("0", callable3);
+		instance.testApi.delete("0", callable3,TAG);
 	}
 
 	@Override

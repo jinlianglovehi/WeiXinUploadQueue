@@ -101,13 +101,19 @@ public class WoInfoFragment extends BaseFragment {
 
     private void init() {
 //        setTextHead();
+        setTextHead();
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        setTextHead();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     private void setTextHead(){
