@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.Logger;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.User;
@@ -28,106 +30,108 @@ import cn.ihealthbaby.weitaixin.library.util.Constants;
 public class WeiTaiXinApplication extends Application {
 
 
-	private AbstractHttpClientAdapter adapter;
+    private AbstractHttpClientAdapter adapter;
 
-	public static WeiTaiXinApplication app;
-	public static String accountToken;
-	public static String phone_number;
-	public static User user;
-	public boolean isLogin = false;
+    public static WeiTaiXinApplication app;
+    public static String accountToken;
+    public static String phone_number;
+    public static User user;
+    public boolean isLogin = false;
 
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-		app=this;
+        app = this;
 
-		initUniversalImageLoader();
+        initUniversalImageLoader();
 
-		initApiManager();
+        initApiManager();
+        initLogger();
 
 //		RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
 //		adapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
 //		HttpClientAdapter adapter = new XiaoCaoVolleyAdapter(getApplicationContext(), Constants.SERVER_URL);
 //		HttpClientAdapter adapter = new LoopjAdapter(getApplicationContext(), Constants.SERVER_URL);
 //		ApiManager.init(adapter);
-	}
+    }
 
-	public AbstractHttpClientAdapter getAdapter() {
-		return adapter;
-	}
+    private void initLogger() {
+        Logger.init(Constants.TAI_XIN_YI)
+                .setMethodCount(2)
+                .setLogLevel(LogLevel.FULL);
+    }
+
+    public AbstractHttpClientAdapter getAdapter() {
+        return adapter;
+    }
 
 
-	public static WeiTaiXinApplication  getInstance(){
-		return app;
-	}
+    public static WeiTaiXinApplication getInstance() {
+        return app;
+    }
 
-	public VolleyAdapter mAdapter;
-	public void initApiManager(){
-		RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
-		mAdapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
+    public VolleyAdapter mAdapter;
+
+    public void initApiManager() {
+        RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
+        mAdapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
 //		mAdapter.setAccountToken(WeiTaiXinApplication.accountToken);
-		ApiManager.init(mAdapter);
+        ApiManager.init(mAdapter);
 //		ApiManager.getInstance();
-	}
+    }
 
 
+    public void putValue(String key, String value) {
+        SharedPreferences sp = getSharedPreferences("weitaixin.data", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
 
 
+    public String getValue(String key, String defValue) {
+        SharedPreferences sp = getSharedPreferences("weitaixin.data", Context.MODE_PRIVATE);
+        String value = sp.getString(key, defValue);
+        return value;
+    }
 
 
-	public void putValue(String key, String value) {
-		SharedPreferences sp = getSharedPreferences("weitaixin.data",  Activity.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sp.edit();
-		editor.putString(key, value);
-		editor.commit();
-	}
+    public void initUniversalImageLoader() {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .memoryCacheExtraOptions(480, 800)
+                .discCacheExtraOptions(480, 800, Bitmap.CompressFormat.JPEG, 75, null)
+                .threadPoolSize(3)
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .discCacheSize(50 * 1024 * 1024)
+                .discCacheFileNameGenerator(new Md5FileNameGenerator())
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .discCacheFileCount(100)
+                .writeDebugLogs()
+                .build();
+
+        ImageLoader.getInstance().init(config);
+    }
 
 
-	public String getValue(String key, String defValue) {
-		SharedPreferences sp = getSharedPreferences("weitaixin.data", Context.MODE_PRIVATE);
-		String value = sp.getString(key, defValue);
-		return value;
-	}
-
-
-
-	public void initUniversalImageLoader() {
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-				.memoryCacheExtraOptions(480, 800)
-				.discCacheExtraOptions(480, 800, Bitmap.CompressFormat.JPEG, 75, null)
-				.threadPoolSize(3)
-				.threadPriority(Thread.NORM_PRIORITY - 2)
-				.discCacheSize(50 * 1024 * 1024)
-				.discCacheFileNameGenerator(new Md5FileNameGenerator())
-				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.discCacheFileCount(100)
-				.writeDebugLogs()
-				.build();
-
-		ImageLoader.getInstance().init(config);
-	}
-
-
-	public DisplayImageOptions setDisplayImageOptions() {
-		DisplayImageOptions options=null;
-		options = new DisplayImageOptions.Builder()
-				.showImageOnLoading(R.drawable.button_monitor_helper)
-				.showImageForEmptyUri(R.drawable.button_monitor_helper)
-				.showImageOnFail(R.drawable.button_monitor_helper)
-				.cacheInMemory(true)
-				.cacheOnDisc(true)
-				.considerExifParams(true)
-				.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-				.bitmapConfig(Bitmap.Config.RGB_565)
-				.displayer(new SimpleBitmapDisplayer())
+    public DisplayImageOptions setDisplayImageOptions() {
+        DisplayImageOptions options = null;
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.button_monitor_helper)
+                .showImageForEmptyUri(R.drawable.button_monitor_helper)
+                .showImageOnFail(R.drawable.button_monitor_helper)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .displayer(new SimpleBitmapDisplayer())
 //				.displayer(new RoundedBitmapDisplayer(20))
 //				.displayer(new FadeInBitmapDisplayer(100))
-				.build();
-		return options;
-	}
-
+                .build();
+        return options;
+    }
 
 
 }
