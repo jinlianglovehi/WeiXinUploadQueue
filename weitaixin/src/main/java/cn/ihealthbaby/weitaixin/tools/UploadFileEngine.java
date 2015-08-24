@@ -152,9 +152,9 @@ public class UploadFileEngine {
     public void updateHeadPicAction(){
         UpdateHeadPicForm updateHeadPicForm=new UpdateHeadPicForm();
         updateHeadPicForm.setHeadPicPath(key);
-        instance.userApi.updateHeadPic(updateHeadPicForm, new HttpClientAdapter.Callback<Void>() {
+        instance.userApi.updateHeadPic(updateHeadPicForm, new HttpClientAdapter.Callback<String>() {
             @Override
-            public void call(Result<Void> t) {
+            public void call(Result<String> t) {
                 if (t.isSuccess()) {
                     ToastUtil.show(context.getApplicationContext(), "头像上传成功");
                 } else {
