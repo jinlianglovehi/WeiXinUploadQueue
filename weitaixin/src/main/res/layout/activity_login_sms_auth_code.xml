@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/gray5"
+    android:orientation="vertical"
     tools:context="cn.ihealthbaby.weitaixin.ui.RegistActivity">
 
     <include layout="@layout/layout_title" />
@@ -15,15 +15,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:phoneNumber="true"
-        android:maxLength="11"
-        android:numeric="integer"
         android:layout_marginTop="20dp"
-        android:text="13161401474"
         android:background="@drawable/frame_selector"
         android:hint="请输入手机号码"
+        android:maxLength="11"
+        android:numeric="integer"
         android:padding="14dp"
+        android:phoneNumber="true"
         android:singleLine="true"
+        android:text="13161401474"
         android:textSize="@dimen/font_normal" />
 
     <LinearLayout
@@ -39,14 +39,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="12dp"
-            android:maxLength="6"
-            android:numeric="integer"
-            android:text="123456"
             android:layout_weight="1"
             android:background="@drawable/frame_selector"
             android:hint="请输入短信验证码"
+            android:maxLength="6"
+            android:numeric="integer"
             android:padding="14dp"
             android:singleLine="true"
+            android:text="123456"
             android:textSize="@dimen/font_normal" />
 
         <TextView
@@ -58,8 +58,8 @@
             android:gravity="center"
             android:padding="14dp"
             android:singleLine="true"
-            android:textColor="@color/button_login"
             android:text="发送验证码"
+            android:textColor="@color/button_login"
             android:textSize="@dimen/font_normal" />
     </LinearLayout>
 
@@ -71,11 +71,13 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <CheckBox
+            android:id="@+id/cbPitch"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/regist_icon" />
+            android:background="@drawable/pitch_selector"
+            android:button="@null"
+            android:scaleType="fitXY" />
 
         <TextView
             android:layout_width="wrap_content"

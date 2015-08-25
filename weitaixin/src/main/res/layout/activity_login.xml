@@ -68,14 +68,16 @@
                 android:textSize="@dimen/font_normal" />
 
 
-            <ImageView
+            <CheckBox
                 android:id="@+id/ivShowPassword"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="20dp"
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="20dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/default_ptr_flip" />
+                android:background="@drawable/eye_selector"
+                android:button="@null"
+                 />
         </FrameLayout>
 
 

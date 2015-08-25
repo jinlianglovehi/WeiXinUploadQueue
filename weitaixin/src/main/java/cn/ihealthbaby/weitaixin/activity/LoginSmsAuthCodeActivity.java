@@ -7,6 +7,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
     @Bind(R.id.et_mark_number_smsauthcode) EditText et_mark_number_smsauthcode;
     @Bind(R.id.tv_mark_number_text_smsauthcode) TextView tv_mark_number_text_smsauthcode;
     @Bind(R.id.tv_login_action_smsauthcode) TextView tv_login_action_smsauthcode;
+    @Bind(R.id.cbPitch) CheckBox cbPitch;
 
     public Handler mHandler=new Handler();
     private Dialog dialog;
@@ -154,7 +157,11 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
     @OnClick(R.id.tv_login_action_smsauthcode)
     public void tvLoginActionSmsAuthCode() {
         if (isHasAuthCode) {
-            tvLogieActionSmsAuthCode();
+            if(cbPitch.isChecked()){
+                tvLogieActionSmsAuthCode();
+            }else{
+                ToastUtil.show(getApplicationContext(), "不接受，不能登录哦~~");
+            }
         }else{
             ToastUtil.show(getApplicationContext(), "先获取验证码~~");
         }

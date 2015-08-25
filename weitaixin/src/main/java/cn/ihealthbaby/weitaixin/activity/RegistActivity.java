@@ -10,6 +10,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -49,11 +50,11 @@ public class RegistActivity extends BaseActivity {
     @Bind(R.id.et_phone_number) EditText et_phone_number;
     @Bind(R.id.etPassword) EditText etPassword;
     @Bind(R.id.et_mark_number) EditText et_mark_number;
-    @Bind(R.id.iv_agree_register) ImageView iv_agree_register;
+    @Bind(R.id.iv_agree_register) CheckBox ivAgreeRegister;
     @Bind(R.id.tv_rule_register) TextView tv_rule_register;
     @Bind(R.id.tv_regist_action) TextView tv_regist_action;
     @Bind(R.id.tv_mark_num_text) TextView tv_mark_num_text;
-    @Bind(R.id.ivShowPassword) ImageView ivShowPassword;
+    @Bind(R.id.ivShowPassword) CheckBox ivShowPassword;
 
     public Handler mHandler=new Handler();
 
@@ -174,7 +175,11 @@ public class RegistActivity extends BaseActivity {
     @OnClick(R.id.tv_regist_action)
     public void tvRegistAction() {
         if (isHasAuthCode) {
-            tvRegistAction2();
+            if(ivAgreeRegister.isChecked()){
+                tvRegistAction2();
+            }else{
+                ToastUtil.show(getApplicationContext(), "不接受，不能注册哦~~");
+            }
         }else{
             ToastUtil.show(getApplicationContext(), "先获取验证码~~");
         }

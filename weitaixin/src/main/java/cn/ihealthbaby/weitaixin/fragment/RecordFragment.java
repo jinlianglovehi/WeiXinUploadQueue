@@ -132,6 +132,16 @@ public class RecordFragment extends BaseFragment {
             }
         }
 
+        setCount();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setCount();
+    }
+
+    public void setCount(){
         ApiManager.getInstance().serviceApi.getByUser(new HttpClientAdapter.Callback<Service>() {
             @Override
             public void call(Result<Service> t) {
@@ -150,7 +160,6 @@ public class RecordFragment extends BaseFragment {
             }
         }, TAG);
     }
-
 
     private void initView() {
         adapter=new MyAdviceItemAdapter(context,null);

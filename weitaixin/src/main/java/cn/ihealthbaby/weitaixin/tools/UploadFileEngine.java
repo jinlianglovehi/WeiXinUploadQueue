@@ -23,6 +23,7 @@ import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.client.model.UploadModel;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
+import cn.ihealthbaby.weitaixin.activity.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
@@ -68,9 +69,9 @@ public class UploadFileEngine {
                     UploadFileEngine.this.key=key;
                     LogUtil.e("errdata", "errdata头像上次七牛成功: "+key);
                     ToastUtil.show(context.getApplicationContext(), "七牛成功");
-                    if(isUpdateInfo){
-                        completeInfoAction();
-                    }
+//                    if(isUpdateInfo){
+//                        completeInfoAction();
+//                    }
                     if(isUpdateHeadPic){
                         updateHeadPicAction();
                     }
@@ -136,7 +137,7 @@ public class UploadFileEngine {
                 }
                 customDialog.dismiss();
             }
-        },TAG);
+        }, TAG);
     }
 
 
@@ -146,8 +147,21 @@ public class UploadFileEngine {
             @Override
             public void call(Result<User> t) {
                 if (t.isSuccess()) {
-                    LogUtil.e("errdata", "errdata完善个人资料成功");
+                    User data = t.getData();
+                    if (data != null) {
+                        WeiTaiXinApplication.user = data;
+                        if (finishActivity != null) {
+                            finishActivity.onFinishActivity(true);
+                        }
+                        LogUtil.e("errdata", "errdata完善个人资料成功");
+                    }else{
+                        ToastUtil.show(context,"完善个人资料失败");
+                    }
                 } else {
+                    if (finishActivity!=null) {
+                        finishActivity.onFinishActivity(false);
+                    }
+                    ToastUtil.show(context,"完善个人资料失败");
                     LogUtil.e("errdata", "errdata完善个人资料失败");
                 }
                 customDialog.dismiss();
@@ -175,6 +189,17 @@ public class UploadFileEngine {
             }
         },TAG);
     }
+
+
+    public FinishActivity finishActivity;
+    public interface FinishActivity{
+        void onFinishActivity(boolean isFinish);
+    }
+
+    public void setOnFinishActivity(FinishActivity fa){
+        this.finishActivity=fa;
+    }
+
 
 
 }

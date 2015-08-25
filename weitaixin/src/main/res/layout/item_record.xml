@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
     <TextView
-        android:layout_width="20dp"
+        android:layout_width="30dp"
         android:layout_height="match_parent"
         android:background="#00FFFFFF" />
 

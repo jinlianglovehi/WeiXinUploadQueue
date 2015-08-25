@@ -145,6 +145,14 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
                 dialog.show();
                 engine.customDialog=customDialog;
                 engine.isUpdateInfo=true;
+                engine.setOnFinishActivity(new UploadFileEngine.FinishActivity() {
+                    @Override
+                    public void onFinishActivity(boolean isFinish) {
+                        if (isFinish) {
+                            InfoEditActivity.this.finish();
+                        }
+                    }
+                });
                 engine.completeInfoAction();
             } else {
                 ToastUtil.show(getApplicationContext(), "头像没有");

@@ -8,6 +8,7 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -43,7 +44,8 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
     @Bind(R.id.et_mark_number_reset) EditText et_mark_number_reset;
     @Bind(R.id.tv_mark_num_text_reset) TextView tv_mark_num_text_reset;
     @Bind(R.id.tv_reset_password_action_reset) TextView tv_reset_password_action_reset;
-    @Bind(R.id.ivShowPassword) ImageView ivShowPassword;
+    @Bind(R.id.ivShowPassword)
+    CheckBox ivShowPassword;
 
 
     public Handler mHandler=new Handler();

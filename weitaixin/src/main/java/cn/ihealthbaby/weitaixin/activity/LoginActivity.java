@@ -7,6 +7,7 @@ import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -46,7 +47,7 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.tv_login_action) TextView tv_login_action;
     @Bind(R.id.tv_regist_action_login) TextView tv_regist_action_login;
     @Bind(R.id.tv_loginsms_action_login) TextView tv_loginsms_action_login;
-    @Bind(R.id.ivShowPassword) ImageView ivShowPassword;
+    @Bind(R.id.ivShowPassword) CheckBox ivShowPassword;
 
 
 
@@ -75,9 +76,11 @@ public class LoginActivity extends BaseActivity {
         if ("0".equals(ivShowPassword.getTag())) {
             et_password_login.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             ivShowPassword.setTag("1");
+//            ivShowPassword.setSelected(true);
         }else{
             et_password_login.setTransformationMethod(PasswordTransformationMethod.getInstance());
             ivShowPassword.setTag("0");
+//            ivShowPassword.setSelected(false);
         }
     }
 

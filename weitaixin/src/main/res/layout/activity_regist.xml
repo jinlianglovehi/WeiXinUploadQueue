@@ -48,14 +48,16 @@
             android:textColor="@color/black1"
             android:textSize="@dimen/font_normal" />
 
-        <ImageView
+        <CheckBox
             android:id="@+id/ivShowPassword"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="20dp"
+            android:background="@drawable/eye_selector"
+            android:button="@null"
             android:scaleType="fitCenter"
-            android:src="@drawable/default_ptr_flip" />
+           />
 
     </FrameLayout>
 
@@ -105,12 +107,13 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <CheckBox
             android:id="@+id/iv_agree_register"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:scaleType="fitXY"
-            android:src="@drawable/regist_icon" />
+            android:button="@null"
+            android:background="@drawable/pitch_selector" />
 
         <TextView
             android:layout_width="wrap_content"
