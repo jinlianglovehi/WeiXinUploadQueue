@@ -148,8 +148,8 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
         engine=new UploadFileEngine(this,null ,customDialog);
         if(photo!=null) {
             dialog.show();
+            engine.isUpdateHeadPic=true;
             engine.init(ImageTool.Bitmap2Bytes(photo));
-            engine.updateHeadPicAction();
         } else {
             ToastUtil.show(getApplicationContext(), "头像没有");
         }

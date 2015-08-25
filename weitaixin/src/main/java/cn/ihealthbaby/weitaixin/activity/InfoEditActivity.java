@@ -144,6 +144,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
             if(photo!=null) {
                 dialog.show();
                 engine.customDialog=customDialog;
+                engine.isUpdateInfo=true;
                 engine.completeInfoAction();
             } else {
                 ToastUtil.show(getApplicationContext(), "头像没有");
