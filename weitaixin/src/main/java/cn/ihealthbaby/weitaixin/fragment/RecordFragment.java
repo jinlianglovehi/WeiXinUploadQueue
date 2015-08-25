@@ -54,17 +54,17 @@ public class RecordFragment extends BaseFragment {
 
     private final static String TAG = "RecordFragment";
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Nullable @Bind(R.id.back) RelativeLayout back;
+    @Nullable @Bind(R.id.title_text) TextView title_text;
+    @Nullable @Bind(R.id.function) TextView function;
 //
 
-    @Bind(R.id.pullToRefresh) PullToRefreshListView pullToRefresh;
-    @Bind(R.id.ivWoHeadIcon) RoundImageView ivWoHeadIcon;
-    @Bind(R.id.tvWoHeadName) TextView tvWoHeadName;
-    @Bind(R.id.tvWoHeadDeliveryTime) TextView tvWoHeadDeliveryTime;
-    @Bind(R.id.tvUsedCount) TextView tvUsedCount;
-    @Bind(R.id.tvHospitalName) TextView tvHospitalName;
+    @Nullable @Bind(R.id.pullToRefresh) PullToRefreshListView pullToRefresh;
+    @Nullable @Bind(R.id.ivWoHeadIcon) RoundImageView ivWoHeadIcon;
+    @Nullable @Bind(R.id.tvWoHeadName) TextView tvWoHeadName;
+    @Nullable @Bind(R.id.tvWoHeadDeliveryTime) TextView tvWoHeadDeliveryTime;
+    @Nullable @Bind(R.id.tvUsedCount) TextView tvUsedCount;
+    @Nullable @Bind(R.id.tvHospitalName) TextView tvHospitalName;
 
 
 
@@ -100,7 +100,7 @@ public class RecordFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (isNoTwo) {
+//        if (isNoTwo) {
             view = inflater.inflate(R.layout.fragment_record, null);
             ButterKnife.bind(this, view);
             back.setVisibility(View.INVISIBLE);
@@ -114,10 +114,18 @@ public class RecordFragment extends BaseFragment {
             pullDatas();
 
             isNoTwo=false;
-        }
+//        }
         LogUtil.e("RecordFragment+Coco7", "RecordFragment+Null");
         return view;
     }
+
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        LogUtil.e("RecordFragment+Coco7", "RecordFragment+Null44");
+    }
+
 
 
 
@@ -141,13 +149,14 @@ public class RecordFragment extends BaseFragment {
         setCount();
     }
 
-    public void setCount(){
+
+    public void setCount() {
         ApiManager.getInstance().serviceApi.getByUser(new HttpClientAdapter.Callback<Service>() {
             @Override
             public void call(Result<Service> t) {
                 if (t.isSuccess()) {
                     Service data = t.getData();
-                    if (data != null) {
+                    if (data != null && tvUsedCount != null) {
                         tvUsedCount.setText(data.getUsedCount() + "");
                     } else {
                         LogUtil.e("2getMsgMap2-2", t.getMsgMap()+"");

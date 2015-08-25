@@ -51,7 +51,7 @@ public class RegistActivity extends BaseActivity {
     @Bind(R.id.etPassword) EditText etPassword;
     @Bind(R.id.et_mark_number) EditText et_mark_number;
     @Bind(R.id.iv_agree_register) CheckBox ivAgreeRegister;
-    @Bind(R.id.tv_rule_register) TextView tv_rule_register;
+    @Bind(R.id.tvRuleRegister) TextView tvRuleRegister;
     @Bind(R.id.tv_regist_action) TextView tv_regist_action;
     @Bind(R.id.tv_mark_num_text) TextView tv_mark_num_text;
     @Bind(R.id.ivShowPassword) CheckBox ivShowPassword;
@@ -87,6 +87,13 @@ public class RegistActivity extends BaseActivity {
     public void onBack(RelativeLayout view) {
         this.finish();
     }
+
+    @OnClick(R.id.tvRuleRegister)
+    public void tvRuleRegister( ) {
+        Intent intent=new Intent(this, ProtocolActivity.class);
+        startActivity(intent);
+    }
+
 
     public boolean isSend=true;
     public Dialog dialog;

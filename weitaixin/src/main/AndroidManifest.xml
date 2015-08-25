@@ -46,6 +46,7 @@
         <activity android:name=".activity.LoginSmsAuthCodeActivity"/>
         <activity android:name=".activity.WoMessagOfSystemMessageActivity"/>
         <activity android:name=".activity.WoMessagOfReplyMessageActivity"/>
+        <activity android:name=".activity.ProtocolActivity"/>
         <activity android:name=".ui.demo.ViewActivity"/>
         <activity android:name=".ui.demo.DeviceListActivity"/>
 

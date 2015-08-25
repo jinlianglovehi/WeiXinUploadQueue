@@ -50,14 +50,12 @@
 
         <CheckBox
             android:id="@+id/ivShowPassword"
-            android:layout_width="40dp"
+            android:layout_width="36dp"
             android:layout_height="20dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="20dp"
             android:background="@drawable/eye_selector"
-            android:button="@null"
-            android:scaleType="fitCenter"
-           />
+            android:button="@null" />
 
     </FrameLayout>
 
@@ -111,9 +109,9 @@
             android:id="@+id/iv_agree_register"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:scaleType="fitXY"
+            android:background="@drawable/pitch_selector"
             android:button="@null"
-            android:background="@drawable/pitch_selector" />
+            android:scaleType="fitXY" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -125,7 +123,7 @@
             android:textSize="@dimen/font_normal14" />
 
         <TextView
-            android:id="@+id/tv_rule_register"
+            android:id="@+id/tvRuleRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

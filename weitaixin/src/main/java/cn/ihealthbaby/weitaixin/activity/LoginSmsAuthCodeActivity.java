@@ -49,6 +49,7 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
     @Bind(R.id.tv_mark_number_text_smsauthcode) TextView tv_mark_number_text_smsauthcode;
     @Bind(R.id.tv_login_action_smsauthcode) TextView tv_login_action_smsauthcode;
     @Bind(R.id.cbPitch) CheckBox cbPitch;
+    @Bind(R.id.tvRuleLogin) TextView tvRuleLogin;
 
     public Handler mHandler=new Handler();
     private Dialog dialog;
@@ -70,6 +71,13 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
     public void onBack( ) {
         this.finish();
     }
+
+    @OnClick(R.id.tvRuleLogin)
+    public void tvRuleLogin() {
+        Intent intent = new Intent(this, ProtocolActivity.class);
+        startActivity(intent);
+    }
+
 
 
     public boolean isSend=true;
