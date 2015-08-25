@@ -1,14 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray5"
-    tools:context="cn.ihealthbaby.weitaixin.ui.LoginActivity">
+<RelativeLayout android:id="@+id/main"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white0"
+                tools:context="cn.ihealthbaby.weitaixin.ui.LoginActivity">
 
     <include
         android:id="@+id/head_title_id"
-        layout="@layout/layout_title" />
+        layout="@layout/layout_title"/>
 
     <RelativeLayout
         android:id="@+id/rl_id"
@@ -28,33 +28,30 @@
             android:background="@null"
             android:gravity="center"
             android:hint="请输入手机号"
-            android:textColorHint="@color/black1"
-            android:textColor="@color/black1"
             android:maxLength="11"
             android:numeric="integer"
             android:padding="14dp"
-            android:text="13161401474"
             android:phoneNumber="true"
             android:singleLine="true"
-            android:textSize="@dimen/font_normal" />
+            android:text="13161401474"
+            android:textColor="@color/black1"
+            android:textColorHint="@color/black1"
+            android:textSize="@dimen/font_normal"/>
 
         <View
             android:id="@+id/view_line_login"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/et_phone_number_login"
-            android:background="#6c6c6c" />
+            android:background="@color/gray10"/>
 
         <EditText
             android:id="@+id/et_password_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_line_login"
-            android:textColorHint="@color/black1"
-            android:textColor="@color/black1"
             android:layout_centerHorizontal="true"
             android:background="@null"
-            android:text="123456"
             android:gravity="center"
             android:hint="请输入密码"
             android:inputType="textPassword"
@@ -62,7 +59,10 @@
             android:padding="16dp"
             android:password="true"
             android:singleLine="true"
-            android:textSize="@dimen/font_normal" />
+            android:text="123456"
+            android:textColor="@color/black1"
+            android:textColorHint="@color/black1"
+            android:textSize="@dimen/font_normal"/>
     </RelativeLayout>
 
 
@@ -80,7 +80,7 @@
         android:singleLine="true"
         android:text="登录"
         android:textColor="@drawable/text_color_selector"
-        android:textSize="@dimen/font_normal" />
+        android:textSize="@dimen/font_normal"/>
 
     <TextView
         android:id="@+id/tv_regist_action_login"
@@ -92,7 +92,7 @@
         android:layout_marginTop="80dp"
         android:text="注册"
         android:textColor="@drawable/text_color_gray3_selector"
-        android:textSize="@dimen/font_normal" />
+        android:textSize="@dimen/font_normal"/>
 
     <TextView
         android:id="@+id/tv_loginsms_action_login"
@@ -104,6 +104,6 @@
         android:layout_marginTop="80dp"
         android:text="短信验证码登录"
         android:textColor="@drawable/text_color_gray3_selector"
-        android:textSize="@dimen/font_normal" />
+        android:textSize="@dimen/font_normal"/>
 
 </RelativeLayout>
