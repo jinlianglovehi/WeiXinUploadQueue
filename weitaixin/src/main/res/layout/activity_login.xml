@@ -24,23 +24,19 @@
             android:id="@+id/et_phone_number_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:background="@null"
             android:gravity="center"
             android:hint="请输入手机号"
             android:maxLength="11"
-            android:layout_marginRight="60dp"
             android:numeric="integer"
             android:padding="14dp"
             android:phoneNumber="true"
             android:singleLine="true"
             android:text="13161401474"
-<<<<<<< 4b5dd004efc2ba818dd77678e89f3f1467387d03
             android:textColor="@color/black1"
             android:textColorHint="@color/black1"
             android:textSize="@dimen/font_normal"/>
-=======
-            android:textSize="@dimen/font_normal" />
->>>>>>> 725853fc41571def2e890bdd52f70732c1347549
 
         <View
             android:id="@+id/view_line_login"
@@ -49,11 +45,11 @@
             android:layout_below="@id/et_phone_number_login"
             android:background="@color/gray10"/>
 
-        <FrameLayout
+        <EditText
+            android:id="@+id/et_password_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_line_login"
-<<<<<<< 4b5dd004efc2ba818dd77678e89f3f1467387d03
             android:layout_centerHorizontal="true"
             android:background="@null"
             android:gravity="center"
@@ -67,39 +63,6 @@
             android:textColor="@color/black1"
             android:textColorHint="@color/black1"
             android:textSize="@dimen/font_normal"/>
-=======
-            android:layout_centerHorizontal="true">
-
-
-            <EditText
-                android:id="@+id/et_password_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:gravity="center"
-                android:hint="请输入密码"
-                android:inputType="textPassword"
-                android:maxLength="20"
-                android:padding="16dp"
-                android:password="true"
-                android:layout_marginRight="60dp"
-                android:singleLine="true"
-                android:text="123456"
-                android:textSize="@dimen/font_normal" />
-
-
-            <ImageView
-                android:id="@+id/ivShowPassword"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="20dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/default_ptr_flip" />
-        </FrameLayout>
-
-
->>>>>>> 725853fc41571def2e890bdd52f70732c1347549
     </RelativeLayout>
 
 

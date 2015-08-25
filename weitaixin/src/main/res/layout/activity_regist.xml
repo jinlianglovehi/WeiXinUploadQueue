@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray5"
     android:orientation="vertical"
+    android:background="@color/gray5"
     tools:context="cn.ihealthbaby.weitaixin.ui.RegistActivity">
 
     <include layout="@layout/layout_title" />
@@ -19,48 +19,30 @@
         android:hint="请输入正确的手机号"
         android:maxLength="11"
         android:numeric="integer"
+        android:textColorHint="@color/black1"
+        android:textColor="@color/black1"
         android:padding="14dp"
         android:phoneNumber="true"
         android:singleLine="true"
-        android:textColor="@color/black1"
-        android:textColorHint="@color/black1"
         android:textSize="@dimen/font_normal" />
 
-    <FrameLayout
+    <EditText
+        android:id="@+id/et_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/black1"
+        android:textColor="@color/black1"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/frame_selector">
-
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="60dp"
-            android:background="@null"
-            android:hint="请输入密码"
-            android:inputType="textPassword"
-            android:maxLength="20"
-            android:padding="14dp"
-            android:password="true"
-            android:singleLine="true"
-            android:textColor="@color/black1"
-            android:textColorHint="@color/black1"
-            android:textSize="@dimen/font_normal" />
-
-        <ImageView
-            android:id="@+id/ivShowPassword"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="20dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/default_ptr_flip" />
-
-    </FrameLayout>
-
+        android:background="@drawable/frame_selector"
+        android:hint="请输入密码"
+        android:maxLength="20"
+        android:padding="14dp"
+        android:inputType="textPassword"
+        android:password="true"
+        android:singleLine="true"
+        android:textSize="@dimen/font_normal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,14 +58,14 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="12dp"
             android:layout_weight="1"
+            android:maxLength="6"
+            android:textColorHint="@color/black1"
+            android:textColor="@color/black1"
             android:background="@drawable/frame_selector"
             android:hint="请输入验证码"
-            android:maxLength="6"
             android:numeric="integer"
             android:padding="14dp"
             android:singleLine="true"
-            android:textColor="@color/black1"
-            android:textColorHint="@color/black1"
             android:textSize="@dimen/font_normal" />
 
         <TextView
@@ -94,9 +76,9 @@
             android:background="@drawable/frame_selector"
             android:gravity="center"
             android:padding="14dp"
+            android:textColor="@color/button_login"
             android:singleLine="true"
             android:text="发送验证码"
-            android:textColor="@color/button_login"
             android:textSize="@dimen/font_normal" />
     </LinearLayout>
 

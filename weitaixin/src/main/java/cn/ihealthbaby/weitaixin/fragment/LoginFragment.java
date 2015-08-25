@@ -37,8 +37,8 @@ public class LoginFragment extends BaseFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		final EditText username = (EditText) view.findViewById(R.id.etPassword);
-		final EditText password = (EditText) view.findViewById(R.id.etPassword);
+		final EditText username = (EditText) view.findViewById(R.id.et_password);
+		final EditText password = (EditText) view.findViewById(R.id.et_password);
 		username.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
