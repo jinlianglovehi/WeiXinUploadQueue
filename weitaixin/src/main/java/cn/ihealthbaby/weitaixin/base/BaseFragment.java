@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
-import com.orhanobut.logger.Logger;
 
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 
@@ -25,13 +24,12 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Logger.d("hello");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Logger.d("request cancelAll:" + TAG.toString());
+//        LogUtil.d("request cancelAll:" + TAG.toString());
         requestQueue.cancelAll(TAG);
     }
 }

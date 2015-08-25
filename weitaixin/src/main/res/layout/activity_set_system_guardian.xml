@@ -1,13 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray5"
-    android:orientation="vertical">
+              xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray5"
+              android:orientation="vertical">
 
     <include
         android:id="@+id/head_title_id"
-        layout="@layout/layout_title" />
+        layout="@layout/layout_title"/>
 
 
     <RelativeLayout
@@ -24,16 +25,17 @@
             android:singleLine="true"
             android:text="自动开始"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font_normal" />
+            android:textSize="@dimen/font_normal"/>
 
-        <CheckBox
-            android:id="@+id/cbAutoStart"
-            android:layout_width="40dp"
-            android:layout_height="30dp"
+        <cn.ihealthbaby.weitaixin.view.SlideSwitch
+            android:id="@+id/slide_switch_begin"
+            android:layout_width="50dip"
+            android:layout_height="30dip"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="30dp"
-            android:button="@drawable/set_system_guardian_selector" />
+            slideswitch:isOpen="true"
+            slideswitch:shape="circle"
+            slideswitch:themeColor="@color/green0"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -56,16 +58,17 @@
                 android:singleLine="true"
                 android:text="报警设置"
                 android:textColor="@drawable/text_color_hei_selector"
-                android:textSize="@dimen/font_normal" />
+                android:textSize="@dimen/font_normal"/>
 
-            <CheckBox
-                android:id="@+id/cbPoliceSet"
-                android:layout_width="40dp"
-                android:layout_height="30dp"
+            <cn.ihealthbaby.weitaixin.view.SlideSwitch
+                android:id="@+id/slide_switch_alarm"
+                android:layout_width="50dip"
+                android:layout_height="30dip"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="30dp"
-                android:button="@drawable/set_system_guardian_selector" />
+                slideswitch:isOpen="true"
+                slideswitch:shape="circle"
+                slideswitch:themeColor="@color/green0"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -81,7 +84,7 @@
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/gray8" />
+                android:background="@color/gray8"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -92,7 +95,7 @@
                 android:singleLine="true"
                 android:text="请选择时间间隔，间隔时间之内不重复报警"
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/font_normal" />
+                android:textSize="@dimen/font_normal"/>
 
             <ListView
                 android:id="@+id/lvGuardian"
@@ -107,7 +110,7 @@
                 android:dividerHeight="1dp"
                 android:fadingEdge="none"
                 android:scrollbars="none"
-                android:transcriptMode="normal" />
+                android:transcriptMode="normal"/>
 
         </LinearLayout>
 
