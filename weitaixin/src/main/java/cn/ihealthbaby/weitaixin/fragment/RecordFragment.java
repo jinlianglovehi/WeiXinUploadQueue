@@ -141,7 +141,8 @@ public class RecordFragment extends BaseFragment {
         setCount();
     }
 
-    public void setCount(){
+
+    public void setCount() {
         ApiManager.getInstance().serviceApi.getByUser(new HttpClientAdapter.Callback<Service>() {
             @Override
             public void call(Result<Service> t) {

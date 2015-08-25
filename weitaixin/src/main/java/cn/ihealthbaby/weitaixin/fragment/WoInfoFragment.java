@@ -91,7 +91,7 @@ public class WoInfoFragment extends BaseFragment {
 
             back.setVisibility(View.INVISIBLE);
             title_text.setText("我的");
-//            init();
+            init();
 
             isNoTwo=false;
         }
@@ -99,9 +99,9 @@ public class WoInfoFragment extends BaseFragment {
         return view;
     }
 
-//    private void init() {
-//        setTextHead();
-//    }
+    private void init() {
+        setTextHead();
+    }
 
 
     @Override

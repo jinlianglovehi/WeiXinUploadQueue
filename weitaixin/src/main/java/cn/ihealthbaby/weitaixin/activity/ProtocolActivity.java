@@ -60,7 +60,6 @@ public class ProtocolActivity extends BaseActivity {
 
 
     private void initView() {
-
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setSavePassword(false);
         webSettings.setSaveFormData(false);
@@ -72,7 +71,7 @@ public class ProtocolActivity extends BaseActivity {
 
         mWebView.setWebChromeClient(new MyWebChromeClient());
 
-//       mWebView.addJavascriptInterface(new DemoJavaScriptInterface(), "androidJS");
+//     mWebView.addJavascriptInterface(new DemoJavaScriptInterface(), "androidJS");
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         mWebView.setWebViewClient(new HelloWebViewClient());
