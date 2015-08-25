@@ -37,7 +37,7 @@
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@id/ivWoHeadIcon"
             android:singleLine="true"
-            android:text="张丽丽"
+            android:text=""
             android:textColor="@color/black0"
             android:textSize="@dimen/font_normal14" />
 
@@ -48,7 +48,7 @@
             android:layout_below="@id/tvWoHeadName"
             android:layout_toRightOf="@id/ivWoHeadIcon"
             android:singleLine="true"
-            android:text="24周17天"
+            android:text=""
             android:textColor="@color/gray3"
             android:textSize="@dimen/font_normal14" />
 
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="32"
+                android:text="0"
                 android:textColor="@color/black0"
                 android:textSize="@dimen/font12" />
 
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="监护次数"
+                android:text="监测次数"
                 android:textColor="@color/black0"
                 android:textSize="@dimen/font12" />
         </LinearLayout>
@@ -174,7 +174,7 @@
             android:layout_below="@id/ivWoHeadIcon"
             android:layout_alignRight="@id/ll_one"
             android:singleLine="true"
-            android:text="建档: 北京海淀区医院"
+            android:text="建档: "
             android:textColor="@color/gray3"
             android:textSize="@dimen/font_normal14" />
 

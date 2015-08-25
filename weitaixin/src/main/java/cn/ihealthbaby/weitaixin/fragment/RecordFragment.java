@@ -140,9 +140,11 @@ public class RecordFragment extends BaseFragment {
                     if (data != null) {
                         tvUsedCount.setText(data.getUsedCount() + "");
                     } else {
+                        LogUtil.e("2getMsgMap2-2", t.getMsgMap()+"");
                         ToastUtil.show(context, t.getMsg());
                     }
                 } else {
+                    LogUtil.e("2getMsgMap2-3", t.getMsgMap()+"");
                     ToastUtil.show(context, t.getMsg());
                 }
             }
@@ -172,7 +174,9 @@ public class RecordFragment extends BaseFragment {
                             ToastUtil.show(context, t.getMsg());
                         }
                         pageIndex = 1;
-                        pullToRefresh.onRefreshComplete();
+                        if (pullToRefresh!=null){
+                            pullToRefresh.onRefreshComplete();
+                        }
                     }
                 }, TAG);
             }
@@ -192,7 +196,9 @@ public class RecordFragment extends BaseFragment {
                             ToastUtil.show(context, t.getMsg());
                             pageIndex--;
                         }
-                        pullToRefresh.onRefreshComplete();
+                        if (pullToRefresh!=null){
+                            pullToRefresh.onRefreshComplete();
+                        }
                     }
                 }, TAG);
             }
@@ -235,6 +241,7 @@ public class RecordFragment extends BaseFragment {
                     adapter.setDatas(dataList);
                     adapter.notifyDataSetChanged();
                 } else {
+                    LogUtil.e("2getMsgMap", t.getMsgMap()+"");
                     ToastUtil.show(context, t.getMsg());
                 }
                 if (pullToRefresh!=null){
