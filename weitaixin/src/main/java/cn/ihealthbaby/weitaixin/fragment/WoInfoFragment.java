@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +22,6 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.activity.GradedActivity;
-import cn.ihealthbaby.weitaixin.activity.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.activity.SetSystemActivity;
 import cn.ihealthbaby.weitaixin.activity.WoGoldenActivity;
 import cn.ihealthbaby.weitaixin.activity.WoInformationActivity;
@@ -85,7 +83,7 @@ public class WoInfoFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (isNoTwo) {
+//        if (isNoTwo) {
             view = inflater.inflate(R.layout.fragment_wo_info, null);
             ButterKnife.bind(this, view);
 
@@ -94,7 +92,7 @@ public class WoInfoFragment extends BaseFragment {
             init();
 
             isNoTwo=false;
-        }
+//        }
         LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+Null");
         return view;
     }

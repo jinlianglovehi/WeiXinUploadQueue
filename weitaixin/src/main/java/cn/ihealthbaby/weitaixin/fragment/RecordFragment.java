@@ -100,7 +100,7 @@ public class RecordFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (isNoTwo) {
+//        if (isNoTwo) {
             view = inflater.inflate(R.layout.fragment_record, null);
             ButterKnife.bind(this, view);
             back.setVisibility(View.INVISIBLE);
@@ -114,10 +114,18 @@ public class RecordFragment extends BaseFragment {
             pullDatas();
 
             isNoTwo=false;
-        }
+//        }
         LogUtil.e("RecordFragment+Coco7", "RecordFragment+Null");
         return view;
     }
+
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        LogUtil.e("RecordFragment+Coco7", "RecordFragment+Null44");
+    }
+
 
 
 

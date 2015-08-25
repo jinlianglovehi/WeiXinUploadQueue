@@ -1,7 +1,7 @@
 package cn.ihealthbaby.weitaixin.base;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
