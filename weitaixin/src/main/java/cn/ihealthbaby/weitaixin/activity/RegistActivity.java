@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -47,13 +44,12 @@ public class RegistActivity extends BaseActivity {
 //
 
     @Bind(R.id.et_phone_number) EditText et_phone_number;
-    @Bind(R.id.etPassword) EditText etPassword;
+    @Bind(R.id.et_password) EditText et_password;
     @Bind(R.id.et_mark_number) EditText et_mark_number;
     @Bind(R.id.iv_agree_register) ImageView iv_agree_register;
     @Bind(R.id.tv_rule_register) TextView tv_rule_register;
     @Bind(R.id.tv_regist_action) TextView tv_regist_action;
     @Bind(R.id.tv_mark_num_text) TextView tv_mark_num_text;
-    @Bind(R.id.ivShowPassword) ImageView ivShowPassword;
 
     public Handler mHandler=new Handler();
 
@@ -68,19 +64,9 @@ public class RegistActivity extends BaseActivity {
         instance = ApiManager.getInstance();
 
 //      tv_regist_action.setEnabled(false);
-        ivShowPassword.setTag("0");
     }
 
-    @OnClick(R.id.ivShowPassword)
-    public void ivShowPassword(){
-        if ("0".equals(ivShowPassword.getTag())) {
-            etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            ivShowPassword.setTag("1");
-        }else{
-            etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            ivShowPassword.setTag("0");
-        }
-    }
+
 
     @OnClick(R.id.back)
     public void onBack(RelativeLayout view) {
@@ -185,7 +171,7 @@ public class RegistActivity extends BaseActivity {
     public String mark_number;
     public void tvRegistAction2() {
         phone_number = et_phone_number.getText().toString().trim();
-        password = etPassword.getText().toString().trim();
+        password = et_password.getText().toString().trim();
         mark_number= et_mark_number.getText().toString().trim();
         if (TextUtils.isEmpty(phone_number)) {
             ToastUtil.show(getApplicationContext(), "请输入手机号");

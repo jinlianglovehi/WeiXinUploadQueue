@@ -6,10 +6,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,8 +40,6 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
     @Bind(R.id.et_mark_number_reset) EditText et_mark_number_reset;
     @Bind(R.id.tv_mark_num_text_reset) TextView tv_mark_num_text_reset;
     @Bind(R.id.tv_reset_password_action_reset) TextView tv_reset_password_action_reset;
-    @Bind(R.id.ivShowPassword) ImageView ivShowPassword;
-
 
     public Handler mHandler=new Handler();
     private Dialog dialog;
@@ -59,26 +54,12 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
 
         title_text.setText("修改密码");
 //      back.setVisibility(View.INVISIBLE);
-        ivShowPassword.setTag("0");
     }
 
     @OnClick(R.id.back)
     public void onBack( ) {
         this.finish();
     }
-
-
-    @OnClick(R.id.ivShowPassword)
-    public void ivShowPassword() {
-        if ("0".equals(ivShowPassword.getTag())) {
-            et_password_reset.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            ivShowPassword.setTag("1");
-        }else{
-            et_password_reset.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            ivShowPassword.setTag("0");
-        }
-    }
-
 
 
     public int countTime=10;

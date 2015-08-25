@@ -33,7 +33,6 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.BufferQueue;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.parser.Parser;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * This class does all the work for setting up and managing Bluetooth connections with other
@@ -357,7 +356,6 @@ public class PseudoBluetoothService {
 				} else {
 					tmp = device.createInsecureRfcommSocketToServiceRecord(
 							                                                      Constants.COMMON_UUID);
-					LogUtil.e("bluetoothScanner", "" + "COMMON_UUID："+ Constants.COMMON_UUID);
 				}
 			} catch (IOException e) {
 				Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
@@ -366,7 +364,7 @@ public class PseudoBluetoothService {
 		}
 
 		public void run() {
-			Log.i(TAG, "BEGIN mConnectThread SocketType2:" + mSocketType);
+			Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
 			setName("ConnectThread" + mSocketType);
 			// Always cancel discovery because it will slow down a connection
 			mAdapter.cancelDiscovery();
@@ -376,7 +374,6 @@ public class PseudoBluetoothService {
 				// successful connection or an exception
 				mmSocket.connect();
 			} catch (IOException e) {
-				LogUtil.e("bluetoothScanner", "" + "connectionFailed：" +e.toString());
 				// Close the socket
 				try {
 					mmSocket.close();
@@ -478,6 +475,4 @@ public class PseudoBluetoothService {
 			}
 		}
 	}
-
-
 }
