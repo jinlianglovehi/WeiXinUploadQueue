@@ -64,10 +64,10 @@ public class UploadFileEngine {
             public void complete(String key, ResponseInfo info, JSONObject response) {
                 if (info.statusCode==200) {
                     UploadFileEngine.this.key=key;
-                    LogUtil.e("errrrrdata", "errrrrdata头像上次七牛成功");
+                    LogUtil.e("errdata", "errdata头像上次七牛成功");
                     ToastUtil.show(context.getApplicationContext(), "头像上次七牛成功");
                 }else{
-                    LogUtil.e("errrrrdata","errrrrdata头像上次七牛失败");
+                    LogUtil.e("errdata","errdata头像上次七牛失败");
                     ToastUtil.show(context.getApplicationContext(), "头像上次七牛失败");
                 }
                 customDialog.dismiss();
@@ -138,11 +138,9 @@ public class UploadFileEngine {
             @Override
             public void call(Result<User> t) {
                 if (t.isSuccess()) {
-                    LogUtil.e("errrrrdata", "errrrrdata完善个人资料成功");
-//                            ToastUtil.show(context.getApplicationContext(),"完善个人资料成功");
+                    LogUtil.e("errdata", "errdata完善个人资料成功");
                 } else {
-                    LogUtil.e("errrrrdata", "errrrrdata完善个人资料失败");
-//                            ToastUtil.show(context.getApplicationContext(),"完善个人资料失败");
+                    LogUtil.e("errdata", "errdata完善个人资料失败");
                 }
                 customDialog.dismiss();
             }
@@ -157,10 +155,14 @@ public class UploadFileEngine {
             @Override
             public void call(Result<String> t) {
                 if (t.isSuccess()) {
-                    ToastUtil.show(context.getApplicationContext(), "头像上传成功");
+                    String headPicStr = t.getData();
+                    WeiTaiXinApplication.user.setHeadPic(headPicStr);
+                    LogUtil.e("errdata", "errdata服务器头像上传: " + headPicStr);
+                    ToastUtil.show(context.getApplicationContext(), "服务器头像上传成功");
                 } else {
-                    ToastUtil.show(context.getApplicationContext(), "头像上传失败");
+                    ToastUtil.show(context.getApplicationContext(), "服务器头像上传失败");
                 }
+                LogUtil.e("errdata", "errdata服务器头像上传: "+t.isSuccess());
                 customDialog.dismiss();
             }
         },TAG);

@@ -1,6 +1,7 @@
-<RelativeLayout android:id="@+id/main"
-                xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white0"
@@ -8,7 +9,7 @@
 
     <include
         android:id="@+id/head_title_id"
-        layout="@layout/layout_title"/>
+        layout="@layout/layout_title" />
 
     <RelativeLayout
         android:id="@+id/rl_id"
@@ -24,50 +25,29 @@
             android:id="@+id/et_phone_number_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="60dp"
             android:background="@null"
             android:gravity="center"
             android:hint="请输入手机号"
             android:maxLength="11"
-            android:layout_marginRight="60dp"
             android:numeric="integer"
             android:padding="14dp"
             android:phoneNumber="true"
             android:singleLine="true"
-            android:text="13161401474"
-<<<<<<< 4b5dd004efc2ba818dd77678e89f3f1467387d03
-            android:textColor="@color/black1"
-            android:textColorHint="@color/black1"
-            android:textSize="@dimen/font_normal"/>
-=======
+            android:text="15210015381"
             android:textSize="@dimen/font_normal" />
->>>>>>> 725853fc41571def2e890bdd52f70732c1347549
 
         <View
             android:id="@+id/view_line_login"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/et_phone_number_login"
-            android:background="@color/gray10"/>
+            android:background="@color/gray10" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_line_login"
-<<<<<<< 4b5dd004efc2ba818dd77678e89f3f1467387d03
-            android:layout_centerHorizontal="true"
-            android:background="@null"
-            android:gravity="center"
-            android:hint="请输入密码"
-            android:inputType="textPassword"
-            android:maxLength="20"
-            android:padding="16dp"
-            android:password="true"
-            android:singleLine="true"
-            android:text="123456"
-            android:textColor="@color/black1"
-            android:textColorHint="@color/black1"
-            android:textSize="@dimen/font_normal"/>
-=======
             android:layout_centerHorizontal="true">
 
 
@@ -75,6 +55,7 @@
                 android:id="@+id/et_password_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="60dp"
                 android:background="@null"
                 android:gravity="center"
                 android:hint="请输入密码"
@@ -82,7 +63,6 @@
                 android:maxLength="20"
                 android:padding="16dp"
                 android:password="true"
-                android:layout_marginRight="60dp"
                 android:singleLine="true"
                 android:text="123456"
                 android:textSize="@dimen/font_normal" />
@@ -99,7 +79,6 @@
         </FrameLayout>
 
 
->>>>>>> 725853fc41571def2e890bdd52f70732c1347549
     </RelativeLayout>
 
 
@@ -117,7 +96,7 @@
         android:singleLine="true"
         android:text="登录"
         android:textColor="@drawable/text_color_selector"
-        android:textSize="@dimen/font_normal"/>
+        android:textSize="@dimen/font_normal" />
 
     <TextView
         android:id="@+id/tv_regist_action_login"
@@ -129,7 +108,7 @@
         android:layout_marginTop="80dp"
         android:text="注册"
         android:textColor="@drawable/text_color_gray3_selector"
-        android:textSize="@dimen/font_normal"/>
+        android:textSize="@dimen/font_normal" />
 
     <TextView
         android:id="@+id/tv_loginsms_action_login"
@@ -141,6 +120,6 @@
         android:layout_marginTop="80dp"
         android:text="短信验证码登录"
         android:textColor="@drawable/text_color_gray3_selector"
-        android:textSize="@dimen/font_normal"/>
+        android:textSize="@dimen/font_normal" />
 
 </RelativeLayout>

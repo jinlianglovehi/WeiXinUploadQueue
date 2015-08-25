@@ -91,7 +91,7 @@ public class WoInfoFragment extends BaseFragment {
 
             back.setVisibility(View.INVISIBLE);
             title_text.setText("我的");
-            init();
+//            init();
 
             isNoTwo=false;
         }
@@ -99,22 +99,17 @@ public class WoInfoFragment extends BaseFragment {
         return view;
     }
 
-    private void init() {
+//    private void init() {
 //        setTextHead();
-        setTextHead();
-    }
+//    }
 
 
     @Override
     public void onResume() {
         super.onResume();
-
+        setTextHead();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     private void setTextHead(){
         if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.user != null) {

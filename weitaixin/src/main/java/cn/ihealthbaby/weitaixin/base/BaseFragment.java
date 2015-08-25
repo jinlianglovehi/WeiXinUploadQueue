@@ -29,7 +29,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        LogUtil.d("request cancelAll:" + TAG.toString());
         requestQueue.cancelAll(TAG);
     }
 }
