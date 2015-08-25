@@ -7,13 +7,13 @@ import android.view.View;
 import com.android.volley.RequestQueue;
 
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * @author liuhongjian on 15/7/24 11:47.
  */
 public class BaseFragment extends Fragment {
     protected RequestQueue requestQueue;
-    protected Object TAG = this;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -29,7 +29,12 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        requestQueue.cancelAll(TAG);
+        LogUtil.d(this.getClass().getName(), "requestQueue.cancelAll:%s", getRequestTag());
+        requestQueue.cancelAll(getRequestTag());
+    }
+
+    protected Object getRequestTag() {
+        return this;
     }
 }
 

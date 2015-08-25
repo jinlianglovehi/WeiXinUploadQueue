@@ -13,7 +13,6 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
  */
 public abstract class BaseActivity extends Activity {
     protected RequestQueue requestQueue;
-    protected Object TAG = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +28,11 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        requestQueue.cancelAll(TAG);
+        LogUtil.d(this.getClass().getName(), "requestQueue.cancelAll:%s", getRequestTag());
+        requestQueue.cancelAll(getRequestTag());
+    }
+
+    protected Object getRequestTag() {
+        return this;
     }
 }

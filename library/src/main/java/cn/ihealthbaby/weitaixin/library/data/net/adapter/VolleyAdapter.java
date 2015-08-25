@@ -50,7 +50,13 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 	@Override
 	public <T> void requestAsync(final RequestParam<T> requestParam) {
 		Object tag = requestParam.getTag();
-		LogUtil.v(TAG, "requestAsync::%s,", requestParam);
+		LogUtil.d(TAG, "requestAsync::%s,", new Object(){
+			@Override
+			public String toString() {
+				return requestParam.getUri() + ", method:" + requestParam.getMethod();
+			}
+		});
+
 		Callback<T> callable = requestParam.getCallable();
 		final List<Map.Entry<String, Object>> form = requestParam.getForm();
 		int method = translate(requestParam.getMethod());

@@ -85,7 +85,7 @@ public class WoInfoFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (isNoTwo) {
+//        if (isNoTwo) {
             view = inflater.inflate(R.layout.fragment_wo_info, null);
             ButterKnife.bind(this, view);
 
@@ -93,8 +93,8 @@ public class WoInfoFragment extends BaseFragment {
             title_text.setText("我的");
 //            init();
 
-            isNoTwo=false;
-        }
+//            isNoTwo=false;
+//        }
         LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+Null");
         return view;
     }
