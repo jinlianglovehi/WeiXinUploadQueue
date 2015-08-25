@@ -54,17 +54,17 @@ public class RecordFragment extends BaseFragment {
 
     private final static String TAG = "RecordFragment";
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Nullable @Bind(R.id.back) RelativeLayout back;
+    @Nullable @Bind(R.id.title_text) TextView title_text;
+    @Nullable @Bind(R.id.function) TextView function;
 //
 
-    @Bind(R.id.pullToRefresh) PullToRefreshListView pullToRefresh;
-    @Bind(R.id.ivWoHeadIcon) RoundImageView ivWoHeadIcon;
-    @Bind(R.id.tvWoHeadName) TextView tvWoHeadName;
-    @Bind(R.id.tvWoHeadDeliveryTime) TextView tvWoHeadDeliveryTime;
-    @Bind(R.id.tvUsedCount) TextView tvUsedCount;
-    @Bind(R.id.tvHospitalName) TextView tvHospitalName;
+    @Nullable @Bind(R.id.pullToRefresh) PullToRefreshListView pullToRefresh;
+    @Nullable @Bind(R.id.ivWoHeadIcon) RoundImageView ivWoHeadIcon;
+    @Nullable @Bind(R.id.tvWoHeadName) TextView tvWoHeadName;
+    @Nullable @Bind(R.id.tvWoHeadDeliveryTime) TextView tvWoHeadDeliveryTime;
+    @Nullable @Bind(R.id.tvUsedCount) TextView tvUsedCount;
+    @Nullable @Bind(R.id.tvHospitalName) TextView tvHospitalName;
 
 
 
@@ -156,7 +156,7 @@ public class RecordFragment extends BaseFragment {
             public void call(Result<Service> t) {
                 if (t.isSuccess()) {
                     Service data = t.getData();
-                    if (data != null) {
+                    if (data != null && tvUsedCount != null) {
                         tvUsedCount.setText(data.getUsedCount() + "");
                     } else {
                         LogUtil.e("2getMsgMap2-2", t.getMsgMap()+"");

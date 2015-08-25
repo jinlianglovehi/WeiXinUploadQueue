@@ -35,11 +35,11 @@ import cn.ihealthbaby.weitaixin.view.RoundImageView;
 public class WoInfoFragment extends BaseFragment {
     private final static String TAG = "WoInfoFragment";
 
-    @Bind(R.id.back)
+    @Nullable @Bind(R.id.back)
     RelativeLayout back;
-    @Bind(R.id.title_text)
+    @Nullable @Bind(R.id.title_text)
     TextView title_text;
-    @Bind(R.id.function)
+    @Nullable @Bind(R.id.function)
     TextView function;
 //
 
@@ -55,16 +55,16 @@ public class WoInfoFragment extends BaseFragment {
     @Nullable
     @Bind(R.id.ll_4)
     LinearLayout ll_4;
-    @Bind(R.id.rl_head_img)
+    @Nullable @Bind(R.id.rl_head_img)
     RelativeLayout rl_head_img;
 
-    @Bind(R.id.tv_wo_head_name)
+    @Nullable @Bind(R.id.tv_wo_head_name)
     TextView tv_wo_head_name;
-    @Bind(R.id.tv_wo_head_breed_date)
+    @Nullable @Bind(R.id.tv_wo_head_breed_date)
     TextView tv_wo_head_breed_date;
-    @Bind(R.id.tv_wo_head_deliveryTime)
+    @Nullable @Bind(R.id.tv_wo_head_deliveryTime)
     TextView tv_wo_head_deliveryTime;
-    @Bind(R.id.iv_wo_head_icon)
+    @Nullable @Bind(R.id.iv_wo_head_icon)
     RoundImageView iv_wo_head_icon;
     private View view;
     private boolean isNoTwo=true;
@@ -78,7 +78,6 @@ public class WoInfoFragment extends BaseFragment {
         }
         return instance;
     }
-
 
     @Nullable
     @Override
