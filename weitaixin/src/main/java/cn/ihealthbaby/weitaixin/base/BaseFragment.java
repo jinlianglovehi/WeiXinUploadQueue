@@ -25,7 +25,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Logger.d("hello");
     }
 
     @Override

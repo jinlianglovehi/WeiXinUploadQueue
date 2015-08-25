@@ -14,8 +14,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-import com.orhanobut.logger.LogLevel;
-import com.orhanobut.logger.Logger;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.User;
@@ -25,7 +23,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.Connecti
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 
 /**
- * @author  by liuhongjian on 15/7/23 14:09.
+ * @author by liuhongjian on 15/7/23 14:09.
  */
 public class WeiTaiXinApplication extends Application {
 
@@ -48,7 +46,6 @@ public class WeiTaiXinApplication extends Application {
         initUniversalImageLoader();
 
         initApiManager();
-        initLogger();
 
 //		RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
 //		adapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
@@ -57,11 +54,6 @@ public class WeiTaiXinApplication extends Application {
 //		ApiManager.init(adapter);
     }
 
-    private void initLogger() {
-        Logger.init(Constants.TAI_XIN_YI)
-                .setMethodCount(2)
-                .setLogLevel(LogLevel.FULL);
-    }
 
     public AbstractHttpClientAdapter getAdapter() {
         return adapter;
@@ -132,7 +124,6 @@ public class WeiTaiXinApplication extends Application {
                 .build();
         return options;
     }
-
 
 
 }
