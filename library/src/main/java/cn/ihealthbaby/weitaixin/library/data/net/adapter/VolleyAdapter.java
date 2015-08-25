@@ -36,6 +36,8 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 public class VolleyAdapter extends AbstractHttpClientAdapter {
 	private final static String TAG = "VolleyAdapter";
 	private static final String CHAR_SET = "UTF-8";
+	public static final String PATCH = "PATCH";
+
 	private final Context context;
 	private RequestQueue requestQueue;
 
@@ -95,13 +97,13 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 
 			@Override
 			public byte[] getBody() throws AuthFailureError {
-				if(requestParam.getMethod().equals("patch")){
+				if(requestParam.getMethod().equalsIgnoreCase(PATCH)){
 //					_method
 					List<Map.Entry<String, Object>> varForm = form;
 					if (varForm == null) {
 						varForm = new ArrayList<>();
 					}
-					varForm.add(new AbstractMap.SimpleImmutableEntry<String, Object>("_method","patch"));
+					varForm.add(new AbstractMap.SimpleImmutableEntry<String, Object>("_method",PATCH));
 					try {
 						return encodeParameters(varForm, getParamsEncoding(), new StringBuilder()).toString().getBytes(getParamsEncoding());
 					} catch (UnsupportedEncodingException e) {
@@ -167,8 +169,8 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 			case "PUT":
 				method = Request.Method.PUT;
 				break;
-			case "PATCH":
-				method = Request.Method.PATCH;
+			case PATCH:
+				method = Request.Method.POST;
 				break;
 			case "DELETE":
 				method = Request.Method.DELETE;
@@ -183,7 +185,7 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 				method = Request.Method.OPTIONS;
 				break;
 			case "TRACE":
-				method = Request.Method.POST;
+				method = Request.Method.TRACE;
 				break;
 			default:
 				try {
