@@ -18,7 +18,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.view.SlideSwitch;
+import cn.ihealthbaby.weitaixin.view.SlideSwitchView;
 
 
 public class SetSystemGuardianActivity extends BaseActivity {
@@ -36,9 +36,9 @@ public class SetSystemGuardianActivity extends BaseActivity {
     @Bind(R.id.meLinearLayout)
     LinearLayout meLinearLayout;
     @Bind(R.id.slide_switch_begin)
-    SlideSwitch mSlideSwitchBegin;
+    SlideSwitchView mSlideSwitchViewBegin;
     @Bind(R.id.slide_switch_alarm)
-    SlideSwitch mSlideSwitchAlarm;
+    SlideSwitchView mSlideSwitchViewAlarm;
 
 
     @Override
@@ -57,7 +57,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
     }
 
     private void initListener() {
-        mSlideSwitchBegin.setSlideListener(new SlideSwitch.SlideListener() {
+        mSlideSwitchViewBegin.setSlideListener(new SlideSwitchView.SlideListener() {
             @Override
             public void open() {
                 WeiTaiXinApplication.getInstance().putValue("AutoStart", "1");
@@ -69,7 +69,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
             }
         });
 
-        mSlideSwitchAlarm.setSlideListener(new SlideSwitch.SlideListener() {
+        mSlideSwitchViewAlarm.setSlideListener(new SlideSwitchView.SlideListener() {
             @Override
             public void open() {
                 WeiTaiXinApplication.getInstance().putValue("PoliceSet", "1");
@@ -89,17 +89,17 @@ public class SetSystemGuardianActivity extends BaseActivity {
         String AutoStart = WeiTaiXinApplication.getInstance().getValue("AutoStart", "0");
 
         if ("1".equals(AutoStart)) {
-            mSlideSwitchBegin.setState(true);
+            mSlideSwitchViewBegin.setState(true);
         } else {
-            mSlideSwitchBegin.setState(false);
+            mSlideSwitchViewBegin.setState(false);
         }
 
         String PoliceSet = WeiTaiXinApplication.getInstance().getValue("PoliceSet", "0");
         if ("1".equals(PoliceSet)) {
-            mSlideSwitchAlarm.setState(false);
+            mSlideSwitchViewAlarm.setState(false);
             meLinearLayout.setVisibility(View.VISIBLE);
         } else {
-            mSlideSwitchAlarm.setState(true);
+            mSlideSwitchViewAlarm.setState(true);
             meLinearLayout.setVisibility(View.GONE);
         }
 

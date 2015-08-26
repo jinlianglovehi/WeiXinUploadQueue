@@ -10,7 +10,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.view.SlideSwitch;
+import cn.ihealthbaby.weitaixin.view.SlideSwitchView;
 
 
 public class SetSystemUploadActivity extends BaseActivity {
@@ -22,7 +22,7 @@ public class SetSystemUploadActivity extends BaseActivity {
     @Bind(R.id.function)
     TextView function;
     @Bind(R.id.slide_switch_upload)
-    SlideSwitch mSlideSwitchUpload;
+    SlideSwitchView mSlideSwitchViewUpload;
     //
 
     @Override
@@ -40,7 +40,7 @@ public class SetSystemUploadActivity extends BaseActivity {
     }
 
     private void initListener() {
-        mSlideSwitchUpload.setSlideListener(new SlideSwitch.SlideListener() {
+        mSlideSwitchViewUpload.setSlideListener(new SlideSwitchView.SlideListener() {
             @Override
             public void open() {
                 WeiTaiXinApplication.getInstance().putValue("SetSystemUpload", "1");
@@ -63,9 +63,9 @@ public class SetSystemUploadActivity extends BaseActivity {
     private void initView() {
         String SetSystemUpload = WeiTaiXinApplication.getInstance().getValue("SetSystemUpload", "0");
         if ("1".equals(SetSystemUpload)) {
-            mSlideSwitchUpload.setState(true);
+            mSlideSwitchViewUpload.setState(true);
         } else {
-            mSlideSwitchUpload.setState(false);
+            mSlideSwitchViewUpload.setState(false);
         }
     }
 

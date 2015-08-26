@@ -24,7 +24,7 @@ import cn.ihealthbaby.weitaixin.R;
 /**
  * @author kang on 2015/8/25.
  */
-public class SlideSwitch extends View {
+public class SlideSwitchView extends View {
 
     public static final int SHAPE_RECT = 1;
     public static final int SHAPE_CIRCLE = 2;
@@ -57,7 +57,7 @@ public class SlideSwitch extends View {
         public void close();
     }
 
-    public SlideSwitch(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SlideSwitchView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         listener = null;
         paint = new Paint();
@@ -71,11 +71,11 @@ public class SlideSwitch extends View {
         a.recycle();
     }
 
-    public SlideSwitch(Context context, AttributeSet attrs) {
+    public SlideSwitchView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SlideSwitch(Context context) {
+    public SlideSwitchView(Context context) {
         this(context, null);
     }
 
