@@ -28,7 +28,7 @@
             android:id="@+id/tv_wo_head_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:gravity="center"
             android:singleLine="true"
             android:text=""
@@ -72,7 +72,7 @@
             android:paddingRight="20dp"
             android:paddingTop="10dp"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font14" />
+            android:textSize="@dimen/font16" />
 
         <TextView
             android:id="@+id/tvAskTime"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
             android:paddingBottom="30dp"
-            android:paddingRight="40dp"
+            android:paddingRight="20dp"
             android:singleLine="true"
             android:textColor="@color/gray3"
             android:textSize="@dimen/font16" />
@@ -161,7 +161,7 @@
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
             android:paddingBottom="20dp"
-            android:paddingRight="40dp"
+            android:paddingRight="20dp"
             android:singleLine="true"
             android:textColor="@color/gray3"
             android:textSize="@dimen/font16" />

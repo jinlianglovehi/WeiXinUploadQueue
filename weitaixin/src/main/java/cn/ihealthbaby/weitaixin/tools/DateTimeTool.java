@@ -20,6 +20,34 @@ public class DateTimeTool {
         return  sdf.format(date);
     }
 
+    public static String date2St2(Date date,String formatStr) {
+        if (date==null) {
+            return "";
+        }
+        long mss = date.getTime();
+        long hour = (mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+        long minute = (mss % (1000 * 60 * 60)) / (1000 * 60);
+        long second = (mss % (1000 * 60)) / 1000;
+
+        StringBuffer sb = new StringBuffer();
+        if (hour>0) {
+            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
+            return  sdf.format(date);
+        } else if(minute > 0 ){
+            sb.append(minute+"分");
+            if(second>0){
+                sb.append(second+"秒");
+            }
+            sb.append("前");
+        }else{
+            sb.append(second+"秒前");
+        }
+
+        return sb.toString();
+
+    }
+
     public static String date2StrAndTime(Date date) {
         if (date==null) {
             return "";

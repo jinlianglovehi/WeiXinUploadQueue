@@ -75,7 +75,7 @@ public class RecordFragment extends BaseFragment {
     private Dialog dialog;
     private Context context;
 
-    private int pageIndex=1, pageSize=5;
+    private int pageIndex=1, pageSize=10;
     private View view;
     private boolean isNoTwo=true;
 
@@ -142,35 +142,35 @@ public class RecordFragment extends BaseFragment {
             }
         }
 
-        setCount();
+//        setCount();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setCount();
+//        setCount();
     }
 
 
-    public void setCount() {
-        ApiManager.getInstance().serviceApi.getByUser(new HttpClientAdapter.Callback<Service>() {
-            @Override
-            public void call(Result<Service> t) {
-                if (t.isSuccess()) {
-                    Service data = t.getData();
-                    if (data != null && tvUsedCount != null) {
-                        tvUsedCount.setText(data.getUsedCount() + "");
-                    } else {
-                        LogUtil.e("2getMsgMap2-2", t.getMsgMap()+"");
-                        ToastUtil.show(context, t.getMsg());
-                    }
-                } else {
-                    LogUtil.e("2getMsgMap2-3", t.getMsgMap()+"");
-                    ToastUtil.show(context, t.getMsg());
-                }
-            }
-        }, getRequestTag());
-    }
+//    public void setCount() {
+//        ApiManager.getInstance().serviceApi.getByUser(new HttpClientAdapter.Callback<Service>() {
+//            @Override
+//            public void call(Result<Service> t) {
+//                if (t.isSuccess()) {
+//                    Service data = t.getData();
+//                    if (data != null && tvUsedCount != null) {
+//                        tvUsedCount.setText(data.getUsedCount() + "");
+//                    } else {
+//                        LogUtil.e("2getMsgMap2-2", t.getMsgMap()+"");
+//                        ToastUtil.show(context, t.getMsg());
+//                    }
+//                } else {
+//                    LogUtil.e("2getMsgMap2-3", t.getMsgMap()+"");
+//                    ToastUtil.show(context, t.getMsg());
+//                }
+//            }
+//        }, getRequestTag());
+//    }
 
     private void initView() {
         adapter=new MyAdviceItemAdapter(context,null);
@@ -188,6 +188,7 @@ public class RecordFragment extends BaseFragment {
                         if (t.isSuccess()) {
                             PageData<AdviceItem> data = t.getData();
                             ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+                            tvUsedCount.setText(data.getCount() + "");
                             adapter.setDatas(dataList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -210,6 +211,8 @@ public class RecordFragment extends BaseFragment {
                         if (t.isSuccess()) {
                             PageData<AdviceItem> data = t.getData();
                             ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+                            LogUtil.d("PageData","ArrayList: "+dataList.size());
+                            tvUsedCount.setText(data.getCount() + "");
                             adapter.addDatas(dataList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -256,6 +259,7 @@ public class RecordFragment extends BaseFragment {
                 if (t.isSuccess()) {
                     PageData<AdviceItem> data = t.getData();
                     ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+                    tvUsedCount.setText(data.getCount() + "");
                     adapter.setDatas(dataList);
                     adapter.notifyDataSetChanged();
                 } else {

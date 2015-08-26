@@ -28,7 +28,7 @@
             android:id="@+id/tv_wo_head_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:gravity="center"
             android:singleLine="true"
             android:text=""
@@ -79,11 +79,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
-            android:paddingRight="40dp"
+            android:paddingRight="20dp"
             android:paddingBottom="30dp"
             android:singleLine="true"
             android:textColor="@color/gray3"
-            android:textSize="@dimen/font_title" />
+            android:textSize="@dimen/font16" />
     </LinearLayout>
 
     <LinearLayout
@@ -161,10 +161,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
-            android:paddingRight="40dp"
+            android:paddingRight="20dp"
             android:paddingBottom="20dp"
             android:singleLine="true"
             android:textColor="@color/gray3"
             android:textSize="@dimen/font_title" />
     </LinearLayout>
+
 </LinearLayout>

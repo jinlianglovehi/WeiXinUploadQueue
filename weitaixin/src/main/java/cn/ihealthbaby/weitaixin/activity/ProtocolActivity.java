@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.webkit.JsResult;
@@ -18,6 +19,7 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 
 public class ProtocolActivity extends BaseActivity {
@@ -32,6 +34,7 @@ public class ProtocolActivity extends BaseActivity {
     //
     @Bind(R.id.mWebView) WebView mWebView;
 
+    private CustomDialog customDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,9 @@ public class ProtocolActivity extends BaseActivity {
         mWebView.getSettings().setUseWideViewPort(true);
         mWebView.setWebViewClient(new HelloWebViewClient());
 
+        customDialog = new CustomDialog();
+        Dialog dialog=customDialog.createDialog1(this,"加载中...");
+        dialog.show();
 
         ApiManager.getInstance().urlApi.getPrivacyAgreementUrl(new HttpClientAdapter.Callback<String>() {
             @Override
@@ -84,6 +90,7 @@ public class ProtocolActivity extends BaseActivity {
                 if (t.isSuccess()) {
                     mWebView.loadUrl(t.getData());
                 }
+                customDialog.dismiss();
             }
         }, getRequestTag());
 
@@ -103,13 +110,13 @@ public class ProtocolActivity extends BaseActivity {
     final class DemoJavaScriptInterface {
 
         DemoJavaScriptInterface() {
+
         }
 
         public void clickOnAndroid() {
             mHandler.post(new Runnable() {
                 public void run() {
-                    System.out.println("-----clickOnAndroid------");
-//	                    mWebView.loadUrl("javascript:wave()");
+//	                mWebView.loadUrl("javascript:wave()");
                     finish();
                 }
             });

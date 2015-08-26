@@ -89,7 +89,7 @@ public class ReplyedActivity extends BaseActivity {
                         tvAskPurpose.setText("监护目的: " + askPurpose[data.getAskPurpose()]);
                         tvFeeling.setText("监护心情: " + feeling[data.getFeeling()]);
                         tvQuestion.setText(data.getQuestion());
-                        tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime()));
+                        tvAskTime.setText(DateTimeTool.date2St2(data.getAskTime(), "MM月dd日 hh:mm"));
 
                         AdviceReply adviceReply = data.getAdviceReply();
                         if (adviceReply!=null) {
@@ -98,7 +98,7 @@ public class ReplyedActivity extends BaseActivity {
                             tvDoctorTitle.setText(adviceReply.getDoctorTitle());
                             tvHospitalName.setText(adviceReply.getHospitalName());
                             tvReplyContext.setText(adviceReply.getReplyContext());
-                            tvReplyTime.setText(DateTimeTool.date2Str(adviceReply.getReplyTime()));
+                            tvReplyTime.setText(DateTimeTool.date2St2(adviceReply.getReplyTime(), "MM月dd日 hh:mm"));
                         }
                     } else {
                         ToastUtil.show(getApplicationContext(), t.getMsg());
