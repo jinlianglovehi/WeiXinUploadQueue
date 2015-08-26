@@ -86,7 +86,7 @@ public class WoMessageActivity extends BaseActivity {
                         pageIndex = 1;
                         pullToRefresh.onRefreshComplete();
                     }
-                }, TAG);
+                }, getRequestTag());
             }
 
             @Override
@@ -105,7 +105,7 @@ public class WoMessageActivity extends BaseActivity {
                         }
                         pullToRefresh.onRefreshComplete();
                     }
-                }, TAG);
+                }, getRequestTag());
             }
         });
 
@@ -176,7 +176,7 @@ public class WoMessageActivity extends BaseActivity {
                 pullToRefresh.onRefreshComplete();
                 dialog.dismiss();
             }
-        }, TAG);
+        }, getRequestTag());
     }
 
     @OnClick(R.id.back)

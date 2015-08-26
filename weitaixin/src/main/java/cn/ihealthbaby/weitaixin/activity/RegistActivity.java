@@ -166,7 +166,7 @@ public class RegistActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        }, TAG);
+        }, getRequestTag());
     }
 
     public void cancel(){
@@ -250,7 +250,7 @@ public class RegistActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        }, TAG);
+        }, getRequestTag());
     }
 
 
@@ -281,7 +281,7 @@ public class RegistActivity extends BaseActivity {
                     ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account")+"");
                 }
             }
-        }, TAG);
+        }, getRequestTag());
     }
 
 

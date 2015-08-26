@@ -73,8 +73,12 @@ public class VolleyAdapterTest extends InstrumentationTestCase {
 
 	public void testRequest() throws Exception {
 		LogUtil.v(TAG, "testRequest::%s", "testRequest");
-		instance.accountApi.loginByPassword(loginByPasswordForm, callable0,TAG);
+		instance.accountApi.loginByPassword(loginByPasswordForm, callable0,getRequestTag());
 		signal.await();
+	}
+
+	private Object getRequestTag() {
+		return this;
 	}
 
 	private void initHandler() {
@@ -152,7 +156,7 @@ public class VolleyAdapterTest extends InstrumentationTestCase {
 			public void handleData(User data) throws Exception {
 				LogUtil.v(TAG, "handleData::%s", data);
 				adapter.setAccountToken(data.getAccountToken());
-				instance.uploadApi.getUploadToken(1, callable4,TAG);
+				instance.uploadApi.getUploadToken(1, callable4,getRequestTag());
 //				UpdateHeadPicForm updateHeadPicForm = new UpdateHeadPicForm("headpic/1/402881fe4e6165af014e6165b38f0066");
 //				instance.userApi.updateHeadPic(updateHeadPicForm, new HttpClientAdapter.Callback<Void>() {
 //					@Override
@@ -164,7 +168,7 @@ public class VolleyAdapterTest extends InstrumentationTestCase {
 	}
 
 	public void testDelete() {
-		instance.testApi.delete("0", callable3,TAG);
+		instance.testApi.delete("0", callable3,getRequestTag());
 	}
 
 	@Override

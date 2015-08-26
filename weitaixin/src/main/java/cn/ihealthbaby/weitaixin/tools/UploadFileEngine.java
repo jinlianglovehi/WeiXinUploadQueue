@@ -37,7 +37,6 @@ import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
  * Created by Think on 2015/8/13.
  */
 public class UploadFileEngine {
-    private  final Object TAG = this;
 
     public CustomDialog customDialog;
     private Context context;
@@ -119,7 +118,7 @@ public class UploadFileEngine {
             }
         });
 
-        instance.uploadApi.getUploadToken(1, callable4,TAG);
+        instance.uploadApi.getUploadToken(1, callable4, getRequestTag());
     }
 
     public void init(final byte[] dataBty){
@@ -137,7 +136,11 @@ public class UploadFileEngine {
                 }
                 customDialog.dismiss();
             }
-        }, TAG);
+        }, getRequestTag());
+    }
+
+    private Object getRequestTag() {
+        return this;
     }
 
 
@@ -154,19 +157,19 @@ public class UploadFileEngine {
                             finishActivity.onFinishActivity(true);
                         }
                         LogUtil.e("errdata", "errdata完善个人资料成功");
-                    }else{
-                        ToastUtil.show(context,"完善个人资料失败");
+                    } else {
+                        ToastUtil.show(context, "完善个人资料失败");
                     }
                 } else {
-                    if (finishActivity!=null) {
+                    if (finishActivity != null) {
                         finishActivity.onFinishActivity(false);
                     }
-                    ToastUtil.show(context,"完善个人资料失败");
+                    ToastUtil.show(context, "完善个人资料失败");
                     LogUtil.e("errdata", "errdata完善个人资料失败");
                 }
                 customDialog.dismiss();
             }
-        },TAG);
+        }, getRequestTag());
     }
 
 
@@ -187,7 +190,7 @@ public class UploadFileEngine {
                 LogUtil.e("errdata", "errdata服务器头像上传: "+t.isSuccess());
                 customDialog.dismiss();
             }
-        },TAG);
+        },getRequestTag());
     }
 
 

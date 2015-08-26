@@ -24,8 +24,6 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 
 public class ProtocolActivity extends BaseActivity {
 
-    public ProtocolActivity TAG=this;
-
     private Handler mHandler = new Handler();
 
     @Bind(R.id.back)
@@ -84,7 +82,7 @@ public class ProtocolActivity extends BaseActivity {
                     mWebView.loadUrl(t.getData());
                 }
             }
-        }, TAG);
+        }, getRequestTag());
 
     }
 

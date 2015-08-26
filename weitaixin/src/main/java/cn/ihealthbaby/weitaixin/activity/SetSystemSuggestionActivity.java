@@ -95,7 +95,7 @@ public class SetSystemSuggestionActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        }, TAG);
+        }, getRequestTag());
 
     }
 

@@ -129,7 +129,7 @@ public class GradedActivity extends BaseActivity {
                 }
                 customDialog.dismiss();
             }
-        },TAG);
+        },getRequestTag());
     }
 
     private void setQuestion(Question question, int index){
@@ -157,7 +157,7 @@ public class GradedActivity extends BaseActivity {
                 }
                 customDialog.dismiss();
             }
-        },TAG);
+        },getRequestTag());
     }
 
     @OnClick(R.id.back)

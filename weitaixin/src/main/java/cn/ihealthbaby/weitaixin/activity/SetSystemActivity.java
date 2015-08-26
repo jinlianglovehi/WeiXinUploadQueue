@@ -108,7 +108,7 @@ public class SetSystemActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        }, TAG);
+        }, getRequestTag());
     }
 
 }

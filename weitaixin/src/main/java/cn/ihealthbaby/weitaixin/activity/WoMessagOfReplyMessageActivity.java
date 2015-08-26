@@ -104,7 +104,7 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        }, TAG);
+        }, getRequestTag());
     }
 
     @OnClick(R.id.back)

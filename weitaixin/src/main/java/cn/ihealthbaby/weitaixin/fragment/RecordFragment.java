@@ -167,7 +167,7 @@ public class RecordFragment extends BaseFragment {
                     ToastUtil.show(context, t.getMsg());
                 }
             }
-        }, TAG);
+        }, getRequestTag());
     }
 
     private void initView() {
@@ -196,7 +196,7 @@ public class RecordFragment extends BaseFragment {
                             pullToRefresh.onRefreshComplete();
                         }
                     }
-                }, TAG);
+                }, getRequestTag());
             }
 
             @Override
@@ -218,7 +218,7 @@ public class RecordFragment extends BaseFragment {
                             pullToRefresh.onRefreshComplete();
                         }
                     }
-                }, TAG);
+                }, getRequestTag());
             }
         });
 
@@ -267,7 +267,7 @@ public class RecordFragment extends BaseFragment {
                 }
                 customDialog.dismiss();
             }
-        }, TAG);
+        }, getRequestTag());
     }
 
     private void init() {

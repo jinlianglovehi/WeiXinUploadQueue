@@ -87,7 +87,7 @@ public class AskDoctorActivity extends BaseActivity {
                     ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsg());
                 }
             }
-        },TAG);
+        },getRequestTag());
     }
 
 
@@ -120,7 +120,7 @@ public class AskDoctorActivity extends BaseActivity {
                 }
                 dialog.dismiss();
             }
-        },TAG);
+        },getRequestTag());
 
     }
 
