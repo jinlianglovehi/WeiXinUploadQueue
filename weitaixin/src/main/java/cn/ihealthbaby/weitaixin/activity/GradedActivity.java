@@ -1,53 +1,46 @@
 package cn.ihealthbaby.weitaixin.activity;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.api.RiskScoreApi;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.form.AnswerForm;
 import cn.ihealthbaby.client.form.AnswerForms;
-import cn.ihealthbaby.client.form.LoginByPasswordForm;
 import cn.ihealthbaby.client.model.Question;
 import cn.ihealthbaby.client.model.RiskScore;
-import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+
+import static cn.ihealthbaby.weitaixin.R.id.tv_true;
 
 public class GradedActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
-//
-    @Bind(R.id.tvGradedText) TextView tvGradedText;
-    @Bind(R.id.tvGradedYes) TextView tvGradedYes;
-    @Bind(R.id.tvGradedNo) TextView tvGradedNo;
-    @Bind(R.id.tvGradedNumberIndex) TextView tvGradedNumberIndex;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
 
+
+    private ApiList<Question> questionList;
+    private int questionIndex;
+    private AnswerForms mAnswerForms = new AnswerForms();
+    private RiskScore mRiskScore;
 
 
     @Override
@@ -58,195 +51,125 @@ public class GradedActivity extends BaseActivity {
 
         title_text.setText("高危评分");
 
-//        showDialogView().show();
-
-        pullQuestion();
-    }
-
-
-
-//    private Dialog showDialogView() {
-//        Dialog dialog = new Dialog(this, R.style.myDialogTheme2);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout_graded, null);
-////		view.setLayoutParams(new ViewGroup.LayoutParams(200, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        dialog.setContentView(view);
-//        TextView gradedText = (TextView) view.findViewById(R.id.tvGradedText);
-//        TextView gradedYes = (TextView) view.findViewById(R.id.tvGradedYes);
-//        TextView gradedNo = (TextView) view.findViewById(R.id.tvGradedNo);
-//        dialog.setCanceledOnTouchOutside(false);
-//        dialog.setCancelable(false);
-//        gradedYes.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-//        gradedNo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-//        return dialog;
-//    }
-
-
-    List<Question> questions ;
-    private int index=0;
-    private boolean isPullQuestion=false;
-    List<AnswerForm> answerForms=new ArrayList<AnswerForm>();
-//    private HashMap<Long, Integer> questionSet=new HashMap<Long, Integer>();
-    private void pullQuestion() {
         long hospitalId = 0;
-        if (WeiTaiXinApplication.user!=null&&WeiTaiXinApplication.user.getServiceInfo()!=null) {
-            hospitalId=WeiTaiXinApplication.user.getServiceInfo().getHospitalId();
-            LogUtil.e("hospitalId","hospitalId: "+hospitalId);
-        }else {
+        if (WeiTaiXinApplication.user != null && WeiTaiXinApplication.user.getServiceInfo() != null) {
+            hospitalId = WeiTaiXinApplication.user.getServiceInfo().getHospitalId();
+            LogUtil.e("hospitalId", "hospitalId: " + hospitalId);
+        } else {
             ToastUtil.show(getApplicationContext(), "暂时没有问题~~~");
             return;
         }
 
-        final CustomDialog customDialog = new CustomDialog();
-        final Dialog dialog=customDialog.createDialog1(this,"获取中...");
-        dialog.show();
         ApiManager.getInstance().riskScoreApi.getQuestions(hospitalId, new HttpClientAdapter.Callback<ApiList<Question>>() {
             @Override
             public void call(Result<ApiList<Question>> t) {
-                if (customDialog.isNoCancel) {
+                if (t.isSuccess()) {
+                    questionList = t.getData();
+                    questionIndex = 0;
+                    start();
+                } else {
+                    ToastUtil.show(getApplicationContext(), t.getMsg());
+                }
+            }
+        }, getRequestTag());
+
+
+    }
+
+    private void start() {
+        final AnswerForm answerForm = new AnswerForm();
+        if (questionIndex < questionList.getList().size()) {
+
+            Question question = questionList.getList().get(questionIndex);
+            answerForm.setQuestionId(question.getId());
+            final Dialog dialog = new Dialog(GradedActivity.this);
+            View view = LayoutInflater.from(GradedActivity.this).inflate(R.layout.view_grade_dialog, null);
+            TextView mTvContent = (TextView) view.findViewById(R.id.tv_content);
+
+            mTvContent.setText(question.getQuestion());
+            TextView mTvNumber = (TextView) view.findViewById(R.id.tv_number);
+            if(0 == questionIndex){
+                mTvNumber.setBackgroundResource(R.drawable.grade_end);
+            }else {
+                mTvNumber.setBackgroundResource(R.drawable.grade_progress);
+            }
+            mTvNumber.setText((questionIndex + 1) + "");
+            LinearLayout mRlSelect = (LinearLayout) view.findViewById(R.id.rl_select);
+            TextView mTvTrue = (TextView) view.findViewById(tv_true);
+            TextView mTvFalse = (TextView) view.findViewById(R.id.tv_false);
+            TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
+            TextView tv_subtitle = (TextView) view.findViewById(R.id.tv_subtitle);
+
+            if (questionIndex > 0) {
+                tv_title.setVisibility(View.INVISIBLE);
+                tv_subtitle.setVisibility(View.GONE);
+            }
+            mTvFalse.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    answerForm.setAnswer(0);
+                    mAnswerForms.addAnswerForms(answerForm);
+                    dialog.dismiss();
+                    start();
+                }
+            });
+            mTvTrue.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    answerForm.setAnswer(1);
+                    mAnswerForms.addAnswerForms(answerForm);
+                    dialog.dismiss();
+                    start();
+                }
+            });
+
+            dialog.setCancelable(false);
+            dialog.setContentView(view);
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            int width = metrics.widthPixels;
+            int height = metrics.heightPixels;
+            dialog.getWindow().setLayout((6 * width) / 7, (1 * height) / 2);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+            questionIndex++;
+
+        } else if (questionIndex != 0 && questionIndex == questionList.getList().size()) {
+            ApiManager.getInstance().riskScoreApi.submitQuestionnaire(mAnswerForms, new HttpClientAdapter.Callback<RiskScore>() {
+                @Override
+                public void call(Result<RiskScore> t) {
                     if (t.isSuccess()) {
-                        ApiList<Question> data = t.getData();
-                        questions = data.getList();
-                        Question question = questions.get(0);
-                        if (question != null) {
-                            setQuestion(question,0);
-                            isPullQuestion = true;
-                        }
+                        mRiskScore = t.getData();
+                        result();
                     } else {
                         ToastUtil.show(getApplicationContext(), t.getMsg());
-                        isPullQuestion = false;
                     }
                 }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+            }, getRequestTag());
+        }
     }
 
-    private void setQuestion(Question question, int index){
-        this.index=index;
-        tvGradedNumberIndex.setText((index+1)+"");
-        tvGradedText.setText(question.getQuestion()+"");
-    }
-
-    private void submit(){
-        AnswerForms forms=new AnswerForms();
-        forms.setAnswerForms(answerForms);
-        final CustomDialog customDialog = new CustomDialog();
-        final Dialog dialog=customDialog.createDialog1(this,"获取中...");
+    private void result() {
+        final Dialog dialog = new Dialog(GradedActivity.this);
+        View view = LayoutInflater.from(GradedActivity.this).inflate(R.layout.view_grade_dialog, null);
+        LinearLayout ll_begin = (LinearLayout) view.findViewById(R.id.ll_begin);
+        ll_begin.setVisibility(View.GONE);
+        LinearLayout ll_result = (LinearLayout) view.findViewById(R.id.ll_result);
+        ll_result.setVisibility(View.VISIBLE);
+        TextView tv_number = (TextView) view.findViewById(R.id.tv_number);
+        tv_number.setBackgroundResource(R.drawable.grade_end);
+        TextView tv_score = (TextView) view.findViewById(R.id.tv_score);
+        tv_score.setText(mRiskScore.getScore() + "分");
+        TextView tv_result_true = (TextView) view.findViewById(R.id.tv_result_true);
+        tv_result_true.setVisibility(View.VISIBLE);
+//        dialog.setCancelable(false);
+        dialog.setContentView(view);
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        dialog.getWindow().setLayout((6 * width) / 7, (4 * height) / 5);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
-        ApiManager.getInstance().riskScoreApi.submitQuestionnaire(forms, new HttpClientAdapter.Callback<RiskScore>() {
-            @Override
-            public void call(Result<RiskScore> t) {
-                if (customDialog.isNoCancel) {
-                    if (t.isSuccess()) {
-                        RiskScore data = t.getData();
-                        ToastUtil.show(getApplicationContext(),data.getScore()+"");
-                    }else {
-                        ToastUtil.show(getApplicationContext(),t.getMsg()+"");
-                    }
-                }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
     }
-
-    @OnClick(R.id.back)
-    public void onBack(RelativeLayout view) {
-        this.finish();
-    }
-
-
-    @OnClick(R.id.tvGradedYes)
-    public void tvGradedYes() {
-        if (isPullQuestion) {
-            AnswerForm form=new AnswerForm();
-            answerForms.add(form);
-            form.setQuestionId(questions.get(index).getId());
-            form.setAnswer(1);
-
-            ++index;
-            if (questions.size()<=index) {
-                submit();
-            }else{
-                setQuestion(questions.get(index), index);
-            }
-        }else{
-            ToastUtil.show(getApplicationContext(),"暂时没有问题");
-        }
-    }
-
-    @OnClick(R.id.tvGradedNo)
-    public void tvGradedNo() {
-        if (isPullQuestion) {
-            AnswerForm form=new AnswerForm();
-            answerForms.add(form);
-            form.setQuestionId(questions.get(index).getId());
-            form.setAnswer(0);
-
-            ++index;
-            if (questions.size()<=index) {
-                submit();
-            }else{
-                setQuestion(questions.get(index-1), index);
-            }
-        }else{
-            ToastUtil.show(getApplicationContext(),"暂时没有问题");
-        }
-    }
-
-
-    private ApiManager instance;
-
-    public void tvLoginAction() {
-//            final CustomDialog customDialog = new CustomDialog();
-//            final Dialog dialog=customDialog.createDialog1(this,"登录中...");
-//            dialog.show();
-//
-
-
-
-//
-//            loginForm = new LoginByPasswordForm(phone_number_login, password_login, "123456789", 1.0d, 1.0d);
-//            instance = ApiManager.getInstance();
-//
-//            instance.accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
-//                @Override
-//                public void call(Result<User> t) {
-//                    if (customDialog.isNoCancel) {
-//                        if (t.isSuccess()) {
-//                            User data=t.getData();
-//                            if (data!=null&&data.getAccountToken()!=null) {
-//                                WeiTaiXinApplication.accountToken=data.getAccountToken();
-//                                WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-//                                WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
-//                                WeiTaiXinApplication.user=data;
-//                                ToastUtil.show(GradedActivity.this.getApplicationContext(), "登录成功");
-//                                WeiTaiXinApplication.getInstance().isLogin=true;
-//                                GradedActivity.this.finish();
-//                            }else{
-//                                ToastUtil.show(GradedActivity.this.getApplicationContext(), t.getMsg());
-//                            }
-//                        }else{
-//                            ToastUtil.show(GradedActivity.this.getApplicationContext(), t.getMsg());
-//                        }
-//                    }
-//                    dialog.dismiss();
-//                }
-//            });
-    }
-
-
-
 }
 
 
