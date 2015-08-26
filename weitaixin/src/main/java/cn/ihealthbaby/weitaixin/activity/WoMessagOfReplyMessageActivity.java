@@ -19,6 +19,7 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceAsk;
 import cn.ihealthbaby.client.model.AdviceReply;
+import cn.ihealthbaby.client.model.ReplyDetail;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -74,28 +75,28 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
         dialog=new CustomDialog().createDialog1(this,"加载中...");
         dialog.show();
 
-
-        ApiManager.getInstance().adviceApi.getReply(relatedId, new HttpClientAdapter.Callback<AdviceReply>() {
+        ApiManager.getInstance().adviceApi.getReplyDetail(relatedId, new HttpClientAdapter.Callback<ReplyDetail>() {
             @Override
-            public void call(Result<AdviceReply> t) {
+            public void call(Result<ReplyDetail> t) {
                 if (t.isSuccess()) {
-                    AdviceReply data = t.getData();
+                    ReplyDetail data = t.getData();
                     if (data != null) {
-                        AdviceAsk adviceAsk = data.getAdviceAsks().get(0);
-                        if (adviceAsk!=null) {
-                            ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
-                            tv_wo_head_name.setText(WeiTaiXinApplication.user.getName());
-                            tvAskPurpose.setText("监护目的: "+askPurpose[adviceAsk.getAskPurpose()]);
-                            tvFeeling.setText("监护心情: "+feeling[adviceAsk.getFeeling()]);
-                            tvQuestion.setText(adviceAsk.getQuestion());
-                            tvAskTime.setText(DateTimeTool.date2Str(adviceAsk.getAskTime()));
+                        ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
+                        tv_wo_head_name.setText(WeiTaiXinApplication.user.getName());
+                        tvAskPurpose.setText("监护目的: " + askPurpose[data.getAskPurpose()]);
+                        tvFeeling.setText("监护心情: " + feeling[data.getFeeling()]);
+                        tvQuestion.setText(data.getQuestion());
+                        tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime()));
+
+                        AdviceReply adviceReply = data.getAdviceReply();
+                        if (adviceReply!=null) {
+                            ImageLoader.getInstance().displayImage(adviceReply.getDoctorHeadPic(), ivDoctorHeadPic, setDisplayImageOptions());
+                            tvDoctorName.setText(adviceReply.getDoctorName());
+                            tvDoctorTitle.setText(adviceReply.getDoctorTitle());
+                            tvHospitalName.setText(adviceReply.getHospitalName());
+                            tvReplyContext.setText(adviceReply.getReplyContext());
+                            tvReplyTime.setText(DateTimeTool.date2Str(adviceReply.getReplyTime()));
                         }
-                        ImageLoader.getInstance().displayImage(data.getDoctorHeadPic(), ivDoctorHeadPic, setDisplayImageOptions());
-                        tvDoctorName.setText(data.getDoctorName());
-                        tvDoctorTitle.setText(data.getDoctorTitle());
-                        tvHospitalName.setText(data.getHospitalName());
-                        tvReplyContext.setText(data.getReplyContext());
-                        tvReplyTime.setText(DateTimeTool.date2Str(data.getReplyTime()));
                     } else {
                         ToastUtil.show(getApplicationContext(), t.getMsg());
                     }
@@ -105,6 +106,8 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
                 dialog.dismiss();
             }
         }, getRequestTag());
+
+
     }
 
     @OnClick(R.id.back)
