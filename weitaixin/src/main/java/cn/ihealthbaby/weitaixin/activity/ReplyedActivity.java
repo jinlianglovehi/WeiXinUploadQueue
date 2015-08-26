@@ -65,7 +65,7 @@ public class ReplyedActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        title_text.setText("回复详情");
+        title_text.setText("已回复");
 
         apiManager=ApiManager.getInstance();
 

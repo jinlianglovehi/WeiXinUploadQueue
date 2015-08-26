@@ -65,7 +65,7 @@ public class WaitReplyingActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        title_text.setText("回复详情");
+        title_text.setText("等待回复");
 
         apiManager=ApiManager.getInstance();
 

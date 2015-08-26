@@ -231,7 +231,7 @@ public class RecordFragment extends BaseFragment {
                 AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
                 int status= adviceItem.getStatus();
                 if (status == 0) {
-                    
+
                 } else if (status == 1) {
 
                 } else if (status == 2) {
