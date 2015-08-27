@@ -18,7 +18,7 @@
     <color name="gray9">#FF999999</color>
     <color name="gray10">#FFBABABA</color>
     <color name="gray11">#FFF1F1F1</color>
-    <color name="gray12">#FFC5C7C7</color>
+    <color name="text_color_hint">#FFC5C7C7</color>
     <color name="black0">#FF222222</color>
     <color name="black1">#FF000000</color>
     <color name="black2">#FF353330</color>

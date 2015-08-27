@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray5"
+    android:background="@color/white0"
     android:orientation="vertical"
     tools:context="cn.ihealthbaby.weitaixin.ui.RegistActivity">
 
@@ -22,6 +22,7 @@
         android:padding="14dp"
         android:phoneNumber="true"
         android:singleLine="true"
+        android:textColorHint="@color/text_color_hint"
         android:textColor="@color/black1"
         android:textSize="@dimen/font_normal" />
 
@@ -42,6 +43,7 @@
             android:hint="请输入密码"
             android:inputType="textPassword"
             android:maxLength="20"
+            android:textColorHint="@color/text_color_hint"
             android:padding="14dp"
             android:password="true"
             android:singleLine="true"
@@ -79,6 +81,7 @@
             android:maxLength="6"
             android:numeric="integer"
             android:padding="14dp"
+            android:textColorHint="@color/text_color_hint"
             android:singleLine="true"
             android:textColor="@color/black1"
             android:textSize="@dimen/font_normal" />
@@ -88,7 +91,7 @@
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/frame_selector"
+            android:background="@drawable/shape_send_verifycode"
             android:gravity="center"
             android:padding="14dp"
             android:singleLine="true"

@@ -172,6 +172,12 @@ public class GradedActivity extends BaseActivity {
         int height = metrics.heightPixels;
         dialog.getWindow().setLayout((6 * width) / 7, (4 * height) / 5);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        tv_result_true.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 }

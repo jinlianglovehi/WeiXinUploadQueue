@@ -35,6 +35,9 @@ dependencies {
     compile project(':refreshlib')
     compile project(':library')
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //log
     compile 'com.orhanobut:logger:1.11'
+    //时间选择器
+    compile 'com.bigkoo:pickerview:1.0.0'
 }
 
