@@ -28,7 +28,6 @@
             android:src="@drawable/round_scale"/>
 
 
-
         <ImageView
             android:id="@+id/round_background"
             android:layout_width="262dp"

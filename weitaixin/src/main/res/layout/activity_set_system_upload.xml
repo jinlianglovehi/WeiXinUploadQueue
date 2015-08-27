@@ -14,8 +14,7 @@
     <RelativeLayout
         android:id="@+id/ll_set_system_01"
         style="@style/wo_info_item"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical">
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="40dp"
             android:singleLine="true"
-            android:text="上传设置"
+            android:text="@string/auto_upload"
             android:textColor="@drawable/text_color_hei_selector"
             android:textSize="@dimen/font_normal"/>
 

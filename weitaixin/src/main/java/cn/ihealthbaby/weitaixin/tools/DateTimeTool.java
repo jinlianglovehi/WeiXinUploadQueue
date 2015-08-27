@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Think on 2015/8/14.
@@ -67,7 +66,7 @@ public class DateTimeTool {
                 - deliveryTime.getTime() / 1000 + 280 * 24 * 3600) / 3600 / 24);
         int weeks = getGestationalDay / 7;
         int days = getGestationalDay % 7;
-        return "孕" + weeks + "周+" + days + "天";
+        return weeks + "周" + days + "天";
     }
 
     public static void main(String[] args) {

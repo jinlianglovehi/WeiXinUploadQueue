@@ -26,5 +26,7 @@
     <string name="title_activity_main3">Main3Activity</string>
     <string name="title_activity_monitor">MonitorActivity</string>
     <string name="title_activity_curve_detial">CurveDetialActivity</string>
+    <string name="waring_empty_username">用户名不能为空</string>
+    <string name="auto_upload">WIFI环境下自动上传</string>
 
 </resources>

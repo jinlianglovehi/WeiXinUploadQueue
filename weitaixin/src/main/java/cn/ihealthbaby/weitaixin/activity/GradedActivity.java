@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
@@ -92,9 +93,9 @@ public class GradedActivity extends BaseActivity {
 
             mTvContent.setText(question.getQuestion());
             TextView mTvNumber = (TextView) view.findViewById(R.id.tv_number);
-            if(0 == questionIndex){
+            if (0 == questionIndex) {
                 mTvNumber.setBackgroundResource(R.drawable.grade_end);
-            }else {
+            } else {
                 mTvNumber.setBackgroundResource(R.drawable.grade_progress);
             }
             mTvNumber.setText((questionIndex + 1) + "");
@@ -179,6 +180,11 @@ public class GradedActivity extends BaseActivity {
             }
         });
         dialog.show();
+    }
+
+    @OnClick(R.id.back)
+    public void back() {
+        finish();
     }
 }
 

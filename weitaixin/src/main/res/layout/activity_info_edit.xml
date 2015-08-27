@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:background="@color/white0"
-    android:layout_height="match_parent"
-    tools:context="cn.ihealthbaby.weitaixin.ui.LoginActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:background="@color/white0"
+                android:layout_height="match_parent"
+                tools:context="cn.ihealthbaby.weitaixin.ui.LoginActivity">
 
     <include
         android:id="@+id/head_title_id"
@@ -51,21 +51,21 @@
                 android:visibility="gone"
                 android:textSize="@dimen/font_normal" />
 
-        <EditText
-            android:id="@+id/et_name_info"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@null"
-            android:gravity="center"
-            android:textColorHint="@color/text_color_hint"
-            android:textColor="@color/black1"
-            android:hint="请输入名字"
-            android:padding="16dp"
-            android:singleLine="true"
-            android:maxLength="10"
-            android:textSize="@dimen/font_normal" />
+            <EditText
+                android:id="@+id/et_name_info"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@null"
+                android:gravity="center"
+                android:textColorHint="@color/text_color_hint"
+                android:textColor="@color/black1"
+                android:hint="请输入名字"
+                android:padding="16dp"
+                android:singleLine="true"
+                android:maxLength="10"
+                android:textSize="@dimen/font_normal" />
         </LinearLayout>
 
         <View
@@ -98,21 +98,21 @@
                 android:visibility="gone"
                 android:textSize="@dimen/font_normal" />
 
-        <TextView
-            android:id="@+id/et_birthdate_info"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ll_user_name"
-            android:layout_centerHorizontal="true"
-            android:background="@null"
-            android:textColorHint="@color/text_color_hint"
-            android:textColor="@color/black1"
-            android:gravity="center"
-            android:hint="你的出生日期"
-            android:padding="16dp"
-            android:singleLine="true"
-            android:textSize="@dimen/font_normal" />
+            <TextView
+                android:id="@+id/et_birthdate_info"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ll_user_name"
+                android:layout_centerHorizontal="true"
+                android:background="@null"
+                android:textColorHint="@color/text_color_hint"
+                android:textColor="@color/black1"
+                android:gravity="center"
+                android:hint="你的出生日期"
+                android:padding="16dp"
+                android:singleLine="true"
+                android:textSize="@dimen/font_normal" />
 
         </LinearLayout>
 
@@ -144,21 +144,21 @@
                 android:visibility="gone"
                 android:textSize="@dimen/font_normal" />
 
-        <TextView
-            android:id="@+id/et_date_info"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/view_line2_info"
-            android:layout_centerHorizontal="true"
-            android:textColorHint="@color/text_color_hint"
-            android:textColor="@color/black1"
-            android:background="@null"
-            android:gravity="center"
-            android:hint="预产日期(提高监测准确性)"
-            android:padding="16dp"
-            android:singleLine="true"
-            android:textSize="@dimen/font_normal" />
+            <TextView
+                android:id="@+id/et_date_info"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_line2_info"
+                android:layout_centerHorizontal="true"
+                android:textColorHint="@color/text_color_hint"
+                android:textColor="@color/black1"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="预产日期(提高监测准确性)"
+                android:padding="16dp"
+                android:singleLine="true"
+                android:textSize="@dimen/font_normal" />
         </LinearLayout>
     </RelativeLayout>
 
