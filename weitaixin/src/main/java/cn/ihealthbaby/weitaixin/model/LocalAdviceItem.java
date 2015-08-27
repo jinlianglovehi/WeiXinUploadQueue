@@ -36,12 +36,11 @@ public class LocalAdviceItem {
 
     public ArrayList<LocalAdviceItem> getDataLocal() {
         ArrayList<LocalAdviceItem> items=new ArrayList<LocalAdviceItem>();
-        for (int i=0;i<10;i++){
+        for (int i=5;0<i;i--){
             LocalAdviceItem item=new LocalAdviceItem();
-            item.mid=(i+111)+"";
+            item.mid=(i+144)+"";
             item.gestationalWeeks="50周+2"+i;
             item.testTime= DateTimeTool.date2StrAndTime2(new Date());
-//            item.testTime= new Date().toString();
             item.testTimeLong=(i+3000)+"";
             item.status="3";
             items.add(item);

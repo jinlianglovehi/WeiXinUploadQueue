@@ -70,26 +70,28 @@ public class DataDao {
 	}
 	
 	
-	public ArrayList<AdviceItem> getAllRecord(){
+	public ArrayList<AdviceItem> getAllRecord(int pageSize){
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<AdviceItem> adviceItems = new ArrayList<AdviceItem>();
 		if (db.isOpen()) {
 		  Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong," +
 		  		"status from " + DataDBHelper.tableName, null);
 			while (cursor.moveToNext()) {
-				AdviceItem adviceItem=new AdviceItem();
-				String mid = cursor.getString(cursor.getColumnIndex("mid"));
-				String gestationalWeeks = cursor.getString(cursor.getColumnIndex("gestationalWeeks"));
-				String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
-				String testTimeLong = cursor.getString(cursor.getColumnIndex("testTimeLong"));
-				String status = cursor.getString(cursor.getColumnIndex("status"));
-				adviceItem.setId(Long.parseLong(mid));
-				adviceItem.setGestationalWeeks(gestationalWeeks);
-				adviceItem.setTestTime(DateTimeTool.str2Date(testTime));
-				adviceItem.setTestTimeLong(Integer.parseInt(testTimeLong));
-				adviceItem.setStatus(Integer.parseInt(status));
-
-				adviceItems.add(adviceItem);
+				if (pageSize > 0) {
+					AdviceItem adviceItem = new AdviceItem();
+					String mid = cursor.getString(cursor.getColumnIndex("mid"));
+					String gestationalWeeks = cursor.getString(cursor.getColumnIndex("gestationalWeeks"));
+					String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
+					String testTimeLong = cursor.getString(cursor.getColumnIndex("testTimeLong"));
+					String status = cursor.getString(cursor.getColumnIndex("status"));
+					adviceItem.setId(Long.parseLong(mid));
+					adviceItem.setGestationalWeeks(gestationalWeeks);
+					adviceItem.setTestTime(DateTimeTool.str2Date(testTime));
+					adviceItem.setTestTimeLong(Integer.parseInt(testTimeLong));
+					adviceItem.setStatus(Integer.parseInt(status));
+					adviceItems.add(adviceItem);
+				}
+				pageSize--;
 			}
 			cursor.close();
 //			db.close();

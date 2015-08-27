@@ -25,6 +25,7 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -71,7 +72,7 @@ public class RecordFragment extends BaseFragment {
     private ArrayList<Information> dataList=new ArrayList<Information>();
     private Context context;
 
-    private int pageIndex=1, pageSize=10;
+    private int pageIndex=1, pageSize=5;
     private View view;
     private boolean isNoTwo=true;
     private DataDao dataDao;
@@ -173,7 +174,7 @@ public class RecordFragment extends BaseFragment {
         pullToRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) { //下拉刷新
-                ApiManager.getInstance().adviceApi.getAdviceItems(1, 10, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
+                ApiManager.getInstance().adviceApi.getAdviceItems(1, pageSize, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
                     @Override
                     public void call(Result<PageData<AdviceItem>> t) {
                         if (t.isSuccess()) {
@@ -256,7 +257,7 @@ public class RecordFragment extends BaseFragment {
         CustomDialog customDialog=new CustomDialog();
         Dialog dialog=customDialog.createDialog1(context,"从数据库中加载...");
         dialog.show();
-        ArrayList<AdviceItem> adviceItems = dataDao.getAllRecord();
+        ArrayList<AdviceItem> adviceItems = dataDao.getAllRecord(pageSize);
         if (adviceItems.size()>0) {
             tvUsedCount.setText(WeiTaiXinApplication.getInstance().getValue("tvUsedCount", 0 + ""));
             adapter.setDatas(adviceItems);
@@ -296,8 +297,8 @@ public class RecordFragment extends BaseFragment {
 
 
                     ArrayList<AdviceItem> dataListPage=new ArrayList<AdviceItem>();
-                    if (dataList.size() >= 10) {
-                        for (int i = 0; i < 10; i++) {
+                    if (dataList.size() >= pageSize) {
+                        for (int i = 0; i < pageSize; i++) {
                             dataListPage.add(dataList.get(i));
                         }
                     } else {
@@ -308,6 +309,7 @@ public class RecordFragment extends BaseFragment {
 
                     //合并
                     sortAdviceItem(dataListPage);
+
                     adapter.datas.clear();
                     adapter.setDatas(dataListPage);
                     adapter.notifyDataSetChanged();

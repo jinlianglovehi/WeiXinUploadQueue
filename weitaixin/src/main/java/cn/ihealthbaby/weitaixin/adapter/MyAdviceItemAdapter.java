@@ -43,19 +43,19 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     }
 
     public void setDatas(ArrayList<AdviceItem> datas) {
-        if (datas==null) {
-            this.datas=new ArrayList<AdviceItem>();
-        }else{
+        if (datas == null) {
+            this.datas = new ArrayList<AdviceItem>();
+        } else {
             this.datas.clear();
-            this.datas=datas;
-            mySortByTime(this.datas);
+            this.datas = datas;
+            mySortByTime(null);
         }
     }
 
     public void addDatas(ArrayList<AdviceItem> datas) {
-        if (this.datas!=null) {
+        if (datas != null) {
             this.datas.addAll(datas);
-            mySortByTime(this.datas);
+            mySortByTime(null);
         }
     }
 
@@ -66,8 +66,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
             }
         };
 
-        Collections.sort(datas, comparator);
+        Collections.sort(this.datas, comparator);
     }
+
 
     @Override
     public int getCount() {
@@ -95,7 +96,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 //
-        final AdviceItem adviceItem = datas.get(position);
+        final AdviceItem adviceItem = this.datas.get(position);
 
         String dateStr=adviceItem.getGestationalWeeks();
         String[] split=dateStr.split("\\+");
