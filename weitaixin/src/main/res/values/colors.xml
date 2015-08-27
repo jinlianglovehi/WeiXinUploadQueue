@@ -17,8 +17,11 @@
     <color name="gray8">#88A9A9A9</color>
     <color name="gray9">#FF999999</color>
     <color name="gray10">#FFBABABA</color>
+    <color name="gray11">#FFF1F1F1</color>
+    <color name="gray12">#FFC5C7C7</color>
     <color name="black0">#FF222222</color>
     <color name="black1">#FF000000</color>
+    <color name="black2">#FF353330</color>
     <color name="red0">#FFFE0058</color>
     <!--主色调-->
     <color name="green0">#FF01CF97</color>

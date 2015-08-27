@@ -33,7 +33,9 @@
             android:numeric="integer"
             android:padding="14dp"
             android:phoneNumber="true"
+            android:textColorHint="@color/gray12"
             android:singleLine="true"
+            android:textColor="@color/black2"
             android:text="15210015381"
             android:textSize="@dimen/font_normal" />
 
@@ -42,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/et_phone_number_login"
-            android:background="@color/gray10" />
+            android:background="@color/gray11" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -63,6 +65,7 @@
                 android:maxLength="20"
                 android:padding="16dp"
                 android:password="true"
+                android:textColorHint="@color/gray12"
                 android:singleLine="true"
                 android:text="123456"
                 android:textSize="@dimen/font_normal" />
@@ -76,8 +79,7 @@
                 android:layout_marginRight="20dp"
                 android:scaleType="fitCenter"
                 android:background="@drawable/eye_selector"
-                android:button="@null"
-                 />
+                android:button="@null"/>
         </FrameLayout>
 
 
@@ -105,9 +107,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/tv_login_action"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dimen_dp_80"
         android:text="注册"
         android:textColor="@drawable/text_color_gray3_selector"
         android:textSize="@dimen/font_normal" />
@@ -117,9 +119,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/tv_login_action"
+        android:layout_alignParentBottom="true"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginBottom="@dimen/dimen_dp_80"
         android:text="短信验证码登录"
         android:textColor="@drawable/text_color_gray3_selector"
         android:textSize="@dimen/font_normal" />

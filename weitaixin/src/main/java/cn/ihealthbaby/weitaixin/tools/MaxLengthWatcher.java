@@ -1,7 +1,6 @@
 package cn.ihealthbaby.weitaixin.tools;
 
 import android.text.Editable;
-import android.text.Selection;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,7 +34,7 @@ public class MaxLengthWatcher implements TextWatcher {
 		int len = editable.length();
 
 
-		tv_sugg_text_count.setText(len+"/2000");
+		tv_sugg_text_count.setText(len+"/200");
 
 	}
 

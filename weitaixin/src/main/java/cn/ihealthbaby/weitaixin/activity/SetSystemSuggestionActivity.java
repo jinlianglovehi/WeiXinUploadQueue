@@ -53,7 +53,7 @@ public class SetSystemSuggestionActivity extends BaseActivity {
             }
         });
 
-        et_suggestion_text.addTextChangedListener(new MaxLengthWatcher(2000, et_suggestion_text,tv_sugg_text_count));
+        et_suggestion_text.addTextChangedListener(new MaxLengthWatcher(2, et_suggestion_text,tv_sugg_text_count));
     }
 
     @Override

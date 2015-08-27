@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
             android:paddingRight="30dp"
-            android:text="0/2000"
+            android:text="0/200"
             android:textColor="@color/gray7"
             android:textSize="@dimen/font_normal" />
 
