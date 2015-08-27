@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -29,7 +31,7 @@ import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 public class MyAdviceItemAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<AdviceItem> datas;
+    public ArrayList<AdviceItem> datas;
 
     private LayoutInflater mInflater;
     private String[] strFlag=new String[]{"问医生","等待回复","已回复","需要上传"};
@@ -44,16 +46,28 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         if (datas==null) {
             this.datas=new ArrayList<AdviceItem>();
         }else{
+            this.datas.clear();
             this.datas=datas;
+            mySortByTime(this.datas);
         }
     }
 
     public void addDatas(ArrayList<AdviceItem> datas) {
         if (this.datas!=null) {
             this.datas.addAll(datas);
+            mySortByTime(this.datas);
         }
     }
 
+    public void mySortByTime(ArrayList<AdviceItem> datas){
+        Comparator<AdviceItem> comparator = new Comparator<AdviceItem>(){
+            public int compare(AdviceItem s1, AdviceItem s2) {
+                return (int)(s2.getTestTime().getTime()-s1.getTestTime().getTime());
+            }
+        };
+
+        Collections.sort(datas, comparator);
+    }
 
     @Override
     public int getCount() {

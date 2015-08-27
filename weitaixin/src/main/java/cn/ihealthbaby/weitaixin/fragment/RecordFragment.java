@@ -1,11 +1,10 @@
 package cn.ihealthbaby.weitaixin.fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,20 +34,16 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.Information;
 import cn.ihealthbaby.client.model.PageData;
-import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
-import cn.ihealthbaby.weitaixin.activity.AskDoctorActivity;
-import cn.ihealthbaby.weitaixin.activity.ReplyedActivity;
-import cn.ihealthbaby.weitaixin.activity.WaitReplyingActivity;
-import cn.ihealthbaby.weitaixin.activity.WoMessagOfReplyMessageActivity;
-import cn.ihealthbaby.weitaixin.activity.WoMessagOfSystemMessageActivity;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
-import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.db.DataDBHelper;
+import cn.ihealthbaby.weitaixin.db.DataDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.model.LocalAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.view.RoundImageView;
@@ -72,12 +69,15 @@ public class RecordFragment extends BaseFragment {
 
     private MyAdviceItemAdapter adapter;
     private ArrayList<Information> dataList=new ArrayList<Information>();
-    private Dialog dialog;
     private Context context;
 
     private int pageIndex=1, pageSize=10;
     private View view;
     private boolean isNoTwo=true;
+    private DataDao dataDao;
+    private int pageCountCache =1;
+    private ArrayList<LocalAdviceItem> localAdviceItems;
+
 
     private static RecordFragment instance;
     public static RecordFragment getInstance(){
@@ -88,18 +88,7 @@ public class RecordFragment extends BaseFragment {
         return instance;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        if (isNoTwo) {
@@ -110,6 +99,8 @@ public class RecordFragment extends BaseFragment {
             title_text.setText("记录");
             function.setText("编辑");
 
+            dataDao=new DataDao(getActivity().getApplicationContext());
+            localAdviceItems = new LocalAdviceItem().getDataLocal();
             context=getActivity();
             initView();
             pullHeadDatas();
@@ -188,14 +179,20 @@ public class RecordFragment extends BaseFragment {
                         if (t.isSuccess()) {
                             PageData<AdviceItem> data = t.getData();
                             ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+
+//                            pageCountCache = 1;
+////                            dataDao.add("recodeList", dataList);
+//                            WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
+
                             tvUsedCount.setText(data.getCount() + "");
+                            adapter.datas.clear();
                             adapter.setDatas(dataList);
                             adapter.notifyDataSetChanged();
                         } else {
                             ToastUtil.show(context, t.getMsg());
                         }
                         pageIndex = 1;
-                        if (pullToRefresh!=null){
+                        if (pullToRefresh != null) {
                             pullToRefresh.onRefreshComplete();
                         }
                     }
@@ -211,7 +208,15 @@ public class RecordFragment extends BaseFragment {
                         if (t.isSuccess()) {
                             PageData<AdviceItem> data = t.getData();
                             ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
-                            LogUtil.d("PageData","ArrayList: "+dataList.size());
+                            LogUtil.d("PageData", "ArrayList: " + dataList.size());
+
+//                            if (pageCountCache <= 3 && dataList.size() > 0) {
+//                                dataDao.add("recodeList", dataList);
+//                                WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
+//                            }
+//                            ++pageCountCache;
+
+
                             tvUsedCount.setText(data.getCount() + "");
                             adapter.addDatas(dataList);
                             adapter.notifyDataSetChanged();
@@ -219,7 +224,7 @@ public class RecordFragment extends BaseFragment {
                             ToastUtil.show(context, t.getMsg());
                             pageIndex--;
                         }
-                        if (pullToRefresh!=null){
+                        if (pullToRefresh != null) {
                             pullToRefresh.onRefreshComplete();
                         }
                     }
@@ -247,20 +252,64 @@ public class RecordFragment extends BaseFragment {
 
     }
 
-
     private void pullDatas() {
-        final CustomDialog customDialog=new CustomDialog();
-        dialog=customDialog.createDialog1(context,"数据加载中...");
+        CustomDialog customDialog=new CustomDialog();
+        Dialog dialog=customDialog.createDialog1(context,"从数据库中加载...");
         dialog.show();
+        ArrayList<AdviceItem> adviceItems = dataDao.getAllRecord();
+        if (adviceItems.size()>0) {
+            tvUsedCount.setText(WeiTaiXinApplication.getInstance().getValue("tvUsedCount", 0 + ""));
+            adapter.setDatas(adviceItems);
+            adapter.notifyDataSetChanged();
+            customDialog.dismiss();
+            customDialog=null;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    pullFirstData(null);
+                }
+            }, 1000);
+        }else{
+            customDialog.dismiss();
+            customDialog=null;
+            CustomDialog customDialogTwo=new CustomDialog();
+            Dialog dialogTwo=customDialogTwo.createDialog1(context,"网络数据中加载...");
+            dialogTwo.show();
+            pullFirstData(customDialogTwo);
+        }
+    }
 
-        ApiManager.getInstance().adviceApi.getAdviceItems(1, 10, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
+
+    public void pullFirstData(final CustomDialog customDialogTwo){
+        ApiManager.getInstance().adviceApi.getAdviceItems(1, 30, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
             @Override
             public void call(Result<PageData<AdviceItem>> t) {
                 if (t.isSuccess()) {
                     PageData<AdviceItem> data = t.getData();
                     ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+
+                    //缓存前30条
+                    pageCountCache =1;
+                    dataDao.add(DataDBHelper.tableName, dataList);
+                    WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
                     tvUsedCount.setText(data.getCount() + "");
-                    adapter.setDatas(dataList);
+
+
+                    ArrayList<AdviceItem> dataListPage=new ArrayList<AdviceItem>();
+                    if (dataList.size() >= 10) {
+                        for (int i = 0; i < 10; i++) {
+                            dataListPage.add(dataList.get(i));
+                        }
+                    } else {
+                        for (int i = 0; i < dataList.size(); i++) {
+                            dataListPage.add(dataList.get(i));
+                        }
+                    }
+
+                    //合并
+                    sortAdviceItem(dataListPage);
+                    adapter.datas.clear();
+                    adapter.setDatas(dataListPage);
                     adapter.notifyDataSetChanged();
                 } else {
                     LogUtil.e("2getMsgMap", t.getMsgMap()+"");
@@ -269,10 +318,25 @@ public class RecordFragment extends BaseFragment {
                 if (pullToRefresh!=null){
                     pullToRefresh.onRefreshComplete();
                 }
-                customDialog.dismiss();
+                if (customDialogTwo != null) {
+                    customDialogTwo.dismiss();
+                }
             }
         }, getRequestTag());
     }
+
+    private void sortAdviceItem(ArrayList<AdviceItem> dataListPage) {
+        for (LocalAdviceItem item : localAdviceItems) {
+            AdviceItem advice = new AdviceItem();
+            advice.setId(Integer.parseInt(item.mid));
+            advice.setGestationalWeeks(item.gestationalWeeks);
+            advice.setTestTime(DateTimeTool.str2Date(item.testTime));
+            advice.setTestTimeLong(Integer.parseInt(item.testTimeLong));
+            advice.setStatus(Integer.parseInt(item.status));
+            dataListPage.add(advice);
+        }
+    }
+
 
     private void init() {
         ILoadingLayout startLabels = pullToRefresh.getLoadingLayoutProxy(true, false);

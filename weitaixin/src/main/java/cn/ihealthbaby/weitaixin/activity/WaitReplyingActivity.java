@@ -69,7 +69,6 @@ public class WaitReplyingActivity extends BaseActivity {
 
         apiManager=ApiManager.getInstance();
 
-
         long relatedId=getIntent().getLongExtra("relatedId", 0);
 
 

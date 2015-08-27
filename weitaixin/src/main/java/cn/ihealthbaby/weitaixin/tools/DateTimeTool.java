@@ -16,7 +16,7 @@ public class DateTimeTool {
             return "";
         }
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return  sdf.format(date);
     }
 
@@ -53,6 +53,14 @@ public class DateTimeTool {
             return "";
         }
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+        return  sdf.format(date);
+    }
+
+    public static String date2StrAndTime2(Date date) {
+        if (date==null) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return  sdf.format(date);
     }
 

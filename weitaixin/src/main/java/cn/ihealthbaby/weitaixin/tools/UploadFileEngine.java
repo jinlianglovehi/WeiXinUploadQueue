@@ -156,7 +156,7 @@ public class UploadFileEngine {
                         if (finishActivity != null) {
                             finishActivity.onFinishActivity(true);
                         }
-                        LogUtil.e("errdata", "errdata完善个人资料成功");
+                        LogUtil.d("errdata", "errdata完善个人资料成功");
                     } else {
                         ToastUtil.show(context, "完善个人资料失败");
                     }
@@ -165,7 +165,7 @@ public class UploadFileEngine {
                         finishActivity.onFinishActivity(false);
                     }
                     ToastUtil.show(context, "完善个人资料失败");
-                    LogUtil.e("errdata", "errdata完善个人资料失败");
+                    LogUtil.d("errdata", "errdata完善个人资料失败");
                 }
                 customDialog.dismiss();
             }
