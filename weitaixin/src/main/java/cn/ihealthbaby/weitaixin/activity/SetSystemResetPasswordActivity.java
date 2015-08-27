@@ -64,6 +64,11 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
         ivShowPassword.setTag("0");
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     @OnClick(R.id.back)
     public void onBack( ) {
         this.finish();

@@ -56,6 +56,11 @@ public class SetSystemGuardianActivity extends BaseActivity {
         initListener();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     private void initListener() {
         mSlideSwitchViewBegin.setSlideListener(new SlideSwitchView.SlideListener() {
             @Override

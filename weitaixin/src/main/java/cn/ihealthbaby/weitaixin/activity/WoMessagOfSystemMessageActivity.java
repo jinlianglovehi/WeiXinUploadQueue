@@ -1,7 +1,6 @@
 package cn.ihealthbaby.weitaixin.activity;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,7 +13,6 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.SysMsg;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
@@ -23,15 +21,22 @@ import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 
 public class WoMessagOfSystemMessageActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
-    @Bind(R.id.tv_title_system_message) TextView tv_title_system_message;
-    @Bind(R.id.tv_createtime_system_message) TextView tv_createtime_system_message;
-    @Bind(R.id.tv_context_system_message) TextView tv_context_system_message;
-    @Bind(R.id.tv_author_system_message) TextView tv_author_system_message;
+    @Bind(R.id.tv_title_system_message)
+    TextView tv_title_system_message;
+    @Bind(R.id.tv_createtime_system_message)
+    TextView tv_createtime_system_message;
+    @Bind(R.id.tv_context_system_message)
+    TextView tv_context_system_message;
+    @Bind(R.id.tv_author_system_message)
+    TextView tv_author_system_message;
 
     private Dialog dialog;
     private ApiManager apiManager;
@@ -46,13 +51,13 @@ public class WoMessagOfSystemMessageActivity extends BaseActivity {
 
         title_text.setText("系统消息");
 
-        apiManager=ApiManager.getInstance();
+        apiManager = ApiManager.getInstance();
 
 
-        long relatedId=getIntent().getLongExtra("SysMsg", 0);
+        long relatedId = getIntent().getLongExtra("SysMsg", 0);
 
 
-        dialog=new CustomDialog().createDialog1(this,"加载中...");
+        dialog = new CustomDialog().createDialog1(this, "加载中...");
         dialog.show();
 
         ApiManager.getInstance().informationApi.getSysMsg(relatedId, new HttpClientAdapter.Callback<SysMsg>() {
@@ -76,11 +81,16 @@ public class WoMessagOfSystemMessageActivity extends BaseActivity {
         }, getRequestTag());
     }
 
-    @OnClick(R.id.back)
-    public void onBack( ) {
-        this.finish();
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
+
+    @OnClick(R.id.back)
+    public void onBack() {
+        this.finish();
+    }
 
 
 }

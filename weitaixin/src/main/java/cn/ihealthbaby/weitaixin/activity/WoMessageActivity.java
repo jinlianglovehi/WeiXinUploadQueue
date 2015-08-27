@@ -1,14 +1,8 @@
 package cn.ihealthbaby.weitaixin.activity;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -27,10 +21,8 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.model.AdviceReply;
 import cn.ihealthbaby.client.model.Information;
 import cn.ihealthbaby.client.model.PageData;
-import cn.ihealthbaby.client.model.SysMsg;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -132,6 +124,11 @@ public class WoMessageActivity extends BaseActivity {
 
 
         pullDatas();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
 

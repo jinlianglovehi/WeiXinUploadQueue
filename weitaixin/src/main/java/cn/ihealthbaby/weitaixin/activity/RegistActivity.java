@@ -5,19 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.SystemClock;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.RequestQueue;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,12 +25,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.Business;
-import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
-import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
-import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -70,6 +59,11 @@ public class RegistActivity extends BaseActivity {
 
 //      tv_regist_action.setEnabled(false);
         ivShowPassword.setTag("0");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @OnClick(R.id.ivShowPassword)

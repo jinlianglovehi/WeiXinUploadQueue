@@ -38,7 +38,10 @@ public class MonitorFragmentTab2 extends BaseFragment {
         title_text.setText("监测");
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onDestroyView() {

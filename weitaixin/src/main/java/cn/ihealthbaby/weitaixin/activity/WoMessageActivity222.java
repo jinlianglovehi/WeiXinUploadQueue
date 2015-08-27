@@ -34,12 +34,16 @@ import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class WoMessageActivity222 extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
 
     //
-    @Bind(R.id.mRecyclerView) RecyclerView mRecyclerView;
+    @Bind(R.id.mRecyclerView)
+    RecyclerView mRecyclerView;
 
 
     MyRecyclerAdapter adapter;
@@ -60,12 +64,13 @@ public class WoMessageActivity222 extends BaseActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new MyRecyclerAdapter(this,null);
+        adapter = new MyRecyclerAdapter(this, null);
         mRecyclerView.setAdapter(adapter);
 
 //        mRecyclerView.addItemDecoration(new MyDecoration(this));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             Paint paint = new Paint();
+
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
                 super.onDraw(c, parent, state);
@@ -89,16 +94,22 @@ public class WoMessageActivity222 extends BaseActivity {
         adapter.setOnItemClickListener(new MyRecyclerAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, Information itemData) {
-                    ToastUtil.show(getApplicationContext(), itemData.getId()+" : "+itemData.getContext());
+                ToastUtil.show(getApplicationContext(), itemData.getId() + " : " + itemData.getContext());
             }
         });
 
         pullDatas();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+
     private void pullDatas() {
 
-        dialog=new CustomDialog().createDialog1(this,"登录中...");
+        dialog = new CustomDialog().createDialog1(this, "登录中...");
         dialog.show();
 
         ApiManager.getInstance().informationApi.getInformations(1, 5, new HttpClientAdapter.Callback<PageData<Information>>() {
@@ -109,8 +120,8 @@ public class WoMessageActivity222 extends BaseActivity {
                     ArrayList<Information> dataList = (ArrayList<Information>) data.getValue();
                     adapter.setDatas(dataList);
                     adapter.notifyDataSetChanged();
-                }else {
-                    ToastUtil.show(getApplicationContext(),t.getMsg());
+                } else {
+                    ToastUtil.show(getApplicationContext(), t.getMsg());
                 }
                 dialog.dismiss();
             }
@@ -118,22 +129,21 @@ public class WoMessageActivity222 extends BaseActivity {
     }
 
     @OnClick(R.id.back)
-    public void onBack( ) {
+    public void onBack() {
         this.finish();
     }
-
 
 
     //
     public class MyDecoration extends RecyclerView.ItemDecoration {
 
-        private  final int[] ATTRS = new int[]{
+        private final int[] ATTRS = new int[]{
                 android.R.attr.listDivider
         };
 
         private Drawable mDivider;
 
-        public MyDecoration(Context ctx){
+        public MyDecoration(Context ctx) {
             final TypedArray a = ctx.obtainStyledAttributes(ATTRS);
             mDivider = a.getDrawable(0);
         }
@@ -143,9 +153,9 @@ public class WoMessageActivity222 extends BaseActivity {
             int top = parent.getPaddingTop();
             int bottom = parent.getHeight() - parent.getPaddingBottom();
             int childCount = parent.getChildCount();
-            for(int i=0;i < childCount;i++){
+            for (int i = 0; i < childCount; i++) {
                 View child = parent.getChildAt(i);
-                RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams)child.getLayoutParams();
+                RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
                 int left = child.getRight() + layoutParams.rightMargin;
                 int right = left + mDivider.getIntrinsicWidth();
                 mDivider.setBounds(left, top, right, bottom);

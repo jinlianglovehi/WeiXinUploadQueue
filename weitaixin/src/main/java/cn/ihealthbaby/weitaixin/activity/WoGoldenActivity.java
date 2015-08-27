@@ -29,6 +29,11 @@ public class WoGoldenActivity extends BaseActivity {
         title_text.setText("我的金库");
         back.setVisibility(View.INVISIBLE);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
 
     @OnClick(R.id.back)
     public void onBack( ) {

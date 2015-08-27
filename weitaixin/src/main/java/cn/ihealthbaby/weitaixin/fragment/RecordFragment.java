@@ -38,10 +38,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.activity.AskDoctorActivity;
-import cn.ihealthbaby.weitaixin.activity.WoMessagOfReplyMessageActivity;
-import cn.ihealthbaby.weitaixin.activity.WoMessagOfSystemMessageActivity;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
-import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -85,6 +82,8 @@ public class RecordFragment extends BaseFragment {
         }
         return instance;
     }
+
+
 
     @Override
     public void onAttach(Activity activity) {

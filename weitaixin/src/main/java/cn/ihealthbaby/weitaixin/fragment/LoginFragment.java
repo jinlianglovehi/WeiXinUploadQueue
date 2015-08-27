@@ -25,6 +25,11 @@ public class LoginFragment extends BaseFragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+	}
+
+	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (activity instanceof LoginSuccessListener) {

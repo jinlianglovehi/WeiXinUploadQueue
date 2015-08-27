@@ -15,8 +15,6 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.Business;
-import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -43,6 +41,11 @@ public class SetSystemActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("系统设置");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @OnClick(R.id.back)

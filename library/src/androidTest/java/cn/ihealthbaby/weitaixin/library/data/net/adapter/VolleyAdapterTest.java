@@ -18,7 +18,6 @@ import java.util.concurrent.CountDownLatch;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.LoginByPasswordForm;
-import cn.ihealthbaby.client.model.Questions;
 import cn.ihealthbaby.client.model.UploadModel;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.library.data.net.Business;
@@ -115,12 +114,12 @@ public class VolleyAdapterTest extends InstrumentationTestCase {
 		/**
 		 * 问题
 		 */
-		callable1 = new DefaultCallback<Questions>(context, new Business<Questions>() {
-			@Override
-			public void handleData(Questions data) throws Exception {
-				LogUtil.v(TAG, "handleData::%s", data);
-			}
-		});
+//		callable1 = new DefaultCallback<Questions>(context, new Business<Questions>() {
+//			@Override
+//			public void handleData(Questions data) throws Exception {
+//				LogUtil.v(TAG, "handleData::%s", data);
+//			}
+//		});
 		/**
 		 *
 		 */

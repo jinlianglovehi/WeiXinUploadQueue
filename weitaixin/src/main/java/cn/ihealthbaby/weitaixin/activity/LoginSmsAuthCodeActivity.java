@@ -5,17 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.android.volley.RequestQueue;
-
-import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,17 +17,11 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.form.ChangePasswordForm;
 import cn.ihealthbaby.client.form.LoginByAuthForm;
-import cn.ihealthbaby.client.form.LoginByPasswordForm;
-import cn.ihealthbaby.client.model.SysMsg;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
-import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
-import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -65,6 +53,11 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
         title_text.setText("短信验证码登录");
 //      back.setVisibility(View.INVISIBLE);
 //        tv_login_action_smsauthcode.setEnabled(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @OnClick(R.id.back)

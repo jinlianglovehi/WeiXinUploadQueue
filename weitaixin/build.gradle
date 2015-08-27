@@ -35,5 +35,6 @@ dependencies {
     compile project(':refreshlib')
     compile project(':library')
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.orhanobut:logger:1.11'
 }
 

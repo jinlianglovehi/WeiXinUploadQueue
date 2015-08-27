@@ -53,8 +53,10 @@ public class HomePageFragment extends BaseFragment {
         title_text.setText("首页");
     }
 
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onDestroyView() {

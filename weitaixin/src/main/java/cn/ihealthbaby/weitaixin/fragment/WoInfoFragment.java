@@ -35,11 +35,14 @@ import cn.ihealthbaby.weitaixin.view.RoundImageView;
 public class WoInfoFragment extends BaseFragment {
     private final static String TAG = "WoInfoFragment";
 
-    @Nullable @Bind(R.id.back)
+    @Nullable
+    @Bind(R.id.back)
     RelativeLayout back;
-    @Nullable @Bind(R.id.title_text)
+    @Nullable
+    @Bind(R.id.title_text)
     TextView title_text;
-    @Nullable @Bind(R.id.function)
+    @Nullable
+    @Bind(R.id.function)
     TextView function;
 //
 
@@ -55,25 +58,31 @@ public class WoInfoFragment extends BaseFragment {
     @Nullable
     @Bind(R.id.ll_4)
     LinearLayout ll_4;
-    @Nullable @Bind(R.id.rl_head_img)
+    @Nullable
+    @Bind(R.id.rl_head_img)
     RelativeLayout rl_head_img;
 
-    @Nullable @Bind(R.id.tv_wo_head_name)
+    @Nullable
+    @Bind(R.id.tv_wo_head_name)
     TextView tv_wo_head_name;
-    @Nullable @Bind(R.id.tv_wo_head_breed_date)
+    @Nullable
+    @Bind(R.id.tv_wo_head_breed_date)
     TextView tv_wo_head_breed_date;
-    @Nullable @Bind(R.id.tv_wo_head_deliveryTime)
+    @Nullable
+    @Bind(R.id.tv_wo_head_deliveryTime)
     TextView tv_wo_head_deliveryTime;
-    @Nullable @Bind(R.id.iv_wo_head_icon)
+    @Nullable
+    @Bind(R.id.iv_wo_head_icon)
     RoundImageView iv_wo_head_icon;
     private View view;
-    private boolean isNoTwo=true;
+    private boolean isNoTwo = true;
 
 
     private static WoInfoFragment instance;
-    public static WoInfoFragment getInstance(){
-        if (instance==null) {
-            instance=new WoInfoFragment();
+
+    public static WoInfoFragment getInstance() {
+        if (instance == null) {
+            instance = new WoInfoFragment();
             LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+getInstance");
         }
         return instance;
@@ -83,14 +92,14 @@ public class WoInfoFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        if (isNoTwo) {
-            view = inflater.inflate(R.layout.fragment_wo_info, null);
-            ButterKnife.bind(this, view);
+        view = inflater.inflate(R.layout.fragment_wo_info, null);
+        ButterKnife.bind(this, view);
 
-            back.setVisibility(View.INVISIBLE);
-            title_text.setText("我的");
-            init();
+        back.setVisibility(View.INVISIBLE);
+        title_text.setText("我的");
+        init();
 
-            isNoTwo=false;
+        isNoTwo = false;
 //        }
         LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+Null");
         return view;
@@ -108,7 +117,7 @@ public class WoInfoFragment extends BaseFragment {
     }
 
 
-    private void setTextHead(){
+    private void setTextHead() {
         if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.user != null) {
             ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
             tv_wo_head_name.setText(WeiTaiXinApplication.user.getName() + "");
@@ -157,7 +166,7 @@ public class WoInfoFragment extends BaseFragment {
 
 
     public DisplayImageOptions setDisplayImageOptions() {
-        DisplayImageOptions options=null;
+        DisplayImageOptions options = null;
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.button_monitor_helper)
                 .showImageForEmptyUri(R.drawable.button_monitor_helper)

@@ -37,7 +37,10 @@ public class SetFragment extends BaseFragment {
         title_text.setText("设置");
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onDestroyView() {

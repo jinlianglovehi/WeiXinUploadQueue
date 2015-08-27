@@ -38,6 +38,11 @@ public class SetSystemUploadActivity extends BaseActivity {
         initView();
         initListener();
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
 
     private void initListener() {
         mSlideSwitchViewUpload.setSlideListener(new SlideSwitchView.SlideListener() {

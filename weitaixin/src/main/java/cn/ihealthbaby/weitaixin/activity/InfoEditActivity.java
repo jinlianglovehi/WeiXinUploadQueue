@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -22,8 +21,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -69,6 +66,11 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         title_text.setText("完善个人信息");
 
         form=new UserInfoForm();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @OnClick(R.id.back)

@@ -17,14 +17,11 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AskForm;
-import cn.ihealthbaby.client.form.FeedBackForm;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
-import cn.ihealthbaby.weitaixin.tools.MaxLengthWatcher;
 
 
 public class AskDoctorActivity extends BaseActivity {
@@ -66,6 +63,11 @@ public class AskDoctorActivity extends BaseActivity {
 //      etAskDoctorText.addTextChangedListener(new MaxLengthWatcher(2000, etAskDoctorText,tv_sugg_text_count));
 
         pullData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @OnClick(R.id.back)

@@ -1,12 +1,10 @@
 package cn.ihealthbaby.weitaixin.fragment;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.view.View;
+import android.content.Intent;
+import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -17,7 +15,6 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.activity.LoginActivity;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
 
 /**
@@ -40,20 +37,21 @@ public class MeMainFragmentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_me_main_fragment);
-        iv_tab_03= (ImageView) findViewById(R.id.iv_tab_03);
-        iv_tab_04= (ImageView) findViewById(R.id.iv_tab_04);
         ButterKnife.bind(this);
-        fragmentManager = getFragmentManager();
         showTabFirst();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     public void showTabFirst() {
         iv_tab_01.setSelected(true);
         if (homePageFragment == null) {
             homePageFragment = new HomePageFragment();
         }
+        fragmentManager = getFragmentManager();
         showFragment(R.id.container, homePageFragment);
     }
 

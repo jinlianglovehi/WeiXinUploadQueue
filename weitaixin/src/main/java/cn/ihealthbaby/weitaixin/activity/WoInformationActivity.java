@@ -5,11 +5,9 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,9 +15,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -80,6 +75,11 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
                 tv_doctor_name.setText(user.getServiceInfo().getDoctorName()+ "");
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
 

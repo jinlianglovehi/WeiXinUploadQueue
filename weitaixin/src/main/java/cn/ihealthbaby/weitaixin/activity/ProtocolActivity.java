@@ -2,13 +2,11 @@ package cn.ihealthbaby.weitaixin.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,6 +43,11 @@ public class ProtocolActivity extends BaseActivity {
         title_text.setText("协议");
 
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @OnClick(R.id.back)

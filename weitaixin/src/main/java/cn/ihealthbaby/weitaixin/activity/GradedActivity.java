@@ -73,7 +73,11 @@ public class GradedActivity extends BaseActivity {
             }
         }, getRequestTag());
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private void start() {

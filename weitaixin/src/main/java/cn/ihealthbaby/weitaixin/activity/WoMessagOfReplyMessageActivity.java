@@ -110,6 +110,11 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     @OnClick(R.id.back)
     public void onBack( ) {
         this.finish();
