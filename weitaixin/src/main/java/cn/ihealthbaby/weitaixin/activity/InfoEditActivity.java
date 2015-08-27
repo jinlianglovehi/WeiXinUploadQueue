@@ -91,6 +91,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
             public void onTimeSelect(Date date) {
                 et_birthdate_info.setGravity(Gravity.LEFT);
                 et_birthdate_info.setText(getTime(date));
+                form.setBirthday(date);
                 mTvBirthday.setVisibility(View.VISIBLE);
             }
         });
@@ -99,6 +100,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
             @Override
             public void onTimeSelect(Date date) {
+                form.setDeliveryTime(date);
                 et_date_info.setGravity(Gravity.LEFT);
                 et_date_info.setText(getTime(date));
                 mTvExpectDay.setVisibility(View.VISIBLE);
@@ -196,33 +198,61 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     @OnClick(R.id.tv_info_edit_action)
     public void tvInfoEditAction() {
-        if (!TextUtils.isEmpty(et_name_info.getText().toString().trim())) {
-            isDone2 = true;
-        }
-        if (isDone1 && isDone2 && isDone3 && isDone4) {
-            form.setName(et_name_info.getText().toString().trim());
+
+        if (!TextUtils.isEmpty(et_name_info.getText().toString())
+                && !TextUtils.isEmpty(et_birthdate_info.getText().toString())
+                && !TextUtils.isEmpty(et_date_info.getText().toString())) {
+            form.setName(et_name_info.getText().toString());
             CustomDialog customDialog = new CustomDialog();
-            Dialog dialog = customDialog.createDialog1(this, "正在完善个人信息...");
-            if (photo != null) {
-                dialog.show();
-                engine.customDialog = customDialog;
-                engine.isUpdateInfo = true;
-                engine.setOnFinishActivity(new UploadFileEngine.FinishActivity() {
-                    @Override
-                    public void onFinishActivity(boolean isFinish) {
-                        if (isFinish) {
-                            InfoEditActivity.this.finish();
-                        }
-                    }
-                });
-                engine.completeInfoAction();
-            } else {
-                ToastUtil.show(getApplicationContext(), "头像没有");
+            if(engine !=null ){
+                engine=new UploadFileEngine(this,form,customDialog);
             }
+            Dialog dialog = customDialog.createDialog1(this, "正在完善个人信息...");
+            dialog.show();
+            engine.customDialog = customDialog;
+            engine.isUpdateInfo = true;
+            engine.setOnFinishActivity(new UploadFileEngine.FinishActivity() {
+                @Override
+                public void onFinishActivity(boolean isFinish) {
+                    if (isFinish) {
+                        InfoEditActivity.this.finish();
+                    }
+                }
+            });
+            engine.completeInfoAction();
         } else {
             ToastUtil.show(getApplicationContext(), "请完善个人信息");
         }
+
     }
+//        if (!TextUtils.isEmpty(et_name_info.getText().toString().trim())) {
+//            isDone2 = true;
+//        }
+//
+//        if (isDone1 && isDone2 && isDone3 && isDone4) {
+//            form.setName(et_name_info.getText().toString().trim());
+//            CustomDialog customDialog = new CustomDialog();
+//            Dialog dialog = customDialog.createDialog1(this, "正在完善个人信息...");
+//            if (photo != null) {
+//                dialog.show();
+//                engine.customDialog = customDialog;
+//                engine.isUpdateInfo = true;
+//                engine.setOnFinishActivity(new UploadFileEngine.FinishActivity() {
+//                    @Override
+//                    public void onFinishActivity(boolean isFinish) {
+//                        if (isFinish) {
+//                            InfoEditActivity.this.finish();
+//                        }
+//                    }
+//                });
+//                engine.completeInfoAction();
+//            } else {
+//                ToastUtil.show(getApplicationContext(), "头像没有");
+//            }
+//        } else {
+//            ToastUtil.show(getApplicationContext(), "请完善个人信息");
+//        }
+//}
 
     @Override
     public void onSelectPhoto(int flag) {
