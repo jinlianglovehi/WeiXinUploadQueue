@@ -123,6 +123,7 @@ public class MonitorFragment extends BaseFragment {
 	private void onConnectingUI() {
 		tvBluetooth.setText("连接中");
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
+
 //		AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.)
 		hint.setVisibility(View.VISIBLE);
 		bpm.setImageResource(R.drawable.bpm_dark);
@@ -233,6 +234,7 @@ public class MonitorFragment extends BaseFragment {
 		// TODO: 15/8/14 登录之后需要保存用户绑定的设备信息
 		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
 	}
+
 
 
 }

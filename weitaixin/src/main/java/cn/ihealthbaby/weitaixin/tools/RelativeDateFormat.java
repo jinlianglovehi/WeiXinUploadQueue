@@ -1,15 +1,11 @@
-package cn.ihealthbaby.weitaixin.library.util;
+package cn.ihealthbaby.weitaixin.tools;
 
 import java.util.Date;
 
 /**
- * Created by kang on 2015/8/24.
+ * @author by kang on 2015/8/28.
  */
-
-
-public class RelativeDateFormat {
-
-    private static final long ONE_MINUTE = 60000L;
+public class RelativeDateFormat {private static final long ONE_MINUTE = 60000L;
     private static final long ONE_HOUR = 3600000L;
     private static final long ONE_DAY = 86400000L;
     private static final long ONE_WEEK = 604800000L;
@@ -75,5 +71,6 @@ public class RelativeDateFormat {
     private static long toYears(long date) {
         return toMonths(date) / 365L;
     }
+
 
 }

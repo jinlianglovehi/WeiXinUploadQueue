@@ -1,13 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray5"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray5"
+              android:orientation="vertical">
 
     <include
         android:id="@+id/head_title_id"
-        layout="@layout/layout_title" />
+        layout="@layout/layout_title"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,12 +17,12 @@
 
         <cn.ihealthbaby.weitaixin.view.RoundImageView
             android:id="@+id/iv_wo_head_icon"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/camera_icon" />
+            android:src="@drawable/camera_icon"/>
 
         <TextView
             android:id="@+id/tv_wo_head_name"
@@ -31,8 +31,19 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:singleLine="true"
+            android:text="张丽丽"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font_normal" />
+            android:textSize="@dimen/font_normal"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="24周5天"
+            android:textColor="@color/font_hint"
+            android:textSize="@dimen/font_normal"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,8 +57,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:text="监护目的: 胎动异常"
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/font_normal" />
+                android:textSize="@dimen/font_normal"/>
 
             <TextView
                 android:id="@+id/tvFeeling"
@@ -55,8 +67,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:singleLine="true"
+                android:text="监护心情: 比较差"
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/font_normal" />
+                android:textSize="@dimen/font_normal"/>
         </LinearLayout>
 
         <TextView
@@ -68,51 +81,53 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="10dp"
+            android:text="15-06-152015-06-152015-06-152-06-152015-06-15"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font_title"/>
 
         <TextView
             android:id="@+id/tvAskTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
-            android:paddingRight="40dp"
             android:paddingBottom="30dp"
+            android:paddingRight="20dp"
             android:singleLine="true"
+            android:text="2015-06-15"
             android:textColor="@color/gray3"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font_normal"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/white0"
-        android:paddingTop="6dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp">
+            android:layout_height="wrap_content">
 
             <cn.ihealthbaby.weitaixin.view.RoundImageView
                 android:id="@+id/ivDoctorHeadPic"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
-                android:layout_marginLeft="4dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_alignParentLeft="true"
+                android:layout_marginLeft="35dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/camera_icon" />
+                android:src="@drawable/camera_icon"/>
 
             <TextView
                 android:id="@+id/tvDoctorName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/ivDoctorHeadPic"
-                android:padding="4dp"
+                android:paddingLeft="15dp"
                 android:singleLine="true"
+                android:text="张纪中"
                 android:textColor="@color/black0"
-                android:textSize="@dimen/font16" />
+                android:textSize="@dimen/font_title"/>
 
 
             <TextView
@@ -120,10 +135,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/tvDoctorName"
-                android:padding="4dp"
+                android:paddingLeft="5dp"
                 android:singleLine="true"
+                android:text="主任医生"
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/font16" />
+                android:textSize="@dimen/font_title"/>
 
             <TextView
                 android:id="@+id/tvHospitalName"
@@ -133,9 +149,11 @@
                 android:layout_below="@id/tvDoctorName"
                 android:layout_toRightOf="@id/ivDoctorHeadPic"
                 android:gravity="center_vertical"
+                android:paddingLeft="15dp"
                 android:singleLine="true"
+                android:text="北京海淀区北京海淀区"
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/font14" />
+                android:textSize="@dimen/font_normal"/>
 
 
         </RelativeLayout>
@@ -149,18 +167,20 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="10dp"
+            android:text="15-06-152015-06-15206-152015-06-152015-06-152015-06-15"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font_title"/>
 
         <TextView
             android:id="@+id/tvReplyTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
-            android:paddingRight="40dp"
             android:paddingBottom="20dp"
+            android:paddingRight="20dp"
             android:singleLine="true"
+            android:text="20分钟前"
             android:textColor="@color/gray3"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font_normal"/>
     </LinearLayout>
 </LinearLayout>

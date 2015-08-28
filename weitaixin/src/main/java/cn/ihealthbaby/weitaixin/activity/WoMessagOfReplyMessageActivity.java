@@ -17,7 +17,6 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.model.AdviceAsk;
 import cn.ihealthbaby.client.model.AdviceReply;
 import cn.ihealthbaby.client.model.ReplyDetail;
 import cn.ihealthbaby.weitaixin.R;
@@ -26,29 +25,47 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.tools.RelativeDateFormat;
 import cn.ihealthbaby.weitaixin.view.RoundImageView;
 
 
 public class WoMessagOfReplyMessageActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
-    @Bind(R.id.iv_wo_head_icon) RoundImageView iv_wo_head_icon;
-    @Bind(R.id.tv_wo_head_name) TextView tv_wo_head_name;
-    @Bind(R.id.tvAskPurpose) TextView tvAskPurpose;
-    @Bind(R.id.tvFeeling) TextView tvFeeling;
-    @Bind(R.id.tvQuestion) TextView tvQuestion;
-    @Bind(R.id.tvAskTime) TextView tvAskTime;
+    @Bind(R.id.iv_wo_head_icon)
+    RoundImageView iv_wo_head_icon;
+    @Bind(R.id.tv_wo_head_name)
+    TextView tv_wo_head_name;
+    @Bind(R.id.tvAskPurpose)
+    TextView tvAskPurpose;
+    @Bind(R.id.tvFeeling)
+    TextView tvFeeling;
+    @Bind(R.id.tvQuestion)
+    TextView tvQuestion;
+    @Bind(R.id.tvAskTime)
+    TextView tvAskTime;
     //
-    @Bind(R.id.ivDoctorHeadPic) RoundImageView ivDoctorHeadPic;
-    @Bind(R.id.tvDoctorName) TextView tvDoctorName;
-    @Bind(R.id.tvDoctorTitle) TextView tvDoctorTitle;
-    @Bind(R.id.tvHospitalName) TextView tvHospitalName;
-    @Bind(R.id.tvReplyContext) TextView tvReplyContext;
-    @Bind(R.id.tvReplyTime) TextView tvReplyTime;
+    @Bind(R.id.ivDoctorHeadPic)
+    RoundImageView ivDoctorHeadPic;
+    @Bind(R.id.tvDoctorName)
+    TextView tvDoctorName;
+    @Bind(R.id.tvDoctorTitle)
+    TextView tvDoctorTitle;
+    @Bind(R.id.tvHospitalName)
+    TextView tvHospitalName;
+    @Bind(R.id.tvReplyContext)
+    TextView tvReplyContext;
+    @Bind(R.id.tvReplyTime)
+    TextView tvReplyTime;
+    @Bind(R.id.tv_date)
+    TextView mTvDate;
 
 
     //
@@ -66,13 +83,13 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
 
         title_text.setText("回复详情");
 
-        apiManager=ApiManager.getInstance();
+        apiManager = ApiManager.getInstance();
 
 
-        long relatedId=getIntent().getLongExtra("AdviceReply", 0);
+        long relatedId = getIntent().getLongExtra("AdviceReply", 0);
 
 
-        dialog=new CustomDialog().createDialog1(this,"加载中...");
+        dialog = new CustomDialog().createDialog1(this, "加载中...");
         dialog.show();
 
         ApiManager.getInstance().adviceApi.getReplyDetail(relatedId, new HttpClientAdapter.Callback<ReplyDetail>() {
@@ -86,16 +103,17 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
                         tvAskPurpose.setText("监护目的: " + askPurpose[data.getAskPurpose()]);
                         tvFeeling.setText("监护心情: " + feeling[data.getFeeling()]);
                         tvQuestion.setText(data.getQuestion());
-                        tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime()));
+                        mTvDate.setText(DateTimeTool.getGestationalWeeks(WeiTaiXinApplication.user.getDeliveryTime()));
+                        tvAskTime.setText(DateTimeTool.date2St2(data.getAskTime(), "MM月dd日 hh:mm"));
 
                         AdviceReply adviceReply = data.getAdviceReply();
-                        if (adviceReply!=null) {
+                        if (adviceReply != null) {
                             ImageLoader.getInstance().displayImage(adviceReply.getDoctorHeadPic(), ivDoctorHeadPic, setDisplayImageOptions());
                             tvDoctorName.setText(adviceReply.getDoctorName());
                             tvDoctorTitle.setText(adviceReply.getDoctorTitle());
                             tvHospitalName.setText(adviceReply.getHospitalName());
                             tvReplyContext.setText(adviceReply.getReplyContext());
-                            tvReplyTime.setText(DateTimeTool.date2Str(adviceReply.getReplyTime()));
+                            tvReplyTime.setText(RelativeDateFormat.format(adviceReply.getReplyTime()));
                         }
                     } else {
                         ToastUtil.show(getApplicationContext(), t.getMsg());
@@ -116,13 +134,13 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
     }
 
     @OnClick(R.id.back)
-    public void onBack( ) {
+    public void onBack() {
         this.finish();
     }
 
 
     public DisplayImageOptions setDisplayImageOptions() {
-        DisplayImageOptions options=null;
+        DisplayImageOptions options = null;
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.button_monitor_helper)
                 .showImageForEmptyUri(R.drawable.button_monitor_helper)
