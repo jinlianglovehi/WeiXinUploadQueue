@@ -30,7 +30,15 @@
             android:textColor="@color/black1"
             android:textSize="@dimen/font_normal" />
 
-
+        <TextView
+            android:id="@+id/tvAskDoctorTextCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right|bottom"
+            android:paddingRight="30dp"
+            android:text="0/200"
+            android:textColor="@color/gray7"
+            android:textSize="@dimen/font_normal" />
     </LinearLayout>
 
 

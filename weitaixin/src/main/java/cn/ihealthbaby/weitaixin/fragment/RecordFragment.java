@@ -38,7 +38,12 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.activity.AskDoctorActivity;
+import cn.ihealthbaby.weitaixin.activity.ReplyedActivity;
+import cn.ihealthbaby.weitaixin.activity.WaitReplyingActivity;
+import cn.ihealthbaby.weitaixin.activity.WoMessagOfReplyMessageActivity;
+import cn.ihealthbaby.weitaixin.activity.WoMessagOfSystemMessageActivity;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
+import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -82,8 +87,6 @@ public class RecordFragment extends BaseFragment {
         }
         return instance;
     }
-
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -223,14 +226,12 @@ public class RecordFragment extends BaseFragment {
 
         pullToRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
                 AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
                 int status= adviceItem.getStatus();
                 if (status == 0) {
-                    Intent intent=new Intent(getActivity().getApplicationContext(), AskDoctorActivity.class);
-                    intent.putExtra("status",status);
-                    startActivity(intent);
+                    
                 } else if (status == 1) {
 
                 } else if (status == 2) {

@@ -29,7 +29,6 @@
                 android:id="@+id/tvCircleTime1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20周"
                 android:textColor="@color/gray3"
                 android:textSize="@dimen/font10" />
 
@@ -37,7 +36,6 @@
                 android:id="@+id/tvCircleTime2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="05"
                 android:textColor="@color/black1"
                 android:textSize="@dimen/font18" />
         </LinearLayout>
@@ -64,7 +62,6 @@
             android:layout_marginLeft="6dp"
             android:layout_toRightOf="@id/ivClock"
             android:singleLine="true"
-            android:text="18分27秒"
             android:textColor="@color/black0"
             android:textSize="@dimen/font18" />
 
@@ -77,7 +74,6 @@
             android:layout_marginLeft="30dp"
             android:layout_toRightOf="@id/ll_Layout"
             android:singleLine="true"
-            android:text="03月8日 22:32"
             android:textColor="@color/gray3"
             android:textSize="@dimen/font_normal" />
 

@@ -47,6 +47,8 @@
         <activity android:name=".activity.WoMessagOfSystemMessageActivity"/>
         <activity android:name=".activity.WoMessagOfReplyMessageActivity"/>
         <activity android:name=".activity.ProtocolActivity"/>
+        <activity android:name=".activity.ReplyedActivity"/>
+        <activity android:name=".activity.WaitReplyingActivity"/>
         <activity android:name=".ui.demo.ViewActivity"/>
         <activity android:name=".ui.demo.DeviceListActivity"/>
 

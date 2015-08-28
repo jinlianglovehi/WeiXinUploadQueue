@@ -35,6 +35,7 @@ public class AskDoctorActivity extends BaseActivity {
     @Bind(R.id.etAskDoctorText) EditText etAskDoctorText;
     @Bind(R.id.tvSendDoctorAction) TextView tvSendDoctorAction;
     @Bind(R.id.tvOtherInfo) TextView tvOtherInfo;
+    @Bind(R.id.tvAskDoctorTextCount) TextView tvAskDoctorTextCount;
 
 
     private int status;
@@ -60,7 +61,7 @@ public class AskDoctorActivity extends BaseActivity {
             }
         });
 
-//      etAskDoctorText.addTextChangedListener(new MaxLengthWatcher(2000, etAskDoctorText,tv_sugg_text_count));
+      etAskDoctorText.addTextChangedListener(new MaxLengthWatcher(200, etAskDoctorText, tvAskDoctorTextCount));
 
         pullData();
     }
@@ -76,14 +77,15 @@ public class AskDoctorActivity extends BaseActivity {
     }
 
 
+    private int totalCount,usedCount;
     private void pullData(){
         ApiManager.getInstance().serviceApi.getByUser(new HttpClientAdapter.Callback<Service>() {
             @Override
             public void call(Result<Service> t) {
                 if (t.isSuccess()) {
                     Service data = t.getData();
-                    int totalCount=data.getTotalCount();
-                    int usedCount=data.getUsedCount();
+                     totalCount=data.getTotalCount();
+                     usedCount=data.getUsedCount();
                     tvOtherInfo.setText("共"+totalCount+"次，已咨询"+usedCount+"次，剩余"+(totalCount-usedCount)+"次");
                 } else {
                     ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsg());
@@ -98,7 +100,11 @@ public class AskDoctorActivity extends BaseActivity {
     public void tvSendDoctorAction( ) {
         String askDoctorText = etAskDoctorText.getText().toString();
         if (TextUtils.isEmpty(askDoctorText)) {
-            ToastUtil.show(getApplicationContext(),"详情描述，便于医生诊断...");
+            ToastUtil.show(getApplicationContext(),"详情描述，便于医生诊断~~~");
+            return;
+        }
+        if ((totalCount-usedCount)<=0) {
+            ToastUtil.show(getApplicationContext(),"没有咨询次数了~~~");
             return;
         }
 
@@ -114,7 +120,6 @@ public class AskDoctorActivity extends BaseActivity {
             public void call(Result<Integer> t) {
                 if (customDialog.isNoCancel) {
                     if (t.isSuccess()) {
-                        ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), "提交成功");
                         AskDoctorActivity.this.finish();
                     } else {
                         ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsg());

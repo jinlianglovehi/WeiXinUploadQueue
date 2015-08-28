@@ -31,6 +31,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:singleLine="true"
+            android:text=""
             android:textColor="@color/black0"
             android:textSize="@dimen/font_normal" />
 
@@ -46,6 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:text=""
                 android:textColor="@color/gray3"
                 android:textSize="@dimen/font_normal" />
 
@@ -55,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:singleLine="true"
+                android:text=""
                 android:textColor="@color/gray3"
                 android:textSize="@dimen/font_normal" />
         </LinearLayout>
@@ -69,7 +72,7 @@
             android:paddingRight="20dp"
             android:paddingTop="10dp"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font_title" />
 
         <TextView
             android:id="@+id/tvAskTime"
@@ -80,13 +83,14 @@
             android:paddingBottom="30dp"
             android:singleLine="true"
             android:textColor="@color/gray3"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font_title" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white0"
+        android:visibility="invisible"
         android:paddingTop="6dp"
         android:orientation="vertical">
 
@@ -98,8 +102,8 @@
             <cn.ihealthbaby.weitaixin.view.RoundImageView
                 android:id="@+id/ivDoctorHeadPic"
                 android:layout_width="54dp"
-                android:layout_height="54dp"
                 android:layout_marginLeft="4dp"
+                android:layout_height="54dp"
                 android:layout_alignParentLeft="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/camera_icon" />
@@ -112,7 +116,7 @@
                 android:padding="4dp"
                 android:singleLine="true"
                 android:textColor="@color/black0"
-                android:textSize="@dimen/font16" />
+                android:textSize="@dimen/font_title" />
 
 
             <TextView
@@ -123,7 +127,7 @@
                 android:padding="4dp"
                 android:singleLine="true"
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/font16" />
+                android:textSize="@dimen/font_title" />
 
             <TextView
                 android:id="@+id/tvHospitalName"
@@ -135,7 +139,7 @@
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/font14" />
+                android:textSize="@dimen/font_title" />
 
 
         </RelativeLayout>
@@ -150,7 +154,7 @@
             android:paddingRight="20dp"
             android:paddingTop="10dp"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font_title" />
 
         <TextView
             android:id="@+id/tvReplyTime"
@@ -161,6 +165,6 @@
             android:paddingBottom="20dp"
             android:singleLine="true"
             android:textColor="@color/gray3"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font_title" />
     </LinearLayout>
 </LinearLayout>

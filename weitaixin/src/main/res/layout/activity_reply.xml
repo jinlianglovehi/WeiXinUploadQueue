@@ -31,6 +31,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:singleLine="true"
+            android:text=""
             android:textColor="@color/black0"
             android:textSize="@dimen/font_normal" />
 
@@ -46,6 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:text=""
                 android:textColor="@color/gray3"
                 android:textSize="@dimen/font_normal" />
 
@@ -55,8 +57,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:singleLine="true"
+                android:text=""
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/font_normal" />
+                android:textSize="@dimen/font16" />
         </LinearLayout>
 
         <TextView
@@ -69,15 +72,15 @@
             android:paddingRight="20dp"
             android:paddingTop="10dp"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font16" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/tvAskTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
-            android:paddingRight="40dp"
             android:paddingBottom="30dp"
+            android:paddingRight="40dp"
             android:singleLine="true"
             android:textColor="@color/gray3"
             android:textSize="@dimen/font16" />
@@ -87,8 +90,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white0"
-        android:paddingTop="6dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -99,8 +102,8 @@
                 android:id="@+id/ivDoctorHeadPic"
                 android:layout_width="54dp"
                 android:layout_height="54dp"
-                android:layout_marginLeft="4dp"
                 android:layout_alignParentLeft="true"
+                android:layout_marginLeft="4dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/camera_icon" />
 
@@ -157,10 +160,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right|bottom"
-            android:paddingRight="40dp"
             android:paddingBottom="20dp"
+            android:paddingRight="40dp"
             android:singleLine="true"
             android:textColor="@color/gray3"
             android:textSize="@dimen/font16" />
     </LinearLayout>
+
 </LinearLayout>
+
+
+
+

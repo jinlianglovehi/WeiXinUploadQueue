@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,15 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.activity.AskDoctorActivity;
+import cn.ihealthbaby.weitaixin.activity.ReplyedActivity;
+import cn.ihealthbaby.weitaixin.activity.WaitReplyingActivity;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 
 
@@ -28,7 +33,6 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private String[] strFlag=new String[]{"问医生","等待回复","已回复","需要上传"};
-
 
     public MyAdviceItemAdapter(Context context, ArrayList<AdviceItem> datas) {
         mInflater = LayoutInflater.from(context);
@@ -77,7 +81,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 //
-        AdviceItem adviceItem = datas.get(position);
+        final AdviceItem adviceItem = datas.get(position);
 
         String dateStr=adviceItem.getGestationalWeeks();
         String[] split=dateStr.split("\\+");
@@ -90,11 +94,38 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
         if (adviceItem.getStatus()==1) {
             viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle_un);
+        }else{
+            viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle);
         }
 
+        viewHolder.tvAdviceStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setItemTextView(adviceItem);
+            }
+        });
         return convertView;
     }
 
+    private void setItemTextView(AdviceItem adviceItem){
+        //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
+        int status= adviceItem.getStatus();
+        if (status == 0) {
+            Intent intent=new Intent(context, AskDoctorActivity.class);
+            intent.putExtra("status",status);
+            context.startActivity(intent);
+        } else if (status == 1) {
+            Intent intent=new Intent(context, WaitReplyingActivity.class);
+            intent.putExtra("relatedId", adviceItem.getId());
+            context.startActivity(intent);
+        } else if (status == 2) {
+            Intent intent=new Intent(context, ReplyedActivity.class);
+            intent.putExtra("relatedId", adviceItem.getId());
+            context.startActivity(intent);
+        } else if (status == 3) {
+
+        }
+    }
 
     static class ViewHolder {
         @Bind(R.id.tvCircleTime1) TextView tvCircleTime1;
