@@ -11,14 +11,36 @@ import java.util.Date;
  */
 public class DateTimeTool {
 
-    public static String date2Str(Date date) {
+    public static String date2Str(Date date,String dateFormat) {
         if (date==null) {
             return "";
         }
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String dateFormatStr=dateFormat;
+        if(TextUtils.isEmpty(dateFormat)){
+            dateFormatStr="yyyy年MM月dd日 hh:mm:ss";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormatStr);
         return  sdf.format(date);
     }
+
+    public static String date2StrAndTime(Date date) {
+        if (date==null) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 hh:mm");
+        return  sdf.format(date);
+    }
+
+
+    public static String date2StrAndTime2(Date date) {
+        if (date==null) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
+        return  sdf.format(date);
+    }
+
+
 
     public static String date2St2(Date date,String formatStr) {
         if (date==null) {
@@ -31,7 +53,7 @@ public class DateTimeTool {
 
         StringBuffer sb = new StringBuffer();
         if (hour>0) {
-            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
             SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
             return  sdf.format(date);
         } else if(minute > 0 ){
@@ -48,27 +70,12 @@ public class DateTimeTool {
 
     }
 
-    public static String date2StrAndTime(Date date) {
-        if (date==null) {
-            return "";
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
-        return  sdf.format(date);
-    }
-
-    public static String date2StrAndTime2(Date date) {
-        if (date==null) {
-            return "";
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return  sdf.format(date);
-    }
 
     public static Date str2Date(String dateStr)  {
         if (TextUtils.isEmpty(dateStr)) {
             return new Date();
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
 //        Date d = sdf.parse("2000-11-11 14:23:20");
         try {
             return sdf.parse(dateStr);

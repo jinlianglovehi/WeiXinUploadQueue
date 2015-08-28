@@ -67,7 +67,7 @@ public class WoMessagOfSystemMessageActivity extends BaseActivity {
                     SysMsg data = t.getData();
                     if (data != null) {
                         tv_title_system_message.setText(data.getTitle());
-                        tv_createtime_system_message.setText(DateTimeTool.date2Str(data.getCreateTime()));
+                        tv_createtime_system_message.setText(DateTimeTool.date2Str(data.getCreateTime(),"MM月dd日"));
                         tv_context_system_message.setText(data.getContext());
                         tv_author_system_message.setText(data.getAuthor());
                     } else {

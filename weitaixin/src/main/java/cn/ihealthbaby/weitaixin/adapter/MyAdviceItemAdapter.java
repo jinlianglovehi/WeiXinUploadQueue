@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,28 +17,38 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.activity.AskDoctorActivity;
 import cn.ihealthbaby.weitaixin.activity.ReplyedActivity;
 import cn.ihealthbaby.weitaixin.activity.WaitReplyingActivity;
+import cn.ihealthbaby.weitaixin.fragment.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 
 
 public class MyAdviceItemAdapter extends BaseAdapter {
 
-    private Context context;
+    private MeMainFragmentActivity context;
     public ArrayList<AdviceItem> datas;
 
     private LayoutInflater mInflater;
-    private String[] strFlag=new String[]{"问医生","等待回复","已回复","需要上传"};
+    private String[] strFlag=new String[]{"问医生","等待回复","已回复","需上传"};
 
-    public MyAdviceItemAdapter(Context context, ArrayList<AdviceItem> datas) {
+
+
+    public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas) {
         mInflater = LayoutInflater.from(context);
         this.context=context;
         setDatas(datas);
@@ -49,7 +60,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         } else {
             this.datas.clear();
             this.datas = datas;
-            mySortByTime(null);
+            mySortByTime();
         }
     }
 
@@ -57,26 +68,26 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     public void addDatas(ArrayList<AdviceItem> datas) {
         if (datas != null) {
             this.datas.addAll(datas);
-            mySortByTime(null);
+            mySortByTime();
         }
     }
 
 
-    public void mySortByTime(ArrayList<AdviceItem> datas){
-        Comparator<AdviceItem> comparator = new Comparator<AdviceItem>(){
-            public int compare(AdviceItem s1, AdviceItem s2) {
-//                LogUtil.d("coWmpare s1","s1=%s",s1);
-//                LogUtil.d("coWmpare s2","s2=%s",s2);
-//                LogUtil.d("coWmpare cha","(s2-s1)=%s",(int)(s2.getTestTime().getTime()-s1.getTestTime().getTime()));
-
-                return s2.getTestTime().compareTo(s1.getTestTime());
-//                return (int)(s2.getTestTime().getTime()-s1.getTestTime().getTestTimeTime());
-            }
-        };
-
-        Collections.sort(this.datas, comparator);
+    public void mySortByTime(){
+        if(this.datas!=null && this.datas.size()>0)
+            Collections.sort(this.datas, comparator);
     }
-
+    public Comparator<AdviceItem> comparator = new Comparator<AdviceItem>(){
+        public int compare(AdviceItem s1, AdviceItem s2) {
+            Date date1=s1.getTestTime();
+            Date date2=s2.getTestTime();
+            if (date1==null||date2==null) {
+                return -1;
+            }else{
+                return date2.compareTo(date1);
+            }
+        }
+    };
 
     @Override
     public int getCount() {
@@ -94,7 +105,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_record, null);
@@ -112,7 +123,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         viewHolder.tvCircleTime2.setText(split[1]);
 
         viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()));//
-        viewHolder.tvDateTime.setText(DateTimeTool.date2StrAndTime(adviceItem.getTestTime())+"");
+        viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 hh:mm"));
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
         viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
         if (adviceItem.getStatus()==1) {
@@ -127,6 +138,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
                 setItemTextView(adviceItem);
             }
         });
+
         return convertView;
     }
 
@@ -147,6 +159,39 @@ public class MyAdviceItemAdapter extends BaseAdapter {
             context.startActivity(intent);
         } else if (status == 3) {
 
+            final CustomDialog customDialog=new CustomDialog();
+            Dialog dialog = customDialog.createDialog1(context, "上传中...");
+            dialog.show();
+
+            AdviceForm adviceForm=new AdviceForm();
+            adviceForm.setClientId(adviceItem.getId() + "");
+            adviceForm.setTestTime(adviceItem.getTestTime());
+            adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
+            adviceForm.setGestationalWeeks(adviceItem.getGestationalWeeks());
+//            adviceForm.setData();
+//            adviceForm.setAskPurpose();
+//            adviceForm.setDataType();
+//            adviceForm.setDeviceType();
+//            adviceForm.setFeeling();
+//            adviceForm.setFetalTonePath();
+//            adviceForm.setLatitude();
+//            adviceForm.setLongitude();
+
+
+
+
+            ApiManager.getInstance().adviceApi.uploadData(adviceForm, new HttpClientAdapter.Callback<Long>() {
+                @Override
+                public void call(Result<Long> t) {
+                    if (t.isSuccess()) {
+                        Long data = t.getData();
+                        ToastUtil.show(context,"上传成功");
+                    }else{
+                        ToastUtil.show(context, t.getMsgMap()+"");
+                    }
+                    customDialog.dismiss();
+                }
+            }, context);
         }
     }
 

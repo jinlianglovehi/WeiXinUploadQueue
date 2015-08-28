@@ -55,7 +55,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
         ImageLoader.getInstance().displayImage(datas.get(index).getPicPath(), viewHolder.iv_head_icon, setDisplayImageOptions());
         viewHolder.tv_title.setText(datas.get(index).getTitle());
         viewHolder.tv_message.setText(datas.get(index).getContext());
-        viewHolder.tv_create_time.setText(DateTimeTool.date2Str(datas.get(index).getCreateTime()));
+        viewHolder.tv_create_time.setText(DateTimeTool.date2Str(datas.get(index).getCreateTime(),"MM月dd日"));
         viewHolder.itemView.setTag(datas.get(index));
     }
 

@@ -5,10 +5,13 @@
     android:background="#00FFFFFF"
     android:orientation="horizontal">
 
-    <TextView
+    <CheckBox
+        android:id="@+id/cbRecordChoose"
         android:layout_width="30dp"
-        android:layout_height="match_parent"
-        android:background="#00FFFFFF" />
+        android:visibility="invisible"
+        android:layout_gravity="center_vertical"
+        android:layout_height="30dp"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -3,6 +3,9 @@ package cn.ihealthbaby.weitaixin.model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
+import cn.ihealthbaby.weitaixin.db.DataDBHelper;
+import cn.ihealthbaby.weitaixin.db.DataDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 

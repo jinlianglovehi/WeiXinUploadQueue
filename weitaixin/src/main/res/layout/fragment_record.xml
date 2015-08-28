@@ -53,12 +53,11 @@
             android:textSize="@dimen/font_normal14" />
 
         <LinearLayout
-            android:id="@+id/ll_one"
+            android:id="@+id/ll_one_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/tvWoHeadName"
             android:layout_marginRight="20dp"
-
             android:layout_alignParentRight="true"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -86,8 +85,8 @@
             android:visibility="gone"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ll_one"
-            android:layout_alignTop="@id/ll_one"
+            android:layout_alignBottom="@id/ll_one_item"
+            android:layout_alignTop="@id/ll_one_item"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_toRightOf="@+id/ll_one"
@@ -125,8 +124,8 @@
             android:visibility="gone"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ll_one"
-            android:layout_alignTop="@id/ll_one"
+            android:layout_alignBottom="@id/ll_one_item"
+            android:layout_alignTop="@id/ll_one_item"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toRightOf="@+id/ll_two"
@@ -172,7 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ivWoHeadIcon"
-            android:layout_alignRight="@id/ll_one"
+            android:layout_alignRight="@id/ll_one_item"
             android:singleLine="true"
             android:text="建档: "
             android:textColor="@color/gray3"

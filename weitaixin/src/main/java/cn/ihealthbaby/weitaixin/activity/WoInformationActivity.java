@@ -67,7 +67,7 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
             tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
             tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2St2(user.getDeliveryTime(),"MM月dd日 hh:mm"));
             tv_phone_number.setText(user.getMobile()+"");
-            tv_birthday.setText(DateTimeTool.date2Str(user.getBirthday())+"");
+            tv_birthday.setText(DateTimeTool.date2Str(user.getBirthday(),"MM月dd日")+"");
             if(user.getServiceInfo()!=null){
                 tv_sn_number.setText(user.getServiceInfo().getSerialnum()+ "");
                 tv_place_name.setText(user.getServiceInfo().getAreaInfo()+ "");
