@@ -1,7 +1,10 @@
 package cn.ihealthbaby.weitaixin.activity;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,17 +35,22 @@ import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class WoMessageActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
 
     //
-    @Bind(R.id.pullToRefresh) PullToRefreshListView pullToRefresh;
+    @Bind(R.id.pullToRefresh)
+    PullToRefreshListView pullToRefresh;
     private MyRefreshAdapter adapter;
-    private ArrayList<Information> dataList=new ArrayList<Information>();
+    private ArrayList<Information> dataList;
     private Dialog dialog;
 
-    int pageIndex=1, pageSize=5;
+    int pageIndex = 1, pageSize = 5;
+    private ReceiveBroadCast receiveBroadCast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +62,11 @@ public class WoMessageActivity extends BaseActivity {
         back.setVisibility(View.INVISIBLE);
 //
 
-        adapter=new MyRefreshAdapter(this,null);
+        adapter = new MyRefreshAdapter(this, null);
         pullToRefresh.setAdapter(adapter);
         pullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
         pullToRefresh.setScrollingWhileRefreshingEnabled(false);
         init();
-
 
         pullToRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -69,7 +76,8 @@ public class WoMessageActivity extends BaseActivity {
                     public void call(Result<PageData<Information>> t) {
                         if (t.isSuccess()) {
                             PageData<Information> data = t.getData();
-                            ArrayList<Information> dataList = (ArrayList<Information>) data.getValue();
+                            dataList = null;
+                            dataList = (ArrayList<Information>) data.getValue();
                             adapter.setDatas(dataList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -88,7 +96,8 @@ public class WoMessageActivity extends BaseActivity {
                     public void call(Result<PageData<Information>> t) {
                         if (t.isSuccess()) {
                             PageData<Information> data = t.getData();
-                            ArrayList<Information> dataList = (ArrayList<Information>) data.getValue();
+                            dataList = null;
+                            dataList = (ArrayList<Information>) data.getValue();
                             adapter.addDatas(dataList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -104,24 +113,24 @@ public class WoMessageActivity extends BaseActivity {
         pullToRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Information item = (Information) adapter.getItem(position-1);
+                Information item = (Information) adapter.getItem(position - 1);
                 // 0 系统消息, 1 医生回复消息  2支付消息
-                int type=item.getType();
+                int type = item.getType();
                 if (type == 0) {
-                    Intent intent=new Intent(getApplicationContext(),WoMessagOfSystemMessageActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), WoMessagOfSystemMessageActivity.class);
                     intent.putExtra("SysMsg", item.getRelatedId());
                     startActivity(intent);
                 } else if (type == 1) {
-                    Intent intent=new Intent(getApplicationContext(),WoMessagOfReplyMessageActivity.class);
-                    intent.putExtra("AdviceReply",item.getRelatedId());
+                    Intent intent = new Intent(getApplicationContext(), WoMessagOfReplyMessageActivity.class);
+                    intent.putExtra("AdviceReply", item.getRelatedId());
+                    intent.putExtra("informationId", item.getId());
                     startActivity(intent);
                 } else if (type == 2) {
-
+                    ToastUtil.show(getApplicationContext(), "敬请期待");
                 }
-                ToastUtil.show(getApplicationContext(),(position-1)+":"+item.getTitle()+" : "+item.getId());
+//                ToastUtil.show(getApplicationContext(),(position-1)+":"+item.getTitle()+" : "+item.getId());
             }
         });
-
 
         pullDatas();
     }
@@ -129,6 +138,13 @@ public class WoMessageActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (receiveBroadCast == null) {
+            receiveBroadCast = new ReceiveBroadCast();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(WoMessagOfReplyMessageActivity.REPLYMESSAGENOTIFICATION);
+            registerReceiver(receiveBroadCast, filter);
+        }
+
     }
 
 
@@ -153,10 +169,9 @@ public class WoMessageActivity extends BaseActivity {
         pullToRefresh.getLoadingLayoutProxy(true, false).setRefreshingLabel("正在加载...");
     }
 
-
     private void pullDatas() {
 
-        dialog=new CustomDialog().createDialog1(this,"数据加载中...");
+        dialog = new CustomDialog().createDialog1(this, "数据加载中...");
         dialog.show();
 
         ApiManager.getInstance().informationApi.getInformations(1, 10, new HttpClientAdapter.Callback<PageData<Information>>() {
@@ -164,11 +179,12 @@ public class WoMessageActivity extends BaseActivity {
             public void call(Result<PageData<Information>> t) {
                 if (t.isSuccess()) {
                     PageData<Information> data = t.getData();
-                    ArrayList<Information> dataList = (ArrayList<Information>) data.getValue();
+                    dataList = null;
+                    dataList = (ArrayList<Information>) data.getValue();
                     adapter.setDatas(dataList);
                     adapter.notifyDataSetChanged();
-                }else {
-                    ToastUtil.show(getApplicationContext(),t.getMsg());
+                } else {
+                    ToastUtil.show(getApplicationContext(), t.getMsg());
                 }
                 pullToRefresh.onRefreshComplete();
                 dialog.dismiss();
@@ -177,9 +193,30 @@ public class WoMessageActivity extends BaseActivity {
     }
 
     @OnClick(R.id.back)
-    public void onBack( ) {
+    public void onBack() {
         this.finish();
     }
 
+    public class ReceiveBroadCast extends BroadcastReceiver {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Long message = intent.getLongExtra("data", 0);
+            for (Information information : dataList) {
+                if (message == information.getId()) {
+                    information.setReadNums(information.getReadNums() + 1);
+                    break;
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (receiveBroadCast != null) {
+            unregisterReceiver(receiveBroadCast);
+        }
+    }
 }

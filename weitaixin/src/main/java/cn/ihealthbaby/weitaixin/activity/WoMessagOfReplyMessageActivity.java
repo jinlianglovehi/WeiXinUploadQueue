@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
@@ -67,6 +68,10 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
     @Bind(R.id.tv_date)
     TextView mTvDate;
 
+    private long relatedId;
+    private long informationId;
+
+    public static String REPLYMESSAGENOTIFICATION = "replymessagenotification";
 
     //
     private Dialog dialog;
@@ -86,7 +91,8 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
         apiManager = ApiManager.getInstance();
 
 
-        long relatedId = getIntent().getLongExtra("AdviceReply", 0);
+        relatedId = getIntent().getLongExtra("AdviceReply", 0);
+        informationId = getIntent().getLongExtra("informationId", 0);
 
 
         dialog = new CustomDialog().createDialog1(this, "加载中...");
@@ -126,6 +132,17 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
         }, getRequestTag());
 
 
+        ApiManager.getInstance().informationApi.readInformation(informationId, new HttpClientAdapter.Callback<Void>() {
+            @Override
+            public void call(Result<Void> t) {
+                if (t.isSuccess()) {
+                    Intent intent = new Intent();
+                    intent.putExtra("data", informationId);
+                    intent.setAction(REPLYMESSAGENOTIFICATION);
+                    sendBroadcast(intent);
+                }
+            }
+        }, getRequestTag());
     }
 
     @Override
@@ -155,6 +172,7 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
                 .build();
         return options;
     }
+
 
 }
 

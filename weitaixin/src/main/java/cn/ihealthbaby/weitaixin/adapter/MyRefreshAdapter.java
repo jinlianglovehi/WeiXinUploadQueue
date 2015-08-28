@@ -78,27 +78,17 @@ public class MyRefreshAdapter extends BaseAdapter {
         }
 
         Information data = datas.get(position);
-        ImageLoader.getInstance().displayImage(data.getPicPath(), viewHolder.iv_head_icon, setDisplayImageOptions());
-        viewHolder.tv_title.setText(data.getTitle());
-        viewHolder.tv_message.setText(data.getContext());
+        ImageLoader.getInstance().displayImage(data.getPicPath(), viewHolder.mIvHeadIcon, setDisplayImageOptions());
+        viewHolder.mTvTitle.setText(data.getTitle());
+        viewHolder.mTvMessage.setText(data.getContext());
         viewHolder.tv_create_time.setText(RelativeDateFormat.format(data.getCreateTime()));
+        if (data.getReadNums() == 0) {
+            viewHolder.tv_notification.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.tv_notification.setVisibility(View.GONE);
+        }
 
         return convertView;
-    }
-
-    static class ViewHolder {
-        @Bind(R.id.iv_head_icon)
-        RoundImageView iv_head_icon;
-        @Bind(R.id.tv_title)
-        TextView tv_title;
-        @Bind(R.id.tv_message)
-        TextView tv_message;
-        @Bind(R.id.tv_create_time)
-        TextView tv_create_time;
-
-        public ViewHolder(View itemView) {
-            ButterKnife.bind(this, itemView);
-        }
     }
 
 
@@ -119,4 +109,21 @@ public class MyRefreshAdapter extends BaseAdapter {
         return options;
     }
 
+
+    static class ViewHolder {
+        @Bind(R.id.iv_head_icon)
+        RoundImageView mIvHeadIcon;
+        @Bind(R.id.tv_title)
+        TextView mTvTitle;
+        @Bind(R.id.tv_message)
+        TextView mTvMessage;
+        @Bind(R.id.tv_create_time)
+        TextView tv_create_time;
+        @Bind(R.id.tv_notification)
+        TextView tv_notification;
+
+        ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
 }
