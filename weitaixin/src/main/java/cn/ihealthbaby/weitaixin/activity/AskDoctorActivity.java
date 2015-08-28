@@ -22,6 +22,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.tools.MaxLengthWatcher;
 
 
 public class AskDoctorActivity extends BaseActivity {
