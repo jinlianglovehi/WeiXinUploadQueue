@@ -21,7 +21,7 @@ public class LocalAdviceItem {
     /**
      * 检测时间
      */
-    public String testTime;
+    public Date testTime;
 
     /**
      * 检测时长
@@ -40,7 +40,8 @@ public class LocalAdviceItem {
             LocalAdviceItem item=new LocalAdviceItem();
             item.mid=(i+144)+"";
             item.gestationalWeeks="50周+2"+i;
-            item.testTime= DateTimeTool.date2StrAndTime2(new Date());
+//            item.testTime= DateTimeTool.date2StrAndTime2(new Date());
+            item.testTime= new Date();
             item.testTimeLong=(i+3000)+"";
             item.status="3";
             items.add(item);

@@ -332,7 +332,8 @@ public class RecordFragment extends BaseFragment {
             AdviceItem advice = new AdviceItem();
             advice.setId(Integer.parseInt(item.mid));
             advice.setGestationalWeeks(item.gestationalWeeks);
-            advice.setTestTime(DateTimeTool.str2Date(item.testTime));
+            advice.setTestTime(item.testTime);
+//            advice.setTestTime(DateTimeTool.str2Date(item.testTime));
             advice.setTestTimeLong(Integer.parseInt(item.testTimeLong));
             advice.setStatus(Integer.parseInt(item.status));
             dataListPage.add(advice);

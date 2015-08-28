@@ -25,6 +25,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.activity.AskDoctorActivity;
 import cn.ihealthbaby.weitaixin.activity.ReplyedActivity;
 import cn.ihealthbaby.weitaixin.activity.WaitReplyingActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 
 
@@ -52,6 +53,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         }
     }
 
+
     public void addDatas(ArrayList<AdviceItem> datas) {
         if (datas != null) {
             this.datas.addAll(datas);
@@ -59,9 +61,13 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         }
     }
 
+
     public void mySortByTime(ArrayList<AdviceItem> datas){
         Comparator<AdviceItem> comparator = new Comparator<AdviceItem>(){
             public int compare(AdviceItem s1, AdviceItem s2) {
+                LogUtil.d("coWmpare s1","s1=%s",s1);
+                LogUtil.d("coWmpare s2","s2=%s",s2);
+                LogUtil.d("coWmpare cha","(s2-s1)=%s",(int)(s2.getTestTime().getTime()-s1.getTestTime().getTime()));
                 return (int)(s2.getTestTime().getTime()-s1.getTestTime().getTime());
             }
         };
