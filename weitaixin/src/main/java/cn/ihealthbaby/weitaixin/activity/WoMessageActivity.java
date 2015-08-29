@@ -31,9 +31,10 @@ import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.view.swipemenulistview.SwipeMenuListView;
 
 
-public class WoMessageActivity extends BaseActivity {
+public class WoMessageActivity extends BaseActivity implements SwipeMenuListView.OnItemClickListener{
 
     @Bind(R.id.back)
     RelativeLayout back;
@@ -60,14 +61,13 @@ public class WoMessageActivity extends BaseActivity {
         ButterKnife.bind(this);
         title_text.setText("我的消息");
         back.setVisibility(View.INVISIBLE);
-//
+
 
         adapter = new MyRefreshAdapter(this, null);
         pullToRefresh.setAdapter(adapter);
         pullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
         pullToRefresh.setScrollingWhileRefreshingEnabled(false);
         init();
-
         pullToRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) { //下拉刷新
@@ -196,6 +196,12 @@ public class WoMessageActivity extends BaseActivity {
     public void onBack() {
         this.finish();
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
 
     public class ReceiveBroadCast extends BroadcastReceiver {
 

@@ -106,13 +106,14 @@
             android:textColor="@drawable/text_color_hei_selector"
             android:textSize="@dimen/font_normal"/>
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/wo_msg_icon"
-            android:visibility="gone"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/message_count"
+            android:gravity="center"
+            android:text="1"
+            android:visibility="visible"/>
     </LinearLayout>
 
 

@@ -39,5 +39,6 @@ dependencies {
     compile 'com.orhanobut:logger:1.11'
     //时间选择器
     compile 'com.bigkoo:pickerview:1.0.0'
+    compile files('libs/nineoldandroids-2.4.0.jar')
 }
 
