@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 
@@ -52,6 +54,37 @@ public class AboutActivity extends BaseActivity {
     private void initView() {
         mTvVersion.setText(getVersion());
     }
+
+
+    @OnClick(R.id.rl_welcome)
+    public void welcomeOnclick() {
+        Intent intent = new Intent(this, WelcomeActiviy.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.rl_feature)
+    public void featureOnclick() {
+        Intent intent = new Intent(this, FeatureActiviy.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.rl_use_process)
+    public void processOnclick() {
+        Intent intent = new Intent(this, UseProcessActiviy.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.rl_use_protocol)
+    public void protocolOnclick() {
+        Intent intent = new Intent(this, UseProtocolActiviy.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.back)
+    public void backOnclick(){
+        finish();
+    }
+
 
 
     /**

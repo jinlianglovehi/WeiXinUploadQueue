@@ -61,6 +61,10 @@
             android:name=".ui.monitor.CurveDetialActivity"
             android:label="@string/title_activity_curve_detial"/>
         <activity android:name=".activity.AboutActivity"/>
+        <activity android:name=".activity.WelcomeActiviy"/>
+        <activity android:name=".activity.FeatureActiviy"/>
+        <activity android:name=".activity.UseProcessActiviy"/>
+        <activity android:name=".activity.UseProtocolActiviy"/>
 
         <receiver android:name=".library.data.bluetooth.mode.spp.BluetoothReceiver"/>
 

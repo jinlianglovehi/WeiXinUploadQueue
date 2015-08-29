@@ -42,4 +42,14 @@
     <string name="copyright">Copyright@2013-2015 Chunwei All Right Reserved</string>
     <string name="about_title">关于微胎心</string>
 
+
+    <!--cn.ihealthbaby.weitaixin.activity.WelcomeActiviy-->
+    <string name="welcome_title">欢迎界面</string>
+
+    <!--cn.ihealthbaby.weitaixin.activity.FeatureActiviy-->
+    <string name="feature_title">产品功能</string>
+
+    <!--cn.ihealthbaby.weitaixin.activity.UseProcessActiviy-->
+    <string name="use_process_title">使用流程</string>
+
 </resources>
