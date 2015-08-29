@@ -123,7 +123,7 @@ public class WoInfoFragment extends BaseFragment {
             ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
             tv_wo_head_name.setText(WeiTaiXinApplication.user.getName() + "");
             tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(WeiTaiXinApplication.user.getDeliveryTime()));
-            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2St2(WeiTaiXinApplication.user.getDeliveryTime(),"MM月dd日"));
+            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(WeiTaiXinApplication.user.getDeliveryTime(),"MM月dd日"));
         }
     }
 

@@ -2,11 +2,15 @@ package cn.ihealthbaby.weitaixin.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,6 +33,7 @@ import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
@@ -38,6 +43,7 @@ import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
+import cn.ihealthbaby.weitaixin.activity.AAAAActivity;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.db.DataDBHelper;
@@ -70,7 +76,7 @@ public class RecordFragment extends BaseFragment {
 
     private MyAdviceItemAdapter adapter;
     private ArrayList<Information> dataList=new ArrayList<Information>();
-    private Context context;
+    private MeMainFragmentActivity context;
 
     private int pageIndex=1, pageSize=5;
     private View view;
@@ -78,7 +84,7 @@ public class RecordFragment extends BaseFragment {
     private DataDao dataDao;
     private int pageCountCache =1;
     private ArrayList<LocalAdviceItem> localAdviceItems;
-
+    private ArrayList<AdviceItem> mAdviceItems=new ArrayList<AdviceItem>();
 
     private static RecordFragment instance;
     public static RecordFragment getInstance(){
@@ -89,6 +95,13 @@ public class RecordFragment extends BaseFragment {
         return instance;
     }
 
+    @OnClick(R.id.ivWoHeadIcon)
+    public void ivWoHeadIcon() {
+//       Intent intent=new Intent(getActivity().getApplicationContext(), AAAAActivity.class);
+//        startActivity(intent);
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,21 +109,56 @@ public class RecordFragment extends BaseFragment {
             view = inflater.inflate(R.layout.fragment_record, null);
             ButterKnife.bind(this, view);
             back.setVisibility(View.INVISIBLE);
-            function.setVisibility(View.VISIBLE);
+//            function.setVisibility(View.VISIBLE);
             title_text.setText("记录");
             function.setText("编辑");
 
             dataDao=new DataDao(getActivity().getApplicationContext());
             localAdviceItems = new LocalAdviceItem().getDataLocal();
-            context=getActivity();
+            context= (MeMainFragmentActivity) getActivity();
             initView();
             pullHeadDatas();
             pullDatas();
 
-            isNoTwo=false;
+            registerForContextMenu(pullToRefresh.getRefreshableView());
+//            isNoTwo=false;
 //        }
         LogUtil.e("RecordFragment+Coco7", "RecordFragment+Null");
         return view;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0, 1, Menu.NONE, "删除");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case 1:
+                if (mAdviceItems.size() > 0) {
+                    AdviceItem adviceItem = mAdviceItems.get((int) menuInfo.id);
+                    if (adviceItem.getStatus()!=3) {
+                        ApiManager.getInstance().adviceApi.delete(adviceItem.getId(), new HttpClientAdapter.Callback<Void>() {
+                            @Override
+                            public void call(Result<Void> t) {
+                                if (t.isSuccess()) {
+                                    ToastUtil.show(context,"删除成功");
+                                    adapter.datas.remove((int) menuInfo.id);
+                                    adapter.notifyDataSetChanged();
+                                }else{
+                                    ToastUtil.show(context,t.getMsgMap()+"");
+                                }
+                            }
+                        },context);
+                    }else{
+                        ToastUtil.show(context,"请先上传，才能删除~~~");
+                    }
+                }
+                break;
+        }
+        return super.onContextItemSelected(item);
     }
 
 
@@ -121,6 +169,10 @@ public class RecordFragment extends BaseFragment {
     }
 
 
+    @OnClick(R.id.function)
+    public void function(){
+        LogUtil.d("function","functionfunction");
+    }
 
 
     private void pullHeadDatas() {
@@ -134,41 +186,20 @@ public class RecordFragment extends BaseFragment {
             }
         }
 
-//        setCount();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        setCount();
     }
 
 
-//    public void setCount() {
-//        ApiManager.getInstance().serviceApi.getByUser(new HttpClientAdapter.Callback<Service>() {
-//            @Override
-//            public void call(Result<Service> t) {
-//                if (t.isSuccess()) {
-//                    Service data = t.getData();
-//                    if (data != null && tvUsedCount != null) {
-//                        tvUsedCount.setText(data.getUsedCount() + "");
-//                    } else {
-//                        LogUtil.e("2getMsgMap2-2", t.getMsgMap()+"");
-//                        ToastUtil.show(context, t.getMsg());
-//                    }
-//                } else {
-//                    LogUtil.e("2getMsgMap2-3", t.getMsgMap()+"");
-//                    ToastUtil.show(context, t.getMsg());
-//                }
-//            }
-//        }, getRequestTag());
-//    }
 
     private void initView() {
         adapter=new MyAdviceItemAdapter(context,null);
         pullToRefresh.setAdapter(adapter);
         pullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
-        pullToRefresh.setScrollingWhileRefreshingEnabled(false);
+//      pullToRefresh.setScrollingWhileRefreshingEnabled(false);
         init();
 
         pullToRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -182,13 +213,14 @@ public class RecordFragment extends BaseFragment {
                             ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
 //                            pageCountCache = 1;
-////                            dataDao.add("recodeList", dataList);
+////                          dataDao.add("recodeList", dataList);
 //                            WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
 
                             tvUsedCount.setText(data.getCount() + "");
                             adapter.datas.clear();
                             adapter.setDatas(dataList);
                             adapter.notifyDataSetChanged();
+                            mAdviceItems = adapter.datas;
                         } else {
                             ToastUtil.show(context, t.getMsg());
                         }
@@ -202,7 +234,6 @@ public class RecordFragment extends BaseFragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) { //上拉加载更多
-
                 ApiManager.getInstance().adviceApi.getAdviceItems((++pageIndex), pageSize, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
                     @Override
                     public void call(Result<PageData<AdviceItem>> t) {
@@ -211,16 +242,20 @@ public class RecordFragment extends BaseFragment {
                             ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
                             LogUtil.d("PageData", "ArrayList: " + dataList.size());
 
+                            if (dataList.size() > 0) {
 //                            if (pageCountCache <= 3 && dataList.size() > 0) {
 //                                dataDao.add("recodeList", dataList);
 //                                WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
 //                            }
 //                            ++pageCountCache;
-
-
-                            tvUsedCount.setText(data.getCount() + "");
-                            adapter.addDatas(dataList);
-                            adapter.notifyDataSetChanged();
+                                tvUsedCount.setText(data.getCount() + "");
+                                adapter.addDatas(dataList);
+                                adapter.notifyDataSetChanged();
+                                mAdviceItems = adapter.datas;
+                            } else {
+                                ToastUtil.show(context, "没有更多数据了~~~");
+                                pageIndex--;
+                            }
                         } else {
                             ToastUtil.show(context, t.getMsg());
                             pageIndex--;
@@ -257,11 +292,13 @@ public class RecordFragment extends BaseFragment {
         CustomDialog customDialog=new CustomDialog();
         Dialog dialog=customDialog.createDialog1(context,"从数据库中加载...");
         dialog.show();
+        //从缓存数据库中展示数据列表
         ArrayList<AdviceItem> adviceItems = dataDao.getAllRecord(pageSize);
         if (adviceItems.size()>0) {
             tvUsedCount.setText(WeiTaiXinApplication.getInstance().getValue("tvUsedCount", 0 + ""));
             adapter.setDatas(adviceItems);
             adapter.notifyDataSetChanged();
+            mAdviceItems=adapter.datas;
             customDialog.dismiss();
             customDialog=null;
             new Handler().postDelayed(new Runnable() {
@@ -289,11 +326,13 @@ public class RecordFragment extends BaseFragment {
                     PageData<AdviceItem> data = t.getData();
                     ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
-                    //缓存前30条
+                    //缓存网络前30条,保存到数据库中
                     pageCountCache =1;
                     dataDao.add(DataDBHelper.tableName, dataList);
                     WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
-                    tvUsedCount.setText(data.getCount() + "");
+                    if (tvUsedCount!=null) {
+                        tvUsedCount.setText(data.getCount() + "");
+                    }
 
 
                     ArrayList<AdviceItem> dataListPage=new ArrayList<AdviceItem>();
@@ -313,6 +352,7 @@ public class RecordFragment extends BaseFragment {
                     adapter.datas.clear();
                     adapter.setDatas(dataListPage);
                     adapter.notifyDataSetChanged();
+                    mAdviceItems=adapter.datas;
                 } else {
                     LogUtil.e("2getMsgMap", t.getMsgMap()+"");
                     ToastUtil.show(context, t.getMsg());
@@ -328,6 +368,7 @@ public class RecordFragment extends BaseFragment {
     }
 
     private void sortAdviceItem(ArrayList<AdviceItem> dataListPage) {
+        ArrayList<AdviceItem> localItem=new ArrayList<AdviceItem>();
         for (LocalAdviceItem item : localAdviceItems) {
             AdviceItem advice = new AdviceItem();
             advice.setId(Integer.parseInt(item.mid));
@@ -337,7 +378,11 @@ public class RecordFragment extends BaseFragment {
             advice.setTestTimeLong(Integer.parseInt(item.testTimeLong));
             advice.setStatus(Integer.parseInt(item.status));
             dataListPage.add(advice);
+            localItem.add(advice);
         }
+        //本地保存数据库
+        DataDao dataDao=new DataDao(WeiTaiXinApplication.getInstance());
+        dataDao.add(DataDBHelper.tableName, localItem);
     }
 
 
