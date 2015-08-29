@@ -21,16 +21,25 @@ import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class SetSystemActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
-    @Bind(R.id.ll_set_system_01) RelativeLayout ll_set_system_01;
-    @Bind(R.id.ll_set_system_02) RelativeLayout ll_set_system_02;
-    @Bind(R.id.ll_set_system_03) RelativeLayout ll_set_system_03;
-    @Bind(R.id.ll_set_system_04) RelativeLayout ll_set_system_04;
-    @Bind(R.id.ll_set_system_05) RelativeLayout ll_set_system_05;
-    @Bind(R.id.ll_set_system_06) RelativeLayout ll_set_system_06;
+    @Bind(R.id.ll_set_system_01)
+    RelativeLayout ll_set_system_01;
+    @Bind(R.id.ll_set_system_02)
+    RelativeLayout ll_set_system_02;
+    @Bind(R.id.ll_set_system_03)
+    RelativeLayout ll_set_system_03;
+    @Bind(R.id.ll_set_system_04)
+    RelativeLayout ll_set_system_04;
+    @Bind(R.id.ll_set_system_05)
+    RelativeLayout ll_set_system_05;
+    @Bind(R.id.ll_set_system_06)
+    RelativeLayout ll_set_system_06;
     private Dialog dialog;
 
     @Override
@@ -49,64 +58,66 @@ public class SetSystemActivity extends BaseActivity {
     }
 
     @OnClick(R.id.back)
-    public void onBack( ) {
+    public void onBack() {
         this.finish();
     }
 
 
     @OnClick(R.id.ll_set_system_01)
     public void ll_set_system_01() {
-        Intent intent=new Intent(getApplicationContext(),SetSystemGuardianActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SetSystemGuardianActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.ll_set_system_02)
     public void ll_set_system_02() {
-        Intent intent=new Intent(getApplicationContext(), SetSystemResetPasswordActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SetSystemResetPasswordActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.ll_set_system_03)
     public void ll_set_system_03() {
-        Intent intent=new Intent(getApplicationContext(),SetSystemSuggestionActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SetSystemSuggestionActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.ll_set_system_04)
     public void ll_set_system_04() {
-
+        Intent intent = new Intent(getApplicationContext(), AboutActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.ll_set_system_05)
     public void ll_set_system_05() {
-        Intent intent=new Intent(getApplicationContext(),SetSystemUploadActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SetSystemUploadActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.ll_set_system_06)
-    public void ll_set_system_06( ) {
+    public void ll_set_system_06() {
         logout();
     }
 
     ApiManager apiManager;
-    public void logout(){
-        apiManager=ApiManager.getInstance();
 
-        dialog=new CustomDialog().createDialog1(this,"退出中...");
+    public void logout() {
+        apiManager = ApiManager.getInstance();
+
+        dialog = new CustomDialog().createDialog1(this, "退出中...");
         dialog.show();
 
         apiManager.accountApi.logout(new HttpClientAdapter.Callback<Void>() {
             @Override
             public void call(Result<Void> t) {
                 if (t.isSuccess()) {
-                    WeiTaiXinApplication.getInstance().isLogin=false;
+                    WeiTaiXinApplication.getInstance().isLogin = false;
 //                  ToastUtil.show(getApplicationContext(),"退出登录");
-                    WeiTaiXinApplication.accountToken=null;
+                    WeiTaiXinApplication.accountToken = null;
                     WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
-                    Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                     finish();
-                }else {
+                } else {
                     ToastUtil.show(getApplicationContext(), t.getMsg());
                 }
                 dialog.dismiss();

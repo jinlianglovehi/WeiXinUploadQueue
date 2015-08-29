@@ -29,4 +29,17 @@
     <string name="waring_empty_username">用户名不能为空</string>
     <string name="auto_upload">WIFI环境下自动上传</string>
 
+
+    <!-- activity_about-->
+    <string name="subtitle">胎儿安全监护医生</string>
+    <string name="version">版本：</string>
+    <string name="welcome">欢迎页面</string>
+    <string name="feature">产品功能</string>
+    <string name="use_process">使用流程</string>
+    <string name="update">产品更新</string>
+    <string name="use_protocol">使用条款和隐私协议</string>
+    <string name="company">春闱科技    版权所有</string>
+    <string name="copyright">Copyright@2013-2015 Chunwei All Right Reserved</string>
+    <string name="about_title">关于微胎心</string>
+
 </resources>
