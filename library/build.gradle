@@ -94,4 +94,9 @@ dependencies {
     compile 'io.netty:netty-all:5.0.0.Alpha2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
     compile 'com.android.support:recyclerview-v7:22.2+'
+    //时间选择器
+    compile 'com.bigkoo:pickerview:1.0.0'
+
+    //画圆
+    compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.3'
 }

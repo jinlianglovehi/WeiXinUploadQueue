@@ -14,8 +14,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-import com.orhanobut.logger.LogLevel;
-import com.orhanobut.logger.Logger;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.User;
@@ -49,19 +47,11 @@ public class WeiTaiXinApplication extends Application {
 
         initApiManager();
 
-        initLogger();
 //		RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
 //		adapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
 //		HttpClientAdapter adapter = new XiaoCaoVolleyAdapter(getApplicationContext(), Constants.SERVER_URL);
 //		HttpClientAdapter adapter = new LoopjAdapter(getApplicationContext(), Constants.SERVER_URL);
 //		ApiManager.init(adapter);
-    }
-
-    private void initLogger() {
-        Logger
-                .init(Constants.TAI_XIN_YI)
-                .setMethodCount(2)
-                .setLogLevel(LogLevel.FULL);
     }
 
 

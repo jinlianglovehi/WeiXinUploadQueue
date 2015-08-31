@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 
@@ -38,6 +39,11 @@ public class UseProtocolActiviy extends BaseActivity {
         mWebSettings.setUseWideViewPort(true);
         mWebSettings.setLoadWithOverviewMode(true);
         mWebSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        mWvWelcome.loadUrl("file:///android_asset/baidu.html");
+        mWvWelcome.loadUrl("http://baidu.com");
+    }
+
+    @OnClick(R.id.back)
+    public void backOnclick() {
+        finish();
     }
 }

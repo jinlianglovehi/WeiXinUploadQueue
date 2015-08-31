@@ -1,11 +1,10 @@
 package cn.ihealthbaby.weitaixin.base;
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
-import com.orhanobut.logger.Logger;
 
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -25,7 +24,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Logger.d("hello");
     }
 
     @Override
