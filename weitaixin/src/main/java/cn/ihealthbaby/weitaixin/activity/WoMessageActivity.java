@@ -31,10 +31,9 @@ import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
-import cn.ihealthbaby.weitaixin.view.swipemenulistview.SwipeMenuListView;
 
 
-public class WoMessageActivity extends BaseActivity implements SwipeMenuListView.OnItemClickListener{
+public class WoMessageActivity extends BaseActivity {
 
     @Bind(R.id.back)
     RelativeLayout back;
@@ -197,10 +196,6 @@ public class WoMessageActivity extends BaseActivity implements SwipeMenuListView
         this.finish();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
 
 
     public class ReceiveBroadCast extends BroadcastReceiver {
