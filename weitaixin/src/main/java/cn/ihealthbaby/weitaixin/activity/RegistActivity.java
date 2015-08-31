@@ -10,6 +10,7 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,21 +32,33 @@ import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class RegistActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
 //
 
-    @Bind(R.id.et_phone_number) EditText et_phone_number;
-    @Bind(R.id.etPassword) EditText etPassword;
-    @Bind(R.id.et_mark_number) EditText et_mark_number;
-    @Bind(R.id.iv_agree_register) CheckBox ivAgreeRegister;
-    @Bind(R.id.tvRuleRegister) TextView tvRuleRegister;
-    @Bind(R.id.tv_regist_action) TextView tv_regist_action;
-    @Bind(R.id.tv_mark_num_text) TextView tv_mark_num_text;
-    @Bind(R.id.ivShowPassword) CheckBox ivShowPassword;
+    @Bind(R.id.et_phone_number)
+    EditText et_phone_number;
+    @Bind(R.id.etPassword)
+    EditText etPassword;
+    @Bind(R.id.et_mark_number)
+    EditText et_mark_number;
+    @Bind(R.id.iv_agree_register)
+    ImageView ivAgreeRegister;
+    @Bind(R.id.tvRuleRegister)
+    TextView tvRuleRegister;
+    @Bind(R.id.tv_regist_action)
+    TextView tv_regist_action;
+    @Bind(R.id.tv_mark_num_text)
+    TextView tv_mark_num_text;
+    @Bind(R.id.ivShowPassword)
+    CheckBox ivShowPassword;
 
-    public Handler mHandler=new Handler();
+    public Handler mHandler = new Handler();
+    private boolean mChecked = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +80,11 @@ public class RegistActivity extends BaseActivity {
     }
 
     @OnClick(R.id.ivShowPassword)
-    public void ivShowPassword(){
+    public void ivShowPassword() {
         if ("0".equals(ivShowPassword.getTag())) {
             etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             ivShowPassword.setTag("1");
-        }else{
+        } else {
             etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
             ivShowPassword.setTag("0");
         }
@@ -83,15 +96,15 @@ public class RegistActivity extends BaseActivity {
     }
 
     @OnClick(R.id.tvRuleRegister)
-    public void tvRuleRegister( ) {
-        Intent intent=new Intent(this, ProtocolActivity.class);
+    public void tvRuleRegister() {
+        Intent intent = new Intent(this, ProtocolActivity.class);
         startActivity(intent);
     }
 
 
-    public boolean isSend=true;
+    public boolean isSend = true;
     public Dialog dialog;
-    public CountDownTimer countDownTimer ;
+    public CountDownTimer countDownTimer;
 
     @OnClick(R.id.tv_mark_num_text)
     public void tvMarkNumText() {
@@ -101,20 +114,20 @@ public class RegistActivity extends BaseActivity {
                 ToastUtil.show(getApplicationContext(), "请输入手机号");
                 return;
             }
-            if (phone_number.length()!=11) {
+            if (phone_number.length() != 11) {
                 ToastUtil.show(getApplicationContext(), "手机号必须是11位");
                 return;
             }
 
-            try{
-                dialog=new CustomDialog().createDialog1(this, "验证码发送中...");
+            try {
+                dialog = new CustomDialog().createDialog1(this, "验证码发送中...");
                 dialog.show();
                 getAuthCode();
 
-                countDownTimer=new CountDownTimer(10000,1000) {
+                countDownTimer = new CountDownTimer(10000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        tv_mark_num_text.setText(millisUntilFinished/1000+"秒之后重发");
+                        tv_mark_num_text.setText(millisUntilFinished / 1000 + "秒之后重发");
                         isSend = false;
                     }
 
@@ -126,7 +139,7 @@ public class RegistActivity extends BaseActivity {
                     }
                 };
                 countDownTimer.start();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 cancel();
             }
@@ -134,28 +147,29 @@ public class RegistActivity extends BaseActivity {
     }
 
 
-    public boolean isHasAuthCode=false;
-//    public boolean isLogining=false;
+    public boolean isHasAuthCode = false;
+
+    //    public boolean isLogining=false;
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
-    public void getAuthCode(){
+    public void getAuthCode() {
         instance.accountApi.getAuthCode(phone_number, 0, new HttpClientAdapter.Callback<Boolean>() {
             @Override
             public void call(Result<Boolean> t) {
                 if (t.isSuccess()) {
                     Boolean data = t.getData();
                     if (data) {
-                        isHasAuthCode=true;
+                        isHasAuthCode = true;
 //                        tv_regist_action.setEnabled(true);
                     } else {
-                        isHasAuthCode=false;
+                        isHasAuthCode = false;
                         cancel();
 //                        tv_regist_action.setEnabled(false);
                         ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + ",请重新获取验证码");
                     }
                 } else {
-                    LogUtil.e("Regist","Regist "+t.getMsgMap());
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile")+"");
-                    isHasAuthCode=false;
+                    LogUtil.e("Regist", "Regist " + t.getMsgMap());
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + "");
+                    isHasAuthCode = false;
                     cancel();
                 }
                 dialog.dismiss();
@@ -163,7 +177,7 @@ public class RegistActivity extends BaseActivity {
         }, getRequestTag());
     }
 
-    public void cancel(){
+    public void cancel() {
         tv_mark_num_text.setText("发送验证码");
         isSend = true;
         countDownTimer.cancel();
@@ -176,12 +190,12 @@ public class RegistActivity extends BaseActivity {
     @OnClick(R.id.tv_regist_action)
     public void tvRegistAction() {
         if (isHasAuthCode) {
-            if(ivAgreeRegister.isChecked()){
+            if (mChecked) {
                 tvRegistAction2();
-            }else{
+            } else {
                 ToastUtil.show(getApplicationContext(), "不接受，不能注册哦~~");
             }
-        }else{
+        } else {
             ToastUtil.show(getApplicationContext(), "先获取验证码~~");
         }
     }
@@ -189,15 +203,16 @@ public class RegistActivity extends BaseActivity {
     public String phone_number;
     public String password;
     public String mark_number;
+
     public void tvRegistAction2() {
         phone_number = et_phone_number.getText().toString().trim();
         password = etPassword.getText().toString().trim();
-        mark_number= et_mark_number.getText().toString().trim();
+        mark_number = et_mark_number.getText().toString().trim();
         if (TextUtils.isEmpty(phone_number)) {
             ToastUtil.show(getApplicationContext(), "请输入手机号");
             return;
         }
-        if (phone_number.length()!=11) {
+        if (phone_number.length() != 11) {
             ToastUtil.show(getApplicationContext(), "手机号必须是11位");
             return;
         }
@@ -205,7 +220,7 @@ public class RegistActivity extends BaseActivity {
             ToastUtil.show(getApplicationContext(), "请输入密码");
             return;
         }
-        if (password.length()<6&&password.length()>20) {
+        if (password.length() < 6 && password.length() > 20) {
             ToastUtil.show(getApplicationContext(), "密码必须是6~20位的数字和字母");
             return;
         }
@@ -213,16 +228,15 @@ public class RegistActivity extends BaseActivity {
             ToastUtil.show(getApplicationContext(), "请输入验证码");
             return;
         }
-        if (mark_number.length()!=6) {
+        if (mark_number.length() != 6) {
             ToastUtil.show(getApplicationContext(), "验证码必须是6位的数字");
             return;
         }
 
 
-
         regForm = new RegForm(phone_number, password, Integer.parseInt(mark_number), "123456789", 1.0d, 1.0d);
-        final CustomDialog customDialog= new CustomDialog();
-        final Dialog dialog=customDialog.createDialog1(this,"注册中...");
+        final CustomDialog customDialog = new CustomDialog();
+        final Dialog dialog = customDialog.createDialog1(this, "注册中...");
         dialog.show();
 //      isLogining=true;
         instance.accountApi.register(regForm, new HttpClientAdapter.Callback<User>() {
@@ -230,16 +244,16 @@ public class RegistActivity extends BaseActivity {
             public void call(Result<User> t) {
                 if (customDialog.isNoCancel) {
                     if (t.isSuccess()) {
-                        User data= t.getData();
-                        if (data!=null&&data.getAccountToken()!=null) {
+                        User data = t.getData();
+                        if (data != null && data.getAccountToken() != null) {
                             ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
                             loginActionOfReg();
-                        }else{
-                            ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+"注册失败");
+                        } else {
+                            ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg() + "注册失败");
                         }
-                    }else {
-                        LogUtil.e("Regist","Regist "+t.getMsgMap());
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg()+"失败");
+                    } else {
+                        LogUtil.e("Regist", "Regist " + t.getMsgMap());
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg() + "失败");
                     }
                 }
                 dialog.dismiss();
@@ -249,7 +263,8 @@ public class RegistActivity extends BaseActivity {
 
 
     private LoginByPasswordForm loginForm;
-    public void loginActionOfReg(){
+
+    public void loginActionOfReg() {
         loginForm = new LoginByPasswordForm(phone_number, password, "123456789", 1.0d, 1.0d);
         instance = ApiManager.getInstance();
 
@@ -257,26 +272,36 @@ public class RegistActivity extends BaseActivity {
             @Override
             public void call(Result<User> t) {
                 if (t.isSuccess()) {
-                    User data=t.getData();
+                    User data = t.getData();
                     System.err.println("登录AccountToken： " + data.getAccountToken());
-                    if (data.getAccountToken()!=null) {
-                        WeiTaiXinApplication.getInstance().isLogin=true;
-                        WeiTaiXinApplication.accountToken=data.getAccountToken();
+                    if (data.getAccountToken() != null) {
+                        WeiTaiXinApplication.getInstance().isLogin = true;
+                        WeiTaiXinApplication.accountToken = data.getAccountToken();
                         WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                        WeiTaiXinApplication.getInstance().phone_number=phone_number;
-                        WeiTaiXinApplication.user=data;
-                        Intent intent=new Intent(RegistActivity.this.getApplicationContext(), InfoEditActivity.class);
+                        WeiTaiXinApplication.getInstance().phone_number = phone_number;
+                        WeiTaiXinApplication.user = data;
+                        Intent intent = new Intent(RegistActivity.this.getApplicationContext(), InfoEditActivity.class);
                         startActivity(intent);
                         RegistActivity.this.finish();
-                    }else{
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account")+"");
+                    } else {
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
                     }
-                }else {
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account")+"");
+                } else {
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
                 }
             }
         }, getRequestTag());
     }
 
+
+    @OnClick(R.id.iv_agree_register)
+    public void agreeRegisterOnclick() {
+        mChecked = !mChecked;
+        if (mChecked) {
+            ivAgreeRegister.setImageResource(R.drawable.pitch);
+        } else {
+            ivAgreeRegister.setImageResource(R.drawable.pitch_un);
+        }
+    }
 
 }
