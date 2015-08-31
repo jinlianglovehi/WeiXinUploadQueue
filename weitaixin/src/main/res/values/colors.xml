@@ -18,6 +18,7 @@
     <color name="gray9">#FF999999</color>
     <color name="gray10">#FFBABABA</color>
     <color name="gray11">#FFF1F1F1</color>
+    <color name="gray12">#FF636363</color>
     <color name="text_color_hint">#FFC5C7C7</color>
     <color name="black0">#FF222222</color>
     <color name="black1">#FF000000</color>
@@ -47,8 +48,9 @@
     <color name="font_gray_on_white">@color/gray3</color>
 
 
-    <!--line color-->
-    <color name="line_gray">@color/gray1</color>
+    <color name="text_color">#FF333333</color>
+    <color name="text_content_color">#FF444444</color>
+    <color name="text_subtitle_color">#FFA8A8A8</color>
 
 
 </resources>

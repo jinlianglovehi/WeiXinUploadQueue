@@ -1,19 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray5"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray5"
+              android:orientation="vertical">
 
     <include
         android:id="@+id/head_title_id"
-        layout="@layout/layout_title" />
+        layout="@layout/layout_title"/>
 
     <ScrollView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:fadingEdge="none"
-        android:scrollbars="none"
-        android:layout_height="wrap_content">
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,19 +26,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/head_title_id"
-                android:paddingBottom="14dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/white0"
-                android:visibility="visible">
+                android:layout_marginTop="2dp"
+                android:background="@color/white0">
 
                 <cn.ihealthbaby.weitaixin.view.RoundImageView
                     android:id="@+id/iv_wo_head_icon"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="@dimen/dimen_dp_70"
+                    android:layout_height="@dimen/dimen_dp_70"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/camera_icon" />
+                    android:src="@drawable/camera_icon"/>
 
                 <TextView
                     android:id="@+id/tv_wo_head_name"
@@ -46,18 +44,19 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/iv_wo_head_icon"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/dimen_dp_10"
                     android:singleLine="true"
-                    android:text=""
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:text="姓名"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/font22"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_wo_head_name"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="@dimen/dimen_dp_15"
+                    android:layout_marginTop="@dimen/dimen_dp_10"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -66,32 +65,31 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text=""
-                        android:textColor="@color/gray3"
-                        android:textSize="@dimen/font_normal" />
+                        android:text="已孕"
+                        android:textColor="@color/text_subtitle_color"
+                        android:textSize="@dimen/font_normal"/>
 
 
                     <TextView
                         android:id="@+id/tv_wo_head_deliveryTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="@dimen/dimen_dp_5"
                         android:singleLine="true"
-                        android:text=""
+                        android:text="预产"
                         android:textColor="@color/gray3"
-                        android:textSize="@dimen/font_normal" />
+                        android:textSize="@dimen/font_normal"/>
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/iv_wo_head_arrow_right"
-                    android:layout_width="10dp"
-                    android:layout_height="16dp"
+                    android:layout_width="9dp"
+                    android:layout_height="15dp"
                     android:layout_alignParentRight="true"
-                    android:visibility="invisible"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="32dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/wo_head_arrow_right" />
+                    android:src="@drawable/wo_head_arrow_right"/>
 
             </RelativeLayout>
 
@@ -105,11 +103,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="@dimen/dimen_dp_20"
                     android:singleLine="true"
                     android:text="我的电话"
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:textColor="@color/text_subtitle_color"
+                    android:textSize="@dimen/font_normal"/>
 
 
                 <TextView
@@ -123,18 +121,18 @@
                     android:singleLine="true"
                     android:text=""
                     android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:textSize="@dimen/font_normal"/>
 
                 <ImageView
                     android:id="@+id/iv_arrow_right2"
-                    android:layout_width="10dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/dimen_dp_10"
+                    android:layout_height="@dimen/dimen_dp_15"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="22dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/wo_head_arrow_right"
-                    android:visibility="visible" />
+                    android:visibility="visible"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -147,11 +145,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="@dimen/dimen_dp_20"
                     android:singleLine="true"
                     android:text="出生日期"
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:textColor="@color/text_subtitle_color"
+                    android:textSize="@dimen/font_normal"/>
 
 
                 <TextView
@@ -165,18 +163,18 @@
                     android:singleLine="true"
                     android:text=""
                     android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:textSize="@dimen/font_normal"/>
 
                 <ImageView
                     android:id="@+id/iv_arrow_right"
-                    android:layout_width="10dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/dimen_dp_10"
+                    android:layout_height="@dimen/dimen_dp_15"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="22dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/wo_head_arrow_right"
-                    android:visibility="visible" />
+                    android:visibility="visible"/>
             </RelativeLayout>
 
             <TextView
@@ -185,8 +183,8 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="监护信息"
-                android:textColor="@color/gray3"
-                android:textSize="@dimen/font_normal" />
+                android:textColor="@color/gray7"
+                android:textSize="@dimen/font_normal"/>
 
             <RelativeLayout
                 android:id="@+id/ll_set_04"
@@ -198,11 +196,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="@dimen/dimen_dp_20"
                     android:singleLine="true"
                     android:text="设备SN码"
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:textColor="@color/text_subtitle_color"
+                    android:textSize="@dimen/font_normal"/>
 
 
                 <TextView
@@ -213,9 +211,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text=""
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:text="设备"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/font_normal"/>
 
             </RelativeLayout>
 
@@ -229,11 +227,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="@dimen/dimen_dp_20"
                     android:singleLine="true"
                     android:text="所在地区"
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:textColor="@color/text_subtitle_color"
+                    android:textSize="@dimen/font_normal"/>
 
 
                 <TextView
@@ -244,9 +242,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text=""
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:text="所在地区"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/font_normal"/>
 
             </RelativeLayout>
 
@@ -260,11 +258,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="@dimen/dimen_dp_20"
                     android:singleLine="true"
                     android:text="所在医院"
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:textColor="@color/text_subtitle_color"
+                    android:textSize="@dimen/font_normal"/>
 
 
                 <TextView
@@ -275,9 +273,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text=""
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:text="所在医院"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/font_normal"/>
 
             </RelativeLayout>
 
@@ -291,11 +289,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="@dimen/dimen_dp_20"
                     android:singleLine="true"
                     android:text="主治医师"
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:textColor="@color/text_subtitle_color"
+                    android:textSize="@dimen/font_normal"/>
 
 
                 <TextView
@@ -306,9 +304,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text=""
-                    android:textColor="@color/black0"
-                    android:textSize="@dimen/font_normal" />
+                    android:text="主治医师"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/font_normal"/>
 
             </RelativeLayout>
 

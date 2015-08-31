@@ -28,13 +28,13 @@
                 android:layout_below="@id/head_title_id"
                 android:layout_marginTop="2dp"
                 android:background="@color/white0"
-                android:paddingBottom="14dp"
+                android:paddingBottom="16dp"
                 android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/iv_wo_head_icon"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
                     android:scaleType="fitXY"
@@ -46,10 +46,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/iv_wo_head_icon"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:singleLine="true"
                     android:text="我的押金"
-                    android:textColor="@color/black0"
+                    android:textColor="@color/text_color"
                     android:textSize="@dimen/font_normal" />
 
                 <LinearLayout
@@ -68,7 +68,7 @@
                         android:singleLine="true"
                         android:text="￥5656"
                         android:textColor="@color/red0"
-                        android:textSize="50sp" />
+                        android:textSize="36sp" />
 
                 </LinearLayout>
 
@@ -78,17 +78,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@color/white0"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="13dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="19dp"
                     android:singleLine="true"
                     android:text="咨询费用"
-                    android:textColor="@color/gray7"
+                    android:textColor="@color/text_subtitle_color"
                     android:textSize="@dimen/font_normal" />
 
 
@@ -96,7 +96,7 @@
                     android:id="@+id/tv_phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
+                    android:layout_marginLeft="12dp"
                     android:singleLine="true"
                     android:text="￥110"
                     android:textColor="@color/black0"
@@ -107,24 +107,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@color/white0"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="13dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="19dp"
                     android:singleLine="true"
                     android:text="购物抵扣"
-                    android:textColor="@color/gray7"
+                    android:textColor="@color/text_subtitle_color"
                     android:textSize="@dimen/font_normal" />
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
+                    android:layout_marginLeft="12dp"
                     android:singleLine="true"
                     android:text="￥560"
                     android:textColor="@color/black0"
