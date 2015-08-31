@@ -29,6 +29,7 @@
     <color name="green0">#FF01CF97</color>
     <color name="green1">#FF24AA42</color>
     <color name="green2">#FF3AD9AE</color>
+    <color name="green3">#FF01CF97</color>
     <!--background-->
     <color name="background_white">@color/white0</color>
     <color name="background_gray">@color/gray6</color>

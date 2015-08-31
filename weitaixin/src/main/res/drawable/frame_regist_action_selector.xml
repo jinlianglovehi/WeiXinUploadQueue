@@ -5,7 +5,7 @@
     <corners android:radius="4dp" />
 
     <!-- 填充 -->
-    <solid android:color="@color/button_login" />
+    <solid android:color="@color/green3" />
 
 
 </shape>
