@@ -1,177 +1,176 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray5"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray5"
+              android:orientation="vertical">
 
     <include
         android:id="@+id/head_title_id"
-        layout="@layout/layout_title" />
+        layout="@layout/layout_title"/>
 
 
     <RelativeLayout
         android:id="@+id/ll_set_system_01"
         style="@style/wo_info_item"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:singleLine="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="23dp"
+            android:singleLine="true"
             android:text="监护设置"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font_normal" />
+            android:textSize="@dimen/font_normal"/>
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="16dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
             android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
             android:scaleType="fitXY"
             android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible" />
+            android:visibility="visible"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ll_set_system_05"
         style="@style/wo_info_item"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="23dp"
             android:singleLine="true"
             android:text="上传设置"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font_normal" />
+            android:textSize="@dimen/font_normal"/>
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="16dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
             android:scaleType="fitXY"
             android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible" />
+            android:visibility="visible"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ll_set_system_02"
         style="@style/wo_info_item"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="23dp"
             android:singleLine="true"
             android:text="修改密码"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font_normal" />
+            android:textSize="@dimen/font_normal"/>
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="16dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
-            android:scaleType="fitXY"
             android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
+            android:scaleType="fitXY"
             android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible" />
+            android:visibility="visible"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ll_set_system_03"
         style="@style/wo_info_item"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="23dp"
             android:singleLine="true"
             android:text="意见和反馈"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font_normal" />
+            android:textSize="@dimen/font_normal"/>
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="16dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
-            android:scaleType="fitXY"
             android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
+            android:scaleType="fitXY"
             android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible" />
+            android:visibility="visible"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ll_set_system_04"
         style="@style/wo_info_item"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:singleLine="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="23dp"
+            android:singleLine="true"
             android:text="关于微胎心"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font_normal" />
+            android:textSize="@dimen/font_normal"/>
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="22dp"
             android:scaleType="fitXY"
             android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible" />
+            android:visibility="visible"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ll_set_system_06"
         style="@style/wo_info_item"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="23dp"
             android:singleLine="true"
             android:text="退出登录"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font_normal" />
+            android:textSize="@dimen/font_normal"/>
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="16dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="30dp"
             android:scaleType="fitXY"
             android:src="@drawable/wo_head_arrow_right"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </RelativeLayout>
-
 
 
 </LinearLayout>

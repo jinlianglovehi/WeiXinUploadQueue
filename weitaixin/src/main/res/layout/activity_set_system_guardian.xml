@@ -14,7 +14,7 @@
     <RelativeLayout
         android:id="@+id/ll_set_system_01"
         style="@style/wo_info_item"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -29,8 +29,8 @@
 
         <cn.ihealthbaby.weitaixin.view.SlideSwitchView
             android:id="@+id/slide_switch_begin"
-            android:layout_width="50dip"
-            android:layout_height="30dip"
+            android:layout_width="47dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="30dp"
             slideswitch:isOpen="true"
@@ -41,7 +41,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:background="@color/white0"
         android:orientation="vertical">
 
@@ -62,7 +62,7 @@
 
             <cn.ihealthbaby.weitaixin.view.SlideSwitchView
                 android:id="@+id/slide_switch_alarm"
-                android:layout_width="50dip"
+                android:layout_width="47dip"
                 android:layout_height="30dip"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="30dp"
@@ -75,6 +75,7 @@
             android:id="@+id/meLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:orientation="vertical">
 
             <View
@@ -90,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="请选择时间间隔，间隔时间之内不重复报警"
