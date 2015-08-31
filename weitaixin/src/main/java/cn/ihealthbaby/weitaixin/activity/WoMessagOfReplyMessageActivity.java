@@ -110,7 +110,7 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
                         tvFeeling.setText("监护心情: " + feeling[data.getFeeling()]);
                         tvQuestion.setText(data.getQuestion());
                         mTvDate.setText(DateTimeTool.getGestationalWeeks(WeiTaiXinApplication.user.getDeliveryTime()));
-                        tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime(),"MM月dd日"));
+                        tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime(), "MM月dd日 hh:mm"));
 
                         AdviceReply adviceReply = data.getAdviceReply();
                         if (adviceReply != null) {
@@ -119,7 +119,7 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
                             tvDoctorTitle.setText(adviceReply.getDoctorTitle());
                             tvHospitalName.setText(adviceReply.getHospitalName());
                             tvReplyContext.setText(adviceReply.getReplyContext());
-                            tvReplyTime.setText(DateTimeTool.date2Str(adviceReply.getReplyTime(),"MM月dd日"));
+                            tvReplyTime.setText(RelativeDateFormat.format(adviceReply.getReplyTime()));
                         }
                     } else {
                         ToastUtil.show(getApplicationContext(), t.getMsg());

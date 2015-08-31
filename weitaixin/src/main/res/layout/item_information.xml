@@ -73,10 +73,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="16dp"
         android:paddingRight="13dp"
         android:singleLine="true"
         android:text="20分钟"
         android:textColor="@color/text_subtitle_color"
-        android:textSize="@dimen/font_normal"/>
+        android:textSize="14sp"/>
 </RelativeLayout>

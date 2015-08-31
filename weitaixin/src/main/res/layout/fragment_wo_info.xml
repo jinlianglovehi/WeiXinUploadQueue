@@ -195,7 +195,7 @@
             android:layout_width="@dimen/dimen_dp_15"
             android:layout_height="@dimen/dimen_dp_15"
             android:layout_marginLeft="@dimen/dimen_dp_25"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:src="@drawable/wo_grade"/>
 
         <TextView
