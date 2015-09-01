@@ -3,159 +3,145 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray12">
+    android:background="@color/gray13">
 
     <include
         android:id="@+id/head_title_id"
         layout="@layout/layout_title" />
 
-    <FrameLayout
+
+    <RelativeLayout
+        android:id="@+id/rlCenterRound"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="276dp"
         android:layout_below="@id/head_title_id"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="50dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/corner_background_white"
-                android:paddingBottom="70dp"
-                android:paddingTop="50dp">
-
-                <TextView
-                    android:id="@+id/tvTextOne"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="提供我的监测时的状态，"
-                    android:textSize="@dimen/font12" />
-
-                <TextView
-                    android:id="@+id/tvTextTwo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvTextOne"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="帮助医生更好掌握胎心信息"
-                    android:textSize="@dimen/font12" />
-
-
-                <RelativeLayout
-                    android:id="@+id/rl_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvTextTwo"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/frame_selector">
-
-                    <FrameLayout
-                        android:id="@+id/flGuardianPurpose"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="40dp"
-                            android:background="@null"
-                            android:padding="18dp"
-                            android:phoneNumber="true"
-                            android:singleLine="true"
-                            android:text="监护目的  其他(感觉不适或用药等)"
-                            android:textColor="@color/black2"
-                            android:textSize="@dimen/font12" />
-
-                        <CheckBox
-                            android:layout_width="40dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="right|center_vertical"
-                            android:background="@drawable/eye_selector"
-                            android:button="@null"
-                            android:scaleType="fitCenter" />
-                    </FrameLayout>
-
-                    <View
-                        android:id="@+id/view_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_below="@id/flGuardianPurpose"
-                        android:background="@color/gray11" />
-
-                    <FrameLayout
-                        android:id="@+id/flGuardianMood"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/view_line"
-                        android:layout_centerHorizontal="true">
-
-
-                        <TextView
-                            android:id="@+id/et_password_login"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="40dp"
-                            android:background="@null"
-                            android:padding="18dp"
-                            android:singleLine="true"
-                            android:text="监护心情"
-                            android:textSize="@dimen/font12" />
-
-
-                        <CheckBox
-                            android:id="@+id/ivShowPassword"
-                            android:layout_width="40dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="right|center_vertical"
-                            android:background="@drawable/eye_selector"
-                            android:button="@null"
-                            android:scaleType="fitCenter" />
-                    </FrameLayout>
-
-                </RelativeLayout>
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/ivHeader"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/grade_progress" />
-
+        android:layout_marginTop="78dp"
+        android:background="@drawable/corner_background_white">
 
         <TextView
-            android:id="@+id/ivFooter"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:background="@drawable/grade_progress"
+            android:id="@+id/tvTextOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="42dp"
             android:gravity="center"
-            android:text="确定"
-            android:textColor="@drawable/text_color_selector"
+            android:singleLine="true"
+            android:text="提供我的监测时的状态，"
             android:textSize="@dimen/font12" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/tvTextTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTextOne"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="帮助医生更好掌握胎心信息"
+            android:textSize="@dimen/font12" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTextTwo"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/frame_selector">
+
+            <FrameLayout
+                android:id="@+id/flGuardianPurpose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
+
+                <TextView
+                    android:id="@+id/tvGuardianPurposeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="40dp"
+                    android:background="@null"
+                    android:padding="18dp"
+                    android:singleLine="true"
+                    android:text="监护目的  其他(感觉不适或用药等)"
+                    android:textColor="@drawable/text_color_hei_selector"
+                    android:textSize="@dimen/font12" />
+
+                <CheckBox
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@drawable/eye_selector"
+                    android:button="@null"
+                    android:scaleType="fitCenter" />
+            </FrameLayout>
+
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/flGuardianPurpose"
+                android:background="@color/gray4" />
+
+            <FrameLayout
+                android:id="@+id/flGuardianMood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_line"
+                android:layout_centerHorizontal="true">
+
+
+                <TextView
+                    android:id="@+id/tvGuardianMoodText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="40dp"
+                    android:background="@null"
+                    android:padding="18dp"
+                    android:singleLine="true"
+                    android:text="监护心情"
+                    android:textColor="@drawable/text_color_hei_selector"
+                    android:textSize="@dimen/font12" />
+
+
+                <CheckBox
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@drawable/eye_selector"
+                    android:button="@null"
+                    android:scaleType="fitCenter" />
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/ivHeader"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-310dp"
+        android:layout_below="@id/rlCenterRound"
+        android:src="@drawable/grade_progress" />
+
+
+    <TextView
+        android:id="@+id/ivFooter"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_below="@id/rlCenterRound"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-38dp"
+        android:background="@drawable/grade_progress"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@drawable/text_color_selector"
+        android:textSize="@dimen/font12" />
 
 
 </RelativeLayout>
