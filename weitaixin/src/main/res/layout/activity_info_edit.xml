@@ -10,7 +10,7 @@
         layout="@layout/layout_title" />
 
 
-    <cn.ihealthbaby.weitaixin.view.RoundImageView
+    <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
         android:id="@+id/iv_head_icon_info"
         android:layout_below="@id/head_title_id"
         android:layout_width="70dp"

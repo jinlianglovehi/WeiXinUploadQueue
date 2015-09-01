@@ -27,7 +27,7 @@
             android:textColor="@drawable/text_color_hei_selector"
             android:textSize="@dimen/font_normal"/>
 
-        <cn.ihealthbaby.weitaixin.view.SlideSwitchView
+        <cn.ihealthbaby.weitaixin.ui.widget.SlideSwitchView
             android:id="@+id/slide_switch_upload"
             android:layout_width="48dip"
             android:layout_height="30dip"

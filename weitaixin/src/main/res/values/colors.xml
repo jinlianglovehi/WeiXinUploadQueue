@@ -19,6 +19,7 @@
     <color name="gray10">#FFBABABA</color>
     <color name="gray11">#FFF1F1F1</color>
     <color name="gray12">#FF636363</color>
+    <color name="gray13">#FFF2F2F2</color>
     <color name="text_color_hint">#FFC5C7C7</color>
     <color name="black0">#FF222222</color>
     <color name="black1">#FF000000</color>
@@ -30,6 +31,7 @@
     <color name="green1">#FF24AA42</color>
     <color name="green2">#FF3AD9AE</color>
     <color name="green3">#FF01CF97</color>
+    <color name="green4">#FFE9fffA</color>
     <!--background-->
     <color name="background_white">@color/white0</color>
     <color name="background_gray">@color/gray6</color>

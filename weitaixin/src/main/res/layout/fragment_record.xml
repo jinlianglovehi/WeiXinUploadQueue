@@ -19,7 +19,7 @@
         android:background="@color/white0"
         android:paddingTop="10dp">
 
-        <cn.ihealthbaby.weitaixin.view.RoundImageView
+        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
             android:id="@+id/ivWoHeadIcon"
             android:layout_width="50dp"
             android:layout_height="50dp"

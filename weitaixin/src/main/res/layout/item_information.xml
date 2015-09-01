@@ -14,7 +14,7 @@
         android:layout_marginLeft="@dimen/dimen_dp_14"
         android:layout_marginTop="@dimen/dimen_dp_18">
 
-        <cn.ihealthbaby.weitaixin.view.RoundImageView
+        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
             android:id="@+id/iv_head_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

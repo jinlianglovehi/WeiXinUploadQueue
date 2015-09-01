@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/corner_background_white"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/tvTitleGuardian"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/corner_background_green"
+            android:gravity="center"
+            android:text="监护目的"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/lvGuardianPurpose"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_below="@id/tvTitleGuardian"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:cacheColorHint="#00000000"
+            android:divider="@color/gray2"
+            android:dividerHeight="1dp"
+            android:fadingEdge="none"
+            android:scrollbars="none"
+            android:transcriptMode="normal" />
+
+        <TextView
+            android:layout_below="@id/lvGuardianPurpose"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+             />
+
+    </RelativeLayout>
+
+</RelativeLayout>

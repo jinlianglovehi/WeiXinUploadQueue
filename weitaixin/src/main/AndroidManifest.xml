@@ -23,7 +23,7 @@
         android:theme="@android:style/Theme.Light.NoTitleBar"
         tools:replace="android:icon">
 
-        <activity android:name=".fragment.MeMainFragmentActivity">
+        <activity android:name=".ui.MeMainFragmentActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -31,26 +31,26 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.RegistActivity"/>
-        <activity android:name=".activity.LoginActivity"/>
-        <activity android:name=".activity.SetSystemActivity"/>
-        <activity android:name=".activity.WoInformationActivity"/>
-        <activity android:name=".activity.InfoEditActivity"/>
-        <activity android:name=".activity.GradedActivity"/>
-        <activity android:name=".activity.WoGoldenActivity"/>
-        <activity android:name=".activity.WoMessageActivity"/>
-        <activity android:name=".activity.AskDoctorActivity"/>
-        <activity android:name=".activity.SetSystemSuggestionActivity"/>
-        <activity android:name=".activity.SetSystemResetPasswordActivity"/>
-        <activity android:name=".activity.SetSystemGuardianActivity"/>
-        <activity android:name=".activity.SetSystemUploadActivity"/>
-        <activity android:name=".activity.LoginSmsAuthCodeActivity"/>
-        <activity android:name=".activity.WoMessagOfSystemMessageActivity"/>
-        <activity android:name=".activity.WoMessagOfReplyMessageActivity"/>
-        <activity android:name=".activity.ProtocolActivity"/>
-        <activity android:name=".activity.ReplyedActivity"/>
-        <activity android:name=".activity.WaitReplyingActivity"/>
-        <activity android:name=".activity.AAAAActivity"/>
+        <activity android:name=".ui.login.RegistActivity"/>
+        <activity android:name=".ui.login.LoginActivity"/>
+        <activity android:name=".ui.mine.SetSystemActivity"/>
+        <activity android:name=".ui.mine.WoInformationActivity"/>
+        <activity android:name=".ui.login.InfoEditActivity"/>
+        <activity android:name=".ui.mine.GradedActivity"/>
+        <activity android:name=".ui.mine.WoGoldenActivity"/>
+        <activity android:name=".ui.mine.WoMessageActivity"/>
+        <activity android:name=".ui.record.AskDoctorActivity"/>
+        <activity android:name=".ui.mine.SetSystemSuggestionActivity"/>
+        <activity android:name=".ui.mine.SetSystemResetPasswordActivity"/>
+        <activity android:name=".ui.mine.SetSystemGuardianActivity"/>
+        <activity android:name=".ui.mine.SetSystemUploadActivity"/>
+        <activity android:name=".ui.login.LoginSmsAuthCodeActivity"/>
+        <activity android:name=".ui.monitor.GuardianStateActivity"/>
+        <activity android:name=".ui.mine.WoMessagOfSystemMessageActivity"/>
+        <activity android:name=".ui.mine.WoMessagOfReplyMessageActivity"/>
+        <activity android:name=".ui.login.ProtocolActivity"/>
+        <activity android:name=".ui.record.ReplyedActivity"/>
+        <activity android:name=".ui.mine.WaitReplyingActivity"/>
         <activity android:name=".ui.demo.ViewActivity"/>
         <activity android:name=".ui.demo.DeviceListActivity"/>
 
@@ -60,11 +60,11 @@
         <activity
             android:name=".ui.monitor.CurveDetialActivity"
             android:label="@string/title_activity_curve_detial"/>
-        <activity android:name=".activity.AboutActivity"/>
-        <activity android:name=".activity.WelcomeActiviy"/>
-        <activity android:name=".activity.FeatureActiviy"/>
-        <activity android:name=".activity.UseProcessActiviy"/>
-        <activity android:name=".activity.UseProtocolActiviy"/>
+        <activity android:name=".ui.mine.AboutActivity"/>
+        <activity android:name=".ui.mine.WelcomeActiviy"/>
+        <activity android:name=".ui.mine.FeatureActiviy"/>
+        <activity android:name=".ui.mine.UseProcessActiviy"/>
+        <activity android:name=".ui.mine.UseProtocolActiviy"/>
 
         <receiver android:name=".library.data.bluetooth.mode.spp.BluetoothReceiver"/>
 

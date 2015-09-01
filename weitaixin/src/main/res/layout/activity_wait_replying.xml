@@ -15,7 +15,7 @@
         android:background="@color/gray5"
         android:orientation="vertical">
 
-        <cn.ihealthbaby.weitaixin.view.RoundImageView
+        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
             android:id="@+id/iv_wo_head_icon"
             android:layout_width="54dp"
             android:layout_height="54dp"
@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:padding="4dp">
 
-            <cn.ihealthbaby.weitaixin.view.RoundImageView
+            <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
                 android:id="@+id/ivDoctorHeadPic"
                 android:layout_width="54dp"
                 android:layout_marginLeft="4dp"

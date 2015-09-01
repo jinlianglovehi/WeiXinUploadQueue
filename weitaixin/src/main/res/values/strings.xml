@@ -43,13 +43,13 @@
     <string name="about_title">关于微胎心</string>
 
 
-    <!--cn.ihealthbaby.weitaixin.activity.WelcomeActiviy-->
+    <!--cn.ihealthbaby.weitaixin.ui.mine.WelcomeActiviy-->
     <string name="welcome_title">欢迎界面</string>
 
-    <!--cn.ihealthbaby.weitaixin.activity.FeatureActiviy-->
+    <!--cn.ihealthbaby.weitaixin.ui.mine.FeatureActiviy-->
     <string name="feature_title">产品功能</string>
 
-    <!--cn.ihealthbaby.weitaixin.activity.UseProcessActiviy-->
+    <!--cn.ihealthbaby.weitaixin.ui.mine.UseProcessActiviy-->
     <string name="use_process_title">使用流程</string>
 
 </resources>

@@ -14,23 +14,14 @@ public class DataDao {
 	
 	private Context context;
 	private DataDBHelper dbHelper;
-	private HashMap<String, Boolean> flage=new HashMap<String, Boolean>();
 
 	public DataDao(Context context) {
 		this.context = context;
 		dbHelper = new DataDBHelper(context);
-		
-		flage.put("recordtable", false);
 	}
 
 	
 	public synchronized  void add(String tableName, final ArrayList<AdviceItem>  adviceItems){
-//		if (!flage.get(tableName)) {
-//			flage.put(tableName, true);
-//		} else {
-//			return;
-//		}
-
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -48,7 +39,6 @@ public class DataDao {
 							db.endTransaction();
 						}
 					}
-//					db.close();
 				}
 			}
 		}).start();
@@ -66,7 +56,6 @@ public class DataDao {
 		} finally {
 			db.endTransaction();
 		}
-//		db.close();
 	}
 	
 	
@@ -94,7 +83,6 @@ public class DataDao {
 				pageSize--;
 			}
 			cursor.close();
-//			db.close();
 		}
 		return adviceItems;
 	}

@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import cn.ihealthbaby.client.model.Information;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.tools.RelativeDateFormat;
-import cn.ihealthbaby.weitaixin.view.RoundImageView;
+import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
 public class MyRefreshAdapter extends BaseAdapter {
