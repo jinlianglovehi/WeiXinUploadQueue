@@ -45,7 +45,6 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     @Bind(R.id.function)
     TextView function;
 
-    //
     @Bind(R.id.iv_head_icon_info)
     RoundImageView iv_head_icon_info;
     @Bind(R.id.et_birthdate_info)
