@@ -40,8 +40,6 @@ import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
-import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
-import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.db.DataDBHelper;
@@ -51,6 +49,8 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.LocalAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
@@ -87,6 +87,8 @@ public class RecordFragment extends BaseFragment {
     @Nullable
     @Bind(R.id.tvHospitalName)
     TextView tvHospitalName;
+    @Bind(R.id.tv_min)
+    TextView mTvMin;
 
 
     private MyAdviceItemAdapter adapter;
@@ -112,8 +114,8 @@ public class RecordFragment extends BaseFragment {
 
 
     @OnClick(R.id.ivWoHeadIcon)
-    public void WoHeadIcon(){
-        Intent intent=new Intent(getActivity().getApplicationContext(), GuardianStateActivity.class);
+    public void WoHeadIcon() {
+        Intent intent = new Intent(getActivity().getApplicationContext(), GuardianStateActivity.class);
         startActivity(intent);
     }
 
@@ -139,6 +141,7 @@ public class RecordFragment extends BaseFragment {
             private float oldXDis;
             private float oldX;
             private float oldY;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (adapter.getSelectedView() == null) {

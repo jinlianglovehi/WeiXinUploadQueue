@@ -44,20 +44,21 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     public ArrayList<AdviceItem> datas;
 
     private LayoutInflater mInflater;
-    private String[] strFlag=new String[]{"问医生","等待回复","已回复","需上传"};
+    private String[] strFlag = new String[]{"问医生", "等待回复", "已回复", "需上传"};
 
-///////
+    ///////
     public View selectedView;
     public View selectedViewOld;
     private int selectedItem;
-    public TextView recordDelete;;
+    public TextView recordDelete;
+    ;
 
     public View getSelectedView() {
         return selectedView;
     }
 
     public void cancel() {
-        if (selectedView==null) {
+        if (selectedView == null) {
             return;
         }
         ObjectAnimator.ofFloat(selectedView, "x", 0f).start();
@@ -65,7 +66,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     }
 
     public void cancel(View selectedViewOld) {
-        if (selectedViewOld==null) {
+        if (selectedViewOld == null) {
             return;
         }
         ObjectAnimator.ofFloat(selectedViewOld, "x", 0f).start();
@@ -76,7 +77,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
     public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas) {
         mInflater = LayoutInflater.from(context);
-        this.context=context;
+        this.context = context;
         setDatas(datas);
     }
 
@@ -103,13 +104,14 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         if (this.datas != null && this.datas.size() > 0)
             Collections.sort(this.datas, comparator);
     }
-    public Comparator<AdviceItem> comparator = new Comparator<AdviceItem>(){
+
+    public Comparator<AdviceItem> comparator = new Comparator<AdviceItem>() {
         public int compare(AdviceItem s1, AdviceItem s2) {
-            Date date1=s1.getTestTime();
-            Date date2=s2.getTestTime();
-            if (date1==null||date2==null) {
+            Date date1 = s1.getTestTime();
+            Date date2 = s2.getTestTime();
+            if (date1 == null || date2 == null) {
                 return -1;
-            }else{
+            } else {
                 return date2.compareTo(date1);
             }
         }
@@ -140,22 +142,22 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        recordDelete=viewHolder.tvRecordDelete;
+        recordDelete = viewHolder.tvRecordDelete;
         viewHolder.rlRecordItem.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        selectedView= v;
-                        selectedItem=position;
+                        selectedView = v;
+                        selectedItem = position;
                         break;
                 }
                 return false;
             }
         });
         final AdviceItem adviceItem = this.datas.get(position);
-        String dateStr=adviceItem.getGestationalWeeks();
-        String[] split=dateStr.split("\\+");
+        String dateStr = adviceItem.getGestationalWeeks();
+        String[] split = dateStr.split("\\+");
         viewHolder.tvCircleTime1.setText(split[0]);
         viewHolder.tvCircleTime2.setText(split[1]);
 
@@ -163,9 +165,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 hh:mm"));
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
         viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
-        if (adviceItem.getStatus()==1) {
+        if (adviceItem.getStatus() == 1) {
             viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle_un);
-        }else{
+        } else {
             viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle);
         }
 
@@ -186,28 +188,28 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void setItemTextView(AdviceItem adviceItem){
+    private void setItemTextView(AdviceItem adviceItem) {
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
-        int status= adviceItem.getStatus();
+        int status = adviceItem.getStatus();
         if (status == 0) {
-            Intent intent=new Intent(context, AskDoctorActivity.class);
-            intent.putExtra("status",status);
+            Intent intent = new Intent(context, AskDoctorActivity.class);
+            intent.putExtra("status", status);
             context.startActivity(intent);
         } else if (status == 1) {
-            Intent intent=new Intent(context, WaitReplyingActivity.class);
+            Intent intent = new Intent(context, WaitReplyingActivity.class);
             intent.putExtra("relatedId", adviceItem.getId());
             context.startActivity(intent);
         } else if (status == 2) {
-            Intent intent=new Intent(context, ReplyedActivity.class);
+            Intent intent = new Intent(context, ReplyedActivity.class);
             intent.putExtra("relatedId", adviceItem.getId());
             context.startActivity(intent);
         } else if (status == 3) {
 
-            final CustomDialog customDialog=new CustomDialog();
+            final CustomDialog customDialog = new CustomDialog();
             Dialog dialog = customDialog.createDialog1(context, "上传中...");
             dialog.show();
 
-            AdviceForm adviceForm=new AdviceForm();
+            AdviceForm adviceForm = new AdviceForm();
             adviceForm.setClientId(adviceItem.getId() + "");
             adviceForm.setTestTime(adviceItem.getTestTime());
             adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
@@ -226,9 +228,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
                 public void call(Result<Long> t) {
                     if (t.isSuccess()) {
                         Long data = t.getData();
-                        ToastUtil.show(context,"上传成功");
-                    }else{
-                        ToastUtil.show(context, t.getMsgMap()+"");
+                        ToastUtil.show(context, "上传成功");
+                    } else {
+                        ToastUtil.show(context, t.getMsgMap() + "");
                     }
                     customDialog.dismiss();
                 }
@@ -236,41 +238,48 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         }
     }
 
-    private void deleteRecordItem(final int position){
+    private void deleteRecordItem(final int position) {
         if (datas.size() > 0) {
             AdviceItem adviceItem = datas.get(position);
-            if (adviceItem.getStatus()!=3) {
+            if (adviceItem.getStatus() != 3) {
                 final CustomDialog customDialog = new CustomDialog();
-                Dialog dialog=customDialog.createDialog1(context,"正在删除...");
+                Dialog dialog = customDialog.createDialog1(context, "正在删除...");
                 dialog.show();
                 ApiManager.getInstance().adviceApi.delete(adviceItem.getId(), new HttpClientAdapter.Callback<Void>() {
                     @Override
                     public void call(Result<Void> t) {
                         if (t.isSuccess()) {
-                            ToastUtil.show(context,"删除成功");
+                            ToastUtil.show(context, "删除成功");
                             datas.remove(position);
                             notifyDataSetChanged();
-                        }else{
-                            ToastUtil.show(context,t.getMsgMap()+"");
+                        } else {
+                            ToastUtil.show(context, t.getMsgMap() + "");
                         }
                         customDialog.dismiss();
                     }
-                },context);
-            }else{
-                ToastUtil.show(context,"请先上传，才能删除~~~");
+                }, context);
+            } else {
+                ToastUtil.show(context, "请先上传，才能删除~~~");
                 cancel();
             }
         }
     }
 
     static class ViewHolder {
-        @Bind(R.id.tvCircleTime1) TextView tvCircleTime1;
-        @Bind(R.id.tvCircleTime2) TextView tvCircleTime2;
-        @Bind(R.id.tvTestTimeLong) TextView tvTestTimeLong;
-        @Bind(R.id.tvDateTime) TextView tvDateTime;
-        @Bind(R.id.tvAdviceStatus) TextView tvAdviceStatus;
-        @Bind(R.id.tvRecordDelete) TextView tvRecordDelete;
-        @Bind(R.id.rlRecordItem) RelativeLayout rlRecordItem;
+        @Bind(R.id.tvCircleTime1)
+        TextView tvCircleTime1;
+        @Bind(R.id.tvCircleTime2)
+        TextView tvCircleTime2;
+        @Bind(R.id.tvTestTimeLong)
+        TextView tvTestTimeLong;
+        @Bind(R.id.tvDateTime)
+        TextView tvDateTime;
+        @Bind(R.id.tvAdviceStatus)
+        TextView tvAdviceStatus;
+        @Bind(R.id.tvRecordDelete)
+        TextView tvRecordDelete;
+        @Bind(R.id.rlRecordItem)
+        RelativeLayout rlRecordItem;
 
         public ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
@@ -279,7 +288,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
 
     public DisplayImageOptions setDisplayImageOptions() {
-        DisplayImageOptions options=null;
+        DisplayImageOptions options = null;
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.button_monitor_helper)
                 .showImageForEmptyUri(R.drawable.button_monitor_helper)
