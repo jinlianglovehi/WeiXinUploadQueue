@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/rl_content"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/transparent"
-                android:gravity="center">
+<FrameLayout
+    android:id="@+id/rl_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="276dp"
+    android:layout_height="400dp"
+    android:layout_gravity="center_horizontal"
+    android:background="@android:color/transparent"
+    android:gravity="center">
 
     <LinearLayout
         android:id="@+id/ll_begin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="58dp"
         android:background="@drawable/shape_grade_dialog"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -22,33 +24,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="30dp"
-            android:text="做个小评分"/>
+            android:paddingTop="56dp"
+            android:text="做个小评分"
+            android:textColor="@color/text_color"
+            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/tv_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_title"
             android:gravity="center"
             android:padding="@dimen/dimen_dp_5"
-            android:text="看自己是否为高危用户"/>
+            android:text="看自己是否为高危用户"
+            android:textColor="@color/text_color"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/tv_mid_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="133dp"
+            android:text="中间内容"
+            android:textColor="@color/text_color"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="56dp"
             android:gravity="center"
-            android:paddingTop="10dp"
-            android:text="这是内容"/>
+            android:text="这是内容"
+            android:textColor="@color/text_color"
+            android:visibility="visible"/>
 
         <LinearLayout
             android:id="@+id/rl_select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="@dimen/dimen_dp_20"
+            android:layout_marginTop="56dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/dimen_dp_40">
@@ -77,88 +93,17 @@
                 android:textColor="@drawable/text_color_hei_selector"
                 android:textSize="@dimen/font_normal14"/>
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_result"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:background="@color/white0"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="@dimen/dimen_dp_30"
-            android:text="本次的高危评分是"/>
-
-        <TextView
-            android:id="@+id/tv_score"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_title"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dimen_dp_30"
-            android:text="100分"
-            android:textColor="@color/green0"
-            android:textSize="@dimen/font30"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="轻：5分，建议平时多注意胎儿异常"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="中：10分-15分，建议向医生反映自己\n情况，询问医生建议"/>
-
-        <TextView
-            android:id="@+id/tv_serious"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="重：≥20分，建议立刻询问医生并遵\n医嘱"/>
-
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_number"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="67dp"
+        android:layout_height="67dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="26dp"
         android:background="@drawable/circle_graded"
         android:gravity="center"
         android:textSize="@dimen/font18"/>
-
-    <TextView
-        android:id="@+id/tv_result_true"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/ll_result"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-20dp"
-        android:background="@drawable/grade_progress"
-        android:gravity="center"
-        android:text="确定"
-        android:textColor="@color/white0"
-        android:visibility="gone"/>
-</RelativeLayout>
-
+</FrameLayout>

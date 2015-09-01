@@ -19,6 +19,9 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
@@ -117,7 +120,23 @@ public class WoInfoFragment extends BaseFragment {
 
     private void setTextHead() {
 
-//        ApiManager.getInstance().informationApi.getUnReadCount();
+        ApiManager.getInstance().informationApi.getUnReadCount(new HttpClientAdapter.Callback<Integer>() {
+            @Override
+            public void call(Result<Integer> t) {
+                if (t.isSuccess()) {
+                    if (t.getData() > 0) {
+                        mTvMessageCount.setVisibility(View.VISIBLE);
+                        mTvMessageCount.setText(t.getData() + "");
+                    } else {
+                        mTvMessageCount.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    mTvMessageCount.setVisibility(View.GONE);
+                }
+
+            }
+        }, getRequestTag());
         if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.user != null) {
             ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
             tv_wo_head_name.setText(WeiTaiXinApplication.user.getName() + "");
