@@ -11,11 +11,22 @@ public class DataDBHelper extends SQLiteOpenHelper{
 	}
 
 	public static String tableName="recordTable";
+	public static String tableNativeName="recordNativeTable";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		
 		db.execSQL("CREATE TABLE recordTable (" +
+				"_id integer primary key autoincrement," + //
+				"mid varchar(50)," + //
+				"gestationalWeeks varchar(50)," + //
+				"testTime varchar(100)," + //
+				"testTimeLong varchar(100)," + //
+				"status varchar(20)" + //
+				")"); //
+
+
+		db.execSQL("CREATE TABLE recordNativeTable (" +
 				"_id integer primary key autoincrement," + //
 				"mid varchar(50)," + //
 				"gestationalWeeks varchar(50)," + //

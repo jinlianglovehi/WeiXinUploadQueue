@@ -316,11 +316,11 @@ public class RecordFragment extends BaseFragment {
                             LogUtil.d("PageData", "ArrayList: " + dataList.size());
 
                             if (dataList.size() > 0) {
-//                            if (pageCountCache <= 3 && dataList.size() > 0) {
-//                                dataDao.add("recodeList", dataList);
-//                                WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
-//                            }
-//                            ++pageCountCache;
+//                              if (pageCountCache <= 3 && dataList.size() > 0) {
+//                                  dataDao.add("recodeList", dataList);
+//                                  WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
+//                              }
+//                              ++pageCountCache;
                                 tvUsedCount.setText(data.getCount() + "");
                                 adapter.addDatas(dataList);
                                 adapter.notifyDataSetChanged();
@@ -361,7 +361,9 @@ public class RecordFragment extends BaseFragment {
         Dialog dialog = customDialog.createDialog1(context, "从数据库中加载...");
         dialog.show();
         //从缓存数据库中展示数据列表
-        ArrayList<AdviceItem> adviceItems = dataDao.getAllRecord(pageSize);
+        ArrayList<AdviceItem> adviceItems = dataDao.getAllRecord(DataDBHelper.tableName, pageSize);
+        ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
+        adviceItems.addAll(adviceNativeItems);
         if (adviceItems.size() > 0) {
             tvUsedCount.setText(WeiTaiXinApplication.getInstance().getValue("tvUsedCount", 0 + ""));
             adapter.setDatas(adviceItems);
@@ -387,14 +389,14 @@ public class RecordFragment extends BaseFragment {
 
 
     public void pullFirstData(final CustomDialog customDialogTwo) {
-        ApiManager.getInstance().adviceApi.getAdviceItems(1, 30, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
+        ApiManager.getInstance().adviceApi.getAdviceItems(1, 20, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
             @Override
             public void call(Result<PageData<AdviceItem>> t) {
                 if (t.isSuccess()) {
                     PageData<AdviceItem> data = t.getData();
                     ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
-                    //缓存网络前30条,保存到数据库中
+                    //缓存网络前20条,保存到数据库中
                     pageCountCache = 1;
 //                  dataDao.add(DataDBHelper.tableName, dataList);
                     WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
@@ -404,23 +406,35 @@ public class RecordFragment extends BaseFragment {
 
 
                     ArrayList<AdviceItem> dataListPage = new ArrayList<AdviceItem>();
-                    if (dataList.size() >= pageSize) {
-                        for (int i = 0; i < pageSize; i++) {
-                            dataListPage.add(dataList.get(i));
+                    if (dataList.size()>0) {
+                        if (dataList.size() >= pageSize) {
+                            for (int i = 0; i < pageSize; i++) {
+                                dataListPage.add(dataList.get(i));
+                            }
+                        } else {
+                            for (int i = 0; i < dataList.size(); i++) {
+                                dataListPage.add(dataList.get(i));
+                            }
                         }
-                    } else {
-                        for (int i = 0; i < dataList.size(); i++) {
-                            dataListPage.add(dataList.get(i));
-                        }
+
+                        //合并
+                        mergeAdviceItem(dataListPage);
+
+                        //缓存网络前20条,保存到数据库中
+                        dataDao.add(DataDBHelper.tableName, dataList);
+                        //
+                        adapter.datas.clear();
+
+//                        ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
+//                        dataListPage.addAll(adviceNativeItems);
+                    }else{
+                        //从缓存数据库中展示数据列表
+                        ArrayList<AdviceItem> adviceItems = dataDao.getAllRecord(DataDBHelper.tableName, pageSize);
+                        ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
+                        adviceItems.addAll(adviceNativeItems);
+                        dataListPage.addAll(adviceItems);
                     }
 
-                    //合并
-                    sortAdviceItem(dataListPage);
-
-                    //缓存网络前30条,保存到数据库中
-                    dataDao.add(DataDBHelper.tableName, dataList);
-                    //
-                    adapter.datas.clear();
                     adapter.setDatas(dataListPage);
                     adapter.notifyDataSetChanged();
                     mAdviceItems = adapter.datas;
@@ -437,22 +451,24 @@ public class RecordFragment extends BaseFragment {
         }, getRequestTag());
     }
 
-    private void sortAdviceItem(ArrayList<AdviceItem> dataListPage) {
-        ArrayList<AdviceItem> localItem = new ArrayList<AdviceItem>();
-        for (LocalAdviceItem item : localAdviceItems) {
-            AdviceItem advice = new AdviceItem();
-            advice.setId(Integer.parseInt(item.mid));
-            advice.setGestationalWeeks(item.gestationalWeeks);
-            advice.setTestTime(item.testTime);
-//            advice.setTestTime(DateTimeTool.str2Date(item.testTime));
-            advice.setTestTimeLong(Integer.parseInt(item.testTimeLong));
-            advice.setStatus(Integer.parseInt(item.status));
-            dataListPage.add(advice);
-            localItem.add(advice);
-        }
+    private void mergeAdviceItem(ArrayList<AdviceItem> dataListPage) {
+//        ArrayList<AdviceItem> nativeItem = new ArrayList<AdviceItem>();
+//        for (LocalAdviceItem item : localAdviceItems) {
+//            AdviceItem advice = new AdviceItem();
+//            advice.setId(Integer.parseInt(item.mid));
+//            advice.setGestationalWeeks(item.gestationalWeeks);
+//            advice.setTestTime(item.testTime);
+////            advice.setTestTime(DateTimeTool.str2Date(item.testTime));
+//            advice.setTestTimeLong(Integer.parseInt(item.testTimeLong));
+//            advice.setStatus(Integer.parseInt(item.status));
+//            dataListPage.add(advice);
+//            nativeItem.add(advice);
+//        }
         //本地保存数据库
-        DataDao dataDao = new DataDao(WeiTaiXinApplication.getInstance());
-        dataDao.add(DataDBHelper.tableName, localItem);
+//        DataDao dataDao = new DataDao(WeiTaiXinApplication.getInstance());
+//        dataDao.add(DataDBHelper.tableNativeName, nativeItem);
+        ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
+        dataListPage.addAll(adviceNativeItems);
     }
 
 
