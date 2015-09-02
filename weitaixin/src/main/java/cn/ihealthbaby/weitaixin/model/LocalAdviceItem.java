@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin.model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.db.DataDBHelper;
 import cn.ihealthbaby.weitaixin.db.DataDao;
@@ -49,9 +50,28 @@ public class LocalAdviceItem {
             item.status="3";
             items.add(item);
         }
+        sortAdviceItem(items);
         return items;
     }
 
+
+
+    private void sortAdviceItem(ArrayList<LocalAdviceItem> localAdviceItems ) {
+        ArrayList<AdviceItem> nativeItem = new ArrayList<AdviceItem>();
+        for (LocalAdviceItem item : localAdviceItems) {
+            AdviceItem advice = new AdviceItem();
+            advice.setId(Integer.parseInt(item.mid));
+            advice.setGestationalWeeks(item.gestationalWeeks);
+            advice.setTestTime(item.testTime);
+//            advice.setTestTime(DateTimeTool.str2Date(item.testTime));
+            advice.setTestTimeLong(Integer.parseInt(item.testTimeLong));
+            advice.setStatus(Integer.parseInt(item.status));
+            nativeItem.add(advice);
+        }
+        //本地保存数据库
+        DataDao dataDao = new DataDao(WeiTaiXinApplication.getInstance());
+        dataDao.add(DataDBHelper.tableNativeName, nativeItem);
+    }
 
 }
 

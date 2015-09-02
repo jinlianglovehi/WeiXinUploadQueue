@@ -21,7 +21,7 @@ public class DataDao {
 	}
 
 	
-	public synchronized  void add(String tableName, final ArrayList<AdviceItem>  adviceItems){
+	public synchronized  void add(final String tableName, final ArrayList<AdviceItem>  adviceItems){
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -29,10 +29,10 @@ public class DataDao {
 				if(db.isOpen()) {
 					for (int i = 0; i < adviceItems.size(); i++) {
 						AdviceItem adviceItem = adviceItems.get(i);
-						delete(String.valueOf(adviceItem.getId()));
+						delete(tableName, String.valueOf(adviceItem.getId()));
 						db.beginTransaction();
 						try {
-							db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status) values (?,?,?,?,?)",
+							db.execSQL("insert into " + tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status) values (?,?,?,?,?)",
 									new Object[]{String.valueOf(adviceItem.getId()), adviceItem.getGestationalWeeks(), String.valueOf(DateTimeTool.date2Str(adviceItem.getTestTime(),null)), String.valueOf(adviceItem.getTestTimeLong()), String.valueOf(adviceItem.getStatus())});
 							db.setTransactionSuccessful();
 						} finally {
@@ -45,12 +45,12 @@ public class DataDao {
 	}
 
 
-	public void delete(String mid){
+	public void delete(String tableName, String mid){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			if (db.isOpen()) {
-				db.execSQL("delete from " + DataDBHelper.tableName + " where mid=?", new Object[]{mid});
+				db.execSQL("delete from " +tableName + " where mid=?", new Object[]{mid});
 			}
 			db.setTransactionSuccessful();
 		} finally {
@@ -59,12 +59,12 @@ public class DataDao {
 	}
 	
 	
-	public ArrayList<AdviceItem> getAllRecord(int pageSize){
+	public ArrayList<AdviceItem> getAllRecord(String tableName, int pageSize){
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<AdviceItem> adviceItems = new ArrayList<AdviceItem>();
 		if (db.isOpen()) {
 		  Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong," +
-		  		"status from " + DataDBHelper.tableName, null);
+		  		"status from " + tableName, null);
 			while (cursor.moveToNext()) {
 				if (pageSize > 0) {
 					AdviceItem adviceItem = new AdviceItem();
