@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@color/white0">
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/white0">
 
     <RelativeLayout
         android:id="@+id/back"
@@ -13,9 +13,9 @@
             android:layout_width="10dp"
             android:layout_height="16dp"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="14dp"
+            android:layout_marginLeft="20dp"
             android:scaleType="fitXY"
-            android:src="@drawable/nav_bar_arrow_left" />
+            android:src="@drawable/nav_bar_arrow_left"/>
 
     </RelativeLayout>
 
@@ -27,7 +27,7 @@
         android:layout_centerInParent="true"
         android:text="手机号注册"
         android:textColor="@color/font_color"
-        android:textSize="@dimen/font_title" />
+        android:textSize="@dimen/font_title"/>
 
     <TextView
         android:id="@+id/function"
@@ -38,6 +38,6 @@
         android:layout_marginRight="14dp"
         android:textColor="@drawable/text_color_hei_selector"
         android:textSize="@dimen/font_normal"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
 </RelativeLayout>

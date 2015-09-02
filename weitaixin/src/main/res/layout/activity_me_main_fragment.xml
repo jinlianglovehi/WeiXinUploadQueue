@@ -1,21 +1,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:background="@color/gray5"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray5"
+              android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="@color/gray1"
+        android:layout_height="47dp"
+        android:background="@color/white0"
         android:gravity="center"
-        android:layout_height="52dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -23,32 +23,32 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:src="@drawable/tab_icon_01_selector" />
+            android:scaleType="fitXY"
+            android:src="@drawable/tab_icon_01_selector"/>
 
         <ImageView
             android:id="@+id/iv_tab_02"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:src="@drawable/tab_icon_02_selector" />
+            android:scaleType="fitXY"
+            android:src="@drawable/tab_icon_02_selector"/>
 
         <ImageView
             android:id="@+id/iv_tab_03"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:src="@drawable/tab_icon_03_selector" />
+            android:scaleType="fitXY"
+            android:src="@drawable/tab_icon_03_selector"/>
 
         <ImageView
             android:id="@+id/iv_tab_04"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:src="@drawable/tab_icon_04_selector" />
+            android:scaleType="fitXY"
+            android:src="@drawable/tab_icon_04_selector"/>
     </LinearLayout>
 
 </LinearLayout>
