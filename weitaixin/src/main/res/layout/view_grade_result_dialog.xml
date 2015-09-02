@@ -14,8 +14,8 @@
         android:layout_height="343dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="81dp"
-        android:background="@drawable/shape_grade_dialog"
         android:orientation="vertical"
+        android:textColor="@color/text_color"
         android:visibility="visible">
 
         <TextView
@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="48dp"
-            android:text="本次的高危评分是"/>
+            android:text="本次的高危评分是"
+            android:textColor="@color/font_color"/>
 
         <TextView
             android:id="@+id/tv_score"
@@ -42,7 +43,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="10dp"
-            android:text="轻：5分，建议平时多注意胎儿异常"/>
+            android:text="轻：5分，建议平时多注意胎儿异常"
+            android:textColor="@color/text_color"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -50,7 +52,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="10dp"
-            android:text="中：10分-15分，建议向医生反映自己\n情况，询问医生建议"/>
+            android:text="中：10分-15分，建议向医生反映自\n己情况，询问医生建议"
+            android:textColor="@color/text_color"/>
 
         <TextView
             android:id="@+id/tv_serious"
@@ -60,7 +63,8 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:padding="10dp"
-            android:text="重：≥20分，建议立刻询问医生并遵\n医嘱"/>
+            android:text="重：≥20分，建议立刻询问医生并遵\n医嘱"
+            android:textColor="@color/text_color"/>
 
     </LinearLayout>
 
