@@ -17,6 +17,7 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AskForm;
+import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -40,7 +41,9 @@ public class AskDoctorActivity extends BaseActivity {
 
 
     private int status;
-
+    private AdviceItem adviceItem;
+    private final int resultCoded = 200;
+    private final int statused = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,9 @@ public class AskDoctorActivity extends BaseActivity {
 //      back.setVisibility(View.INVISIBLE);
 
         status = getIntent().getIntExtra("status", 0);
+        adviceItem = (AdviceItem) getIntent().getSerializableExtra("adviceItem");
+
+
         etAskDoctorText.setMovementMethod(ScrollingMovementMethod.getInstance());
         etAskDoctorText.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -121,6 +127,8 @@ public class AskDoctorActivity extends BaseActivity {
             public void call(Result<Integer> t) {
                 if (customDialog.isNoCancel) {
                     if (t.isSuccess()) {
+                        adviceItem.setStatus(statused);
+                        setResult(resultCoded);
                         AskDoctorActivity.this.finish();
                     } else {
                         ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsg());

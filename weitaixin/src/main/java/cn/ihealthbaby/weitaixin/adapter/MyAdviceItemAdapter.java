@@ -188,13 +188,15 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         return convertView;
     }
 
+    private final int requestCode=100;
     private void setItemTextView(AdviceItem adviceItem) {
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
         int status = adviceItem.getStatus();
         if (status == 0) {
             Intent intent = new Intent(context, AskDoctorActivity.class);
             intent.putExtra("status", status);
-            context.startActivity(intent);
+            intent.putExtra("adviceItem",adviceItem);
+            context.startActivityForResult(intent,requestCode);
         } else if (status == 1) {
             Intent intent = new Intent(context, WaitReplyingActivity.class);
             intent.putExtra("relatedId", adviceItem.getId());

@@ -163,10 +163,12 @@ public class RecordFragment extends BaseFragment {
                         if (distanceX < 0) {
                             float distanceY = event.getY() - oldY;
                             if (Math.abs(distanceX) > Math.abs(distanceY)) {
-                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth()) {
+                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth()&&selectedView!=null) {
                                     selectedView.setX(-adapter.recordDelete.getWidth());
                                 } else {
-                                    selectedView.setX(selectedView.getX() + distanceX);
+                                    if (selectedView!=null) {
+                                        selectedView.setX(selectedView.getX() + distanceX);
+                                    }
                                 }
                             }
                         } else {
@@ -179,10 +181,12 @@ public class RecordFragment extends BaseFragment {
                     case MotionEvent.ACTION_UP:
                         float distanceX2 = event.getX() - oldXDis;
                         if (distanceX2 < 0) {
-                            if (Math.abs(distanceX2) >= adapter.recordDelete.getWidth() / 2) {
+                            if (Math.abs(distanceX2) >= adapter.recordDelete.getWidth() / 2&&selectedView!=null) {
                                 selectedView.setX(-adapter.recordDelete.getWidth());
                             } else {
-                                selectedView.setX(0);
+                                if (selectedView!=null) {
+                                    selectedView.setX(0);
+                                }
                             }
                         } else {
                             adapter.cancel();
@@ -336,7 +340,7 @@ public class RecordFragment extends BaseFragment {
                 AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
                 int status = adviceItem.getStatus();
                 if (status == 0) {
-
+                    //跳播放界面
                 } else if (status == 1) {
 
                 } else if (status == 2) {
@@ -470,6 +474,19 @@ public class RecordFragment extends BaseFragment {
         pullToRefresh.getLoadingLayoutProxy(true, false).setRefreshingLabel("正在加载...");
     }
 
+    private final int requestCoded = 100;
+    private final int resultCoded = 200;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LogUtil.d("resu++", requestCode+ " resu++ " + resultCode);
+        if (requestCode==requestCoded) {
+            if (resultCode==resultCoded) {
+                LogUtil.d("resultCoded","resultCoded "+resultCode);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     @Override
     public void onDestroyView() {

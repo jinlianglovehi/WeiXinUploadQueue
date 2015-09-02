@@ -86,7 +86,7 @@ public class GuardianStateActivity extends BaseActivity {
         myPoPoWinGuardian.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                tvGuardianPurposeText.setText(askPurposetypes.get(myPoPoWinGuardian.indexPosition).getViewValue()+"");
+                tvGuardianPurposeText.setText(askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue()+"");
             }
         });
     }
@@ -104,7 +104,7 @@ public class GuardianStateActivity extends BaseActivity {
         myPoPoWinGuardian.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                tvGuardianMoodText.setText(feelingTypes.get(myPoPoWinGuardian.indexPosition).getViewValue()+"");
+                tvGuardianMoodText.setText(feelingTypes.get(myPoPoWinGuardian.indexPosition).getValue()+"");
             }
         });
     }

@@ -85,8 +85,8 @@ public class WaitReplyingActivity extends BaseActivity {
                     if (data != null) {
                         ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
                         tv_wo_head_name.setText(WeiTaiXinApplication.user.getName());
-                        tvAskPurpose.setText("监护目的: " + askPurpose[data.getAskPurpose()]);
-                        tvFeeling.setText("监护心情: " + feeling[data.getFeeling()]);
+                        tvAskPurpose.setText("监护目的: " +data.getAskPurpose());
+                        tvFeeling.setText("监护心情: " + data.getFeeling());
                         tvQuestion.setText(data.getQuestion());
                         tvAskTime.setText(DateTimeTool.date2St2(data.getAskTime(), "MM月dd日 hh:mm"));
 

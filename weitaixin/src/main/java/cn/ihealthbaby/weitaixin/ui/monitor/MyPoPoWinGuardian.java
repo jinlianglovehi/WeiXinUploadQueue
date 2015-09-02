@@ -151,7 +151,7 @@ public class MyPoPoWinGuardian extends PopupWindow {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.tvTime.setText(askPurposetypes.get(position).getViewValue()+"");
+            viewHolder.tvTime.setText(askPurposetypes.get(position).getValue()+"");
             if (indexPosition==position) {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
                 viewHolder.tvState.setTextColor(context.getResources().getColor(R.color.green0));
@@ -235,7 +235,7 @@ public class MyPoPoWinGuardian extends PopupWindow {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.tvTime.setText(feelingTypes.get(position).getViewValue()+"");
+            viewHolder.tvTime.setText(feelingTypes.get(position).getValue()+"");
             if (indexPosition == position) {//convertView.isSelected()
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
                 viewHolder.tvState.setTextColor(context.getResources().getColor(R.color.green0));

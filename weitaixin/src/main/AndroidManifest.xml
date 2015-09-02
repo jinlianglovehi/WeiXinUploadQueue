@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="cn.ihealthbaby.weitaixin"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cn.ihealthbaby.weitaixin" >
 
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".WeiTaiXinApplication"
@@ -21,53 +19,54 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Light.NoTitleBar"
-        tools:replace="android:icon">
-
-        <activity android:name=".ui.MeMainFragmentActivity">
+        tools:replace="android:icon" >
+        <activity android:name=".ui.MeMainFragmentActivity" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.login.RegistActivity"/>
-        <activity android:name=".ui.login.LoginActivity"/>
-        <activity android:name=".ui.mine.SetSystemActivity"/>
-        <activity android:name=".ui.mine.WoInformationActivity"/>
-        <activity android:name=".ui.login.InfoEditActivity"/>
-        <activity android:name=".ui.mine.GradedActivity"/>
-        <activity android:name=".ui.mine.WoGoldenActivity"/>
-        <activity android:name=".ui.mine.WoMessageActivity"/>
-        <activity android:name=".ui.record.AskDoctorActivity"/>
-        <activity android:name=".ui.mine.SetSystemSuggestionActivity"/>
-        <activity android:name=".ui.mine.SetSystemResetPasswordActivity"/>
-        <activity android:name=".ui.mine.SetSystemGuardianActivity"/>
-        <activity android:name=".ui.mine.SetSystemUploadActivity"/>
-        <activity android:name=".ui.login.LoginSmsAuthCodeActivity"/>
-        <activity android:name=".ui.monitor.GuardianStateActivity"/>
-        <activity android:name=".ui.mine.WoMessagOfSystemMessageActivity"/>
-        <activity android:name=".ui.mine.WoMessagOfReplyMessageActivity"/>
-        <activity android:name=".ui.login.ProtocolActivity"/>
-        <activity android:name=".ui.record.ReplyedActivity"/>
-        <activity android:name=".ui.mine.WaitReplyingActivity"/>
-        <activity android:name=".ui.demo.ViewActivity"/>
-        <activity android:name=".ui.demo.DeviceListActivity"/>
-
+        <activity android:name=".ui.login.RegistActivity" />
+        <activity android:name=".ui.login.LoginActivity" />
+        <activity android:name=".ui.mine.SetSystemActivity" />
+        <activity android:name=".ui.mine.WoInformationActivity" />
+        <activity android:name=".ui.login.InfoEditActivity" />
+        <activity android:name=".ui.mine.GradedActivity" />
+        <activity android:name=".ui.mine.WoGoldenActivity" />
+        <activity android:name=".ui.mine.WoMessageActivity" />
+        <activity android:name=".ui.record.AskDoctorActivity" />
+        <activity android:name=".ui.mine.SetSystemSuggestionActivity" />
+        <activity android:name=".ui.mine.SetSystemResetPasswordActivity" />
+        <activity android:name=".ui.mine.SetSystemGuardianActivity" />
+        <activity android:name=".ui.mine.SetSystemUploadActivity" />
+        <activity android:name=".ui.login.LoginSmsAuthCodeActivity" />
+        <activity android:name=".ui.monitor.GuardianStateActivity" />
+        <activity android:name=".ui.mine.WoMessagOfSystemMessageActivity" />
+        <activity android:name=".ui.mine.WoMessagOfReplyMessageActivity" />
+        <activity android:name=".ui.login.ProtocolActivity" />
+        <activity android:name=".ui.record.ReplyedActivity" />
+        <activity android:name=".ui.mine.WaitReplyingActivity" />
+        <activity android:name=".ui.demo.ViewActivity" />
+        <activity android:name=".ui.demo.DeviceListActivity" />
         <activity
             android:name=".ui.monitor.MonitorActivity"
-            android:label="@string/title_activity_monitor"/>
+            android:label="@string/title_activity_monitor" />
         <activity
             android:name=".ui.monitor.CurveDetialActivity"
-            android:label="@string/title_activity_curve_detial"/>
-        <activity android:name=".ui.mine.AboutActivity"/>
-        <activity android:name=".ui.mine.WelcomeActiviy"/>
-        <activity android:name=".ui.mine.FeatureActiviy"/>
-        <activity android:name=".ui.mine.UseProcessActiviy"/>
-        <activity android:name=".ui.mine.UseProtocolActiviy"/>
+            android:label="@string/title_activity_curve_detial" />
+        <activity android:name=".ui.mine.AboutActivity" />
+        <activity android:name=".ui.mine.WelcomeActiviy" />
+        <activity android:name=".ui.mine.FeatureActiviy" />
+        <activity android:name=".ui.mine.UseProcessActiviy" />
+        <activity android:name=".ui.mine.UseProtocolActiviy" />
 
-        <receiver android:name=".library.data.bluetooth.mode.spp.BluetoothReceiver"/>
+        <receiver android:name=".library.data.bluetooth.mode.spp.BluetoothReceiver" />
 
+        <activity
+            android:name=".ui.pay.PayAccountActivity"
+            android:label="@string/title_activity_pay_account" >
+        </activity>
     </application>
 
 </manifest>
