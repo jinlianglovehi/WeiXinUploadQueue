@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.record;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -102,6 +103,10 @@ public class RecordFragment extends BaseFragment {
     private int pageCountCache = 1;
     private ArrayList<LocalAdviceItem> localAdviceItems;
     private ArrayList<AdviceItem> mAdviceItems = new ArrayList<AdviceItem>();
+    private String[] strStateFlag = new String[]{"问医生", "等待回复", "已回复", "需上传"};
+
+
+
 
     private static RecordFragment instance;
 
@@ -293,7 +298,10 @@ public class RecordFragment extends BaseFragment {
                             pullToRefresh.onRefreshComplete();
                         }
                     }
-                }, getRequestTag());*/
+                }, getRequestTag());
+        */
+
+                pageIndex = 1;
                 pullFirstData(null);
             }
 
@@ -339,15 +347,10 @@ public class RecordFragment extends BaseFragment {
                 //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
                 AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
                 int status = adviceItem.getStatus();
-                if (status == 0) {
-                    //跳播放界面
-                } else if (status == 1) {
 
-                } else if (status == 2) {
-
-                } else if (status == 3) {
-
-                }
+                Intent intent=new Intent(getActivity().getApplicationContext(), RecordPlayActivity.class);
+                intent.putExtra("strStateFlag", strStateFlag[status]);
+                startActivity(intent);
             }
         });
 
@@ -476,14 +479,20 @@ public class RecordFragment extends BaseFragment {
 
     private final int requestCoded = 100;
     private final int resultCoded = 200;
-    @Override
+    private final int STATE = 1;
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.d("resu++", requestCode+ " resu++ " + resultCode);
         if (requestCode==requestCoded) {
-            if (resultCode==resultCoded) {
-                LogUtil.d("resultCoded","resultCoded "+resultCode);
-                adapter.notifyDataSetChanged();
+            if (resultCode== Activity.RESULT_OK) {
+                LogUtil.d("resultCoded", "resultCoded " + resultCode);
+                if (data!=null) {
+                    int positionExtra = data.getIntExtra("positionExtra", -1);
+                    if (positionExtra!=-1) {
+                        adapter.datas.get(positionExtra).setStatus(STATE);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
             }
         }
     }

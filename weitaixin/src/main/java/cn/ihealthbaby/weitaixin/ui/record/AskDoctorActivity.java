@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.record;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
@@ -21,6 +22,7 @@ import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.MaxLengthWatcher;
@@ -40,8 +42,8 @@ public class AskDoctorActivity extends BaseActivity {
     @Bind(R.id.tvAskDoctorTextCount) TextView tvAskDoctorTextCount;
 
 
-    private int status;
-    private AdviceItem adviceItem;
+    private long adviceItemId=-1;
+    private int position;
     private final int resultCoded = 200;
     private final int statused = 1;
 
@@ -55,9 +57,9 @@ public class AskDoctorActivity extends BaseActivity {
         title_text.setText("问医生");
 //      back.setVisibility(View.INVISIBLE);
 
-        status = getIntent().getIntExtra("status", 0);
-        adviceItem = (AdviceItem) getIntent().getSerializableExtra("adviceItem");
-
+        adviceItemId = getIntent().getLongExtra("adviceItemId", -1);
+        position = getIntent().getIntExtra("position", -1);
+        LogUtil.d("getIntent==",position+ " getIntent= " +adviceItemId);
 
         etAskDoctorText.setMovementMethod(ScrollingMovementMethod.getInstance());
         etAskDoctorText.setOnTouchListener(new View.OnTouchListener() {
@@ -95,7 +97,7 @@ public class AskDoctorActivity extends BaseActivity {
                      usedCount=data.getUsedCount();
                     tvOtherInfo.setText("共"+totalCount+"次，已咨询"+usedCount+"次，剩余"+(totalCount-usedCount)+"次");
                 } else {
-                    ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsg());
+                    ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
                 }
             }
         },getRequestTag());
@@ -107,31 +109,43 @@ public class AskDoctorActivity extends BaseActivity {
     public void tvSendDoctorAction( ) {
         String askDoctorText = etAskDoctorText.getText().toString();
         if (TextUtils.isEmpty(askDoctorText)) {
-            ToastUtil.show(getApplicationContext(),"详情描述，便于医生诊断~~~");
+            ToastUtil.show(getApplicationContext(), "详情描述，便于医生诊断~~~");
             return;
         }
         if ((totalCount-usedCount)<=0) {
-            ToastUtil.show(getApplicationContext(),"没有咨询次数了~~~");
+            ToastUtil.show(getApplicationContext(), "没有咨询次数了~~~");
             return;
         }
 
+        if (adviceItemId==-1) {
+            ToastUtil.show(getApplicationContext(), "id不对~~~");
+            return;
+        }
+
+
         final CustomDialog customDialog = new CustomDialog();
-        final Dialog dialog=customDialog.createDialog1(this,"发送中...");
+        final Dialog dialog=customDialog.createDialog1(this, "发送中...");
         dialog.show();
 
         AskForm askForm=new AskForm();
-        askForm.setAdviceId(status);
+        askForm.setAdviceId(adviceItemId);
         askForm.setQuestion(askDoctorText);
         ApiManager.getInstance().adviceApi.askDoctor(askForm, new HttpClientAdapter.Callback<Integer>() {
             @Override
             public void call(Result<Integer> t) {
                 if (customDialog.isNoCancel) {
                     if (t.isSuccess()) {
-                        adviceItem.setStatus(statused);
-                        setResult(resultCoded);
-                        AskDoctorActivity.this.finish();
+                        int data = t.getData();
+                        if (data==0) {
+                            Intent intent=new Intent();
+                            intent.putExtra("positionExtra",position);
+                            setResult(RESULT_OK,intent);
+                            AskDoctorActivity.this.finish();
+                        }else if(data==1){
+                            ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), "没有咨询次数");
+                        }
                     } else {
-                        ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsg());
+                        ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
                     }
                 }
                 dialog.dismiss();
