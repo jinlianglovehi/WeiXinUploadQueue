@@ -161,8 +161,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         String[] split = dateStr.split("\\+");
         viewHolder.tvCircleTime1.setText(split[0]);
         viewHolder.tvCircleTime2.setText(split[1]);
-        if (split[1]!=null&&split[1].length()==1) {
-            viewHolder.tvCircleTime2.setText(0+""+split[1]);
+        if (split[1] != null && split[1].length() == 1) {
+            viewHolder.tvCircleTime2.setText(0 + "" + split[1]);
         }
 
         viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()));//
@@ -178,7 +178,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         viewHolder.tvAdviceStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setItemTextView(adviceItem);
+                setItemTextView(adviceItem, position);
             }
         });
 
@@ -192,16 +192,17 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private final int requestCode=100;
-    private void setItemTextView(AdviceItem adviceItem,int position) {
+    private final int requestCode = 100;
+
+    private void setItemTextView(AdviceItem adviceItem, int position) {
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
         int status = adviceItem.getStatus();
         if (status == 0) {
             Intent intent = new Intent(context, AskDoctorActivity.class);
-            LogUtil.d("AskDocgetId","AskDocgetId = "+adviceItem.getId());
+            LogUtil.d("AskDocgetId", "AskDocgetId = " + adviceItem.getId());
             intent.putExtra("adviceItemId", adviceItem.getId());
-            intent.putExtra("position",position);
-            context.startActivityForResult(intent,requestCode);
+            intent.putExtra("position", position);
+            context.startActivityForResult(intent, requestCode);
         } else if (status == 1) {
             Intent intent = new Intent(context, WaitReplyingActivity.class);
             intent.putExtra("relatedId", adviceItem.getId());

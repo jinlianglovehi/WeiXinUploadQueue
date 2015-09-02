@@ -22,10 +22,10 @@
             android:id="@+id/ll_tab_home"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="4dp">
 
             <ImageView
                 android:id="@+id/iv_tab_01"
@@ -37,8 +37,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="2dp"
                 android:text="首页"
                 android:textColor="@color/gray14"
                 android:textSize="12sp"/>
@@ -48,10 +46,10 @@
             android:id="@+id/ll_tab_monitor"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="4dp">
 
             <ImageView
                 android:id="@+id/iv_tab_02"
@@ -63,8 +61,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="2dp"
                 android:text="监测"
                 android:textColor="@color/gray14"
                 android:textSize="12sp"/>
@@ -74,10 +70,10 @@
             android:id="@+id/ll_tab_record"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="4dp">
 
             <ImageView
                 android:id="@+id/iv_tab_03"
@@ -89,8 +85,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="2dp"
                 android:text="记录"
                 android:textColor="@color/gray14"
                 android:textSize="12sp"/>
@@ -100,10 +94,10 @@
             android:id="@+id/ll_tab_profile"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="4dp">
 
             <ImageView
                 android:id="@+id/iv_tab_04"
@@ -115,8 +109,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="2dp"
                 android:text="我的"
                 android:textColor="@color/gray14"
                 android:textSize="12sp"/>
