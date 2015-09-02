@@ -13,42 +13,115 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="47dp"
+        android:layout_height="wrap_content"
         android:background="@color/white0"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/iv_tab_01"
+        <LinearLayout
+            android:id="@+id/ll_tab_home"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/tab_icon_01_selector"/>
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/iv_tab_02"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/tab_icon_02_selector"/>
+            <ImageView
+                android:id="@+id/iv_tab_01"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_icon_01_selector"/>
 
-        <ImageView
-            android:id="@+id/iv_tab_03"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/tab_icon_03_selector"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="2dp"
+                android:text="首页"
+                android:textColor="@color/gray14"
+                android:textSize="12sp"/>
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_tab_04"
+        <LinearLayout
+            android:id="@+id/ll_tab_monitor"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/tab_icon_04_selector"/>
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_tab_02"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_icon_02_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="2dp"
+                android:text="监测"
+                android:textColor="@color/gray14"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_tab_record"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_tab_03"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_icon_03_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="2dp"
+                android:text="记录"
+                android:textColor="@color/gray14"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_tab_profile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_tab_04"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_icon_04_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="2dp"
+                android:text="我的"
+                android:textColor="@color/gray14"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

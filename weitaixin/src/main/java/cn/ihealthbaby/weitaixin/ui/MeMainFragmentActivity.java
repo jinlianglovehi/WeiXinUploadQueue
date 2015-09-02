@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,12 +27,25 @@ import cn.ihealthbaby.weitaixin.ui.record.RecordFragment;
 public class MeMainFragmentActivity extends BaseActivity {
 
 
-    @Bind(R.id.iv_tab_01) ImageView iv_tab_01;
-    @Bind(R.id.iv_tab_02) ImageView iv_tab_02;
+    @Bind(R.id.iv_tab_01)
+    ImageView iv_tab_01;
+    @Bind(R.id.iv_tab_02)
+    ImageView iv_tab_02;
 
-    @Bind(R.id.iv_tab_03) ImageView iv_tab_03;
-    @Bind(R.id.iv_tab_04) ImageView iv_tab_04;
-    @Bind(R.id.container) FrameLayout container;
+    @Bind(R.id.iv_tab_03)
+    ImageView iv_tab_03;
+    @Bind(R.id.iv_tab_04)
+    ImageView iv_tab_04;
+    @Bind(R.id.container)
+    FrameLayout container;
+    @Bind(R.id.ll_tab_home)
+    LinearLayout mLlTabHome;
+    @Bind(R.id.ll_tab_monitor)
+    LinearLayout mLlTabMonitor;
+    @Bind(R.id.ll_tab_record)
+    LinearLayout mLlTabRecord;
+    @Bind(R.id.ll_tab_profile)
+    LinearLayout mLlTabProfile;
 
     private FragmentManager fragmentManager;
 
@@ -64,16 +78,16 @@ public class MeMainFragmentActivity extends BaseActivity {
     public RecordFragment recordFragment;
     public WoInfoFragment woInfoFragment;
 
-    @OnClick(R.id.iv_tab_01)
+    @OnClick(R.id.ll_tab_home)
     public void iv_tab_01() {
         showTab(iv_tab_01);
         if (WeiTaiXinApplication.getInstance().isLogin) {
-            homePageFragment=HomePageFragment.getInstance();
+            homePageFragment = HomePageFragment.getInstance();
             showFragment(R.id.container, homePageFragment);
         }
     }
 
-    @OnClick(R.id.iv_tab_02)
+    @OnClick(R.id.ll_tab_monitor)
     public void iv_tab_02() {
         showTab(iv_tab_02);
         if (WeiTaiXinApplication.getInstance().isLogin) {
@@ -84,11 +98,11 @@ public class MeMainFragmentActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.iv_tab_03)
+    @OnClick(R.id.ll_tab_record)
     public void iv_tab_03() {
         showTab(iv_tab_03);
         if (WeiTaiXinApplication.getInstance().isLogin) {
-            recordFragment=RecordFragment.getInstance();
+            recordFragment = RecordFragment.getInstance();
             showFragment(R.id.container, recordFragment);
         }
     }
@@ -98,7 +112,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     public void iv_tab_04() {
         showTab(iv_tab_04);
         if (WeiTaiXinApplication.getInstance().isLogin) {
-            woInfoFragment=WoInfoFragment.getInstance();
+            woInfoFragment = WoInfoFragment.getInstance();
             showFragment(R.id.container, woInfoFragment);
         }
     }
