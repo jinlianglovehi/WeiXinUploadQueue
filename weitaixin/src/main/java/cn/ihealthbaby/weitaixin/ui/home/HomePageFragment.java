@@ -21,18 +21,19 @@ public class HomePageFragment extends BaseFragment {
 
     @Bind(R.id.back)
     RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
 //
-
 
     View view;
 
-
     private static HomePageFragment instance;
-    public static HomePageFragment getInstance(){
-        if (instance==null) {
-            instance=new HomePageFragment();
+
+    public static HomePageFragment getInstance() {
+        if (instance == null) {
+            instance = new HomePageFragment();
         }
         return instance;
     }
@@ -41,11 +42,11 @@ public class HomePageFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-         view = inflater.inflate(R.layout.fragment_home_page, null);
+        view = inflater.inflate(R.layout.fragment_home_page, null);
         ButterKnife.bind(this, view);
         init(view);
         back.setVisibility(View.INVISIBLE);
-        LogUtil.e("HomePageFragment+Coco7","HomePageFragment+Null");
+        LogUtil.e("HomePageFragment+Coco7", "HomePageFragment+Null");
         return view;
     }
 

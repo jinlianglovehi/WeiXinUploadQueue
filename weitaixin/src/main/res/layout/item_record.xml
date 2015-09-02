@@ -8,12 +8,12 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="74dp">
 
         <TextView
             android:id="@+id/tvRecordDelete"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="73dp"
             android:layout_gravity="right|center_vertical"
             android:background="@color/red0"
             android:gravity="center"
@@ -24,14 +24,14 @@
         <RelativeLayout
             android:id="@+id/rlRecordItem"
             android:layout_width="match_parent"
-            android:layout_height="74dp"
+            android:layout_height="match_parent"
             android:paddingLeft="16dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="74dp"
                 android:layout_marginLeft="9dp"
-                android:background="@drawable/recode_half_circle_bg">
+                android:background="@drawable/bg_record_item">
 
                 <LinearLayout
                     android:id="@+id/ll_Layout"
