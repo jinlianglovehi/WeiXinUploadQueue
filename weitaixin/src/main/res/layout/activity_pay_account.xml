@@ -2,15 +2,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray5"
     tools:context="cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity">
 
     <include
         android:id="@+id/head_title_id"
         layout="@layout/layout_title" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_below="@id/head_title_id"
+        android:layout_marginTop="4dp"
+        android:background="@color/white0"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/pay_account_rent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="租用设备" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="42dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/pay_account_rent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="购买耦合剂" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>
-
-
-
 
 

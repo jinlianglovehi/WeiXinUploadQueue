@@ -15,6 +15,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInfoFragment;
@@ -67,6 +68,7 @@ public class MeMainFragmentActivity extends BaseActivity {
         iv_tab_01.setSelected(true);
         if (homePageFragment == null) {
             homePageFragment = new HomePageFragment();
+            oldFragment = homePageFragment;
         }
         fragmentManager = getFragmentManager();
         showFragment(R.id.container, homePageFragment);
@@ -77,6 +79,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     public MonitorFragment monitorFragment;
     public RecordFragment recordFragment;
     public WoInfoFragment woInfoFragment;
+    public Fragment oldFragment;
 
     @OnClick(R.id.ll_tab_home)
     public void iv_tab_01() {
@@ -135,10 +138,25 @@ public class MeMainFragmentActivity extends BaseActivity {
 
     private void showFragment(int container, Fragment fragment/*, int animIn, int animOut*/) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.setCustomAnimations(animIn, animOut);
-        fragmentTransaction.replace(container, fragment);
+        show(container,fragmentTransaction,fragment);
+//      fragmentTransaction.replace(container, fragment);
         fragmentTransaction.commit();
     }
+
+    private void show(int container, FragmentTransaction fragmentTransaction, Fragment fragment){
+        if (fragment == null) {
+            return;
+        }
+        if (!fragment.isAdded()) {
+            fragmentTransaction.add(container, fragment);
+        } else {
+            fragmentTransaction.hide(oldFragment);
+            fragmentTransaction.show(fragment);
+        }
+        oldFragment = fragment;
+        LogUtil.d("ChildCount==","ChildCount= %s",this.container.getChildCount());
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -147,6 +165,8 @@ public class MeMainFragmentActivity extends BaseActivity {
             recordFragment.onActivityResult(requestCode,resultCode,data);
         }
     }
+
+
 }
 
 

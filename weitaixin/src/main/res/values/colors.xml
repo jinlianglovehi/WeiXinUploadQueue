@@ -7,6 +7,8 @@
 
     <!--bisic color-->
     <color name="white0">#FFFFFFFF</color>
+    <color name="white1">#00000000</color>
+    <color name="white2">#33FFFFFF</color>
     <color name="gray1">#FFE5E5E5</color>
     <color name="gray2">#FFD8D8D8</color>
     <color name="gray3">#FF999696</color>
