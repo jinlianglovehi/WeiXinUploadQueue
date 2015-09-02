@@ -40,14 +40,12 @@ public class RecordPlayActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("胎心监测");
-        function.setVisibility(View.VISIBLE);
-        function.setText("监护心情");
 
         initText();
     }
 
     private void initText() {
-        stateFlag = getIntent().getStringExtra("status");
+        stateFlag = getIntent().getStringExtra("strStateFlag");
         if("问医生".equals(stateFlag)) {
             tvStateText.setText("问医生");
 //            ivActionImage.setImageResource();
