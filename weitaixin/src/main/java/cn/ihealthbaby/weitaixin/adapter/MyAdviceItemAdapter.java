@@ -29,6 +29,7 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
 import cn.ihealthbaby.weitaixin.ui.record.ReplyedActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
@@ -160,6 +161,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         String[] split = dateStr.split("\\+");
         viewHolder.tvCircleTime1.setText(split[0]);
         viewHolder.tvCircleTime2.setText(split[1]);
+        if (split[1]!=null&&split[1].length()==1) {
+            viewHolder.tvCircleTime2.setText(0+""+split[1]);
+        }
 
         viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()));//
         viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 hh:mm"));
@@ -174,7 +178,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         viewHolder.tvAdviceStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setItemTextView(adviceItem);
+                setItemTextView(adviceItem,position);
             }
         });
 
@@ -189,13 +193,14 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     }
 
     private final int requestCode=100;
-    private void setItemTextView(AdviceItem adviceItem) {
+    private void setItemTextView(AdviceItem adviceItem,int position) {
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
         int status = adviceItem.getStatus();
         if (status == 0) {
             Intent intent = new Intent(context, AskDoctorActivity.class);
-            intent.putExtra("status", status);
-            intent.putExtra("adviceItem",adviceItem);
+            LogUtil.d("AskDocgetId","AskDocgetId = "+adviceItem.getId());
+            intent.putExtra("adviceItemId", adviceItem.getId());
+            intent.putExtra("position",position);
             context.startActivityForResult(intent,requestCode);
         } else if (status == 1) {
             Intent intent = new Intent(context, WaitReplyingActivity.class);
