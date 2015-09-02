@@ -14,6 +14,7 @@
         android:layout_height="343dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="81dp"
+        android:background="@drawable/shape_grade_dialog"
         android:orientation="vertical"
         android:textColor="@color/text_color"
         android:visibility="visible">
