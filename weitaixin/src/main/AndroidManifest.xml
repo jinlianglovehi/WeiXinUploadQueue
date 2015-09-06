@@ -61,14 +61,16 @@
 
         <receiver android:name=".library.data.bluetooth.mode.spp.BluetoothReceiver" />
 
-        <activity android:name=".ui.record.RecordPlayActivity"/>
-        <activity android:name=".ui.pay.PayAccountActivity"/>
-        <activity android:name=".ui.pay.PayMimeOrderActivity"/>
-        <activity android:name=".ui.pay.PayMimeAddressActivity"/>
-        <activity android:name=".ui.pay.PayAddAddressActivity"/>
-        <activity android:name=".ui.pay.PayRentInformationActivity"/>
-        <activity android:name=".ui.pay.PayHospitalChooseActivity"/>
-        <activity android:name=".ui.pay.PayCityChooseActivity"/>
+        <activity android:name=".ui.record.RecordPlayActivity" />
+        <activity android:name=".ui.pay.PayAccountActivity" />
+        <activity android:name=".ui.pay.PayMimeOrderActivity" />
+        <activity android:name=".ui.pay.PayMimeAddressActivity" />
+        <activity android:name=".ui.pay.PayAddAddressActivity" />
+        <activity android:name=".ui.pay.PayRentInformationActivity" />
+        <activity android:name=".ui.pay.PayHospitalChooseActivity" />
+        <activity android:name=".ui.pay.PayCityChooseActivity" />
+
+        <service android:name=".service.UploadService"/>
     </application>
 
 </manifest>

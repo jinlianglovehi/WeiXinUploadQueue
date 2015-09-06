@@ -127,7 +127,7 @@ public class UploadFileEngine {
                     UploadModel data = t.getData();
                     uploadFile(dataBty, data.getKey(), data.getToken());
                 } else {
-                    ToastUtil.show(context, t.getMsg());
+                    ToastUtil.show(context, t.getMsgMap()+"");
                 }
                 customDialog.dismiss();
             }
