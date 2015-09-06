@@ -1,0 +1,397 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+    <RelativeLayout
+        android:id="@+id/rl1Function"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/head_title_id"
+        android:layout_marginTop="2dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="订单商品:"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv1"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="订单号码:"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:id="@+id/tvOrderGoods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="的三分所发生的撒大辅导费的撒"
+            android:textColor="@color/font_color"
+            android:textSize="@dimen/font12" />
+
+        <TextView
+            android:id="@+id/tvOrderGoodsNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv1"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="243243224"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@id/rl1Function"
+        android:background="@color/gray5"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="领取方式"
+        android:textColor="@color/gray12"
+        android:textSize="@dimen/font10" />
+
+    <RelativeLayout
+        android:id="@+id/rl3Function"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_below="@id/tv2"
+        android:background="@color/white0">
+
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pay_choose_un" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/iv1"
+            android:text="快递方式"
+            android:textColor="@color/black0"
+            android:textSize="@dimen/font10" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl4Function"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_below="@id/rl3Function"
+        android:layout_marginTop="2dp"
+        android:background="@color/white0">
+
+        <ImageView
+            android:id="@+id/iv2"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pay_choose" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/iv2"
+            android:text="医院自取"
+            android:textColor="@color/black0"
+            android:textSize="@dimen/font10" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl5Function"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl4Function"
+        android:layout_marginTop="12dp"
+        android:background="@color/white0">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:background="@color/white0"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv1None"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="20dp"
+                android:text="选择医院"
+                android:textColor="@color/gray12"
+                android:textSize="@dimen/font10" />
+
+            <TextView
+                android:id="@+id/tv2None"
+                android:layout_below="@id/tv1None"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="20dp"
+                android:text="所选医生"
+                android:textColor="@color/gray12"
+                android:textSize="@dimen/font10" />
+
+            <TextView
+                android:layout_below="@id/tv2None"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="20dp"
+                android:text="*请付款后到该医院领取设备，开通服务"
+                android:textColor="@color/gray12"
+                android:textSize="@dimen/font10" />
+
+            <TextView
+                android:id="@+id/tvHospitalName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text="北京海淀区医院"
+                android:textColor="@color/gray12"
+                android:textSize="@dimen/font10" />
+
+            <TextView
+                android:id="@+id/tvDoctorName"
+                android:layout_below="@id/tv1None"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="20dp"
+                android:text="历史大"
+                android:textColor="@color/gray12"
+                android:textSize="@dimen/font10" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="34dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="地址都没有添加，要寄到哪里了？"
+                android:textColor="@color/gray4"
+                android:textSize="@dimen/font10" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="12dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/wo_head_arrow_right" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:paddingBottom="12dp"
+            android:paddingLeft="20dp"
+            android:background="@color/white0">
+
+
+            <LinearLayout
+                android:id="@+id/llOneFunction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="收货人:"
+                    android:textColor="@color/gray4"
+                    android:textSize="@dimen/font10" />
+
+                <TextView
+                    android:id="@+id/tvAddressName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="李香兰"
+                    android:textColor="@color/black0"
+                    android:textSize="@dimen/font10" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llTwoFunction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llOneFunction"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电    话:"
+                    android:textColor="@color/gray4"
+                    android:textSize="@dimen/font10" />
+
+                <TextView
+                    android:id="@+id/tvAddressPhoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="137645645453"
+                    android:textColor="@color/black0"
+                    android:textSize="@dimen/font10" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llTwoFunction"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="收货地址:"
+                    android:textColor="@color/gray4"
+                    android:textSize="@dimen/font10" />
+
+                <TextView
+                    android:id="@+id/tvAddressText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="北京海淀区的撒大撒旦"
+                    android:textColor="@color/black0"
+                    android:textSize="@dimen/font10" />
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="12dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/wo_head_arrow_right" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_above="@+id/rl10Function"
+        android:id="@+id/rl6Function"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl5Function"
+        android:layout_marginTop="12dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="12dp"
+            android:text="商品清单"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font12" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl10Function"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="1dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:text="总计￥3424"
+            android:textColor="@color/red0"
+            android:textSize="@dimen/font12" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:background="@color/red0"
+            android:gravity="center"
+            android:text="总计￥3424"
+            android:textColor="@color/white0"
+            android:textSize="@dimen/font12" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
+
+

@@ -1,0 +1,237 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+    <RelativeLayout
+        android:id="@+id/rl1Function"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/head_title_id"
+        android:layout_marginTop="2dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="订单商品:"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv1"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="订单号码:"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:id="@+id/tvOrderGoods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="的三分所发生的撒大辅导费的撒"
+            android:textColor="@color/font_color"
+            android:textSize="@dimen/font12" />
+
+        <TextView
+            android:id="@+id/tvOrderGoodsNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv1"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="243243224"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl4Function"
+        android:layout_below="@id/rl1Function"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:paddingBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="20dp"
+        android:background="@color/white0">
+
+
+        <LinearLayout
+            android:id="@+id/llOneFunction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="收货人:"
+                android:textColor="@color/gray4"
+                android:textSize="@dimen/font10" />
+
+            <TextView
+                android:id="@+id/tvAddressName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="李香兰"
+                android:textColor="@color/black0"
+                android:textSize="@dimen/font10" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llTwoFunction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llOneFunction"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电    话:"
+                android:textColor="@color/gray4"
+                android:textSize="@dimen/font10" />
+
+            <TextView
+                android:id="@+id/tvAddressPhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="137645645453"
+                android:textColor="@color/black0"
+                android:textSize="@dimen/font10" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llTwoFunction"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="收货地址:"
+                android:textColor="@color/gray4"
+                android:textSize="@dimen/font10" />
+
+            <TextView
+                android:id="@+id/tvAddressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="北京海淀区的撒大撒旦"
+                android:textColor="@color/black0"
+                android:textSize="@dimen/font10" />
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right" />
+
+    </RelativeLayout>
+
+
+
+
+    <RelativeLayout
+        android:layout_above="@id/rl10Function"
+        android:id="@+id/rl6Function"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl4Function"
+        android:layout_marginTop="12dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="12dp"
+            android:text="商品清单"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font12" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/rl10Function"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal"
+        android:background="@color/white0">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_height="26dp"
+            android:background="@drawable/corner_background_gray16"
+            android:gravity="center"
+            android:text="取消订单"
+            android:textColor="@color/gray3"
+            android:textSize="@dimen/font12" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="26dp"
+            android:layout_marginLeft="24dp"
+            android:background="@color/red0"
+            android:gravity="center"
+            android:layout_marginRight="16dp"
+            android:text="去支付"
+            android:textColor="@color/white0"
+            android:textSize="@dimen/font12" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+
+

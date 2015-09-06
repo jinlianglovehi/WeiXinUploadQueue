@@ -1,0 +1,113 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5"
+    tools:context="cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+    <LinearLayout
+        android:id="@+id/llOneFunction"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/head_title_id"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/llAllOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvAllOrderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="全部订单"
+                android:textColor="@color/green5"
+                android:textSize="@dimen/font12" />
+
+            <View
+                android:id="@+id/viewAllOrderLine"
+                android:layout_width="48dp"
+                android:layout_height="4dp"
+                android:visibility="visible"
+                android:layout_marginTop="6dp"
+                android:background="@color/green5" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llPayingOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="22dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvPayOrderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="待付款"
+                android:textColor="@color/font_color"
+                android:textSize="@dimen/font12" />
+
+            <View
+                android:id="@+id/viewPayOrderLine"
+                android:layout_width="48dp"
+                android:layout_height="4dp"
+                android:visibility="invisible"
+                android:layout_marginTop="6dp"
+                android:background="@color/green5" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llGetingGoods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="22dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvGetGoodsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="待收货"
+                android:textColor="@color/font_color"
+                android:textSize="@dimen/font12" />
+
+            <View
+                android:id="@+id/viewGetGoodsLine"
+                android:layout_width="48dp"
+                android:visibility="invisible"
+                android:layout_height="4dp"
+                android:layout_marginTop="6dp"
+                android:background="@color/green5" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/llOneFunction"
+        android:id="@+id/flContainerPay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+
+</RelativeLayout>
+
+

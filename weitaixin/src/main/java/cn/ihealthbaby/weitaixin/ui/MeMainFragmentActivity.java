@@ -68,7 +68,6 @@ public class MeMainFragmentActivity extends BaseActivity {
         iv_tab_01.setSelected(true);
         if (homePageFragment == null) {
             homePageFragment = new HomePageFragment();
-            oldFragment = homePageFragment;
         }
         fragmentManager = getFragmentManager();
         showFragment(R.id.container, homePageFragment);
@@ -139,7 +138,6 @@ public class MeMainFragmentActivity extends BaseActivity {
     private void showFragment(int container, Fragment fragment/*, int animIn, int animOut*/) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         show(container,fragmentTransaction,fragment);
-//      fragmentTransaction.replace(container, fragment);
         fragmentTransaction.commit();
     }
 
@@ -148,8 +146,11 @@ public class MeMainFragmentActivity extends BaseActivity {
             return;
         }
         if (!fragment.isAdded()) {
+            if(oldFragment!=null){
+                fragmentTransaction.hide(oldFragment);
+            }
             fragmentTransaction.add(container, fragment);
-        } else {
+        } else if( oldFragment != fragment){
             fragmentTransaction.hide(oldFragment);
             fragmentTransaction.show(fragment);
         }

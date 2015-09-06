@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/addressPullToRefreshAllOrder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tvTexted"
+        android:layout_below="@id/head_title_id"
+        android:layout_marginTop="12dp"
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:listSelector="#55FFFFFF"
+        android:smoothScrollbar="true" />
+
+
+    <TextView
+        android:id="@+id/tvTexted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvAddNewAddress"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="6dp"
+        android:layout_marginTop="18dp"
+        android:gravity="center"
+        android:text="勾选为默认地址"
+        android:textColor="@color/gray4"
+        android:textSize="@dimen/font10" />
+
+
+    <TextView
+        android:id="@+id/tvAddNewAddress"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="76dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="@color/white0"
+        android:gravity="center"
+        android:text="添加新地址"
+        android:textColor="@drawable/text_color_green0_selector"
+        android:textSize="@dimen/font10" />
+
+
+</RelativeLayout>
+
+

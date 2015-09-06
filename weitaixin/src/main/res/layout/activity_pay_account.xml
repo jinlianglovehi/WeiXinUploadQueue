@@ -10,6 +10,7 @@
         layout="@layout/layout_title" />
 
     <LinearLayout
+        android:id="@+id/llOneFunction"
         android:layout_width="match_parent"
         android:layout_height="190dp"
         android:layout_below="@id/head_title_id"
@@ -48,7 +49,7 @@
                 android:layout_width="68dp"
                 android:layout_height="68dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/pay_account_rent" />
+                android:src="@drawable/pay_account_coupling" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -60,6 +61,63 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/rlPayMimeOrder"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_below="@id/llOneFunction"
+        android:layout_marginTop="10dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="我的订单"
+            android:textColor="@drawable/text_color_hei_selector"
+            android:textSize="@dimen/font10" />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rlPayAddress"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_below="@id/rlPayMimeOrder"
+        android:layout_marginTop="10dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="收货地址"
+            android:textColor="@drawable/text_color_hei_selector"
+            android:textSize="@dimen/font10" />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right" />
+
+
+    </RelativeLayout>
 </RelativeLayout>
 
 

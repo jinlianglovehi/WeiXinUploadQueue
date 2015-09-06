@@ -50,6 +50,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     ///////
     public View selectedView;
     public View selectedViewOld;
+    public View tvAdviceStatused;
+    public View tvAdviceStatusedOld;
     private int selectedItem;
     public TextView recordDelete;
     ;
@@ -57,13 +59,20 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     public View getSelectedView() {
         return selectedView;
     }
+    public View getAdviceStatused() {
+        return tvAdviceStatused;
+    }
 
     public void cancel() {
+        if (tvAdviceStatused != null) {
+            tvAdviceStatused.setVisibility(View.VISIBLE);
+        }
         if (selectedView == null) {
             return;
         }
         ObjectAnimator.ofFloat(selectedView, "x", 0f).start();
         selectedView = null;
+        tvAdviceStatused=null;
     }
 
     public void cancel(View selectedViewOld) {
@@ -75,10 +84,11 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     }
 
     //////
-
-    public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas) {
+    private TextView tvUsedCount;
+    public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas, TextView tvUsedCount) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
+        this.tvUsedCount=tvUsedCount;
         setDatas(datas);
     }
 
@@ -133,9 +143,10 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         return position;
     }
 
+
+    ViewHolder viewHolder = null;
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_record, null);
             viewHolder = new ViewHolder(convertView);
@@ -151,11 +162,17 @@ public class MyAdviceItemAdapter extends BaseAdapter {
                     case MotionEvent.ACTION_DOWN:
                         selectedView = v;
                         selectedItem = position;
+                        tvAdviceStatused = (TextView) v.findViewById(R.id.tvAdviceStatus);
+                        tvAdviceStatused.setVisibility(View.INVISIBLE);
+                        if (tvAdviceStatusedOld!=null) {
+                            tvAdviceStatusedOld.setVisibility(View.VISIBLE);
+                        }
                         break;
                 }
                 return false;
             }
         });
+
         final AdviceItem adviceItem = this.datas.get(position);
         String dateStr = adviceItem.getGestationalWeeks();
         String[] split = dateStr.split("\\+");
@@ -189,6 +206,10 @@ public class MyAdviceItemAdapter extends BaseAdapter {
             }
         });
         cancel();
+
+        if (tvUsedCount!=null) {
+            tvUsedCount.setText(getCount()+"");
+        }
         return convertView;
     }
 

@@ -190,8 +190,6 @@ public class WoInfoFragment extends BaseFragment {
                 .showImageOnLoading(R.drawable.button_monitor_helper)
                 .showImageForEmptyUri(R.drawable.button_monitor_helper)
                 .showImageOnFail(R.drawable.button_monitor_helper)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
                 .considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .bitmapConfig(Bitmap.Config.RGB_565)
