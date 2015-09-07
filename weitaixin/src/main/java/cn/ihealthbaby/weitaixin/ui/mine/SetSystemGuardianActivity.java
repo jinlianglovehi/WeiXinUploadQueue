@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixin.ui.mine;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +18,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.SlideSwitchView;
 
@@ -40,6 +41,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
     @Bind(R.id.slide_switch_alarm)
     SlideSwitchView mSlideSwitchViewAlarm;
 
+    private SharedPreferences mySharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class SetSystemGuardianActivity extends BaseActivity {
 
         title_text.setText("监护设置");
 //      back.setVisibility(View.INVISIBLE);
-
+        mySharedPreferences = getSharedPreferences("config",
+                Activity.MODE_PRIVATE);
         initData();
         initView();
         initListener();
@@ -62,49 +65,64 @@ public class SetSystemGuardianActivity extends BaseActivity {
     }
 
     private void initListener() {
+        final SharedPreferences.Editor editor = mySharedPreferences.edit();
         mSlideSwitchViewBegin.setSlideListener(new SlideSwitchView.SlideListener() {
             @Override
             public void open() {
-                WeiTaiXinApplication.getInstance().putValue("AutoStart", "1");
+                editor.putBoolean("AutoStart", true);
+//                WeiTaiXinApplication.getInstance().putValue("AutoStart", "1");
+                editor.commit();
+
             }
 
             @Override
             public void close() {
-                WeiTaiXinApplication.getInstance().putValue("AutoStart", "0");
+                editor.putBoolean("AutoStart", false);
+//                WeiTaiXinApplication.getInstance().putValue("AutoStart", "0");
+                editor.commit();
+
             }
         });
 
         mSlideSwitchViewAlarm.setSlideListener(new SlideSwitchView.SlideListener() {
             @Override
             public void open() {
-                WeiTaiXinApplication.getInstance().putValue("PoliceSet", "1");
+                editor.putBoolean("PoliceSet", true);
+//                WeiTaiXinApplication.getInstance().putValue("PoliceSet", "1");
                 meLinearLayout.setVisibility(View.VISIBLE);
+                editor.commit();
+
             }
 
             @Override
             public void close() {
-                WeiTaiXinApplication.getInstance().putValue("PoliceSet", "0");
+                editor.putBoolean("PoliceSet", false);
+//                WeiTaiXinApplication.getInstance().putValue("PoliceSet", "0");
                 meLinearLayout.setVisibility(View.GONE);
+                editor.commit();
+
             }
         });
+
     }
 
 
     private void initView() {
-        String AutoStart = WeiTaiXinApplication.getInstance().getValue("AutoStart", "0");
-
-        if ("1".equals(AutoStart)) {
+//        String AutoStart = WeiTaiXinApplication.getInstance().getValue("AutoStart", "0");
+        boolean AutoStart = mySharedPreferences.getBoolean("AutoStart", true);
+        boolean PoliceSet = mySharedPreferences.getBoolean("PoliceSet", true);
+        if (AutoStart) {
             mSlideSwitchViewBegin.setState(true);
         } else {
             mSlideSwitchViewBegin.setState(false);
         }
 
-        String PoliceSet = WeiTaiXinApplication.getInstance().getValue("PoliceSet", "0");
-        if ("1".equals(PoliceSet)) {
-            mSlideSwitchViewAlarm.setState(false);
+//        String PoliceSet = WeiTaiXinApplication.getInstance().getValue("PoliceSet", "0");
+        if (PoliceSet) {
+            mSlideSwitchViewAlarm.setState(true);
             meLinearLayout.setVisibility(View.VISIBLE);
         } else {
-            mSlideSwitchViewAlarm.setState(true);
+            mSlideSwitchViewAlarm.setState(false);
             meLinearLayout.setVisibility(View.GONE);
         }
 
@@ -113,13 +131,16 @@ public class SetSystemGuardianActivity extends BaseActivity {
     MyTimeAdapter myTimeAdapter;
 
     private void initData() {
+        final SharedPreferences.Editor editor = mySharedPreferences.edit();
         myTimeAdapter = new MyTimeAdapter(this);
         lvGuardian.setAdapter(myTimeAdapter);
         lvGuardian.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 myTimeAdapter.isFirst = false;
-                view.setSelected(true);
+//                view.setSelected(true);
+                editor.putInt("select_num", position);
+                editor.commit();
                 myTimeAdapter.notifyDataSetChanged();
             }
         });
@@ -168,7 +189,10 @@ public class SetSystemGuardianActivity extends BaseActivity {
             }
             viewHolder.tvTime.setText(titleTimes[position]);
             System.err.println("isFirst: " + isFirst);
-            if (convertView.isSelected()) {
+
+            final SharedPreferences.Editor editor = mySharedPreferences.edit();
+            int select_num = mySharedPreferences.getInt("select_num", 0);
+            if (select_num == position) {
                 viewHolder.tvTime.setTextColor(getResources().getColor(R.color.green0));
                 viewHolder.tvState.setTextColor(getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
@@ -177,11 +201,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
                 viewHolder.tvState.setTextColor(getResources().getColor(R.color.gray9));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
             }
-            if (isFirst && position == 0) {
-                viewHolder.tvTime.setTextColor(getResources().getColor(R.color.green0));
-                viewHolder.tvState.setTextColor(getResources().getColor(R.color.green0));
-                viewHolder.tvState.setVisibility(View.VISIBLE);
-            }
+
             return convertView;
         }
 
