@@ -149,18 +149,19 @@ public class UploadFileEngine {
                     if (data != null) {
                         WeiTaiXinApplication.user = data;
                         if (finishActivity != null) {
+                            WeiTaiXinApplication.getInstance().putValue("InfoEdit","true");
                             finishActivity.onFinishActivity(true);
                         }
-                        LogUtil.d("errdata", "errdata完善个人资料成功");
                     } else {
+                        WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
                         ToastUtil.show(context, "完善个人资料失败");
                     }
                 } else {
                     if (finishActivity != null) {
                         finishActivity.onFinishActivity(false);
                     }
+                    WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
                     ToastUtil.show(context, "完善个人资料失败");
-                    LogUtil.d("errdata", "errdata完善个人资料失败");
                 }
                 customDialog.dismiss();
             }

@@ -66,9 +66,7 @@ public class MeMainFragmentActivity extends BaseActivity {
 
     public void showTabFirst() {
         iv_tab_01.setSelected(true);
-        if (homePageFragment == null) {
-            homePageFragment = new HomePageFragment();
-        }
+        homePageFragment = HomePageFragment.getInstance();
         fragmentManager = getFragmentManager();
         showFragment(R.id.container, homePageFragment);
     }

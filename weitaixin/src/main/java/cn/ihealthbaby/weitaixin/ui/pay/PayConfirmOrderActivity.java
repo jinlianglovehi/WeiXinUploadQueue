@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,13 +26,21 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.collecton.ApiList;
+import cn.ihealthbaby.client.form.ServiceOrderForm;
+import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.client.model.Product;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.GoodsList;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class PayConfirmOrderActivity extends BaseActivity {
 
@@ -54,6 +63,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
     @Bind(R.id.tvHospitalName) TextView tvHospitalName;
     @Bind(R.id.tvDoctorName) TextView tvDoctorName;
     @Bind(R.id.tvPrice) TextView tvPrice;
+    @Bind(R.id.tvSericeSubmitOrder) TextView tvSericeSubmitOrder;
 
     private ArrayList<HashMap<String, String>> datas = new ArrayList<HashMap<String, String>>();
     private MyGoodsListAdapter myGoodsListAdapter;
@@ -95,7 +105,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
         myGoodsListAdapter.setDatas(datas);
         myGoodsListAdapter.notifyDataSetChanged();
 
-        tvPrice.setText("总计￥"+priceCount+"");
+        tvPrice.setText("总计￥" + priceCount + "");
     }
 
     public void productFor(ArrayList<Product> productDatas){
@@ -117,6 +127,27 @@ public class PayConfirmOrderActivity extends BaseActivity {
     public void onBack() {
         this.finish();
     }
+
+    @OnClick(R.id.tvSericeSubmitOrder)
+    public void SericeSubmitOrder() {
+        final CustomDialog customDialog=new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
+        dialog.show();
+
+        ServiceOrderForm serviceOrderForm=new ServiceOrderForm();
+//        serviceOrderForm.set
+        ApiManager.getInstance().orderApi.submitServiceOrder(serviceOrderForm, new HttpClientAdapter.Callback<Integer>() {
+            @Override
+            public void call(Result<Integer> t) {
+                if (t.isSuccess()) {
+                    t.getData();
+                }else {
+                    ToastUtil.show(getApplicationContext(),t.getMsgMap()+"");
+                }
+            }
+        },getRequestTag());
+    }
+
 
     @OnClick(R.id.rlExpressageAction)
     public void ExpressageAction() {
