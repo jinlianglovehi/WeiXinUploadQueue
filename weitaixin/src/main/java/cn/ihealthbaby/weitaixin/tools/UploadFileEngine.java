@@ -61,8 +61,8 @@ public class UploadFileEngine {
             public void complete(String key, ResponseInfo info, JSONObject response) {
                 if (info.statusCode==200) {
                     UploadFileEngine.this.key=key;
-                    LogUtil.e("errdata", "errdata头像上次七牛成功: "+key);
-                    ToastUtil.show(context.getApplicationContext(), "七牛成功");
+                    LogUtil.e("errdata", "errdata头像上次七牛成功: " + key);
+//                    ToastUtil.show(context.getApplicationContext(), "七牛成功");
 //                    if(isUpdateInfo){
 //                        completeInfoAction();
 //                    }
@@ -70,8 +70,8 @@ public class UploadFileEngine {
                         updateHeadPicAction();
                     }
                 }else{
-                    LogUtil.e("errdata","errdata头像上次七牛失败");
-                    ToastUtil.show(context.getApplicationContext(), "七牛失败");
+                    LogUtil.e("errdata","errdata头像上次七牛失败 "+info.error);
+                    ToastUtil.show(context.getApplicationContext(), info.error);
                 }
                 customDialog.dismiss();
             }
@@ -149,18 +149,19 @@ public class UploadFileEngine {
                     if (data != null) {
                         WeiTaiXinApplication.user = data;
                         if (finishActivity != null) {
+                            WeiTaiXinApplication.getInstance().putValue("InfoEdit","true");
                             finishActivity.onFinishActivity(true);
                         }
-                        LogUtil.d("errdata", "errdata完善个人资料成功");
                     } else {
+                        WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
                         ToastUtil.show(context, "完善个人资料失败");
                     }
                 } else {
                     if (finishActivity != null) {
                         finishActivity.onFinishActivity(false);
                     }
+                    WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
                     ToastUtil.show(context, "完善个人资料失败");
-                    LogUtil.d("errdata", "errdata完善个人资料失败");
                 }
                 customDialog.dismiss();
             }

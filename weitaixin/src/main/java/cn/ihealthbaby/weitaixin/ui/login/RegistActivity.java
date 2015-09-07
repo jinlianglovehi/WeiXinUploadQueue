@@ -284,8 +284,12 @@ public class RegistActivity extends BaseActivity {
                         WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
                         WeiTaiXinApplication.getInstance().phone_number = phone_number;
                         WeiTaiXinApplication.user = data;
-                        Intent intent = new Intent(RegistActivity.this.getApplicationContext(), InfoEditActivity.class);
-                        startActivity(intent);
+
+                        String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
+                        if(!"true".equals(value)){
+                            Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
+                            startActivity(intent);
+                        }
                         RegistActivity.this.finish();
                     } else {
                         ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");

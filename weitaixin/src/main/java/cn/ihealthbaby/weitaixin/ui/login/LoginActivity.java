@@ -123,6 +123,13 @@ public class LoginActivity extends BaseActivity {
                                 WeiTaiXinApplication.user=data;
                                 ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
                                 WeiTaiXinApplication.getInstance().isLogin=true;
+
+                                String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
+                                if(!"true".equals(value)){
+                                    Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
+                                    startActivity(intent);
+                                }
+
                                 LoginActivity.this.finish();
                             }else{
                                 ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account").toString()+"");

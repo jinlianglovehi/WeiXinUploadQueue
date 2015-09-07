@@ -366,6 +366,7 @@
             android:textSize="@dimen/font12" />
 
         <TextView
+            android:id="@+id/tvSericeSubmitOrder"
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
@@ -374,7 +375,7 @@
             android:background="@color/red0"
             android:gravity="center"
             android:text="提交订单"
-            android:textColor="@color/white0"
+            android:textColor="@drawable/text_color_selector"
             android:textSize="@dimen/font12" />
 
 

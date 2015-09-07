@@ -215,7 +215,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
     private final int requestCode = 100;
 
-    private void setItemTextView(AdviceItem adviceItem, int position) {
+    private void setItemTextView(final AdviceItem adviceItem, int position) {
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
         int status = adviceItem.getStatus();
         if (status == 0) {
@@ -258,6 +258,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
                     if (t.isSuccess()) {
                         Long data = t.getData();
                         ToastUtil.show(context, "上传成功");
+                        adviceItem.setStatus(0);
+                        notifyDataSetChanged();
                     } else {
                         ToastUtil.show(context, t.getMsgMap() + "");
                     }
