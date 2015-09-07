@@ -46,7 +46,7 @@ public class QuestionDialog extends Dialog {
         TextView tv_number = (TextView) findViewById(R.id.tv_number);
         TextView tv_true = (TextView) findViewById(R.id.tv_true);
         TextView tv_false = (TextView) findViewById(R.id.tv_false);
-        tv_number.setText(mPosition + "");
+        tv_number.setText(String.format("%02d", mPosition));
         if (0 == mPosition) {
             tv_content.setText(mQuestion.getQuestion());
             tv_number.setBackgroundResource(R.drawable.grade_begin);
