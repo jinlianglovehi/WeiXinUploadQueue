@@ -89,6 +89,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="32dp"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     android:src="@drawable/wo_head_arrow_right"/>
 
             </RelativeLayout>

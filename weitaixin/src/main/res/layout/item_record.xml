@@ -2,8 +2,14 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal">
+              android:background="@color/gray17"
+              android:orientation="vertical">
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="13dp"
+        android:layout_marginLeft="49dp"
+        android:background="@color/green0"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -12,24 +18,40 @@
         <TextView
             android:id="@+id/tvRecordDelete"
             android:layout_width="100dp"
-            android:layout_height="73dp"
+            android:layout_height="72dp"
             android:layout_gravity="right|center_vertical"
+            android:layout_marginBottom="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
             android:background="@color/red0"
             android:gravity="center"
             android:text="删 除"
             android:textColor="@drawable/text_color_remove_selector"
-            android:textSize="@dimen/font18"/>
+            android:textSize="@dimen/font16"/>
+
+        <ImageView
+            android:layout_width="74dp"
+            android:layout_height="74dp"
+            android:layout_marginLeft="9dp"
+            android:src="@drawable/bg_white_circle"/>
 
         <RelativeLayout
             android:id="@+id/rlRecordItem"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="74dp"
                 android:layout_marginLeft="9dp"
                 android:background="@drawable/bg_record_item">
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="40dp"
+                    android:background="@color/green0"/>
 
                 <LinearLayout
                     android:id="@+id/ll_Layout"
@@ -97,9 +119,10 @@
                 <TextView
                     android:id="@+id/tvAdviceStatus"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="33dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="22dp"
                     android:background="@drawable/recode_half_circle"
                     android:gravity="center"
                     android:text="问医生"
