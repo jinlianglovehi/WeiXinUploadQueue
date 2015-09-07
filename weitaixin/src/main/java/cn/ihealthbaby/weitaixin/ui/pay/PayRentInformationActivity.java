@@ -33,8 +33,10 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Doctor;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.model.LocalProductData;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
@@ -75,6 +77,8 @@ public class PayRentInformationActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.currentPosition = position;
                 adapter.notifyDataSetChanged();
+                Doctor doctor= (Doctor) adapter.getItem(position);
+                LocalProductData.getLocal().put(LocalProductData.DoctorName, doctor.getName());
             }
         });
 
@@ -105,7 +109,8 @@ public class PayRentInformationActivity extends BaseActivity {
 
     @OnClick(R.id.tvGotoOrderAction)
     public void GotoOrderAction() {
-
+        Intent intent = new Intent(this, PayGoingOrderActivity.class);
+        startActivity(intent);
     }
 
     private long hospitalId=-1;

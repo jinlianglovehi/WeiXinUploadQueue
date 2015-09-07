@@ -50,8 +50,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     ///////
     public View selectedView;
     public View selectedViewOld;
-    public View tvAdviceStatused;
-    public View tvAdviceStatusedOld;
+//    public View tvAdviceStatused;
+//    public View tvAdviceStatusedOld;
     private int selectedItem;
     public TextView recordDelete;
     ;
@@ -59,20 +59,20 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     public View getSelectedView() {
         return selectedView;
     }
-    public View getAdviceStatused() {
-        return tvAdviceStatused;
-    }
+//    public View getAdviceStatused() {
+//        return tvAdviceStatused;
+//    }
 
     public void cancel() {
-        if (tvAdviceStatused != null) {
-            tvAdviceStatused.setVisibility(View.VISIBLE);
-        }
+//        if (tvAdviceStatused != null) {
+//            tvAdviceStatused.setVisibility(View.VISIBLE);
+//        }
         if (selectedView == null) {
             return;
         }
         ObjectAnimator.ofFloat(selectedView, "x", 0f).start();
         selectedView = null;
-        tvAdviceStatused=null;
+//        tvAdviceStatused=null;
     }
 
     public void cancel(View selectedViewOld) {
@@ -162,11 +162,11 @@ public class MyAdviceItemAdapter extends BaseAdapter {
                     case MotionEvent.ACTION_DOWN:
                         selectedView = v;
                         selectedItem = position;
-                        tvAdviceStatused = (TextView) v.findViewById(R.id.tvAdviceStatus);
-                        tvAdviceStatused.setVisibility(View.INVISIBLE);
-                        if (tvAdviceStatusedOld!=null) {
-                            tvAdviceStatusedOld.setVisibility(View.VISIBLE);
-                        }
+//                        tvAdviceStatused = (TextView) v.findViewById(R.id.tvAdviceStatus);
+//                        tvAdviceStatused.setVisibility(View.INVISIBLE);
+//                        if (tvAdviceStatusedOld!=null) {
+//                            tvAdviceStatusedOld.setVisibility(View.VISIBLE);
+//                        }
                         break;
                 }
                 return false;
@@ -243,12 +243,12 @@ public class MyAdviceItemAdapter extends BaseAdapter {
             adviceForm.setTestTime(adviceItem.getTestTime());
             adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
             adviceForm.setGestationalWeeks(adviceItem.getGestationalWeeks());
-//            adviceForm.setData();
-//            adviceForm.setAskPurpose();
+            adviceForm.setData("sd");
+            adviceForm.setAskPurpose("dsda");
 //            adviceForm.setDataType();
 //            adviceForm.setDeviceType();
-//            adviceForm.setFeeling();
-//            adviceForm.setFetalTonePath();
+            adviceForm.setFeeling("dsadsad");
+            adviceForm.setFetalTonePath("dsaddsa");
 //            adviceForm.setLatitude();
 //            adviceForm.setLongitude();
 

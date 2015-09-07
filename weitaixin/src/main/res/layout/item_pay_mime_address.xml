@@ -14,7 +14,7 @@
         android:src="@drawable/pay_choose" />
 
     <LinearLayout
-        android:id="@+id/llOneFunction"
+        android:id="@+id/llOne1Function"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -43,7 +43,7 @@
         android:id="@+id/llTwoFunction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/llOneFunction"
+        android:layout_below="@id/llOne1Function"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/ivAddressImage"
         android:orientation="horizontal">

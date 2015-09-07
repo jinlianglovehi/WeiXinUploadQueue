@@ -21,6 +21,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapt
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.model.LocalProductData;
 
 /**
  * @author by liuhongjian on 15/7/23 14:09.
@@ -35,7 +36,7 @@ public class WeiTaiXinApplication extends Application {
     public static String phone_number;
     public static User user;
     public boolean isLogin = false;
-
+    public LocalProductData localProductData=new LocalProductData(); //保存商品
 
     @Override
     public void onCreate() {

@@ -25,7 +25,7 @@ public class PayOrderInformationActivity extends BaseActivity {
     @Bind(R.id.function) TextView function;
     //
 
-    @Bind(R.id.addressPullToRefreshAllOrder) PullToRefreshListView addressPullToRefreshAllOrder;
+    PullToRefreshListView addressPullToRefreshAllOrder;
     @Bind(R.id.tvAddNewAddress) TextView tvAddNewAddress;
 
 
