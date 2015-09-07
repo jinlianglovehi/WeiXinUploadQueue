@@ -27,7 +27,6 @@
         android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="2dp"
         android:cacheColorHint="#00000000"
         android:divider="@color/gray5"
         android:dividerHeight="3dp"

@@ -28,21 +28,28 @@ import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class SetSystemResetPasswordActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
-//    @Bind(R.id.et_phone_number_reset) EditText et_phone_number_reset;
-    @Bind(R.id.et_password_reset) EditText et_password_reset;
-    @Bind(R.id.et_mark_number_reset) EditText et_mark_number_reset;
-    @Bind(R.id.tv_mark_num_text_reset) TextView tv_mark_num_text_reset;
-    @Bind(R.id.tv_reset_password_action_reset) TextView tv_reset_password_action_reset;
+    //    @Bind(R.id.et_phone_number_reset) EditText et_phone_number_reset;
+    @Bind(R.id.et_password_reset)
+    EditText et_password_reset;
+    @Bind(R.id.et_mark_number_reset)
+    EditText et_mark_number_reset;
+    @Bind(R.id.tv_mark_num_text_reset)
+    TextView tv_mark_num_text_reset;
+    @Bind(R.id.tv_reset_password_action_reset)
+    TextView tv_reset_password_action_reset;
     @Bind(R.id.ivShowPassword)
     CheckBox ivShowPassword;
 
 
-    public Handler mHandler=new Handler();
+    public Handler mHandler = new Handler();
     private Dialog dialog;
 
 
@@ -64,7 +71,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
     }
 
     @OnClick(R.id.back)
-    public void onBack( ) {
+    public void onBack() {
         this.finish();
     }
 
@@ -74,18 +81,17 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
         if ("0".equals(ivShowPassword.getTag())) {
             et_password_reset.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             ivShowPassword.setTag("1");
-        }else{
+        } else {
             et_password_reset.setTransformationMethod(PasswordTransformationMethod.getInstance());
             ivShowPassword.setTag("0");
         }
     }
 
 
-
-    public int countTime=10;
-    public boolean isSend=true;
-    public CountDownTimer countDownTimer ;
-    public boolean isHasAuthCode=false;
+    public int countTime = 10;
+    public boolean isSend = true;
+    public CountDownTimer countDownTimer;
+    public boolean isHasAuthCode = false;
 
 
     @OnClick(R.id.tv_mark_num_text_reset)
@@ -96,21 +102,23 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                 ToastUtil.show(getApplicationContext(), "请输入密码");
                 return;
             }
-            if (newPassword.length()<6&&newPassword.length()>20) {
+            if (newPassword.length() < 6 && newPassword.length() > 20) {
                 ToastUtil.show(getApplicationContext(), "密码必须是6~20位的数字和字母");
                 return;
             }
 
-            try{
-                dialog=new CustomDialog().createDialog1(this,"验证码发送中...");
+            tv_mark_num_text_reset.setBackgroundResource(R.color.gray1);
+            tv_mark_num_text_reset.setTextColor(getResources().getColor(R.color.gray2));
+            try {
+                dialog = new CustomDialog().createDialog1(this, "验证码发送中...");
                 dialog.show();
                 getAuthCode();
 
 
-                countDownTimer=new CountDownTimer(10000,1000) {
+                countDownTimer = new CountDownTimer(10000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        tv_mark_num_text_reset.setText(millisUntilFinished/1000+"秒之后重发");
+                        tv_mark_num_text_reset.setText(millisUntilFinished / 1000 + "秒之后重发");
                         isSend = false;
                     }
 
@@ -119,10 +127,12 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                         tv_mark_num_text_reset.setText("发送验证码");
                         isSend = true;
                         dialog.dismiss();
+                        tv_mark_num_text_reset.setBackgroundResource(R.drawable.shape_send_verifycode);
+                        tv_mark_num_text_reset.setTextColor(getResources().getColor(R.color.black0));
                     }
                 };
                 countDownTimer.start();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 cancel();
             }
@@ -130,8 +140,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
     }
 
 
-
-    public void cancel(){
+    public void cancel() {
         tv_mark_num_text_reset.setText("发送验证码");
         isSend = true;
         countDownTimer.cancel();
@@ -140,22 +149,22 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
 
 
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
-    public void getAuthCode(){
-        ApiManager.getInstance().accountApi.getAuthCode(WeiTaiXinApplication.getInstance().phone_number, 2, new HttpClientAdapter.Callback<Boolean>() {
+    public void getAuthCode() {
+        ApiManager.getInstance().accountApi.getAuthCode(WeiTaiXinApplication.phone_number, 2, new HttpClientAdapter.Callback<Boolean>() {
             @Override
             public void call(Result<Boolean> t) {
                 if (t.isSuccess()) {
-                    Boolean data=t.getData();
-                    if (data){
-                        isHasAuthCode=true;
-                    }else{
-                        isHasAuthCode=false;
+                    Boolean data = t.getData();
+                    if (data) {
+                        isHasAuthCode = true;
+                    } else {
+                        isHasAuthCode = false;
                         cancel();
-                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg()+"重新获取验证码");
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg() + "重新获取验证码");
                     }
-                }else{
+                } else {
                     ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
-                    isHasAuthCode=false;
+                    isHasAuthCode = false;
                     cancel();
                 }
                 dialog.dismiss();
@@ -168,7 +177,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
     public void tvResetPasswordActionReset() {
         if (isHasAuthCode) {
             tvRegistAction2();
-        }else{
+        } else {
             ToastUtil.show(getApplicationContext(), "先获取验证码~~");
         }
 
@@ -177,14 +186,15 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
 
     public String newPassword;
     public String mark_number;
+
     public void tvRegistAction2() {
         newPassword = et_password_reset.getText().toString().trim();
-        mark_number= et_mark_number_reset.getText().toString().trim();
+        mark_number = et_mark_number_reset.getText().toString().trim();
         if (TextUtils.isEmpty(newPassword)) {
             ToastUtil.show(getApplicationContext(), "请输入密码");
             return;
         }
-        if (newPassword.length()<6&&newPassword.length()>20) {
+        if (newPassword.length() < 6 && newPassword.length() > 20) {
             ToastUtil.show(getApplicationContext(), "密码必须是6~20位的数字和字母");
             return;
         }
@@ -194,26 +204,26 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
         }
 
 
-        final CustomDialog customDialog= new CustomDialog();
-        final Dialog dialog=customDialog.createDialog1(this,"登录中...");
+        final CustomDialog customDialog = new CustomDialog();
+        final Dialog dialog = customDialog.createDialog1(this, "登录中...");
         dialog.show();
 
 
-        ChangePasswordForm changePasswordForm=new ChangePasswordForm(Integer.parseInt(mark_number),newPassword);
+        ChangePasswordForm changePasswordForm = new ChangePasswordForm(Integer.parseInt(mark_number), newPassword);
 
         ApiManager.getInstance().accountApi.changePassword(changePasswordForm, new HttpClientAdapter.Callback<Boolean>() {
             @Override
             public void call(Result<Boolean> t) {
                 if (customDialog.isNoCancel) {
                     if (t.isSuccess()) {
-                        Boolean data= t.getData();
+                        Boolean data = t.getData();
                         if (data) {
                             ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "修改密码成功");
                             finish();
-                        }else{
+                        } else {
                             ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
                         }
-                    }else {
+                    } else {
                         ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
                     }
                 }

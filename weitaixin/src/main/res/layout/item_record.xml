@@ -17,14 +17,13 @@
             android:background="@color/red0"
             android:gravity="center"
             android:text="删 除"
-            android:textColor="@drawable/text_color_hei_selector"
+            android:textColor="@drawable/text_color_remove_selector"
             android:textSize="@dimen/font18"/>
 
         <RelativeLayout
             android:id="@+id/rlRecordItem"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="16dp">
+            android:layout_height="match_parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
