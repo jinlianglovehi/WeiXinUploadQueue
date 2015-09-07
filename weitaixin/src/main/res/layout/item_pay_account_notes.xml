@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    android:background="@color/white0">
+
+    <TextView
+        android:id="@+id/tvAccountNotesName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="20dp"
+        android:text="购买耦合剂*4"
+        android:textColor="@color/black0"
+        android:textSize="@dimen/font10" />
+
+
+    <TextView
+        android:id="@+id/tvAccountNotesTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAccountNotesName"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="8dp"
+        android:text="2015-07-26   15: 01"
+        android:textColor="@color/gray7"
+        android:textSize="@dimen/font8" />
+
+
+    <TextView
+        android:id="@+id/tvAccountNotesPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="20dp"
+        android:text="-￥3425"
+        android:textColor="@color/red2"
+        android:textSize="@dimen/font10" />
+
+</RelativeLayout>

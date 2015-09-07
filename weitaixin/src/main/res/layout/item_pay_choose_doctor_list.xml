@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white0">
+
+    <FrameLayout
+        android:id="@+id/fl1None"
+        android:layout_width="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="40dp">
+
+        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
+            android:id="@+id/ivDoctorPicNone"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pay_choose_un" />
+
+        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
+            android:id="@+id/ivDoctorPic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pay_choose"
+            android:visibility="gone" />
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/tvDoctorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fl1None"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:text="湿答答"
+        android:textColor="@color/gray12"
+        android:textSize="@dimen/font10" />
+
+
+    <TextView
+        android:id="@+id/tvDoctorLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvDoctorName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:text="打算主任"
+        android:textColor="@color/gray7"
+        android:textSize="@dimen/font10" />
+
+</RelativeLayout>

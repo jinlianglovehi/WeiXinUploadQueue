@@ -2,7 +2,7 @@ package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -12,7 +12,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 
-public class PayAccountActivity extends BaseActivity {
+public class PayCityChooseActivity extends BaseActivity {
 
     @Bind(R.id.back)
     RelativeLayout back;
@@ -21,18 +21,20 @@ public class PayAccountActivity extends BaseActivity {
     @Bind(R.id.function)
     TextView function;
     //
-    @Bind(R.id.rlPayMimeOrder)
-    RelativeLayout rlPayMimeOrder;
+    @Bind(R.id.lvCityChoose)
+    ListView lvCityChoose;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay_account);
+        setContentView(R.layout.activity_pay_city_choose);
 
         ButterKnife.bind(this);
 
-        title_text.setText("我的账户");
+        title_text.setText("选择城市");
+
+
     }
 
 
@@ -41,19 +43,6 @@ public class PayAccountActivity extends BaseActivity {
         this.finish();
     }
 
-    @OnClick(R.id.rlPayMimeOrder)
-    public void PayMimeOrder() {
-        Intent intent = new Intent(this, PayMimeOrderActivity.class);
-        startActivity(intent);
-    }
-
-
-    @OnClick(R.id.rlPayAddress)
-    public void PayAddress() {
-//        Intent intent = new Intent(this, PayMimeAddressActivity.class);
-        Intent intent = new Intent(this, PayRentInformationActivity.class);
-        startActivity(intent);
-    }
 
 
 }

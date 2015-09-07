@@ -1,0 +1,148 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray5">
+
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl1None"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_below="@id/head_title_id"
+        android:layout_marginTop="2dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="所在城市"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/iv1None"
+            android:text="北京"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+
+        <ImageView
+            android:id="@+id/iv1None"
+            android:layout_width="8dp"
+            android:layout_height="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl2None"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_below="@id/rl1None"
+        android:layout_marginTop="8dp"
+        android:background="@color/white0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="选医院"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:id="@+id/tvHospitalName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/iv2None"
+            android:text="北京医院倒萨的大"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+
+        <ImageView
+            android:id="@+id/iv2None"
+            android:layout_width="8dp"
+            android:layout_height="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl3None"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_above="@+id/tvGotoOrderAction"
+        android:layout_below="@id/rl2None"
+        android:layout_marginTop="8dp"
+        android:background="@color/white0">
+
+
+        <TextView
+            android:id="@+id/tv2None"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="14dp"
+            android:text="选医院"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font10" />
+
+        <GridView
+            android:id="@+id/gvChooseDoctorList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tv2None"
+            android:layout_marginBottom="22dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="18dp"
+            android:fadingEdge="none"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:verticalSpacing="10dp" />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tvGotoOrderAction"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="34dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/green0"
+        android:gravity="center"
+        android:text="去下单"
+        android:textColor="@color/white0"
+        android:textSize="@dimen/font10" />
+
+</RelativeLayout>
+

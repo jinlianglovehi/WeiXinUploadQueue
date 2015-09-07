@@ -1,0 +1,95 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="76dp"
+    android:background="@color/white0">
+
+    <ImageView
+        android:id="@+id/ivAddressImage"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:src="@drawable/pay_choose" />
+
+    <LinearLayout
+        android:id="@+id/llOneFunction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@id/ivAddressImage"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="收货人:"
+            android:textColor="@color/gray4"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:id="@+id/tvAddressName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="李香兰"
+            android:textColor="@color/black0"
+            android:textSize="@dimen/font10" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llTwoFunction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llOneFunction"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/ivAddressImage"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="电    话:"
+            android:textColor="@color/gray4"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:id="@+id/tvAddressPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="137645645453"
+            android:textColor="@color/black0"
+            android:textSize="@dimen/font10" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llTwoFunction"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/ivAddressImage"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="收货地址:"
+            android:textColor="@color/gray4"
+            android:textSize="@dimen/font10" />
+
+        <TextView
+            android:id="@+id/tvAddressText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="北京海淀区的撒大撒旦"
+            android:textColor="@color/black0"
+            android:textSize="@dimen/font10" />
+    </LinearLayout>
+
+
+</RelativeLayout>

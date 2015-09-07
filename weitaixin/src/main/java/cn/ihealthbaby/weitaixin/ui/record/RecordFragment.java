@@ -107,7 +107,7 @@ public class RecordFragment extends BaseFragment {
 
 
 
-
+    private int countNumber=0;
     private static RecordFragment instance;
 
     public static RecordFragment getInstance() {
@@ -140,9 +140,10 @@ public class RecordFragment extends BaseFragment {
         pullHeadDatas();
         pullDatas();
 
-        registerForContextMenu(pullToRefresh.getRefreshableView());
+//        registerForContextMenu(pullToRefresh.getRefreshableView());
         pullToRefresh.getRefreshableView().setOnTouchListener(new View.OnTouchListener() {
             private View selectedView;
+            private View tvAdviceStatused;
             private float oldXDis;
             private float oldX;
             private float oldY;
@@ -158,6 +159,7 @@ public class RecordFragment extends BaseFragment {
                             adapter.cancel(adapter.selectedViewOld);
                         }
                         selectedView = adapter.getSelectedView();
+                        tvAdviceStatused = adapter.getAdviceStatused();
                         oldXDis = event.getX();
                         oldX = event.getX();
                         oldY = event.getY();
@@ -197,6 +199,7 @@ public class RecordFragment extends BaseFragment {
                             adapter.cancel();
                         }
                         adapter.selectedViewOld = selectedView;
+                        adapter.tvAdviceStatusedOld = tvAdviceStatused;
                         break;
                 }
                 return false;
@@ -229,6 +232,9 @@ public class RecordFragment extends BaseFragment {
                                     ToastUtil.show(context, "删除成功");
                                     adapter.datas.remove((int) menuInfo.id);
                                     adapter.notifyDataSetChanged();
+                                    if (tvUsedCount != null) {
+                                        tvUsedCount.setText((--countNumber)+ "");
+                                    }
                                 } else {
                                     ToastUtil.show(context, t.getMsgMap() + "");
                                 }
@@ -265,7 +271,7 @@ public class RecordFragment extends BaseFragment {
 
 
     private void initView() {
-        adapter = new MyAdviceItemAdapter(context, null);
+        adapter = new MyAdviceItemAdapter(context, null,tvUsedCount);
         pullToRefresh.setAdapter(adapter);
         pullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
 //      pullToRefresh.setScrollingWhileRefreshingEnabled(false);
@@ -321,7 +327,8 @@ public class RecordFragment extends BaseFragment {
 //                                  WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
 //                              }
 //                              ++pageCountCache;
-                                tvUsedCount.setText(data.getCount() + "");
+                                countNumber=data.getCount();
+                                tvUsedCount.setText(countNumber + "");
                                 adapter.addDatas(dataList);
                                 adapter.notifyDataSetChanged();
                                 mAdviceItems = adapter.datas;
@@ -365,7 +372,9 @@ public class RecordFragment extends BaseFragment {
         ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
         adviceItems.addAll(adviceNativeItems);
         if (adviceItems.size() > 0) {
-            tvUsedCount.setText(WeiTaiXinApplication.getInstance().getValue("tvUsedCount", 0 + ""));
+            countNumber=adviceItems.size();
+            tvUsedCount.setText(countNumber+"");
+//            tvUsedCount.setText(WeiTaiXinApplication.getInstance().getValue("tvUsedCount", 0 + ""));
             adapter.setDatas(adviceItems);
             adapter.notifyDataSetChanged();
             mAdviceItems = adapter.datas;
@@ -399,9 +408,10 @@ public class RecordFragment extends BaseFragment {
                     //缓存网络前20条,保存到数据库中
                     pageCountCache = 1;
 //                  dataDao.add(DataDBHelper.tableName, dataList);
-                    WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
+                    countNumber=data.getCount();
+//                    WeiTaiXinApplication.getInstance().putValue("tvUsedCount", countNumber+ "");
                     if (tvUsedCount != null) {
-                        tvUsedCount.setText(data.getCount() + "");
+                        tvUsedCount.setText(countNumber+ "");
                     }
 
 
@@ -433,6 +443,10 @@ public class RecordFragment extends BaseFragment {
                         ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
                         adviceItems.addAll(adviceNativeItems);
                         dataListPage.addAll(adviceItems);
+                        countNumber=dataListPage.size();
+                        if (tvUsedCount != null) {
+                            tvUsedCount.setText(countNumber+ "");
+                        }
                     }
 
                     adapter.setDatas(dataListPage);
