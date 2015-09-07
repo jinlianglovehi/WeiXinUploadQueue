@@ -23,7 +23,7 @@
         android:padding="14dp"
         android:phoneNumber="true"
         android:singleLine="true"
-        android:text="13161401474"
+        android:text=""
         android:textColor="@color/black1"
         android:textColorHint="@color/text_color_hint"
         android:textSize="@dimen/font_normal"/>
@@ -48,7 +48,7 @@
             android:numeric="integer"
             android:padding="14dp"
             android:singleLine="true"
-            android:text="123456"
+            android:text=""
             android:textColor="@color/black1"
             android:textColorHint="@color/text_color_hint"
             android:textSize="@dimen/font_normal"/>

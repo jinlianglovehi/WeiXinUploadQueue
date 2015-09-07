@@ -93,9 +93,13 @@ public class AskDoctorActivity extends BaseActivity {
             public void call(Result<Service> t) {
                 if (t.isSuccess()) {
                     Service data = t.getData();
-                     totalCount=data.getTotalCount();
-                     usedCount=data.getUsedCount();
-                    tvOtherInfo.setText("共"+totalCount+"次，已咨询"+usedCount+"次，剩余"+(totalCount-usedCount)+"次");
+                    if (data!=null) {
+                        totalCount=data.getTotalCount();
+                        usedCount=data.getUsedCount();
+                        tvOtherInfo.setText("共"+totalCount+"次，已咨询"+usedCount+"次，剩余"+(totalCount-usedCount)+"次");
+                    } else {
+                        ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
+                    }
                 } else {
                     ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
                 }
