@@ -71,10 +71,10 @@
 
             <TextView
                 android:id="@+id/tv_true"
-                android:layout_width="80dp"
-                android:layout_height="26dp"
+                android:layout_width="91dp"
+                android:layout_height="33dp"
                 android:layout_marginRight="@dimen/dimen_dp_10"
-                android:background="@drawable/corner_graded"
+                android:background="@drawable/grade_bt_selector"
                 android:gravity="center"
                 android:padding="@dimen/dimen_dp_5"
                 android:text="是"
@@ -83,10 +83,10 @@
 
             <TextView
                 android:id="@+id/tv_false"
-                android:layout_width="80dp"
-                android:layout_height="26dp"
+                android:layout_width="91dp"
+                android:layout_height="33dp"
                 android:layout_marginLeft="@dimen/dimen_dp_10"
-                android:background="@drawable/corner_graded"
+                android:background="@drawable/grade_bt_selector"
                 android:gravity="center"
                 android:padding="@dimen/dimen_dp_5"
                 android:text="否"

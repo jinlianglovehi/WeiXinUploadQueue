@@ -34,6 +34,9 @@
     <color name="gray18">#FFDADADA</color>
     <!-- 监护设置里面的横线-->
     <color name="gray19">#FFE0E0E0</color>
+
+    <!-- 高危评分 button 字体颜色-->
+    <color name="gray20">#FF7B7B7B</color>
     <color name="black0">#FF222222</color>
     <color name="black1">#FF000000</color>
     <color name="black2">#FF353330</color>
