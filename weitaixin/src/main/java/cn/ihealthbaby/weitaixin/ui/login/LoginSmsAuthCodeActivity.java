@@ -112,6 +112,9 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                 return;
             }
 
+            tv_mark_number_text_smsauthcode.setBackgroundResource(R.color.gray1);
+            tv_mark_number_text_smsauthcode.setTextColor(getResources().getColor(R.color.gray2));
+
             try {
                 dialog = new CustomDialog().createDialog1(this, "短信验证码发送中...");
                 dialog.show();
@@ -128,6 +131,8 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                     @Override
                     public void onFinish() {
                         tv_mark_number_text_smsauthcode.setText("发送验证码");
+                        tv_mark_number_text_smsauthcode.setBackgroundResource(R.drawable.shape_send_verifycode);
+                        tv_mark_number_text_smsauthcode.setTextColor(getResources().getColor(R.color.black0));
                         isSend = true;
                         dialog.dismiss();
                     }

@@ -40,4 +40,10 @@
         android:textSize="@dimen/font_normal"
         android:visibility="invisible"/>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray18"/>
+
 </RelativeLayout>

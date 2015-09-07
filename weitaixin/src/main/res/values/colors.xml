@@ -9,11 +9,13 @@
     <color name="white0">#FFFFFFFF</color>
     <color name="white1">#00000000</color>
     <color name="white2">#33FFFFFF</color>
+    <!-- 用户名密码 框颜色 -->
     <color name="gray1">#FFE5E5E5</color>
     <color name="gray2">#FFD8D8D8</color>
     <color name="gray3">#FF999696</color>
     <color name="gray4">#FFB8B8B8</color>
     <color name="gray5">#FFF7F7F7</color>
+    <!-- title tab  颜色-->
     <color name="gray6">#FFEFEFEF</color>
     <color name="gray7">#FFA9A9A9</color>
     <color name="gray8">#88A9A9A9</color>
@@ -26,11 +28,15 @@
     <color name="gray15">#FFEDEDED</color>
     <color name="gray16">#FF979797</color>
     <color name="text_color_hint">#FFC5C7C7</color>
+    <!--内部填充 -->
+    <color name="gray17">#FFEBEBEB</color>
+    <!--描边颜色 -->
+    <color name="gray18">#FFDADADA</color>
     <color name="black0">#FF222222</color>
     <color name="black1">#FF000000</color>
     <color name="black2">#FF353330</color>
     <color name="black3">#FF2E2E2E</color>
-    <color name="red0">#FFFE0058</color>
+    <color name="red0">#FFFE0058</color>d
     <color name="red1">#FFea5550</color>
     <color name="red2">#FFee4f4e</color>
     <color name="red3">#FFFE2E62</color>

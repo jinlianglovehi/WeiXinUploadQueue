@@ -119,6 +119,8 @@ public class RegistActivity extends BaseActivity {
                 return;
             }
 
+            tv_mark_num_text.setBackgroundResource(R.color.gray1);
+            tv_mark_num_text.setTextColor(getResources().getColor(R.color.gray2));
             try {
                 dialog = new CustomDialog().createDialog1(this, "验证码发送中...");
                 dialog.show();
@@ -136,6 +138,8 @@ public class RegistActivity extends BaseActivity {
                         tv_mark_num_text.setText("发送验证码");
                         isSend = true;
                         dialog.dismiss();
+                        tv_mark_num_text.setBackgroundResource(R.drawable.shape_send_verifycode);
+                        tv_mark_num_text.setTextColor(getResources().getColor(R.color.black0));
                     }
                 };
                 countDownTimer.start();

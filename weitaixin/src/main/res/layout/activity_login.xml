@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/et_phone_number_login"
-            android:background="@color/gray4"/>
+            android:background="@color/gray1"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -70,8 +70,8 @@
 
             <CheckBox
                 android:id="@+id/ivShowPassword"
-                android:layout_width="40dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="17dp"
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/eye_selector"
