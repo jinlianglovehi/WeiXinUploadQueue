@@ -10,7 +10,7 @@
         layout="@layout/layout_title" />
 
     <LinearLayout
-        android:id="@+id/llOneFunction"
+        android:id="@+id/ll1Function"
         android:layout_width="match_parent"
         android:layout_height="190dp"
         android:layout_below="@id/head_title_id"
@@ -20,6 +20,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/llRentEquipment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -64,8 +65,8 @@
     <RelativeLayout
         android:id="@+id/rlPayMimeOrder"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_below="@id/llOneFunction"
+        android:layout_height="40dp"
+        android:layout_below="@id/ll1Function"
         android:layout_marginTop="10dp"
         android:background="@color/white0">
 
@@ -76,11 +77,11 @@
             android:layout_marginLeft="16dp"
             android:text="我的订单"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font12" />
 
         <ImageView
             android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_height="18dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
@@ -93,7 +94,7 @@
     <RelativeLayout
         android:id="@+id/rlPayAddress"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="40dp"
         android:layout_below="@id/rlPayMimeOrder"
         android:layout_marginTop="10dp"
         android:background="@color/white0">
@@ -105,19 +106,19 @@
             android:layout_marginLeft="16dp"
             android:text="收货地址"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font12" />
 
         <ImageView
             android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_height="18dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
             android:scaleType="fitXY"
             android:src="@drawable/wo_head_arrow_right" />
 
-
     </RelativeLayout>
+
 </RelativeLayout>
 
 

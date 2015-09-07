@@ -25,8 +25,10 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Hospital;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.model.LocalProductData;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class PayHospitalChooseActivity extends BaseActivity {
@@ -68,6 +70,7 @@ public class PayHospitalChooseActivity extends BaseActivity {
                 Intent intent=new Intent();
                 intent.putExtra("hospitalId", hospitalId);
                 intent.putExtra("hospitalName", adapter.datas.get(position).getName());
+                LocalProductData.getLocal().put(LocalProductData.HospitalName, adapter.datas.get(position).getName());
                 setResult(PayConstant.resultCodeHospitalChoose, intent);
                 finish();
             }

@@ -12,7 +12,7 @@
     <RelativeLayout
         android:id="@+id/rl1None"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="40dp"
         android:layout_below="@id/head_title_id"
         android:layout_marginTop="2dp"
         android:background="@color/white0">
@@ -53,7 +53,7 @@
     <RelativeLayout
         android:id="@+id/rl2None"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="40dp"
         android:layout_below="@id/rl1None"
         android:layout_marginTop="8dp"
         android:background="@color/white0">
@@ -132,7 +132,7 @@
     <TextView
         android:id="@+id/tvGotoOrderAction"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="46dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="34dp"
         android:layout_marginLeft="18dp"
@@ -142,7 +142,7 @@
         android:gravity="center"
         android:text="去下单"
         android:textColor="@color/white0"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font16" />
 
 </RelativeLayout>
 

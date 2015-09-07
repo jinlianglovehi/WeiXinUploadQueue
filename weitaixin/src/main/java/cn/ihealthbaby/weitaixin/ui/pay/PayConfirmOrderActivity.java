@@ -1,8 +1,13 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -11,12 +16,22 @@ import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.model.Product;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.model.GoodsList;
+import cn.ihealthbaby.weitaixin.model.LocalProductData;
 
 public class PayConfirmOrderActivity extends BaseActivity {
 
@@ -25,9 +40,24 @@ public class PayConfirmOrderActivity extends BaseActivity {
     @Bind(R.id.function) TextView function;
     //
 
-    @Bind(R.id.addressPullToRefreshAllOrder) PullToRefreshListView addressPullToRefreshAllOrder;
-    @Bind(R.id.tvAddNewAddress) TextView tvAddNewAddress;
+    @Bind(R.id.lvGoodsList) ListView lvGoodsList;
+    @Bind(R.id.ivExpressageAction) ImageView ivExpressageAction;
+    @Bind(R.id.ivHospitalAction) ImageView ivHospitalAction;
 
+    @Bind(R.id.rlExpressageAction) RelativeLayout rlExpressageAction;
+    @Bind(R.id.rlHospitalAction) RelativeLayout rlHospitalAction;
+
+    @Bind(R.id.rlHospitalGet) RelativeLayout rlHospitalGet;
+    @Bind(R.id.rlNoneGet) RelativeLayout rlNoneGet;
+    @Bind(R.id.rlExpressageGet) RelativeLayout rlExpressageGet;
+
+    @Bind(R.id.tvHospitalName) TextView tvHospitalName;
+    @Bind(R.id.tvDoctorName) TextView tvDoctorName;
+    @Bind(R.id.tvPrice) TextView tvPrice;
+
+    private ArrayList<HashMap<String, String>> datas = new ArrayList<HashMap<String, String>>();
+    private MyGoodsListAdapter myGoodsListAdapter;
+    private int priceCount=0;
 
 
     @Override
@@ -39,56 +69,46 @@ public class PayConfirmOrderActivity extends BaseActivity {
 
         title_text.setText("确认订单");
 
+        HospitalAction();
         pullData();
     }
 
+
+
     private void pullData() {
-        PayMimeAddressAdapter adapter = new PayMimeAddressAdapter(getApplicationContext(), null);
-        addressPullToRefreshAllOrder.setAdapter(adapter);
-        addressPullToRefreshAllOrder.setMode(PullToRefreshBase.Mode.BOTH);
-        init();
+        tvPrice.setText("总计￥"+priceCount+"");
+        myGoodsListAdapter=new MyGoodsListAdapter(this,null);
+        lvGoodsList.setAdapter(myGoodsListAdapter);
 
-        addressPullToRefreshAllOrder.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) { //下拉刷新
+        //
 
-            }
+        ArrayList<Product> products01= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name01);
+        ArrayList<Product> products02= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name02);
+        ArrayList<Product> products03= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name03);
+        ArrayList<Product> products04= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name04);
 
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) { //上拉加载更多
+        productFor(products01);
+        productFor(products02);
+        productFor(products03);
+        productFor(products04);
 
-            }
-        });
+        myGoodsListAdapter.setDatas(datas);
+        myGoodsListAdapter.notifyDataSetChanged();
 
-        addressPullToRefreshAllOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-            }
-        });
-
+        tvPrice.setText("总计￥"+priceCount+"");
     }
 
-
-    private void init() {
-        ILoadingLayout startLabels = addressPullToRefreshAllOrder.getLoadingLayoutProxy(true, false);
-        startLabels.setPullLabel("下拉刷新...");// 刚下拉时，显示的提示
-        startLabels.setRefreshingLabel("正在载入...");// 刷新时
-        startLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
-
-        ILoadingLayout endLabels = addressPullToRefreshAllOrder.getLoadingLayoutProxy(false, true);
-        endLabels.setPullLabel("上拉刷新...");// 刚下拉时，显示的提示
-        endLabels.setRefreshingLabel("正在载入...");// 刷新时
-        endLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
-
-        // 设置下拉刷新文本
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(false, true).setPullLabel("上拉刷新...");
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(false, true).setReleaseLabel("放开刷新...");
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载...");
-        // 设置上拉刷新文本
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(true, false).setPullLabel("下拉刷新...");
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(true, false).setReleaseLabel("放开刷新...");
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(true, false).setRefreshingLabel("正在加载...");
+    public void productFor(ArrayList<Product> productDatas){
+        if (productDatas==null) {
+            return;
+        }
+        for(int i=0;i<productDatas.size();i++){
+            Product product = productDatas.get(i);
+            priceCount+=product.getPrice();
+            HashMap<String, String> dataMap=new HashMap<String, String>();
+            dataMap.put(product.getName(), product.getPrice()+"");
+            datas.add(dataMap);
+        }
     }
 
 
@@ -97,6 +117,108 @@ public class PayConfirmOrderActivity extends BaseActivity {
     public void onBack() {
         this.finish();
     }
+
+    @OnClick(R.id.rlExpressageAction)
+    public void ExpressageAction() {
+        ivExpressageAction.setImageResource(R.drawable.pay_choose_un);
+        ivHospitalAction.setImageResource(R.drawable.pay_choose_un);
+        ivExpressageAction.setImageResource(R.drawable.pay_choose);
+        rlExpressageGet.setVisibility(View.GONE);
+        rlHospitalGet.setVisibility(View.GONE);
+        rlNoneGet.setVisibility(View.GONE);
+        rlExpressageGet.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.rlHospitalAction)
+    public void HospitalAction() {
+        ivExpressageAction.setImageResource(R.drawable.pay_choose_un);
+        ivHospitalAction.setImageResource(R.drawable.pay_choose_un);
+        ivHospitalAction.setImageResource(R.drawable.pay_choose);
+        rlExpressageGet.setVisibility(View.GONE);
+        rlHospitalGet.setVisibility(View.GONE);
+        rlNoneGet.setVisibility(View.GONE);
+        rlHospitalGet.setVisibility(View.VISIBLE);
+        tvHospitalName.setText(LocalProductData.getLocal().get(LocalProductData.HospitalName) + "");
+        tvDoctorName.setText(LocalProductData.getLocal().get(LocalProductData.DoctorName)+"");
+    }
+
+
+    public class MyGoodsListAdapter extends BaseAdapter {
+        private Context context;
+        private ArrayList<HashMap<String,String>> datas;
+        private LayoutInflater mInflater;
+        public int currentPosition;
+
+        public MyGoodsListAdapter(Context context, ArrayList<HashMap<String,String>> datas) {
+            mInflater = LayoutInflater.from(context);
+            this.context = context;
+            setDatas(datas);
+        }
+
+        public void setDatas(ArrayList<HashMap<String,String>> datas) {
+            if (datas == null) {
+                this.datas = new ArrayList<HashMap<String,String>>();
+            } else {
+                this.datas.clear();
+                this.datas = datas;
+            }
+        }
+
+
+        public void addDatas(ArrayList<HashMap<String,String>> datas) {
+            if (datas != null) {
+                this.datas.addAll(datas);
+            }
+        }
+
+
+        @Override
+        public int getCount() {
+            return this.datas.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return datas.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.item_pay_goods_list, null);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            HashMap<String, String> goodsList = this.datas.get(position);
+
+            Iterator iter = goodsList.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry) iter.next();
+                viewHolder.tvName.setText(entry.getKey()+"");
+                viewHolder.tvPrice.setText("￥" + entry.getValue() + "");
+            }
+            return convertView;
+        }
+
+        class ViewHolder {
+            @Bind(R.id.tvName) TextView tvName;
+            @Bind(R.id.tvPrice) TextView tvPrice;
+
+            public ViewHolder(View itemView) {
+                ButterKnife.bind(this, itemView);
+            }
+        }
+    }
+
 
 
 }

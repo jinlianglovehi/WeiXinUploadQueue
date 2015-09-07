@@ -104,7 +104,7 @@ public class RecordFragment extends BaseFragment {
     private ArrayList<LocalAdviceItem> localAdviceItems;
     private ArrayList<AdviceItem> mAdviceItems = new ArrayList<AdviceItem>();
     private String[] strStateFlag = new String[]{"问医生", "等待回复", "已回复", "需上传"};
-
+    private boolean isMove=false;
 
 
     private int countNumber=0;
@@ -159,13 +159,15 @@ public class RecordFragment extends BaseFragment {
                             adapter.cancel(adapter.selectedViewOld);
                         }
                         selectedView = adapter.getSelectedView();
-                        tvAdviceStatused = adapter.getAdviceStatused();
+//                        tvAdviceStatused = adapter.getAdviceStatused();
                         oldXDis = event.getX();
                         oldX = event.getX();
                         oldY = event.getY();
+                        isMove=false;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
+                        isMove=true;
                         float distanceX = event.getX() - oldX;
                         if (distanceX < 0) {
                             float distanceY = event.getY() - oldY;
@@ -199,7 +201,7 @@ public class RecordFragment extends BaseFragment {
                             adapter.cancel();
                         }
                         adapter.selectedViewOld = selectedView;
-                        adapter.tvAdviceStatusedOld = tvAdviceStatused;
+//                        adapter.tvAdviceStatusedOld = tvAdviceStatused;
                         break;
                 }
                 return false;
@@ -351,13 +353,15 @@ public class RecordFragment extends BaseFragment {
         pullToRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
-                AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
-                int status = adviceItem.getStatus();
+                if(!isMove){
+                    //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
+                    AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
+                    int status = adviceItem.getStatus();
 
-                Intent intent=new Intent(getActivity().getApplicationContext(), RecordPlayActivity.class);
-                intent.putExtra("strStateFlag", strStateFlag[status]);
-                startActivity(intent);
+                    Intent intent=new Intent(getActivity().getApplicationContext(), RecordPlayActivity.class);
+                    intent.putExtra("strStateFlag", strStateFlag[status]);
+                    startActivity(intent);
+                }
             }
         });
 
