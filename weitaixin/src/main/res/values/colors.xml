@@ -32,6 +32,8 @@
     <color name="gray17">#FFEBEBEB</color>
     <!--描边颜色 -->
     <color name="gray18">#FFDADADA</color>
+    <!-- 监护设置里面的横线-->
+    <color name="gray19">#FFE0E0E0</color>
     <color name="black0">#FF222222</color>
     <color name="black1">#FF000000</color>
     <color name="black2">#FF353330</color>

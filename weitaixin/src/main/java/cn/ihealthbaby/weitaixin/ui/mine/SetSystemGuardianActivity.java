@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -19,7 +20,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.ui.widget.SlideSwitchView;
 
 
 public class SetSystemGuardianActivity extends BaseActivity {
@@ -37,9 +37,9 @@ public class SetSystemGuardianActivity extends BaseActivity {
     @Bind(R.id.meLinearLayout)
     LinearLayout meLinearLayout;
     @Bind(R.id.slide_switch_begin)
-    SlideSwitchView mSlideSwitchViewBegin;
+    ImageView mSlideSwitchViewBegin;
     @Bind(R.id.slide_switch_alarm)
-    SlideSwitchView mSlideSwitchViewAlarm;
+    ImageView mSlideSwitchViewAlarm;
 
     private SharedPreferences mySharedPreferences;
 
@@ -66,44 +66,35 @@ public class SetSystemGuardianActivity extends BaseActivity {
 
     private void initListener() {
         final SharedPreferences.Editor editor = mySharedPreferences.edit();
-        mSlideSwitchViewBegin.setSlideListener(new SlideSwitchView.SlideListener() {
+        mSlideSwitchViewBegin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void open() {
-                editor.putBoolean("AutoStart", true);
-//                WeiTaiXinApplication.getInstance().putValue("AutoStart", "1");
+            public void onClick(View v) {
+                boolean AutoStart = mySharedPreferences.getBoolean("AutoStart", true);
+                if (!AutoStart) {
+                    mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
+                } else {
+                    mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
+                }
+                editor.putBoolean("AutoStart", !AutoStart);
                 editor.commit();
-
-            }
-
-            @Override
-            public void close() {
-                editor.putBoolean("AutoStart", false);
-//                WeiTaiXinApplication.getInstance().putValue("AutoStart", "0");
-                editor.commit();
-
             }
         });
 
-        mSlideSwitchViewAlarm.setSlideListener(new SlideSwitchView.SlideListener() {
+        mSlideSwitchViewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void open() {
-                editor.putBoolean("PoliceSet", true);
-//                WeiTaiXinApplication.getInstance().putValue("PoliceSet", "1");
-                meLinearLayout.setVisibility(View.VISIBLE);
+            public void onClick(View v) {
+                boolean PoliceSet = mySharedPreferences.getBoolean("PoliceSet", true);
+                if (!PoliceSet) {
+                    mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
+                    meLinearLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
+                    meLinearLayout.setVisibility(View.INVISIBLE);
+                }
+                editor.putBoolean("PoliceSet", !PoliceSet);
                 editor.commit();
-
-            }
-
-            @Override
-            public void close() {
-                editor.putBoolean("PoliceSet", false);
-//                WeiTaiXinApplication.getInstance().putValue("PoliceSet", "0");
-                meLinearLayout.setVisibility(View.GONE);
-                editor.commit();
-
             }
         });
-
     }
 
 
@@ -112,17 +103,17 @@ public class SetSystemGuardianActivity extends BaseActivity {
         boolean AutoStart = mySharedPreferences.getBoolean("AutoStart", true);
         boolean PoliceSet = mySharedPreferences.getBoolean("PoliceSet", true);
         if (AutoStart) {
-            mSlideSwitchViewBegin.setState(true);
+            mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
         } else {
-            mSlideSwitchViewBegin.setState(false);
+            mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
         }
 
 //        String PoliceSet = WeiTaiXinApplication.getInstance().getValue("PoliceSet", "0");
         if (PoliceSet) {
-            mSlideSwitchViewAlarm.setState(true);
+            mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
             meLinearLayout.setVisibility(View.VISIBLE);
         } else {
-            mSlideSwitchViewAlarm.setState(false);
+            mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
             meLinearLayout.setVisibility(View.GONE);
         }
 
@@ -194,11 +185,9 @@ public class SetSystemGuardianActivity extends BaseActivity {
             int select_num = mySharedPreferences.getInt("select_num", 0);
             if (select_num == position) {
                 viewHolder.tvTime.setTextColor(getResources().getColor(R.color.green0));
-                viewHolder.tvState.setTextColor(getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.tvTime.setTextColor(getResources().getColor(R.color.gray9));
-                viewHolder.tvState.setTextColor(getResources().getColor(R.color.gray9));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
             }
 
@@ -209,7 +198,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
             @Bind(R.id.tvTime)
             TextView tvTime;
             @Bind(R.id.tvState)
-            TextView tvState;
+            ImageView tvState;
 
             public ViewHolder(View convertView) {
                 ButterKnife.bind(this, convertView);

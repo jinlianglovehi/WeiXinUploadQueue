@@ -27,15 +27,14 @@
             android:textColor="@drawable/text_color_hei_selector"
             android:textSize="@dimen/font_normal"/>
 
-        <cn.ihealthbaby.weitaixin.ui.widget.SlideSwitchView
+        <ImageView
             android:id="@+id/slide_switch_begin"
-            android:layout_width="48dp"
+            android:layout_width="49dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="30dp"
-            slideswitch:isOpen="true"
-            slideswitch:shape="circle"
-            slideswitch:themeColor="@color/green0"/>
+            android:src="@drawable/switch_on"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -48,6 +47,7 @@
         <RelativeLayout
             android:id="@+id/ll_set_system_02"
             style="@style/wo_info_item"
+
             android:gravity="center_vertical">
 
             <TextView
@@ -60,15 +60,14 @@
                 android:textColor="@drawable/text_color_hei_selector"
                 android:textSize="@dimen/font_normal"/>
 
-            <cn.ihealthbaby.weitaixin.ui.widget.SlideSwitchView
+            <ImageView
                 android:id="@+id/slide_switch_alarm"
                 android:layout_width="48dip"
                 android:layout_height="30dip"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="30dp"
-                slideswitch:isOpen="true"
-                slideswitch:shape="circle"
-                slideswitch:themeColor="@color/green0"/>
+                android:src="@drawable/switch_off"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -85,7 +84,7 @@
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/gray8"/>
+                android:background="@color/gray19"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -107,7 +106,7 @@
                 android:layout_marginRight="60dp"
                 android:layout_marginTop="10dp"
                 android:cacheColorHint="#00000000"
-                android:divider="@color/gray2"
+                android:divider="@color/gray19"
                 android:dividerHeight="1dp"
                 android:fadingEdge="none"
                 android:scrollbars="none"

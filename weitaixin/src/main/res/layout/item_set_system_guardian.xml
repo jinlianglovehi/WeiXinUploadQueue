@@ -16,15 +16,14 @@
         android:textColor="@color/gray9"
         android:textSize="@dimen/font12"/>
 
-    <TextView
+    <ImageView
         android:id="@+id/tvState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="12dp"
+        android:layout_centerVertical="true"
+        android:layout_height="12dp"
         android:layout_marginLeft="55dp"
         android:layout_toRightOf="@id/tvTime"
-        android:singleLine="true"
-        android:text="√"
-        android:textColor="@color/gray9"
+        android:src="@drawable/select"
         android:textSize="@dimen/font26"/>
 
 
