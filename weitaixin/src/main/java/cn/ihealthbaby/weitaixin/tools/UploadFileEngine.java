@@ -61,8 +61,8 @@ public class UploadFileEngine {
             public void complete(String key, ResponseInfo info, JSONObject response) {
                 if (info.statusCode==200) {
                     UploadFileEngine.this.key=key;
-                    LogUtil.e("errdata", "errdata头像上次七牛成功: "+key);
-                    ToastUtil.show(context.getApplicationContext(), "七牛成功");
+                    LogUtil.e("errdata", "errdata头像上次七牛成功: " + key);
+//                    ToastUtil.show(context.getApplicationContext(), "七牛成功");
 //                    if(isUpdateInfo){
 //                        completeInfoAction();
 //                    }
@@ -70,8 +70,8 @@ public class UploadFileEngine {
                         updateHeadPicAction();
                     }
                 }else{
-                    LogUtil.e("errdata","errdata头像上次七牛失败");
-                    ToastUtil.show(context.getApplicationContext(), "七牛失败");
+                    LogUtil.e("errdata","errdata头像上次七牛失败 "+info.error);
+                    ToastUtil.show(context.getApplicationContext(), info.error);
                 }
                 customDialog.dismiss();
             }

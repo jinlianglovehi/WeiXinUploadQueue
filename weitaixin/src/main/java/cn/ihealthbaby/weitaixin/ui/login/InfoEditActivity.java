@@ -204,6 +204,10 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         if (!TextUtils.isEmpty(et_name_info.getText().toString())
                 && !TextUtils.isEmpty(et_birthdate_info.getText().toString())
                 && !TextUtils.isEmpty(et_date_info.getText().toString())) {
+            if(et_name_info.getText().toString().length()<2){
+                ToastUtil.show(getApplicationContext(), "名字至少两个字符");
+                return;
+            }
             form.setName(et_name_info.getText().toString());
             CustomDialog customDialog = new CustomDialog();
             if(engine == null ){
