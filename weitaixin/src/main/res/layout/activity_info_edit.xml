@@ -17,8 +17,8 @@
         android:layout_below="@id/head_title_id"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/camera_icon"/>
+        android:scaleType="fitCenter"
+        android:src="@drawable/profile_image"/>
 
     <RelativeLayout
         android:id="@+id/rl_id"
@@ -72,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/ll_user_name"
-            android:background="@color/gray4"/>
+            android:background="@color/gray1"/>
 
         <LinearLayout
             android:id="@+id/ll_birthday"
@@ -119,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/ll_birthday"
-            android:background="@color/gray4"/>
+            android:background="@color/gray1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
