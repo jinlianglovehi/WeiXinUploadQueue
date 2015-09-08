@@ -17,11 +17,13 @@
         android:layout_marginTop="15dp"
         android:gravity="center_vertical">
 
+
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="40dp"
+            android:gravity="center"
             android:singleLine="true"
             android:text="自动开始"
             android:textColor="@drawable/text_color_hei_selector"
@@ -34,6 +36,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="30dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/switch_on"/>
     </RelativeLayout>
 
@@ -52,9 +55,10 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="40dp"
+                android:gravity="center"
                 android:singleLine="true"
                 android:text="报警设置"
                 android:textColor="@drawable/text_color_hei_selector"
@@ -64,8 +68,8 @@
                 android:id="@+id/slide_switch_alarm"
                 android:layout_width="48dip"
                 android:layout_height="30dip"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="30dp"
                 android:src="@drawable/switch_off"/>
         </RelativeLayout>

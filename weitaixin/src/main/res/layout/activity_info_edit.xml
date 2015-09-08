@@ -9,7 +9,6 @@
         android:id="@+id/head_title_id"
         layout="@layout/layout_title"/>
 
-
     <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
         android:id="@+id/iv_head_icon_info"
         android:layout_width="96dp"

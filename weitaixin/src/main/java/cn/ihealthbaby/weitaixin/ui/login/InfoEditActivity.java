@@ -30,7 +30,6 @@ import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.ImageTool;
@@ -73,6 +72,8 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     EditText mTvExpectDay;
     private boolean birthDateShow;
     private boolean expectedDateShow;
+    public MyPoPoWin ppWin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,6 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         this.finish();
     }
 
-    public MyPoPoWin ppWin;
 
     @OnClick(R.id.iv_head_icon_info)
     public void ivHeadIconInfo(ImageView iv_head_icon_info) {
@@ -204,13 +204,13 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         if (!TextUtils.isEmpty(et_name_info.getText().toString())
                 && !TextUtils.isEmpty(et_birthdate_info.getText().toString())
                 && !TextUtils.isEmpty(et_date_info.getText().toString())) {
-            if(et_name_info.getText().toString().length()<2){
+            if (et_name_info.getText().toString().length() < 2) {
                 ToastUtil.show(getApplicationContext(), "名字至少两个字符");
                 return;
             }
             form.setName(et_name_info.getText().toString());
             CustomDialog customDialog = new CustomDialog();
-            if(engine == null ){
+            if (engine == null) {
                 engine = new UploadFileEngine(this, form, customDialog);
             }
             Dialog dialog = customDialog.createDialog1(this, "正在完善个人信息...");
@@ -221,14 +221,14 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
                 @Override
                 public void onFinishActivity(boolean isFinish) {
                     if (isFinish) {
-                        WeiTaiXinApplication.getInstance().putValue("InfoEdit","true");
+                        WeiTaiXinApplication.getInstance().putValue("InfoEdit", "true");
                         InfoEditActivity.this.finish();
                     }
                 }
             });
             engine.completeInfoAction();
         } else {
-            WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
+            WeiTaiXinApplication.getInstance().putValue("InfoEdit", "");
             ToastUtil.show(getApplicationContext(), "请完善个人信息");
         }
 

@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,7 +51,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     ///////
     public View selectedView;
     public View selectedViewOld;
-//    public View tvAdviceStatused;
+    //    public View tvAdviceStatused;
 //    public View tvAdviceStatusedOld;
     private int selectedItem;
     public TextView recordDelete;
@@ -85,10 +86,11 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
     //////
     private TextView tvUsedCount;
+
     public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas, TextView tvUsedCount) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.tvUsedCount=tvUsedCount;
+        this.tvUsedCount = tvUsedCount;
         setDatas(datas);
     }
 
@@ -145,6 +147,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
 
     ViewHolder viewHolder = null;
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -188,8 +191,10 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
         if (adviceItem.getStatus() == 1) {
             viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle_un);
+            viewHolder.iv_circle.setVisibility(View.GONE);
         } else {
-            viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle);
+            viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.bg_ask_doctor);
+            viewHolder.iv_circle.setVisibility(View.VISIBLE);
         }
 
         viewHolder.tvAdviceStatus.setOnClickListener(new View.OnClickListener() {
@@ -207,8 +212,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         });
         cancel();
 
-        if (tvUsedCount!=null) {
-            tvUsedCount.setText(getCount()+"");
+        if (tvUsedCount != null) {
+            tvUsedCount.setText(getCount() + "");
         }
         return convertView;
     }
@@ -311,6 +316,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         TextView tvRecordDelete;
         @Bind(R.id.rlRecordItem)
         RelativeLayout rlRecordItem;
+
+        @Bind(R.id.iv_circle)
+        ImageView iv_circle;
 
         public ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);

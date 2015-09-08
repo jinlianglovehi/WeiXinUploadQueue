@@ -104,10 +104,10 @@ public class RecordFragment extends BaseFragment {
     private ArrayList<LocalAdviceItem> localAdviceItems;
     private ArrayList<AdviceItem> mAdviceItems = new ArrayList<AdviceItem>();
     private String[] strStateFlag = new String[]{"问医生", "等待回复", "已回复", "需上传"};
-    private boolean isMove=false;
+    private boolean isMove = false;
 
 
-    private int countNumber=0;
+    private int countNumber = 0;
     private static RecordFragment instance;
 
     public static RecordFragment getInstance() {
@@ -163,19 +163,19 @@ public class RecordFragment extends BaseFragment {
                         oldXDis = event.getX();
                         oldX = event.getX();
                         oldY = event.getY();
-                        isMove=false;
+                        isMove = false;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-                        isMove=true;
+                        isMove = true;
                         float distanceX = event.getX() - oldX;
                         if (distanceX < 0) {
                             float distanceY = event.getY() - oldY;
                             if (Math.abs(distanceX) > Math.abs(distanceY)) {
-                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth()&&selectedView!=null) {
+                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
                                     selectedView.setX(-adapter.recordDelete.getWidth());
                                 } else {
-                                    if (selectedView!=null) {
+                                    if (selectedView != null) {
                                         selectedView.setX(selectedView.getX() + distanceX);
                                     }
                                 }
@@ -190,10 +190,10 @@ public class RecordFragment extends BaseFragment {
                     case MotionEvent.ACTION_UP:
                         float distanceX2 = event.getX() - oldXDis;
                         if (distanceX2 < 0) {
-                            if (Math.abs(distanceX2) >= adapter.recordDelete.getWidth() / 2&&selectedView!=null) {
+                            if (Math.abs(distanceX2) >= adapter.recordDelete.getWidth() / 2 && selectedView != null) {
                                 selectedView.setX(-adapter.recordDelete.getWidth());
                             } else {
-                                if (selectedView!=null) {
+                                if (selectedView != null) {
                                     selectedView.setX(0);
                                 }
                             }
@@ -235,7 +235,7 @@ public class RecordFragment extends BaseFragment {
                                     adapter.datas.remove((int) menuInfo.id);
                                     adapter.notifyDataSetChanged();
                                     if (tvUsedCount != null) {
-                                        tvUsedCount.setText((--countNumber)+ "");
+                                        tvUsedCount.setText((--countNumber) + "");
                                     }
                                 } else {
                                     ToastUtil.show(context, t.getMsgMap() + "");
@@ -273,7 +273,7 @@ public class RecordFragment extends BaseFragment {
 
 
     private void initView() {
-        adapter = new MyAdviceItemAdapter(context, null,tvUsedCount);
+        adapter = new MyAdviceItemAdapter(context, null, tvUsedCount);
         pullToRefresh.setAdapter(adapter);
         pullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
 //      pullToRefresh.setScrollingWhileRefreshingEnabled(false);
@@ -329,7 +329,7 @@ public class RecordFragment extends BaseFragment {
 //                                  WeiTaiXinApplication.getInstance().putValue("tvUsedCount", data.getCount() + "");
 //                              }
 //                              ++pageCountCache;
-                                countNumber=data.getCount();
+                                countNumber = data.getCount();
                                 tvUsedCount.setText(countNumber + "");
                                 adapter.addDatas(dataList);
                                 adapter.notifyDataSetChanged();
@@ -353,12 +353,12 @@ public class RecordFragment extends BaseFragment {
         pullToRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if(!isMove){
+                if (!isMove) {
                     //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
                     AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
                     int status = adviceItem.getStatus();
 
-                    Intent intent=new Intent(getActivity().getApplicationContext(), RecordPlayActivity.class);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), RecordPlayActivity.class);
                     intent.putExtra("strStateFlag", strStateFlag[status]);
                     startActivity(intent);
                 }
@@ -376,8 +376,8 @@ public class RecordFragment extends BaseFragment {
         ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
         adviceItems.addAll(adviceNativeItems);
         if (adviceItems.size() > 0) {
-            countNumber=adviceItems.size();
-            tvUsedCount.setText(countNumber+"");
+            countNumber = adviceItems.size();
+            tvUsedCount.setText(countNumber + "");
 //            tvUsedCount.setText(WeiTaiXinApplication.getInstance().getValue("tvUsedCount", 0 + ""));
             adapter.setDatas(adviceItems);
             adapter.notifyDataSetChanged();
@@ -412,15 +412,15 @@ public class RecordFragment extends BaseFragment {
                     //缓存网络前20条,保存到数据库中
                     pageCountCache = 1;
 //                  dataDao.add(DataDBHelper.tableName, dataList);
-                    countNumber=data.getCount();
+                    countNumber = data.getCount();
 //                    WeiTaiXinApplication.getInstance().putValue("tvUsedCount", countNumber+ "");
                     if (tvUsedCount != null) {
-                        tvUsedCount.setText(countNumber+ "");
+                        tvUsedCount.setText(countNumber + "");
                     }
 
 
                     ArrayList<AdviceItem> dataListPage = new ArrayList<AdviceItem>();
-                    if (dataList.size()>0) {
+                    if (dataList.size() > 0) {
                         if (dataList.size() >= pageSize) {
                             for (int i = 0; i < pageSize; i++) {
                                 dataListPage.add(dataList.get(i));
@@ -441,15 +441,15 @@ public class RecordFragment extends BaseFragment {
 
 //                        ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
 //                        dataListPage.addAll(adviceNativeItems);
-                    }else{
+                    } else {
                         //从缓存数据库中展示数据列表
                         ArrayList<AdviceItem> adviceItems = dataDao.getAllRecord(DataDBHelper.tableName, pageSize);
                         ArrayList<AdviceItem> adviceNativeItems = dataDao.getAllRecord(DataDBHelper.tableNativeName, 10000);
                         adviceItems.addAll(adviceNativeItems);
                         dataListPage.addAll(adviceItems);
-                        countNumber=dataListPage.size();
+                        countNumber = dataListPage.size();
                         if (tvUsedCount != null) {
-                            tvUsedCount.setText(countNumber+ "");
+                            tvUsedCount.setText(countNumber + "");
                         }
                     }
 
@@ -514,15 +514,16 @@ public class RecordFragment extends BaseFragment {
     private final int requestCoded = 100;
     private final int resultCoded = 200;
     private final int STATE = 1;
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtil.d("resu++", requestCode+ " resu++ " + resultCode);
-        if (requestCode==requestCoded) {
-            if (resultCode== Activity.RESULT_OK) {
+        LogUtil.d("resu++", requestCode + " resu++ " + resultCode);
+        if (requestCode == requestCoded) {
+            if (resultCode == Activity.RESULT_OK) {
                 LogUtil.d("resultCoded", "resultCoded " + resultCode);
-                if (data!=null) {
+                if (data != null) {
                     int positionExtra = data.getIntExtra("positionExtra", -1);
-                    if (positionExtra!=-1) {
+                    if (positionExtra != -1) {
                         adapter.datas.get(positionExtra).setStatus(STATE);
                         adapter.notifyDataSetChanged();
                     }

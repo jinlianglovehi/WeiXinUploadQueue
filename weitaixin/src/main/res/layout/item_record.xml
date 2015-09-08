@@ -117,12 +117,13 @@
                     android:textSize="@dimen/font_normal"/>
 
                 <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
+                    android:id="@+id/iv_circle"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="45dp"
-                    android:src="@drawable/upload_item_bg"/>
+                    android:layout_marginRight="60dp"
+                    android:src="@drawable/shape_circle"/>
 
                 <TextView
                     android:id="@+id/tvAdviceStatus"
@@ -134,7 +135,6 @@
                     android:gravity="center"
                     android:text="问医生"
                     android:textColor="@drawable/text_color_selector"/>
-
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>

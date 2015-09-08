@@ -89,7 +89,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
                     meLinearLayout.setVisibility(View.VISIBLE);
                 } else {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
-                    meLinearLayout.setVisibility(View.INVISIBLE);
+                    meLinearLayout.setVisibility(View.GONE);
                 }
                 editor.putBoolean("PoliceSet", !PoliceSet);
                 editor.commit();
