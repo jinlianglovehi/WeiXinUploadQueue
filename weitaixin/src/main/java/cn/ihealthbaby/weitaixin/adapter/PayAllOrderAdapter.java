@@ -101,7 +101,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
 
         Order order = this.datas.get(position);
         viewHolder.tvPayType.setText("【"+PayConstant.orderType[order.getOrderStatus()]+"】");
-//        viewHolder.tvGoodsName.setText(order.get+"");
+        viewHolder.tvGoodsName.setText(order.getDescription()+"");
         viewHolder.tvGoodsTime.setText(DateTimeTool.date2St2(order.getCreateTime(), "yyyy-MM-dd hh: mm"));
         viewHolder.tvPayPriceText.setText("￥" + order.getTotalFee() + "");
 

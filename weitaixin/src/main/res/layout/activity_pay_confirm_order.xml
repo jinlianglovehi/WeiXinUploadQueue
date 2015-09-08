@@ -9,7 +9,7 @@
         layout="@layout/layout_title" />
 
     <RelativeLayout
-        android:id="@+id/rl1Function"
+        android:id="@+id/rl11Function"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/head_title_id"
@@ -47,7 +47,7 @@
         android:id="@+id/tv2"
         android:layout_width="match_parent"
         android:layout_height="28dp"
-        android:layout_below="@id/rl1Function"
+        android:layout_below="@id/rl11Function"
         android:background="@color/gray5"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
@@ -151,9 +151,20 @@
                 android:textSize="@dimen/font10" />
 
             <TextView
+                android:id="@+id/tv33None"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv22None"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:text="医院地址"
+                android:textColor="@color/gray12"
+                android:textSize="@dimen/font10" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv33None"
                 android:paddingBottom="12dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="9dp"
@@ -168,7 +179,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="12dp"
-                android:text="北京海淀区医院"
+                android:text=""
                 android:textColor="@color/gray12"
                 android:textSize="@dimen/font10" />
 
@@ -180,9 +191,22 @@
                 android:layout_below="@id/tv1None"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="12dp"
-                android:text="历史大"
+                android:text=""
                 android:textColor="@color/gray12"
                 android:textSize="@dimen/font10" />
+
+            <TextView
+                android:id="@+id/tvHospitalAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tvDoctorName"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="12dp"
+                android:text=""
+                android:textColor="@color/gray12"
+                android:textSize="@dimen/font10" />
+
         </RelativeLayout>
 
 
@@ -242,7 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:text="李香兰"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font10" />
             </LinearLayout>
@@ -268,7 +292,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:text="137645645453"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font10" />
             </LinearLayout>
@@ -293,7 +317,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:text="北京海淀区的撒大撒旦"
+                    android:text=""
                     android:textColor="@color/black0"
                     android:textSize="@dimen/font10" />
             </LinearLayout>

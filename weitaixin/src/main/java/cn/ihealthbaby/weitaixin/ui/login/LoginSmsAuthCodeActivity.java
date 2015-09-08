@@ -237,6 +237,10 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                             WeiTaiXinApplication.user = data;
                             ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), "登录成功");
                             WeiTaiXinApplication.getInstance().isLogin = true;
+                            if(!data.getIsInit()){
+                                Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
+                                startActivity(intent);
+                            }
                             LoginSmsAuthCodeActivity.this.finish();
                         } else {
                             ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + "");

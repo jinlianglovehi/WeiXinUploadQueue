@@ -47,6 +47,8 @@ public class PayAllOrderFragment extends BaseFragment {
     @Bind(R.id.payPullToRefreshAllOrder) PullToRefreshListView payPullToRefreshAllOrder;
 
     private BaseActivity context;
+    private  PayAllOrderAdapter adapter;
+
 
     private static PayAllOrderFragment instance;
 
@@ -56,7 +58,6 @@ public class PayAllOrderFragment extends BaseFragment {
         }
         return instance;
     }
-
 
 
     @Override
@@ -92,7 +93,7 @@ public class PayAllOrderFragment extends BaseFragment {
         }, getRequestTag());
     }
 
-    private  PayAllOrderAdapter adapter;
+
     private void initView() {
         adapter = new PayAllOrderAdapter(context, null);
         payPullToRefreshAllOrder.setAdapter(adapter);

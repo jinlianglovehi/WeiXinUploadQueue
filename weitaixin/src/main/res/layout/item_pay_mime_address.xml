@@ -1,24 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
+    android:layout_height="wrap_content"
     android:background="@color/white0">
 
     <ImageView
-        android:id="@+id/ivAddressImage"
+        android:id="@+id/ivAddressImaged"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
-        android:src="@drawable/pay_choose" />
+        android:src="@drawable/pay_choose_un" />
 
     <LinearLayout
         android:id="@+id/llOne1Function"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_toRightOf="@id/ivAddressImage"
+        android:layout_toRightOf="@id/ivAddressImaged"
         android:orientation="horizontal">
 
         <TextView
@@ -40,12 +40,12 @@
 
 
     <LinearLayout
-        android:id="@+id/llTwoFunction"
+        android:id="@+id/llTwoFunctioned"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/llOne1Function"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/ivAddressImage"
+        android:layout_toRightOf="@id/ivAddressImaged"
         android:orientation="horizontal">
 
         <TextView
@@ -69,9 +69,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/llTwoFunction"
+        android:layout_below="@id/llTwoFunctioned"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/ivAddressImage"
+        android:paddingBottom="12dp"
+        android:layout_toRightOf="@id/ivAddressImaged"
         android:orientation="horizontal">
 
         <TextView

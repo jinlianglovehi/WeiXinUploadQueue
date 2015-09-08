@@ -27,12 +27,13 @@
             android:textSize="@dimen/font10" />
 
         <TextView
+            android:id="@+id/tvCityName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/iv1None"
-            android:text="北京"
+            android:text=""
             android:textColor="@color/gray12"
             android:textSize="@dimen/font10" />
 
@@ -74,7 +75,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/iv2None"
-            android:text="北京医院倒萨的大"
+            android:text=""
             android:textColor="@color/gray12"
             android:textSize="@dimen/font10" />
 
@@ -95,19 +96,20 @@
     <RelativeLayout
         android:id="@+id/rl3None"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/tvGotoOrderAction"
         android:layout_below="@id/rl2None"
-        android:layout_marginTop="8dp"
-        android:background="@color/white0">
-
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/tv2None"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="14dp"
+            android:background="@color/white0"
+            android:gravity="center_vertical"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
             android:text="选医院"
             android:textColor="@color/gray12"
             android:textSize="@dimen/font10" />
@@ -115,15 +117,15 @@
         <GridView
             android:id="@+id/gvChooseDoctorList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/tv2None"
-            android:layout_marginBottom="22dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="18dp"
+            android:background="@color/white0"
             android:fadingEdge="none"
             android:horizontalSpacing="10dp"
             android:numColumns="3"
+            android:paddingBottom="30dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
             android:verticalSpacing="10dp" />
 
     </RelativeLayout>
@@ -141,7 +143,7 @@
         android:background="@color/green0"
         android:gravity="center"
         android:text="去下单"
-        android:textColor="@color/white0"
+        android:textColor="@drawable/text_color_selector"
         android:textSize="@dimen/font16" />
 
 </RelativeLayout>

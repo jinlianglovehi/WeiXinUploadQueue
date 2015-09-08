@@ -23,13 +23,18 @@ public class LocalProductData {
         return WeiTaiXinApplication.getInstance().localProductData;
     }
 
+    public static String HospitalId="HospitalId";
     public static String HospitalName="HospitalName";
+    public static String DoctorId="DoctorId";
     public static String DoctorName="DoctorName";
     public static String Name01="Name01";
     public static String Name02="Name02";
     public static String Name03="Name03";
     public static String Name04="Name04";
     public static String Name05="Name05";
+    public static String PriceCount="PriceCount";
+    public static String HospitalStatus="HospitalStatus";
+    public static String HospitalAddress="HospitalAddress";
 
 
 }

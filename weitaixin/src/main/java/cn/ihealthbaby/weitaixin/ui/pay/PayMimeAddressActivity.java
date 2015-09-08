@@ -30,6 +30,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.PayAllOrderAdapter;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -77,7 +78,8 @@ public class PayMimeAddressActivity extends BaseActivity {
                 if (t.isSuccess()) {
                     ApiList<Address> data = t.getData();
                     ArrayList<Address> addressList = (ArrayList<Address>) data.getList();
-                    if (addressList.size()<=0) {
+                    LogUtil.d("addressList","addressList =%s ",addressList);
+                    if (addressList.size() <= 0) {
                         ToastUtil.show(getApplicationContext(), "没有数据");
                     }
                     adapter.setDatas(addressList);
@@ -117,8 +119,29 @@ public class PayMimeAddressActivity extends BaseActivity {
 
         addressPullToRefreshAllOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
+                final CustomDialog customDialog=new CustomDialog();
+                Dialog dialog = customDialog.createDialog1(PayMimeAddressActivity.this, "数据加载中...");
+                dialog.show();
 
+                final Address item = (Address) adapter.getItem(position - 1);
+                ApiManager.getInstance().addressApi.setDef(item.getId(), new HttpClientAdapter.Callback<Void>() {
+                    @Override
+                    public void call(Result<Void> t) {
+                        if (t.isSuccess()) {
+                            adapter.currentPosition = (position - 1);
+                            item.setIsDef(true);
+                            adapter.notifyDataSetChanged();
+                            Intent intent=new Intent();
+                            intent.putExtra("addressItem",item);
+                            setResult(999, intent);
+                            PayMimeAddressActivity.this.finish();
+                        }else {
+                            ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
+                        }
+                        customDialog.dismiss();
+                    }
+                },getRequestTag());
             }
         });
 

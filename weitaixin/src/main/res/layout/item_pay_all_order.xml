@@ -23,7 +23,7 @@
         android:layout_marginLeft="6dp"
         android:layout_marginTop="22dp"
         android:layout_toRightOf="@id/tvPayType"
-        android:text="似懂非懂孙菲菲的三分大"
+        android:text=""
         android:textColor="@color/font_color"
         android:textSize="@dimen/font12" />
 
@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTextText"
         android:layout_marginTop="18dp"
-        android:layout_marginBottom="18dp"
+        android:paddingBottom="18dp"
         android:gravity="center"
         android:orientation="horizontal">
 

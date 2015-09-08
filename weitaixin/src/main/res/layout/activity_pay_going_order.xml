@@ -11,6 +11,8 @@
     <ListView
         android:id="@+id/lvCashPledgeProduct"
         android:layout_width="wrap_content"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/head_title_id"
         android:layout_marginTop="2dp"
@@ -34,12 +36,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv2"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:background="@color/white0" />
 
 
     <ListView
         android:id="@+id/lvCouplingProduct"
         android:layout_width="wrap_content"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/lvRentProduct"
         android:layout_marginTop="26dp"
@@ -50,6 +56,8 @@
         android:id="@+id/lvConsultProduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:layout_above="@+id/rl10Function"
         android:layout_below="@id/lvCouplingProduct"
         android:layout_marginTop="26dp"
@@ -84,7 +92,7 @@
             android:background="@color/red0"
             android:gravity="center"
             android:text="确认订单"
-            android:textColor="@color/white0"
+            android:textColor="@drawable/text_color_selector"
             android:textSize="@dimen/font12" />
 
     </RelativeLayout>

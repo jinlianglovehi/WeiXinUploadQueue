@@ -32,7 +32,7 @@
             android:numeric="integer"
             android:phoneNumber="true"
             android:singleLine="true"
-            android:text=""
+            android:text="15210015381"
             android:textColor="@color/black0"
             android:textColorHint="@color/gray4"
             android:textSize="@dimen/font_normal"/>
@@ -62,7 +62,7 @@
                 android:maxLength="20"
                 android:password="true"
                 android:singleLine="true"
-                android:text=""
+                android:text="123456"
                 android:textColor="@color/black0"
                 android:textColorHint="@color/gray4"
                 android:textSize="@dimen/font_normal"/>

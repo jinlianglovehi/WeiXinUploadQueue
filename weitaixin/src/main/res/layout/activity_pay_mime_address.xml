@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/tvTexted"
         android:layout_below="@id/head_title_id"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:cacheColorHint="#00000000"
         android:divider="@null"
         android:dividerHeight="10dp"
@@ -38,13 +38,13 @@
         android:gravity="center"
         android:text="勾选为默认地址"
         android:textColor="@color/gray4"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font12" />
 
 
     <TextView
         android:id="@+id/tvAddNewAddress"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="76dp"
         android:layout_marginLeft="14dp"
@@ -53,7 +53,7 @@
         android:gravity="center"
         android:text="添加新地址"
         android:textColor="@drawable/text_color_green0_selector"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font14" />
 
 
 </RelativeLayout>

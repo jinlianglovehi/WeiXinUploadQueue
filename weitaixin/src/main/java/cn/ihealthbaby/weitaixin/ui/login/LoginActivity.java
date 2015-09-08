@@ -125,7 +125,7 @@ public class LoginActivity extends BaseActivity {
                                 WeiTaiXinApplication.getInstance().isLogin=true;
 
                                 String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
-                                if(!"true".equals(value)){
+                                if(!data.getIsInit()){
                                     Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
                                     startActivity(intent);
                                 }

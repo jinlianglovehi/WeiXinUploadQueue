@@ -65,12 +65,22 @@ public class PayHospitalChooseActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.currentPosition = position;
-                long hospitalId=adapter.datas.get(position).getId();
+                Hospital hospital = adapter.datas.get(position);
+                long hospitalId=hospital.getId();
                 adapter.notifyDataSetChanged();
+
                 Intent intent=new Intent();
                 intent.putExtra("hospitalId", hospitalId);
-                intent.putExtra("hospitalName", adapter.datas.get(position).getName());
-                LocalProductData.getLocal().put(LocalProductData.HospitalName, adapter.datas.get(position).getName());
+                intent.putExtra("hospitalName", hospital.getName());
+                LocalProductData.getLocal().put(LocalProductData.HospitalName, hospital.getName());
+                LocalProductData.getLocal().put(LocalProductData.HospitalId, hospital.getId());
+
+                //0 未启用,1 开通院内,2 开通院外,3 开通院外线上但不支持邮寄, 4 开通院外线上且支持邮寄
+                int hospitalStatus = hospital.getHospitalStatus();
+                LocalProductData.getLocal().put(LocalProductData.HospitalStatus, hospitalStatus);
+                LocalProductData.getLocal().put(LocalProductData.HospitalAddress, hospital.getAddress());
+
+
                 setResult(PayConstant.resultCodeHospitalChoose, intent);
                 finish();
             }
@@ -110,7 +120,7 @@ public class PayHospitalChooseActivity extends BaseActivity {
         private Context context;
         private ArrayList<Hospital> datas;
         private LayoutInflater mInflater;
-        public int currentPosition;
+        public int currentPosition=-1;
 
         public MyHospitalAdapter(Context context, ArrayList<Hospital> datas) {
             mInflater = LayoutInflater.from(context);
@@ -162,6 +172,8 @@ public class PayHospitalChooseActivity extends BaseActivity {
             }
 
             Hospital hospital = this.datas.get(position);
+            //0 未启用,1 开通院内,2 开通院外,3 开通院外线上但不支持邮寄, 4 开通院外线上且支持邮寄
+            hospital.getHospitalStatus();
             viewHolder.tvHospitalName.setText(hospital.getName());
 
             if(position == currentPosition){

@@ -17,30 +17,32 @@
         android:background="@color/white0">
 
         <RelativeLayout
-            android:id="@+id/rl1Function"
+            android:id="@+id/rl1Functioned"
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="收货人"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
 
             <TextView
                 android:id="@+id/tvAddAddressName"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
                 android:gravity="center"
                 android:text="李新宇"
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
             <View
                 android:layout_width="match_parent"
@@ -52,31 +54,33 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl2Function"
+            android:id="@+id/rl2Functioned"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_below="@id/rl1Function">
+            android:layout_height="40dp"
+            android:layout_below="@id/rl1Functioned">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:gravity="center"
+                android:layout_centerVertical="true"
                 android:text="手机"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
 
             <TextView
                 android:id="@+id/tvAddAddressPhone"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="14dp"
                 android:gravity="center"
                 android:text="121312432432"
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
             <View
                 android:layout_width="match_parent"
@@ -88,31 +92,33 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl3Function"
+            android:id="@+id/rl3Functioned"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_below="@id/rl2Function">
+            android:layout_height="40dp"
+            android:layout_below="@id/rl2Functioned">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="省份"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
 
             <TextView
                 android:id="@+id/tvAddAddressProvince"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
                 android:gravity="center"
                 android:text="北京"
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
             <View
                 android:layout_width="match_parent"
@@ -125,32 +131,33 @@
 
 
         <RelativeLayout
-            android:id="@+id/rl4Function"
-
+            android:id="@+id/rl4Functioned"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_below="@id/rl3Function">
+            android:layout_height="40dp"
+            android:layout_below="@id/rl3Functioned">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:gravity="center"
+                android:layout_centerVertical="true"
                 android:text="地区"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
 
             <TextView
                 android:id="@+id/tvAddAddressArea"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
                 android:gravity="center"
                 android:text="海淀区"
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
             <View
                 android:layout_width="match_parent"
@@ -163,35 +170,40 @@
 
 
         <RelativeLayout
-            android:id="@+id/rl5Function"
+            android:id="@+id/rl5Functioned"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_below="@id/rl4Function">
+            android:layout_height="40dp"
+            android:layout_below="@id/rl4Functioned">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="详细地址"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
 
             <TextView
                 android:id="@+id/tvAddAddressDetailAddress"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
                 android:gravity="center"
+
+                android:layout_centerVertical="true"
+
                 android:text="北京"
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font10" />
+                android:textSize="@dimen/font12" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="14dp"
@@ -204,7 +216,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_below="@id/rlFak"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="14dp"
@@ -213,7 +225,7 @@
         android:text="保存并返回"
         android:background="@drawable/corner_background_green0"
         android:textColor="@color/green0"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font12" />
 
 </RelativeLayout>
 

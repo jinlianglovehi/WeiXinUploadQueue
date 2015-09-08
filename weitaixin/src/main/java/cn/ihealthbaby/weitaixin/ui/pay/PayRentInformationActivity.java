@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class PayRentInformationActivity extends BaseActivity {
     @Bind(R.id.gvChooseDoctorList) GridView gvChooseDoctorList;
     @Bind(R.id.tvGotoOrderAction) TextView tvGotoOrderAction;
     @Bind(R.id.tvHospitalName) TextView tvHospitalName;
+    @Bind(R.id.tvCityName) TextView tvCityName;
 
 
 
@@ -79,6 +81,7 @@ public class PayRentInformationActivity extends BaseActivity {
                 adapter.notifyDataSetChanged();
                 Doctor doctor= (Doctor) adapter.getItem(position);
                 LocalProductData.getLocal().put(LocalProductData.DoctorName, doctor.getName());
+                LocalProductData.getLocal().put(LocalProductData.DoctorId, doctor.getId());
             }
         });
 
@@ -109,6 +112,18 @@ public class PayRentInformationActivity extends BaseActivity {
 
     @OnClick(R.id.tvGotoOrderAction)
     public void GotoOrderAction() {
+        if(TextUtils.isEmpty(tvCityName.getText().toString().trim())){
+//            ToastUtil.show(getApplicationContext(),"请选择城市");
+//            return;
+        }
+        if(TextUtils.isEmpty(tvHospitalName.getText().toString().trim())){
+            ToastUtil.show(getApplicationContext(),"请选择医院");
+            return;
+        }
+        if(adapter.currentPosition==-1){
+            ToastUtil.show(getApplicationContext(),"请选择医生");
+            return;
+        }
         Intent intent = new Intent(this, PayGoingOrderActivity.class);
         startActivity(intent);
     }
