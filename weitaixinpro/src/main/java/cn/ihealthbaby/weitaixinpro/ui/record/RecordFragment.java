@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro.record;
+package cn.ihealthbaby.weitaixinpro.ui.record;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

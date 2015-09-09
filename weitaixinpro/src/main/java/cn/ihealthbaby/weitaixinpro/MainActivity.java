@@ -2,8 +2,8 @@ package cn.ihealthbaby.weitaixinpro;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,11 +11,11 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import cn.ihealthbaby.weitaixinpro.monitor.MonitorTabFragment;
-import cn.ihealthbaby.weitaixinpro.record.RecordTabFragment;
-import cn.ihealthbaby.weitaixinpro.settings.SettingsTabFragment;
+import cn.ihealthbaby.weitaixinpro.ui.monitor.MonitorTabFragment;
+import cn.ihealthbaby.weitaixinpro.ui.record.RecordTabFragment;
+import cn.ihealthbaby.weitaixinpro.ui.settings.SettingsTabFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
 
     @butterknife.Bind(android.R.id.tabhost)
     FragmentTabHost mTabhost;

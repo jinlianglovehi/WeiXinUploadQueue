@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro.monitor;
+package cn.ihealthbaby.weitaixinpro.ui.monitor;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

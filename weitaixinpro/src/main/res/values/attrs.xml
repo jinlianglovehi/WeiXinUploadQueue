@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="weitaixinTitleBar">
+        <attr name="right_title_text" format="string"/>
+        <attr name="left_title_icon" format="integer"/>
+        <attr name="title_weitaixin_actionbar" format="string"/>
+        <attr name="left_title_icon_show" format="boolean"/>
+    </declare-styleable>
+</resources>

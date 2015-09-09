@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro.settings;
+package cn.ihealthbaby.weitaixinpro.ui.record;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,16 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cn.ihealthbaby.weitaixinpro.BaseTabFragment;
+import cn.ihealthbaby.weitaixinpro.R;
 
 /**
  * @author by kang on 2015/9/9.
  */
-public class SettingsTabFragment extends BaseTabFragment {
+public class RecordTabFragment extends BaseTabFragment {
     private boolean IsViewInited;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(cn.ihealthbaby.weitaixinpro.R.layout.main_tab_container, null);
+        return inflater.inflate(R.layout.main_tab_container, null);
     }
 
     @Override
@@ -28,6 +29,6 @@ public class SettingsTabFragment extends BaseTabFragment {
     }
 
     private void initView() {
-        replaceFragment(new SettingsFragment(), false);
+        replaceFragment(new RecordFragment(), false);
     }
 }

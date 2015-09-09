@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro.monitor;
+package cn.ihealthbaby.weitaixinpro.ui.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,11 +12,11 @@ import cn.ihealthbaby.weitaixinpro.R;
 /**
  * @author by kang on 2015/9/9.
  */
-public class Monitorfragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.monitor_fragment, null);
+        return inflater.inflate(R.layout.settings_fragment, null);
     }
 }

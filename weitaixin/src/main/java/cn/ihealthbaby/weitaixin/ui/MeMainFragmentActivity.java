@@ -135,33 +135,33 @@ public class MeMainFragmentActivity extends BaseActivity {
 
     private void showFragment(int container, Fragment fragment/*, int animIn, int animOut*/) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        show(container,fragmentTransaction,fragment);
+        show(container, fragmentTransaction, fragment);
         fragmentTransaction.commit();
     }
 
-    private void show(int container, FragmentTransaction fragmentTransaction, Fragment fragment){
+    private void show(int container, FragmentTransaction fragmentTransaction, Fragment fragment) {
         if (fragment == null) {
             return;
         }
         if (!fragment.isAdded()) {
-            if(oldFragment!=null){
+            if (oldFragment != null) {
                 fragmentTransaction.hide(oldFragment);
             }
             fragmentTransaction.add(container, fragment);
-        } else if( oldFragment != fragment){
+        } else if (oldFragment != fragment) {
             fragmentTransaction.hide(oldFragment);
             fragmentTransaction.show(fragment);
         }
         oldFragment = fragment;
-        LogUtil.d("ChildCount==","ChildCount= %s",this.container.getChildCount());
+        LogUtil.d("ChildCount==", "ChildCount= %s", this.container.getChildCount());
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (recordFragment!=null) {
-            recordFragment.onActivityResult(requestCode,resultCode,data);
+        if (recordFragment != null) {
+            recordFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
