@@ -71,25 +71,18 @@ public class RecordFragment extends BaseFragment {
 //
 
     @Nullable
-    @Bind(R.id.pullToRefresh)
-    PullToRefreshListView pullToRefresh;
+    @Bind(R.id.pullToRefresh) PullToRefreshListView pullToRefresh;
     @Nullable
-    @Bind(R.id.ivWoHeadIcon)
-    RoundImageView ivWoHeadIcon;
+    @Bind(R.id.ivWoHeadIcon) RoundImageView ivWoHeadIcon;
     @Nullable
-    @Bind(R.id.tvWoHeadName)
-    TextView tvWoHeadName;
+    @Bind(R.id.tvWoHeadName) TextView tvWoHeadName;
     @Nullable
-    @Bind(R.id.tvWoHeadDeliveryTime)
-    TextView tvWoHeadDeliveryTime;
+    @Bind(R.id.tvWoHeadDeliveryTime) TextView tvWoHeadDeliveryTime;
     @Nullable
-    @Bind(R.id.tvUsedCount)
-    TextView tvUsedCount;
+    @Bind(R.id.tvUsedCount) TextView tvUsedCount;
     @Nullable
-    @Bind(R.id.tvHospitalName)
-    TextView tvHospitalName;
-    @Bind(R.id.tv_min)
-    TextView mTvMin;
+    @Bind(R.id.tvHospitalName) TextView tvHospitalName;
+    @Bind(R.id.tv_min) TextView mTvMin;
 
 
     private MyAdviceItemAdapter adapter;

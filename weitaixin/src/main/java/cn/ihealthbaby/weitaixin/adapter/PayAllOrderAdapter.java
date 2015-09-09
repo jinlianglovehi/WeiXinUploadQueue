@@ -34,14 +34,17 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.model.LocalProductData;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
+import cn.ihealthbaby.weitaixin.ui.pay.PayAffirmPaymentActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
 import cn.ihealthbaby.weitaixin.ui.pay.PayMimeOrderActivity;
 import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
 import cn.ihealthbaby.weitaixin.ui.record.ReplyedActivity;
+import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 
 
 public class PayAllOrderAdapter extends BaseAdapter {
@@ -99,7 +102,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Order order = this.datas.get(position);
+        final Order order = this.datas.get(position);
         viewHolder.tvPayType.setText("【"+PayConstant.orderType[order.getOrderStatus()]+"】");
         viewHolder.tvGoodsName.setText(order.getDescription()+"");
         viewHolder.tvGoodsTime.setText(DateTimeTool.date2St2(order.getCreateTime(), "yyyy-MM-dd hh: mm"));
@@ -113,6 +116,9 @@ public class PayAllOrderAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     ToastUtil.show(context, position + "");
+                    Intent intent=new Intent(context.getApplicationContext(), PayAffirmPaymentActivity.class);
+                    LocalProductData.getLocal().put(LocalProductData.PriceCount, order.getTotalFee());
+                    context.startActivity(intent);
                 }
             });
         }else if (order.getOrderStatus()==PayConstant.gettingGoods) {
@@ -122,12 +128,44 @@ public class PayAllOrderAdapter extends BaseAdapter {
             viewHolder.tvPayAffirmGoodsOrGoPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtil.show(context, position + "");
+                    PayDialog payDialog=new PayDialog(context,new String[]{"确定收货","不收货","确定收货"});
+                    payDialog.show();
+                    payDialog.operationAction=new PayDialog.OperationAction() {
+                        @Override
+                        public void payYes(Object... obj) {
+                            final CustomDialog customDialog=new CustomDialog();
+                            Dialog dialog = customDialog.createDialog1(context, "确认收货中...");
+                            dialog.show();
+                            ApiManager.getInstance().orderApi.confirmReceive(order.getId(), new HttpClientAdapter.Callback<Void>() {
+                                @Override
+                                public void call(Result<Void> t) {
+                                    if (t.isSuccess()) {
+                                        ToastUtil.show(context.getApplicationContext(), "确认收货成功");
+                                        notifyDataSetChanged();
+                                    } else {
+                                        ToastUtil.show(context.getApplicationContext(), t.getMsgMap() + "");
+                                    }
+                                    customDialog.dismiss();
+                                }
+                            }, context);
+                        }
+
+                        @Override
+                        public void payNo(Object... obj) {
+
+                        }
+                    };
                 }
             });
-        }if (order.getOrderStatus()==PayConstant.orderFinish) {
+        }
+
+
+        if (order.getOrderStatus()==PayConstant.orderFinish) {
             viewHolder.tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
-        }if (order.getOrderStatus()==PayConstant.orderCancel) {
+        }
+
+
+        if (order.getOrderStatus()==PayConstant.orderCancel) {
             viewHolder.tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
         }
 
@@ -135,7 +173,34 @@ public class PayAllOrderAdapter extends BaseAdapter {
         viewHolder.tvPayDelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.show(context, position+"");
+                PayDialog payDialog=new PayDialog(context,new String[]{"确定删除订单","不删除","确定删除"});
+                payDialog.show();
+                payDialog.operationAction=new PayDialog.OperationAction() {
+                    @Override
+                    public void payYes(Object... obj) {
+                        final CustomDialog customDialog=new CustomDialog();
+                        Dialog dialog = customDialog.createDialog1(context, "删除中...");
+                        dialog.show();
+                        ApiManager.getInstance().orderApi.delete(order.getId(), new HttpClientAdapter.Callback<Void>() {
+                            @Override
+                            public void call(Result<Void> t) {
+                                if (t.isSuccess()) {
+                                    ToastUtil.show(context.getApplicationContext(), "删除成功");
+                                    datas.remove(position);
+                                    notifyDataSetChanged();
+                                } else {
+                                    ToastUtil.show(context.getApplicationContext(), t.getMsgMap() + "");
+                                }
+                                customDialog.dismiss();
+                            }
+                        }, context);
+                    }
+
+                    @Override
+                    public void payNo(Object... obj) {
+
+                    }
+                };
             }
         });
 

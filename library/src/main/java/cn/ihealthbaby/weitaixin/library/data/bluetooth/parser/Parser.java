@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.library.data.bluetooth.parser;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.IOException;
@@ -8,10 +9,12 @@ import java.io.InputStream;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.BufferQueue;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.FHRParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ValidationParseException;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
@@ -49,6 +52,12 @@ public class Parser {
 	private static final String TAG = "Parser";
 	private Handler handler;
 	private BufferQueue bufferQueue;
+	//
+	private byte[] bytes4 = new byte[4];
+	private byte[] bytes7 = new byte[7];
+	private byte[] bytes321 = new byte[321];
+	private byte[] bytes101 = new byte[101];
+	private StringBuffer stringBuffer = new StringBuffer();
 	//	/**
 //	 * 检验buffer头部信息
 //	 *
@@ -129,11 +138,12 @@ public class Parser {
 //		}
 //	}
 	public void printBuffer(String tag, byte[] buffer) {
-		StringBuffer stringBuffer = new StringBuffer();
-		for (int i = 0; i < buffer.length; i++) {
-			stringBuffer.append(" " + Integer.toHexString(buffer[i] & 0xff));
-		}
-		Log.d(TAG, tag + stringBuffer.toString());
+		return;
+//		stringBuffer.setLength(0);
+//		for (int i = 0; i < buffer.length; i++) {
+//			stringBuffer.append(" " + Integer.toHexString(buffer[i] & 0xff));
+//		}
+//		Log.d(TAG, tag + stringBuffer.toString());
 	}
 
 	public void printShort(String tag, short[] buffer) {
@@ -185,7 +195,7 @@ public class Parser {
 					switch (translate(oneByte[0])) {
 						//v1,胎心
 						case CONTROLLER_HEART_BEAT_RATE_V1:
-							byte[] fetalDataBufferV1 = new byte[4];
+							byte[] fetalDataBufferV1 = bytes4;
 							mmInStream.read(fetalDataBufferV1);
 //									printBuffer("f:", fetalDataBufferV1);
 							bufferQueue.add(fetalDataBufferV1, BufferQueue.DATA_FHR);
@@ -195,7 +205,7 @@ public class Parser {
 							break;
 						//v2,胎心
 						case CONTROLLER_HEART_BEAT_RATE_V2:
-							byte[] fetalDataBufferV2 = new byte[7];
+							byte[] fetalDataBufferV2 = bytes7;
 							mmInStream.read(fetalDataBufferV2);
 //									printBuffer("f:", fetalDataBufferV2);
 							validateData(fetalDataBufferV2);
@@ -204,7 +214,7 @@ public class Parser {
 							break;
 						//v1,声音
 						case CONTROLLER_SOUND_V1:
-							byte[] soundDataBufferV1 = new byte[321];
+							byte[] soundDataBufferV1 = bytes321;
 							mmInStream.read(soundDataBufferV1);
 //							printBuffer("s:", soundDataBufferV1);
 							validateData(soundDataBufferV1);
@@ -213,7 +223,7 @@ public class Parser {
 							break;
 						//v2,声音
 						case CONTROLLER_SOUND_V2:
-							byte[] soundDataBufferV2 = new byte[101];
+							byte[] soundDataBufferV2 = bytes101;
 							mmInStream.read(soundDataBufferV2);
 //							printBuffer("s:", soundDataBufferV2);
 							validateData(soundDataBufferV2);
@@ -244,7 +254,7 @@ public class Parser {
 	}
 
 	private FHRPackage parseFHBV1(byte[] buffer) {
-		FHRPackage FHRPackage1 = new FHRPackage();
+		FHRPackage FHRPackage1 = DataStorage.fhrPackagePool;
 		FHRPackage1.setTime(System.currentTimeMillis());
 		FHRPackage1.setVersion("1");
 		FHRPackage1.setFHR1(buffer[0] & LAST2BYTE);
@@ -254,7 +264,7 @@ public class Parser {
 	}
 
 	private FHRPackage parseFHBV2(byte[] buffer) {
-		FHRPackage FHRPackage2 = new FHRPackage();
+		FHRPackage FHRPackage2 = DataStorage.fhrPackagePool;
 		FHRPackage2.setTime(System.currentTimeMillis());
 		FHRPackage2.setVersion("2");
 		FHRPackage2.setFHR1(buffer[0] & LAST2BYTE);
@@ -308,23 +318,35 @@ public class Parser {
 							break;
 						//v1,声音
 						case CONTROLLER_SOUND_V1:
-							if (bufferQueue.getVersion() == null) {
-								bufferQueue.setVersion("1");
-							}
-							byte[] soundDataBufferV1 = new byte[321];
-							mmInStream.read(soundDataBufferV1);
-//							printBuffer("s:", soundDataBufferV1);
-							bufferQueue.add(soundDataBufferV1, BufferQueue.DATA_SOUND);
+//							if (bufferQueue.getVersion() == null) {
+//								bufferQueue.setVersion("1");
+//							}
+//							byte[] soundDataBufferV1 = new byte[321];
+//							mmInStream.read(soundDataBufferV1);
+////							printBuffer("s:", soundDataBufferV1);
+//							bufferQueue.add(soundDataBufferV1, BufferQueue.DATA_SOUND);
+							int[] voice = getVoice(mmInStream);
+							byte[] v = intForByte(ByteUtil.analysePackage(voice));
+							Message message1 = Message.obtain(handler);
+							message1.what = Constants.MESSAGE_VOICE;
+							message1.obj = v;
+							message1.sendToTarget();
 							break;
 						//v2,声音
 						case CONTROLLER_SOUND_V2:
-							if (bufferQueue.getVersion() == null) {
-								bufferQueue.setVersion("2");
-							}
-							byte[] soundDataBufferV2 = new byte[101];
-							mmInStream.read(soundDataBufferV2);
-//							printBuffer("s:", soundDataBufferV2);
-							bufferQueue.add(soundDataBufferV2, BufferQueue.DATA_SOUND);
+//							if (bufferQueue.getVersion() == null) {
+//								bufferQueue.setVersion("2");
+//							}
+//							byte[] soundDataBufferV2 = new byte[101];
+//							mmInStream.read(soundDataBufferV2);
+////							printBuffer("s:", soundDataBufferV2);
+//							bufferQueue.add(soundDataBufferV2, BufferQueue.DATA_SOUND);
+							int[] voiceAd = getVoiceAd(mmInStream);
+							byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
+							Message message2 = Message.obtain(handler);
+							message2.what = Constants.MESSAGE_VOICE;
+							message2.obj = adv;
+							message2.sendToTarget();
 							break;
 						default:
 							throw new ParseException("no such controller");
@@ -354,6 +376,53 @@ public class Parser {
 		}
 		// TODO: 15/8/12 音频解码
 		return bytes;
+	}
+
+	/**
+	 * 获取一个原始的胎声包。
+	 *
+	 * @param inputStream
+	 * @return
+	 */
+	private int[] getVoice(InputStream inputStream) {
+		int[] ints = new int[321];
+		for (int i = 0; i < 321; i++) {
+			try {
+				ints[i] = inputStream.read();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return ints;
+	}
+
+	private int[] getVoiceAd(InputStream inputStream) {
+		int[] ints = new int[101];
+		for (int i = 0; i < 101; i++) {
+			try {
+				ints[i] = inputStream.read();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return ints;
+	}
+
+	/**
+	 * int数组转成byte数组。
+	 *
+	 * @param ints
+	 * @return
+	 */
+	private byte[] intForByte(int[] ints) {
+		int size = ints.length;
+		byte[] shorts = new byte[size];
+		for (int i = 0; i < size; i++) {
+			shorts[i] = (byte) ints[i];
+		}
+		return shorts;
 	}
 
 	private byte[] parseSoundV2(byte[] buffer) {

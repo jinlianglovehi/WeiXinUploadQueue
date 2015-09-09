@@ -232,17 +232,16 @@ public class PseudoBluetoothService {
 	}
 
 	/**
-	 * Indicate that the connection attempt failed and notify the UI Activity.
+	 * Unable to connect device. Indicate that the connection attempt failed and notify the UI
+	 * Activity.
 	 */
 	private void connectionFailed() {
 		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-		Bundle bundle = new Bundle();
-		bundle.putString(Constants.TOAST, "Unable to connect device");
-		msg.setData(bundle);
+		Message msg = mHandler.obtainMessage(Constants.MESSAGE_CANNOT_CONNECT);
 		mHandler.sendMessage(msg);
 		// Start the service over to restart listening mode
-		PseudoBluetoothService.this.start();
+		// TODO: 15/9/7 失败重连
+//		PseudoBluetoothService.this.start();
 	}
 
 	/**
@@ -250,13 +249,11 @@ public class PseudoBluetoothService {
 	 */
 	private void connectionLost() {
 		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-		Bundle bundle = new Bundle();
-		bundle.putString(Constants.TOAST, "Device connection was lost");
-		msg.setData(bundle);
+		Message msg = mHandler.obtainMessage(Constants.MESSAGE_CONNECTION_LOST);
 		mHandler.sendMessage(msg);
 		// Start the service over to restart listening mode
-		PseudoBluetoothService.this.start();
+		// TODO: 15/9/7 失败重连
+//		PseudoBluetoothService.this.start();
 	}
 
 	/**
@@ -355,9 +352,8 @@ public class PseudoBluetoothService {
 					tmp = device.createRfcommSocketToServiceRecord(
 							                                              Constants.COMMON_UUID);
 				} else {
-					tmp = device.createInsecureRfcommSocketToServiceRecord(
-							                                                      Constants.COMMON_UUID);
-					LogUtil.e("bluetoothScanner", "" + "COMMON_UUID："+ Constants.COMMON_UUID);
+					tmp = device.createInsecureRfcommSocketToServiceRecord(Constants.COMMON_UUID);
+					LogUtil.e("bluetoothScanner", "" + "COMMON_UUID：" + Constants.COMMON_UUID);
 				}
 			} catch (IOException e) {
 				Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
@@ -376,7 +372,7 @@ public class PseudoBluetoothService {
 				// successful connection or an exception
 				mmSocket.connect();
 			} catch (IOException e) {
-				LogUtil.e("bluetoothScanner", "" + "connectionFailed：" +e.toString());
+				LogUtil.e("bluetoothScanner", "" + "connectionFailed：" + e.toString());
 				// Close the socket
 				try {
 					mmSocket.close();
@@ -478,6 +474,4 @@ public class PseudoBluetoothService {
 			}
 		}
 	}
-
-
 }

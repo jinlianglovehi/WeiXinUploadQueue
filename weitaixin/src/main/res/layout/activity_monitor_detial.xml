@@ -1,0 +1,132 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="cn.ihealthbaby.weitaixin.ui.monitor.CurveDetialActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/layout_title"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title">
+
+
+        <cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView
+            android:id="@+id/chs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            >
+
+
+            <cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView
+                android:id="@+id/curve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                />
+
+
+        </cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView>
+
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="22dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--/>-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginRight="22dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--/>-->
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="42dp"
+            >
+
+            <TextView
+                android:id="@+id/bpm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="3"
+                android:text="128"
+                android:textSize="46sp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/bpm"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:id="@+id/red_heart"
+                    android:layout_width="16dp"
+                    android:layout_height="12dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/bpm"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/red_heart"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:text="BPM"
+                    android:textColor="@color/red0"
+                    />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_movement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="感受到胎动点这里"
+            android:textColor="@color/green0"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/btn_start"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:layout_above="@id/tv_record"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/button_movement"/>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

@@ -5,10 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title"/>
 
     <RelativeLayout
+        android:id="@+id/rl_round"
         android:layout_width="284dp"
         android:layout_height="284dp"
+        android:layout_below="@id/head_title_id"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp">
 
@@ -19,12 +24,11 @@
             android:src="@drawable/round_scale"/>
 
 
-        <ImageView
-            android:id="@+id/round_background"
+        <cn.ihealthbaby.weitaixin.ui.widget.RoundMaskView
+            android:id="@+id/round_progress_mask"
             android:layout_width="262dp"
             android:layout_height="262dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/round_background_3"/>
+            android:layout_centerInParent="true"/>
 
         <ImageView
             android:id="@+id/round_frontground"
@@ -33,11 +37,6 @@
             android:layout_centerInParent="true"
             android:src="@drawable/round_frontground_1"/>
 
-        <!--<cn.ihealthbaby.weitaixin.ui.wedget.RoundMaskView-->
-        <!--android:id="@+id/round_progress_mask"-->
-        <!--android:layout_width="262dp"-->
-        <!--android:layout_height="262dp"-->
-        <!--android:layout_centerInParent="true"/>-->
 
         <TextView
             android:id="@+id/tv_bluetooth"
@@ -47,7 +46,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:maxEms="3"
-            android:text="100"
+            android:text="--"
             android:textColor="@color/green0"
             android:textSize="68sp"
             />
@@ -74,13 +73,32 @@
             android:visibility="gone"/>
     </RelativeLayout>
 
+    <cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView
+        android:id="@+id/hs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_round"
+        android:fillViewport="false"
+        android:scrollbars="none">
+
+
+        <cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorSimpleView
+            android:id="@+id/curve_simple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+
+    </cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView>
+
+
     <RelativeLayout
         android:id="@+id/rl_movement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         >
 
         <TextView

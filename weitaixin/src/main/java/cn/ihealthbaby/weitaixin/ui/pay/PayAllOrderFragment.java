@@ -46,7 +46,7 @@ public class PayAllOrderFragment extends BaseFragment {
 
     @Bind(R.id.payPullToRefreshAllOrder) PullToRefreshListView payPullToRefreshAllOrder;
 
-    private BaseActivity context;
+    private PayMimeOrderActivity context;
     private  PayAllOrderAdapter adapter;
 
 
@@ -65,7 +65,7 @@ public class PayAllOrderFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pay_all_order, null);
         ButterKnife.bind(this, view);
 
-        context = (BaseActivity) getActivity();
+        context = (PayMimeOrderActivity) getActivity();
         initView();
         pullDatas();
 
@@ -83,8 +83,12 @@ public class PayAllOrderFragment extends BaseFragment {
                 if (t.isSuccess()) {
                     PageData<Order> data = t.getData();
                     ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
-                    adapter.setDatas(orders);
-                    adapter.notifyDataSetChanged();
+                    if (orders != null && orders.size() <= 0) {
+                        ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据~~~");
+                    } else {
+                        adapter.setDatas(orders);
+                        adapter.notifyDataSetChanged();
+                    }
                 } else {
                     ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
                 }

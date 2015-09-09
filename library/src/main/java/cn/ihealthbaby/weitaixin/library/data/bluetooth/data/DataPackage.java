@@ -3,8 +3,8 @@ package cn.ihealthbaby.weitaixin.library.data.bluetooth.data;
 /**
  * Created by liuhongjian on 15/7/17 12:54.
  */
-public class DataPackage implements Cloneable {
-	protected String version;
+public class DataPackage {
+	protected String version = "";
 	protected long time;
 
 	public DataPackage() {

@@ -76,7 +76,7 @@ public class DateTimeTool {
             return new Date();
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
-//        Date d = sdf.parse("2000-11-11 14:23:20");
+//        Date d = sdf.listToArrayString("2000-11-11 14:23:20");
         try {
             return sdf.parse(dateStr);
         } catch (ParseException e) {
