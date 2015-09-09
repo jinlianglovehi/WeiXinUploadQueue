@@ -29,14 +29,19 @@ import cn.ihealthbaby.weitaixin.model.LocalProductData;
 public class WeiTaiXinApplication extends Application {
 
 
-    private AbstractHttpClientAdapter adapter;
-
     public static WeiTaiXinApplication app;
     public static String accountToken;
     public static String phone_number;
     public static User user;
-    public boolean isLogin = false;
+//    public boolean isLogin = false;
+public boolean isLogin = true;
     public LocalProductData localProductData=new LocalProductData(); //保存商品
+    public VolleyAdapter mAdapter;
+    private AbstractHttpClientAdapter adapter;
+
+    public static WeiTaiXinApplication getInstance() {
+        return app;
+    }
 
     @Override
     public void onCreate() {
@@ -55,17 +60,9 @@ public class WeiTaiXinApplication extends Application {
 //		ApiManager.init(adapter);
     }
 
-
     public AbstractHttpClientAdapter getAdapter() {
         return adapter;
     }
-
-
-    public static WeiTaiXinApplication getInstance() {
-        return app;
-    }
-
-    public VolleyAdapter mAdapter;
 
     public void initApiManager() {
         RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());

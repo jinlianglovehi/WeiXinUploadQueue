@@ -14,4 +14,5 @@ public class DataStorage {
 	public static final List<Integer> fhrs = Collections.synchronizedList(new ArrayList<Integer>());
 	public static FHRPackage fhrPackagePool = new FHRPackage();
 	public static FHRPackage fhrPackage = new FHRPackage();
+	public static List<Integer> hearts = Collections.synchronizedList(new ArrayList<Integer>());
 }

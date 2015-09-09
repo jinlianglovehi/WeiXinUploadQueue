@@ -17,6 +17,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.Util;
+import cn.ihealthbaby.weitaixin.ui.monitor.data.DataHandler;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorSimpleView;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundMaskView;
@@ -51,7 +52,7 @@ public class MonitorActivity extends BaseActivity {
 	@Bind(R.id.curve_simple)
 	CurveMonitorSimpleView curveSimple;
 	private ExpendableCountDownTimer countDownTimer;
-	private int lastFMPosition;
+	private long lastFMTime;
 	private int width;
 
 	@OnClick(R.id.back)
@@ -71,18 +72,18 @@ public class MonitorActivity extends BaseActivity {
 		startActivity(intent);
 	}
 
-	@OnClick(R.id.rl_movement)
+	@OnClick(value = {R.id.rl_movement, R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
-//		int position = (int) (countDownTimer.getConsumedTime() / countDownTimer.getInterval());
-		int position = curveSimple.getFhrs().size();
-		if (lastFMPosition == 0) {
-			lastFMPosition = position;
-		} else if (lastFMPosition - position > 5 * 60 / countDownTimer.getInterval()) {
+		long consumedTime = countDownTimer.getConsumedTime();
+		int position = (int) (consumedTime / countDownTimer.getInterval());
+		if (lastFMTime == 0 || consumedTime - lastFMTime >= 3 * 1000) {
 			savePosition(position);
+			lastFMTime = consumedTime;
 		}
 	}
 
 	private void savePosition(int position) {
+		curveSimple.getHearts().add(position);
 	}
 
 	@Override
@@ -117,9 +118,10 @@ public class MonitorActivity extends BaseActivity {
 			public void onTick(long millisUntilFinished) {
 				roundProgressMask.setAngel((float) (360 * getConsumedTime() / getDuration()));
 				roundProgressMask.postInvalidate();
-				if (lasttime < DataStorage.fhrPackage.getTime()) {
+				long time = DataStorage.fhrPackage.getTime();
+				if (lasttime < time) {
 					fhr = DataStorage.fhrPackage.getFHR1();
-					lasttime = DataStorage.fhrPackage.getTime();
+					lasttime = time;
 				} else {
 					fhr = 0;
 				}
@@ -133,7 +135,7 @@ public class MonitorActivity extends BaseActivity {
 
 			@Override
 			public void onFinish() {
-				String parsed = ResultHandler.listToArrayString(DataStorage.fhrs);
+				String parsed = DataHandler.listToArrayString(DataStorage.fhrs);
 			}
 		};
 //		DataStorage.fhrPackages.clear();
@@ -141,9 +143,10 @@ public class MonitorActivity extends BaseActivity {
 	}
 
 	private void configCurveSimple() {
-//		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 4));
-		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 8));
+		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 4));
+//		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 8));
 		curveSimple.setyMax(210);
+		curveSimple.setHearts(DataStorage.hearts);
 		//TODO 根据配置设置
 //		WeiTaiXinApplication.user.getServiceInfo();
 //		curveSimple.setSafeMax();

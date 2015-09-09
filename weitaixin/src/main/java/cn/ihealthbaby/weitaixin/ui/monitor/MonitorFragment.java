@@ -25,10 +25,7 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.ihealthbaby.client.model.ServiceInfo;
-import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
@@ -291,16 +288,16 @@ public class MonitorFragment extends BaseFragment {
 
 	public String getDeviceName() {
 //		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
-		//		return "IHB2LC9P2UUZ"; //IHB2LD1X7CUC   IHB2LC9JUHPB
-		String serialnum = "";
-		User user = WeiTaiXinApplication.user;
-		if (user != null) {
-			ServiceInfo serviceInfo = user.getServiceInfo();
-			if (serviceInfo != null) {
-				serialnum = serviceInfo.getSerialnum();
-			}
-		}
-		return serialnum;
+		return "IHB2LC9P2UUZ"; //IHB2LD1X7CUC   IHB2LC9JUHPB
+//		String serialnum = "";
+//		User user = WeiTaiXinApplication.user;
+//		if (user != null) {
+//			ServiceInfo serviceInfo = user.getServiceInfo();
+//			if (serviceInfo != null) {
+//				serialnum = serviceInfo.getSerialnum();
+//			}
+//		}
+//		return serialnum;
 		//  TODO: 15/9/7 请求网络
 	}
 }

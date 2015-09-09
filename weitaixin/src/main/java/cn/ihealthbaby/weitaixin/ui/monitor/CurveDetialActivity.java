@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
@@ -32,12 +33,33 @@ public class CurveDetialActivity extends BaseActivity {
 	TextView function;
 	@Bind(R.id.curve)
 	CurveMonitorDetialView curve;
+	@Bind(R.id.tv_record)
+	TextView tvRecord;
+	@Bind(R.id.btn_start)
+	ImageView btnStart;
+	@Bind(R.id.rl_movement)
+	RelativeLayout rlMovement;
 	private long consumedtime;
 	private long duration;
 	private long interval;
 	private int width;
 	private boolean needReset = true;
 	private ExpendableCountDownTimer countDownTimer;
+	private long lastFMTime;
+
+	@OnClick(value = {R.id.rl_movement, R.id.tv_record, R.id.btn_start})
+	public void fetalMovement() {
+		long consumedTime = countDownTimer.getConsumedTime();
+		int position = (int) (consumedTime / countDownTimer.getInterval());
+		if (lastFMTime == 0 || consumedTime - lastFMTime >= 3 * 1000) {
+			savePosition(position);
+			lastFMTime = consumedTime;
+		}
+	}
+
+	private void savePosition(int position) {
+		curve.getHearts().add(position);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +96,9 @@ public class CurveDetialActivity extends BaseActivity {
 				curve.resetPoints();
 				curve.postInvalidate();
 				int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
-				bpm.setText(String.valueOf(fhr1));
+				bpm.setText(fhr1 + "");
 				if (!chs.isTouching()) {
+					System.out.println("position" + curve.getCurrentPositionX() + "width" + width);
 					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
 				}
 			}
@@ -90,6 +113,7 @@ public class CurveDetialActivity extends BaseActivity {
 	private void configCurve() {
 		curve.setFhrs(DataStorage.fhrs);
 		curve.setCellWidth(Util.dip2px(getApplicationContext(), 10));
+		curve.setHearts(DataStorage.hearts);
 		ViewGroup.LayoutParams layoutParams = curve.getLayoutParams();
 		layoutParams.width = curve.getMinWidth();
 		layoutParams.height = curve.getMinHeight() + Util.dip2px(getApplicationContext(), 16);

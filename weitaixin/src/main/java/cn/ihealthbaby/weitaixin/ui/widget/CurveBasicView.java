@@ -31,6 +31,15 @@ public class CurveBasicView extends CoordinateView {
 	protected int gridColor = Color.parseColor("#B2DEDEDE");
 	protected int shadowColor = Color.parseColor("#E8F6EF");
 	private Bitmap scaledBitmap;
+
+	public List<Integer> getHearts() {
+		return hearts;
+	}
+
+	public void setHearts(List<Integer> hearts) {
+		this.hearts = hearts;
+	}
+
 	/**
 	 * 保存的是发生胎动的点的位置
 	 */
@@ -205,8 +214,6 @@ public class CurveBasicView extends CoordinateView {
 		resetPaint();
 		paint.setColor(limitLineColor);
 		paint.setTextSize(textSizeY);
-		for (int i = 0; i < xMax / 60; i++) {
-		}
 		canvas.drawLine(convertX(0), convertY(limitMin), convertX(xMax), convertY(limitMin), paint);
 		canvas.drawLine(convertX(0), convertY(limitMax), convertX(xMax), convertY(limitMax), paint);
 	}
@@ -230,6 +237,6 @@ public class CurveBasicView extends CoordinateView {
 	}
 
 	public float getCurrentPositionX() {
-		return positionToX(fhrs.size() - 1);
+		return convertX(positionToX(fhrs.size() - 1));
 	}
 }

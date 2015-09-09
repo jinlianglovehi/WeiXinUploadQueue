@@ -23,12 +23,12 @@ public class CurveMonitorSimpleView extends CurveBasicView {
 	@Override
 	protected void onDraw(Canvas canvas) {
 //		drawShadow(canvas);
-		drawGrid(canvas);
+//		drawGrid(canvas);
 //		drawLimitLine(canvas);
 		drawSafeLine(canvas);
 		drawCurve(canvas);
 //		drawScaleX(canvas);
-		drawRedPoints(canvas);
+//		drawRedPoints(canvas);
 		drawRedHeart(canvas);
 	}
 }

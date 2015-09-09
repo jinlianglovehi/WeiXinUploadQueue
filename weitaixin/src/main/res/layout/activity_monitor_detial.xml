@@ -98,7 +98,34 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_movement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        >
 
+        <TextView
+            android:id="@+id/tv_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="感受到胎动点这里"
+            android:textColor="@color/green0"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/btn_start"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:layout_above="@id/tv_record"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/button_movement"/>
+    </RelativeLayout>
 
 
 
