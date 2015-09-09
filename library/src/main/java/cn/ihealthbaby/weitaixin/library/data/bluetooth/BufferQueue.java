@@ -30,6 +30,7 @@ public class BufferQueue {
 	private int count2;
 	private Handler handler;
 	private Parser parser;
+	private int filter;
 
 	public BufferQueue(Handler handler) {
 		this.handler = handler;
@@ -46,9 +47,9 @@ public class BufferQueue {
 	public void start() {
 		stop();
 		fhrParser = new Thread(new FHRParser(fhrQueue));
-		soundParser = new Thread(new SoundParser(soundQueue));
+//		soundParser = new Thread(new SoundParser(soundQueue));
 		fhrParser.start();
-		soundParser.start();
+//		soundParser.start();
 	}
 
 	public void stop() {
@@ -63,15 +64,22 @@ public class BufferQueue {
 				fhrQueue.add(buffer);
 				break;
 			case DATA_SOUND:
-				soundQueue.add(buffer);
+//				soundQueue.add(buffer);
 				break;
 		}
 	}
 
 	private void save(FHRPackage fhrPackage) {
 		// TODO: 15/8/12
-		DataStorage.fhrPackages.add(fhrPackage);
-		System.out.println(DataStorage.fhrPackages.size());
+//		if (filter % 2 == 0) {
+//			DataStorage.fhrPackages.add(fhrPackage);
+//			System.out.println("size" + DataStorage.fhrPackages.size());
+//		}
+//		filter++;
+//		DataStorage.fhr = fhrPackage.getFHR1();
+//		DataStorage.time = fhrPackage.getTime();
+		DataStorage.fhrPackage.setFHRPackage(fhrPackage);
+		DataStorage.fhrPackagePool.recycle();
 	}
 
 	private void save(byte[] bytes) {
@@ -109,6 +117,7 @@ public class BufferQueue {
 			while (true) {
 				try {
 					byte[] buffer = queue.take();
+					System.out.println("queue size" + queue.size());
 					parser.validateData(buffer);
 					FHRPackage fhrPackage = parser.parseFHR(buffer, getVersion());
 					LogUtil.v(TAG, "run::%s", fhrPackage);
@@ -159,7 +168,7 @@ public class BufferQueue {
 		}
 
 		private void play(short[] bytes) {
-			AudioPlayer.getInstance().playAudioTrack(bytes, 0, bytes.length);
+//			AudioPlayer.getInstance().playAudioTrack(bytes, 0, bytes.length);
 		}
 
 		private short[] decode(byte[] bytes) {

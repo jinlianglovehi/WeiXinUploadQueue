@@ -2,9 +2,9 @@ package cn.ihealthbaby.weitaixin.ui.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -14,7 +14,8 @@ import android.view.View;
 public class RoundMaskView extends View {
 	private Paint paint;
 	private float angel;
-	private float radius = 100;
+	private float radius;
+	private RectF oval;
 
 	public RoundMaskView(Context context) {
 		this(context, null, 0);
@@ -27,30 +28,22 @@ public class RoundMaskView extends View {
 	public RoundMaskView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		paint = new Paint();
+		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL);
-		paint.setColor(Color.GREEN);
-		paint.setAlpha(0x0F);
-//		CountDownTimer countDownTimer = new CountDownTimer(10000, 10) {
-//			public float angel;
-//
-//			@Override
-//			public void onTick(long millisUntilFinished) {
-//				setAngel(angel++);
-//				invalidate();
-//			}
-//
-//			@Override
-//			public void onFinish() {
-//			}
-//		};
-//		countDownTimer.start();
+		paint.setColor(0xEFEFEF);
+		paint.setAlpha(0xFF);
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		RectF oval = new RectF(0, 0, radius, radius);
-		canvas.drawArc(oval, 0, angel, true, paint);
+		if (angel <= 360) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				canvas.drawArc(0, 0, getWidth(), getWidth(), angel - 90, 360 - angel, true, paint);
+			} else {
+				canvas.drawArc(new RectF(0, 0, getWidth(), getWidth()), angel - 90, 360 - angel, true, paint);
+			}
+		}
 	}
 
 	public float getAngel() {

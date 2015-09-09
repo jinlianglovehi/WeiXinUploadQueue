@@ -3,7 +3,9 @@ package cn.ihealthbaby.weitaixin.ui.monitor;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -15,13 +17,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.model.ServiceInfo;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
@@ -42,9 +49,7 @@ public class MonitorFragment extends BaseFragment {
 	@Bind(R.id.round_background)
 	ImageView roundBackground;
 	//	@Bind(R.id.round_progress_mask)
-	//	RoundMaskView roundProgressMask;
-	@Bind(R.id.bpm)
-	ImageView bpm;
+//	RoundMaskView roundProgressMask;
 	@Bind(R.id.hint)
 	TextView hint;
 	@Bind(R.id.tv_record)
@@ -55,18 +60,32 @@ public class MonitorFragment extends BaseFragment {
 	TextView tvBluetooth;
 	@Bind(R.id.rl_start)
 	RelativeLayout rlStart;
+	@Bind(R.id.back)
+	RelativeLayout back;
+	@Bind(R.id.title_text)
+	TextView titleText;
+	@Bind(R.id.function)
+	TextView function;
+	@Bind(R.id.roundScale)
+	ImageView roundScale;
+	@Bind(R.id.bpm)
+	ImageView bpm;
+	@Bind(R.id.hint_animation)
+	TextView hintAnimation;
 	private BluetoothReceiver bluetoothReceiver;
 	private BluetoothAdapter adapter;
 	private BluetoothScanner bluetoothScanner;
 	private Set<BluetoothDevice> bondedDevices;
 	private PseudoBluetoothService pseudoBluetoothService;
 	private ArrayList<BluetoothDevice> scanedDevices;
+	private boolean connected;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case Constants.MESSAGE_STATE_CHANGE:
 					switch (msg.arg1) {
 						case PseudoBluetoothService.STATE_CONNECTED:
+							connected = true;
 							onConnectedUI();
 //							startActivity(new Intent(getActivity().getApplicationContext(), MonitorActivity.class));
 							break;
@@ -83,18 +102,33 @@ public class MonitorFragment extends BaseFragment {
 					break;
 				case Constants.MESSAGE_READ:
 					FHRPackage fhrPackage = (FHRPackage) msg.obj;
-					tvBluetooth.setText(String.valueOf(fhrPackage.getFHR1()));
+					if (tvBluetooth != null) {
+						tvBluetooth.setText(fhrPackage.getFHR1() + "");
+					}
 					break;
 				case Constants.MESSAGE_DEVICE_NAME:
 					// save the connected device's name
 					String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
 					break;
-				case Constants.MESSAGE_TOAST:
+				case Constants.MESSAGE_CANNOT_CONNECT:
+					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
+					resetUI();
 					break;
+				case Constants.MESSAGE_CONNECTION_LOST:
+					ToastUtil.show(getActivity().getApplicationContext(), "失去连接");
+					resetUI();
+					break;
+				case Constants.MESSAGE_VOICE:
 			}
 		}
 	};
 	private String deviceName;
+	private CountDownTimer countDownTimer;
+
+	@OnClick(R.id.rl_start)
+	public void startRecord(View view) {
+		startActivity(new Intent(getActivity(), MonitorActivity.class));
+	}
 
 	public void onConnectedUI() {
 		rlStart.setVisibility(View.VISIBLE);
@@ -115,7 +149,7 @@ public class MonitorFragment extends BaseFragment {
 		if (!bluetoothScanner.isEnable()) {
 			bluetoothScanner.enable();
 		} else {
-			LogUtil.e("bluetoothScanner","bluetoothScanner");
+			LogUtil.e("bluetoothScanner", "bluetoothScanner");
 			connectBondedDeviceOrSearch();
 		}
 	}
@@ -123,12 +157,10 @@ public class MonitorFragment extends BaseFragment {
 	private void onConnectingUI() {
 		tvBluetooth.setText("连接中");
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
-
-//		AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.)
 		hint.setVisibility(View.VISIBLE);
 		bpm.setImageResource(R.drawable.bpm_dark);
 		bpm.setVisibility(View.VISIBLE);
-		roundBackground.setImageResource(R.drawable.round_background_2);
+		loadSrc(roundBackground, R.drawable.round_background_2);
 	}
 
 	@Nullable
@@ -143,7 +175,27 @@ public class MonitorFragment extends BaseFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		ButterKnife.bind(this, view);
+		loadSrc(roundBackground, R.drawable.round_background_1);
+		loadSrc(roundFrontground, R.drawable.round_frontground_1);
+		loadSrc(roundScale, R.drawable.round_scale);
+		back.setVisibility(View.GONE);
+		titleText.setText("胎心监测");
+		function.setVisibility(View.GONE);
 		adapter = BluetoothAdapter.getDefaultAdapter();
+		countDownTimer = new CountDownTimer(10000, 10000) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+			}
+
+			@Override
+			public void onFinish() {
+				if (!connected || bluetoothScanner.isDiscovering()) {
+					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
+					resetUI();
+				}
+				bluetoothScanner.cancleDiscovery();
+			}
+		};
 		bluetoothScanner = new DefaultBluetoothScanner(adapter);
 		scanedDevices = new ArrayList<>();
 		pseudoBluetoothService = new PseudoBluetoothService(getActivity().getApplicationContext(), handler);
@@ -199,28 +251,35 @@ public class MonitorFragment extends BaseFragment {
 		});
 	}
 
+	private void loadSrc(ImageView imageView, int drawableId) {
+		ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+		Picasso.with(getActivity().getApplicationContext()).load(drawableId).resize(layoutParams.width, layoutParams.height).into(imageView);
+	}
+
 	public void resetUI() {
 		tvBluetooth.setText("start");
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
 		hint.setVisibility(View.GONE);
 		bpm.setVisibility(View.GONE);
 		roundBackground.setImageResource(R.drawable.round_background_1);
+		connected = false;
 	}
 
 	public void connectBondedDeviceOrSearch() {
 		bondedDevices = adapter.getBondedDevices();
-		LogUtil.e("bluetoothScanner",""+bondedDevices.size());
+		LogUtil.e("bluetoothScanner", "" + bondedDevices.size());
 		if (bondedDevices != null && bondedDevices.size() > 0) {
 			for (BluetoothDevice device : bondedDevices) {
-				LogUtil.e("bluetoothScanner","devicegetName: "+device.getName());
+				LogUtil.e("bluetoothScanner", "devicegetName: " + device.getName());
 				if (getDeviceName().equalsIgnoreCase(device.getName())) {
-					LogUtil.e("bluetoothScanner",""+"pseudoBluetoothService.connect()");
+					LogUtil.e("bluetoothScanner", "" + "pseudoBluetoothService.connect()");
 					pseudoBluetoothService.connect(device, false);
 				}
 			}
 		} else if (!bluetoothScanner.isDiscovering()) {
 			bluetoothScanner.discovery();
 		}
+		countDownTimer.start();
 	}
 
 	@Override
@@ -231,12 +290,19 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	public String getDeviceName() {
-		// TODO: 15/8/14 登录之后需要保存用户绑定的设备信息
-		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
+//		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
+		//		return "IHB2LC9P2UUZ"; //IHB2LD1X7CUC   IHB2LC9JUHPB
+		String serialnum = "";
+		User user = WeiTaiXinApplication.user;
+		if (user != null) {
+			ServiceInfo serviceInfo = user.getServiceInfo();
+			if (serviceInfo != null) {
+				serialnum = serviceInfo.getSerialnum();
+			}
+		}
+		return serialnum;
+		//  TODO: 15/9/7 请求网络
 	}
-
-
-
 }
 
 

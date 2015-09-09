@@ -33,6 +33,16 @@ public class FHRPackage extends DataPackage {
 		super();
 	}
 
+	public void setFHRPackage(FHRPackage fhrPackage) {
+		this.AFM = fhrPackage.isAFM();
+		this.FHR1 = fhrPackage.getFHR1();
+		this.FHR2 = fhrPackage.getFHR2();
+		this.signalStrength = fhrPackage.getSignalStrength();
+		this.batteryPower = fhrPackage.getBatteryPower();
+		this.time = fhrPackage.getTime();
+		this.version = fhrPackage.getVersion();
+	}
+
 	public int getTOCO() {
 		return TOCO;
 	}
@@ -93,5 +103,15 @@ public class FHRPackage extends DataPackage {
 		sb.append(", batteryPower=").append(batteryPower);
 		sb.append('}');
 		return sb.toString();
+	}
+
+	public void recycle() {
+		FHR1 = 0;
+		FHR2 = 0;
+		AFM = false;
+		signalStrength = 0;
+		batteryPower = 0;
+		time = 0;
+		version = "";
 	}
 }

@@ -1,128 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/button_monitor_helper"
-        />
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title"/>
 
     <RelativeLayout
-        android:layout_width="284dp"
-        android:layout_height="284dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/head_title_id">
 
         <ImageView
-            android:layout_width="284dp"
-            android:layout_height="284dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/round_scale"/>
-
-
-        <ImageView
-            android:id="@+id/round_background"
-            android:layout_width="262dp"
-            android:layout_height="262dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/round_background_1"/>
-
-        <ImageView
-            android:id="@+id/round_frontground"
-            android:layout_width="218dp"
-            android:layout_height="218dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/round_frontground_1"/>
-
-        <!--<cn.ihealthbaby.weitaixin.ui.wedget.RoundMaskView-->
-        <!--android:id="@+id/round_progress_mask"-->
-        <!--android:layout_width="262dp"-->
-        <!--android:layout_height="262dp"-->
-        <!--android:layout_centerInParent="true"/>-->
-
-        <TextView
-            android:id="@+id/tv_bluetooth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:padding="0dp"
-            android:text="start"
-            android:textColor="@color/green0"
-            android:textSize="58sp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/button_monitor_helper"
             />
 
-        <ImageView
-            android:id="@+id/bpm"
-            android:layout_width="52dp"
-            android:layout_height="14dp"
+        <RelativeLayout
+            android:layout_width="284dp"
+            android:layout_height="284dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="66dp"
-            android:src="@drawable/bpm_dark"
-            android:visibility="gone"/>
+            android:layout_marginTop="30dp">
 
-        <TextView
-            android:id="@+id/hint"
-            android:layout_width="wrap_content"
-            android:layout_height="16dp"
-            android:layout_below="@id/tv_bluetooth"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="2dp"
-            android:text="请耐心等待"
-            android:textColor="@color/gray1"
-            android:textSize="12sp"
-            android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/roundScale"
+                android:layout_width="284dp"
+                android:layout_height="284dp"
+                android:layout_centerInParent="true"
+                />
 
-        <TextView
-            android:id="@+id/hint_animation"
-            android:layout_width="wrap_content"
-            android:layout_height="16dp"
-            android:layout_below="@id/tv_bluetooth"
-            android:layout_marginTop="2dp"
-            android:layout_toRightOf="@id/hint"
-            android:text="..."
-            android:textColor="@color/gray1"
-            android:textSize="12sp"
-            android:visibility="gone"/>
-    </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:visibility="gone">
+            <ImageView
+                android:id="@+id/round_background"
+                android:layout_width="262dp"
+                android:layout_height="262dp"
+                android:layout_centerInParent="true"
+                />
 
-        <TextView
-            android:id="@+id/tv_record"
+            <ImageView
+                android:id="@+id/round_frontground"
+                android:layout_width="218dp"
+                android:layout_height="218dp"
+                android:layout_centerInParent="true"
+                />
+
+            <!--<cn.ihealthbaby.weitaixin.ui.wedget.RoundMaskView-->
+            <!--android:id="@+id/round_progress_mask"-->
+            <!--android:layout_width="262dp"-->
+            <!--android:layout_height="262dp"-->
+            <!--android:layout_centerInParent="true"/>-->
+
+            <TextView
+                android:id="@+id/tv_bluetooth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:padding="0dp"
+                android:text="start"
+                android:textColor="@color/green0"
+                android:textSize="58sp"
+                />
+
+            <ImageView
+                android:id="@+id/bpm"
+                android:layout_width="52dp"
+                android:layout_height="14dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="66dp"
+                android:src="@drawable/bpm_dark"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/hint"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_below="@id/tv_bluetooth"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
+                android:text="请耐心等待"
+                android:textColor="@color/gray1"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/hint_animation"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_below="@id/tv_bluetooth"
+                android:layout_marginTop="2dp"
+                android:layout_toRightOf="@id/hint"
+                android:text="..."
+                android:textColor="@color/gray1"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:text="立即开始"
-            android:textColor="@color/green0"
-            android:textSize="12sp"/>
+            android:layout_marginBottom="40dp"
+            android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/btn_start"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
-            android:layout_above="@id/tv_record"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/button_start_record"/>
+            <TextView
+                android:id="@+id/tv_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="立即开始"
+                android:textColor="@color/green0"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/btn_start"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:layout_above="@id/tv_record"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/button_start_record"/>
+        </RelativeLayout>
     </RelativeLayout>
-
 
 </RelativeLayout>
