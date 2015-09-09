@@ -1,4 +1,4 @@
-package cn.ihealthbaby.taixinyi.util;
+package cn.ihealthbaby.weitaixin.library.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
