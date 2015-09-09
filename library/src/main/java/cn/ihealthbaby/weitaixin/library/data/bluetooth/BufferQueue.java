@@ -70,14 +70,7 @@ public class BufferQueue {
 	}
 
 	private void save(FHRPackage fhrPackage) {
-		// TODO: 15/8/12
-//		if (filter % 2 == 0) {
-//			DataStorage.fhrPackages.add(fhrPackage);
-//			System.out.println("size" + DataStorage.fhrPackages.size());
-//		}
-//		filter++;
-//		DataStorage.fhr = fhrPackage.getFHR1();
-//		DataStorage.time = fhrPackage.getTime();
+
 		DataStorage.fhrPackage.setFHRPackage(fhrPackage);
 		DataStorage.fhrPackagePool.recycle();
 	}
@@ -122,7 +115,7 @@ public class BufferQueue {
 					FHRPackage fhrPackage = parser.parseFHR(buffer, getVersion());
 					LogUtil.v(TAG, "run::%s", fhrPackage);
 					Message message = Message.obtain(handler);
-					message.what = Constants.MESSAGE_READ;
+					message.what = Constants.MESSAGE_READ_FETAL_DATA;
 					message.obj = fhrPackage;
 					message.sendToTarget();
 					save(fhrPackage);

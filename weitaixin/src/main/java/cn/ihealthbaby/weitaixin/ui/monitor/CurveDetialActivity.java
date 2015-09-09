@@ -37,7 +37,7 @@ public class CurveDetialActivity extends BaseActivity {
 	TextView tvRecord;
 	@Bind(R.id.btn_start)
 	ImageView btnStart;
-	@Bind(R.id.rl_movement)
+	@Bind(R.id.rl_function)
 	RelativeLayout rlMovement;
 	private long consumedtime;
 	private long duration;
@@ -47,7 +47,7 @@ public class CurveDetialActivity extends BaseActivity {
 	private ExpendableCountDownTimer countDownTimer;
 	private long lastFMTime;
 
-	@OnClick(value = {R.id.rl_movement, R.id.tv_record, R.id.btn_start})
+	@OnClick(value = {R.id.rl_function, R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
 		long consumedTime = countDownTimer.getConsumedTime();
 		int position = (int) (consumedTime / countDownTimer.getInterval());

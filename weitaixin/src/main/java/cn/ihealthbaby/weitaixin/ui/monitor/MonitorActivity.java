@@ -43,7 +43,7 @@ public class MonitorActivity extends BaseActivity {
 	TextView tvRecord;
 	@Bind(R.id.btn_start)
 	ImageView btnStart;
-	@Bind(R.id.rl_movement)
+	@Bind(R.id.rl_function)
 	RelativeLayout rlMovement;
 	@Bind(R.id.hs)
 	CurveHorizontalScrollView hs;
@@ -52,7 +52,7 @@ public class MonitorActivity extends BaseActivity {
 	@Bind(R.id.curve_simple)
 	CurveMonitorSimpleView curveSimple;
 	private ExpendableCountDownTimer countDownTimer;
-	private long lastFMTime;
+	private long lastFetalMoveTime;
 	private int width;
 
 	@OnClick(R.id.back)
@@ -72,13 +72,13 @@ public class MonitorActivity extends BaseActivity {
 		startActivity(intent);
 	}
 
-	@OnClick(value = {R.id.rl_movement, R.id.tv_record, R.id.btn_start})
+	@OnClick(value = {R.id.rl_function, R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
 		long consumedTime = countDownTimer.getConsumedTime();
 		int position = (int) (consumedTime / countDownTimer.getInterval());
-		if (lastFMTime == 0 || consumedTime - lastFMTime >= 3 * 1000) {
+		if (lastFetalMoveTime == 0 || consumedTime - lastFetalMoveTime >= 3 * 1000) {
 			savePosition(position);
-			lastFMTime = consumedTime;
+			lastFetalMoveTime = consumedTime;
 		}
 	}
 
@@ -138,7 +138,7 @@ public class MonitorActivity extends BaseActivity {
 				String parsed = DataHandler.listToArrayString(DataStorage.fhrs);
 			}
 		};
-//		DataStorage.fhrPackages.clear();
+		reset();
 		countDownTimer.start();
 	}
 
@@ -166,5 +166,12 @@ public class MonitorActivity extends BaseActivity {
 		if (countDownTimer != null) {
 			countDownTimer.cancel();
 		}
+		reset();
+	}
+
+	private void reset() {
+		lastFetalMoveTime = 0;
+		DataStorage.fhrs.clear();
+		DataStorage.hearts.clear();
 	}
 }

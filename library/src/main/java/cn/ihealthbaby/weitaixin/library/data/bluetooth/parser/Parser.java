@@ -2,13 +2,14 @@ package cn.ihealthbaby.weitaixin.library.data.bluetooth.parser;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.BufferQueue;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.FHRParseException;
@@ -51,92 +52,44 @@ public class Parser {
 	private static final int VERSION_NONE = -1;
 	private static final String TAG = "Parser";
 	private Handler handler;
-	private BufferQueue bufferQueue;
 	//
-	private byte[] bytes4 = new byte[4];
-	private byte[] bytes7 = new byte[7];
+	private byte[] fetalDataBufferV1 = new byte[4];
+	private byte[] fetalDataBufferV2 = new byte[7];
 	private byte[] bytes321 = new byte[321];
 	private byte[] bytes101 = new byte[101];
-	private StringBuffer stringBuffer = new StringBuffer();
-	//	/**
-//	 * 检验buffer头部信息
-//	 *
-//	 * @param buffer
-//	 * @return
-//	 */
-//	public static boolean parseHead(byte[] buffer) throws ParseHeaderException {
-//		if ((buffer[0] & LAST2BYTE) == HEADER_0 && (buffer[1] & LAST2BYTE) == HEADER_1) {
-//			return true;
-//		} else {
-//			throw new ParseHeaderException("WRONG HEADER");
-//		}
-//	}
-//	/**
-//	 * 检验buffer控制部分
-//	 *
-//	 * @param buffer
-//	 * @return
-//	 */
-//	public static void parseController(byte[] buffer) throws ParseControllerException {
-//		int controller = buffer[2] & LAST2BYTE;
-//		switch (controller) {
-//			case CONTROLLER_HEART_BEAT_RATE_V1:
-//				break;
-//			case CONTROLLER_SOUND_V1:
-//				break;
-//			case CONTROLLER_HEART_BEAT_RATE_V2:
-//				break;
-//			case CONTROLLER_SOUND_V2:
-//				break;
-//			default:
-//				throw new ParseControllerException("WRONG CONTROLLER");
-//		}
-//	}
-//	/**
-//	 * 检验控制部分
-//	 *
-//	 * @param buffer
-//	 * @return
-//	 */
-//	public static int parseControllerVersion(byte[] buffer) throws ParseVersionException {
-//		int controller = buffer[2] & LAST2BYTE;
-//		int state = VERSION_NONE;
-//		switch (controller) {
-//			case CONTROLLER_VERSION_INFO:
-//				state = STATE_VERSION_INFO;
-//				break;
-//			default:
-//				throw new ParseVersionException("WRONG VERSION");
-//		}
-//		return state;
-//	}
+	private int[] soundDataBufferV1 = new int[321];
+	private int[] soundDataBufferV2 = new int[101];
+	private boolean needRecord;
+	private boolean needPlay;
 
-	public Parser(Handler handler, BufferQueue bufferQueue) {
+	public Parser(Handler handler) {
 		this.handler = handler;
-		this.bufferQueue = bufferQueue;
 	}
 
-	//	public void parse(byte[] buffer) throws ParseHeaderException, ParseControllerException {
-//		if (parseHead(buffer)) {
-//			int controller = buffer[2] & LAST2BYTE;
-//			switch (controller) {
-//				case CONTROLLER_HEART_BEAT_RATE_V1:
-//					parseFHBV1(buffer);
-//					break;
-//				case CONTROLLER_SOUND_V1:
-//					SoundPackage soundPackage = new SoundPackage();
-//					soundPackage.setVersion("1");
-//					break;
-//				case CONTROLLER_HEART_BEAT_RATE_V2:
-//					parseFHBV2(buffer);
-//					break;
-//				case CONTROLLER_SOUND_V2:
-//					break;
-//				default:
-//					throw new ParseControllerException("WRONG CONTROLLER");
-//			}
-//		}
-//	}
+	/**
+	 * 生成文件并支持追加数据。
+	 *
+	 * @param path
+	 * @param name
+	 * @return
+	 */
+	public static boolean generateFile(String path, String name, byte[] bytes) {
+		boolean result = true;
+		File file = new File(path, name);
+		try {
+			FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+			fileOutputStream.write(bytes);
+			fileOutputStream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			result = false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			result = false;
+		}
+		return result;
+	}
+
 	public void printBuffer(String tag, byte[] buffer) {
 		return;
 //		stringBuffer.setLength(0);
@@ -147,11 +100,12 @@ public class Parser {
 	}
 
 	public void printShort(String tag, short[] buffer) {
-		StringBuffer stringBuffer = new StringBuffer();
-		for (int i = 0; i < buffer.length; i++) {
-			stringBuffer.append(" " + Integer.toHexString(buffer[i] & 0xff));
-		}
-		Log.d(TAG, tag + stringBuffer.toString());
+		return;
+//		StringBuffer stringBuffer = new StringBuffer();
+//		for (int i = 0; i < buffer.length; i++) {
+//			stringBuffer.append(" " + Integer.toHexString(buffer[i] & 0xff));
+//		}
+//		Log.d(TAG, tag + stringBuffer.toString());
 	}
 
 	/**
@@ -173,71 +127,6 @@ public class Parser {
 		}
 	}
 
-	public void parsePackageData1(InputStream mmInStream) throws IOException, ParseException {
-//		byte[] soundDataBufferV1 = new byte[321];
-//		byte[] fetalDataBufferV1 = new byte[4];
-//		byte[] soundDataBufferV2 = new byte[101];
-//		byte[] fetalDataBufferV2 = new byte[7];
-		byte[] oneByte = new byte[1];
-		while (true) {
-			System.out.println(mmInStream.available());
-			if (mmInStream.available() < 324) {
-				continue;
-			}
-			mmInStream.read(oneByte);
-//			printBuffer("oneByte:", oneByte);
-			if (translate(oneByte[0]) == 0x55) {
-				mmInStream.read(oneByte);
-//				printBuffer("oneByte:", oneByte);
-				if (translate(oneByte[0]) == 0xaa) {
-					mmInStream.read(oneByte);
-//					printBuffer("oneByte:", oneByte);
-					switch (translate(oneByte[0])) {
-						//v1,胎心
-						case CONTROLLER_HEART_BEAT_RATE_V1:
-							byte[] fetalDataBufferV1 = bytes4;
-							mmInStream.read(fetalDataBufferV1);
-//									printBuffer("f:", fetalDataBufferV1);
-							bufferQueue.add(fetalDataBufferV1, BufferQueue.DATA_FHR);
-							validateData(fetalDataBufferV1);
-							FHRPackage FHRPackage1 = parseFHR(fetalDataBufferV1, "1");
-							LogUtil.v(TAG, "run::%s", FHRPackage1);
-							break;
-						//v2,胎心
-						case CONTROLLER_HEART_BEAT_RATE_V2:
-							byte[] fetalDataBufferV2 = bytes7;
-							mmInStream.read(fetalDataBufferV2);
-//									printBuffer("f:", fetalDataBufferV2);
-							validateData(fetalDataBufferV2);
-							FHRPackage FHRPackage2 = parseFHR(fetalDataBufferV2, "2");
-							LogUtil.v(TAG, "run::%s", FHRPackage2);
-							break;
-						//v1,声音
-						case CONTROLLER_SOUND_V1:
-							byte[] soundDataBufferV1 = bytes321;
-							mmInStream.read(soundDataBufferV1);
-//							printBuffer("s:", soundDataBufferV1);
-							validateData(soundDataBufferV1);
-							byte[] bytes1 = parseSound(soundDataBufferV1, "1");
-							AudioPlayer.getInstance().playAudioTrack(bytes1, 0, bytes1.length);
-							break;
-						//v2,声音
-						case CONTROLLER_SOUND_V2:
-							byte[] soundDataBufferV2 = bytes101;
-							mmInStream.read(soundDataBufferV2);
-//							printBuffer("s:", soundDataBufferV2);
-							validateData(soundDataBufferV2);
-							byte[] bytes2 = parseSound(soundDataBufferV2, "2");
-							AudioPlayer.getInstance().playAudioTrack(bytes2, 0, bytes2.length);
-							break;
-						default:
-							throw new ParseException("no such controller");
-					}
-				}
-			}
-		}
-	}
-
 	public FHRPackage parseFHR(byte[] buffer, String version) throws FHRParseException {
 		switch (version) {
 			case "1":
@@ -250,10 +139,12 @@ public class Parser {
 	}
 
 	private int translate(byte oneByte) {
-		return oneByte & 0xff;
+		return oneByte & LAST2BYTE;
 	}
 
 	private FHRPackage parseFHBV1(byte[] buffer) {
+		//实际解析出来的都是同一个对象,只是每次都会更新内容
+		//避免new 对象
 		FHRPackage FHRPackage1 = DataStorage.fhrPackagePool;
 		FHRPackage1.setTime(System.currentTimeMillis());
 		FHRPackage1.setVersion("1");
@@ -264,6 +155,8 @@ public class Parser {
 	}
 
 	private FHRPackage parseFHBV2(byte[] buffer) {
+		//实际解析出来的都是同一个对象,只是每次都会更新内容
+		//避免new 对象
 		FHRPackage FHRPackage2 = DataStorage.fhrPackagePool;
 		FHRPackage2.setTime(System.currentTimeMillis());
 		FHRPackage2.setVersion("2");
@@ -275,15 +168,8 @@ public class Parser {
 	}
 
 	public void parsePackageData(InputStream mmInStream) throws IOException, ParseException {
-//		byte[] soundDataBufferV1 = new byte[321];
-//		byte[] fetalDataBufferV1 = new byte[4];
-//		byte[] soundDataBufferV2 = new byte[101];
-//		byte[] fetalDataBufferV2 = new byte[7];
-		bufferQueue.start();
 		byte[] oneByte = new byte[1];
 		while (true) {
-//			System.out.println(mmInStream.available());
-//			System.out.println(bufferQueue.toString());
 			if (mmInStream.available() < 324) {
 				continue;
 			}
@@ -298,55 +184,51 @@ public class Parser {
 					switch (translate(oneByte[0])) {
 						//v1,胎心
 						case CONTROLLER_HEART_BEAT_RATE_V1:
-							if (bufferQueue.getVersion() == null) {
-								bufferQueue.setVersion("1");
-							}
-							byte[] fetalDataBufferV1 = new byte[4];
 							mmInStream.read(fetalDataBufferV1);
-//									printBuffer("f:", fetalDataBufferV1);
-							bufferQueue.add(fetalDataBufferV1, BufferQueue.DATA_FHR);
+							validateData(fetalDataBufferV1);
+//							parseFHR(fetalDataBufferV1, "1");
+							FHRPackage fhrPackage1 = parseFHR(fetalDataBufferV1, "1");
+							Message message1 = Message.obtain(handler);
+							message1.what = Constants.MESSAGE_READ_FETAL_DATA;
+							message1.obj = fhrPackage1;
+							message1.sendToTarget();
 							break;
 						//v2,胎心
 						case CONTROLLER_HEART_BEAT_RATE_V2:
-							if (bufferQueue.getVersion() == null) {
-								bufferQueue.setVersion("2");
-							}
-							byte[] fetalDataBufferV2 = new byte[7];
 							mmInStream.read(fetalDataBufferV2);
-//									printBuffer("f:", fetalDataBufferV2);
-							bufferQueue.add(fetalDataBufferV2, BufferQueue.DATA_FHR);
+//							parseFHR(fetalDataBufferV2, "2");
+							FHRPackage fhrPackage2 = parseFHR(fetalDataBufferV2, "2");
+							Message message2 = Message.obtain(handler);
+							message2.what = Constants.MESSAGE_READ_FETAL_DATA;
+							message2.obj = fhrPackage2;
+							message2.sendToTarget();
 							break;
 						//v1,声音
 						case CONTROLLER_SOUND_V1:
-//							if (bufferQueue.getVersion() == null) {
-//								bufferQueue.setVersion("1");
-//							}
-//							byte[] soundDataBufferV1 = new byte[321];
-//							mmInStream.read(soundDataBufferV1);
-////							printBuffer("s:", soundDataBufferV1);
-//							bufferQueue.add(soundDataBufferV1, BufferQueue.DATA_SOUND);
 							int[] voice = getVoice(mmInStream);
 							byte[] v = intForByte(ByteUtil.analysePackage(voice));
-							Message message1 = Message.obtain(handler);
-							message1.what = Constants.MESSAGE_VOICE;
-							message1.obj = v;
-							message1.sendToTarget();
+							if (needRecord) {
+								generateFile(Constants.RECORD_PATH, Constants.FILE_NAME + Constants.EXTENTION_NAME, v);
+							}
+							if (needPlay) {
+								AudioPlayer.getInstance().playAudioTrack(v, 0, v.length);
+							}
+//							Message message3 = Message.obtain(handler);
+//							message3.what = Constants.MESSAGE_VOICE;
+//							message3.obj = v;
+//							message3.sendToTarget();
 							break;
 						//v2,声音
 						case CONTROLLER_SOUND_V2:
-//							if (bufferQueue.getVersion() == null) {
-//								bufferQueue.setVersion("2");
-//							}
-//							byte[] soundDataBufferV2 = new byte[101];
-//							mmInStream.read(soundDataBufferV2);
-////							printBuffer("s:", soundDataBufferV2);
-//							bufferQueue.add(soundDataBufferV2, BufferQueue.DATA_SOUND);
 							int[] voiceAd = getVoiceAd(mmInStream);
 							byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
-							Message message2 = Message.obtain(handler);
-							message2.what = Constants.MESSAGE_VOICE;
-							message2.obj = adv;
-							message2.sendToTarget();
+							if (needPlay) {
+								AudioPlayer.getInstance().playAudioTrack(adv, 0, adv.length);
+							}
+//							Message message4 = Message.obtain(handler);
+//							message4.what = Constants.MESSAGE_VOICE;
+//							message4.obj = adv;
+//							message4.sendToTarget();
 							break;
 						default:
 							throw new ParseException("no such controller");
@@ -385,29 +267,25 @@ public class Parser {
 	 * @return
 	 */
 	private int[] getVoice(InputStream inputStream) {
-		int[] ints = new int[321];
 		for (int i = 0; i < 321; i++) {
 			try {
-				ints[i] = inputStream.read();
+				soundDataBufferV1[i] = inputStream.read();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return ints;
+		return soundDataBufferV1;
 	}
 
 	private int[] getVoiceAd(InputStream inputStream) {
-		int[] ints = new int[101];
 		for (int i = 0; i < 101; i++) {
 			try {
-				ints[i] = inputStream.read();
+				soundDataBufferV2[i] = inputStream.read();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return ints;
+		return soundDataBufferV2;
 	}
 
 	/**
@@ -442,5 +320,13 @@ public class Parser {
 			bytes[i + 4] = (byte) (buffer[i + 5] & 0x03 + buffer[i + 4]);
 		}
 		return bytes;
+	}
+
+	public void setNeedRecord(boolean needRecord) {
+		this.needRecord = needRecord;
+	}
+
+	public void setNeedPlay(boolean needPlay) {
+		this.needPlay = needPlay;
 	}
 }

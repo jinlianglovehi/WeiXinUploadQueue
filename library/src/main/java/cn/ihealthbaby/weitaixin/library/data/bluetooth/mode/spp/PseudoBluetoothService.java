@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.BufferQueue;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.parser.Parser;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
@@ -60,7 +59,6 @@ public class PseudoBluetoothService {
 	private ConnectedThread mConnectedThread;
 	private int mState;
 	private Parser parser;
-	private BufferQueue bufferQueue;
 
 	/**
 	 * Constructor. Prepares a new BluetoothChat session.
@@ -72,9 +70,7 @@ public class PseudoBluetoothService {
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
 		mState = STATE_NONE;
 		mHandler = handler;
-		bufferQueue = new BufferQueue(mHandler);
-		parser = new Parser(mHandler, bufferQueue);
-		bufferQueue.setParser(parser);
+		parser = new Parser(mHandler);
 	}
 
 	/**
@@ -254,6 +250,14 @@ public class PseudoBluetoothService {
 		// Start the service over to restart listening mode
 		// TODO: 15/9/7 失败重连
 //		PseudoBluetoothService.this.start();
+	}
+
+	public void setNeedRecord(boolean record) {
+		parser.setNeedRecord(record);
+	}
+
+	public void setNeedPlay(boolean play) {
+		parser.setNeedPlay(play);
 	}
 
 	/**
@@ -436,7 +440,7 @@ public class PseudoBluetoothService {
 					// Read from the InputStream
 //					bytes = mmInStream.read(buffer);
 					// Send the obtained bytes to the UI Activity
-//					mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
+//					mHandler.obtainMessage(Constants.MESSAGE_READ_FETAL_DATA, bytes, -1, buffer)
 //							.sendToTarget();
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);

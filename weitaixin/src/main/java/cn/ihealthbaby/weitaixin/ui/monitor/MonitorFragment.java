@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceiver;
@@ -69,12 +70,12 @@ public class MonitorFragment extends BaseFragment {
 	ImageView bpm;
 	@Bind(R.id.hint_animation)
 	TextView hintAnimation;
-	private BluetoothReceiver bluetoothReceiver;
-	private BluetoothAdapter adapter;
+	private BluetoothReceiver bluetoothReceiver = new BluetoothReceiver();
+	private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 	private BluetoothScanner bluetoothScanner;
 	private Set<BluetoothDevice> bondedDevices;
 	private PseudoBluetoothService pseudoBluetoothService;
-	private ArrayList<BluetoothDevice> scanedDevices;
+	private ArrayList<BluetoothDevice> scanedDevices = new ArrayList<>();
 	private boolean connected;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -84,7 +85,6 @@ public class MonitorFragment extends BaseFragment {
 						case PseudoBluetoothService.STATE_CONNECTED:
 							connected = true;
 							onConnectedUI();
-//							startActivity(new Intent(getActivity().getApplicationContext(), MonitorActivity.class));
 							break;
 						case PseudoBluetoothService.STATE_CONNECTING:
 							break;
@@ -97,8 +97,9 @@ public class MonitorFragment extends BaseFragment {
 				case Constants.MESSAGE_WRITE:
 					byte[] writeBuf = (byte[]) msg.obj;
 					break;
-				case Constants.MESSAGE_READ:
+				case Constants.MESSAGE_READ_FETAL_DATA:
 					FHRPackage fhrPackage = (FHRPackage) msg.obj;
+					DataStorage.fhrPackage.setFHRPackage(fhrPackage);
 					if (tvBluetooth != null) {
 						tvBluetooth.setText(fhrPackage.getFHR1() + "");
 					}
@@ -146,13 +147,14 @@ public class MonitorFragment extends BaseFragment {
 		if (!bluetoothScanner.isEnable()) {
 			bluetoothScanner.enable();
 		} else {
-			LogUtil.e("bluetoothScanner", "bluetoothScanner");
+			LogUtil.d("bluetoothScanner", "bluetoothScanner");
 			connectBondedDeviceOrSearch();
 		}
 	}
 
 	private void onConnectingUI() {
 		tvBluetooth.setText("连接中");
+		tvBluetooth.setClickable(false);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
 		hint.setVisibility(View.VISIBLE);
 		bpm.setImageResource(R.drawable.bpm_dark);
@@ -178,8 +180,7 @@ public class MonitorFragment extends BaseFragment {
 		back.setVisibility(View.GONE);
 		titleText.setText("胎心监测");
 		function.setVisibility(View.GONE);
-		adapter = BluetoothAdapter.getDefaultAdapter();
-		countDownTimer = new CountDownTimer(10000, 10000) {
+		countDownTimer = new CountDownTimer(20000, 20000) {
 			@Override
 			public void onTick(long millisUntilFinished) {
 			}
@@ -189,20 +190,19 @@ public class MonitorFragment extends BaseFragment {
 				if (!connected || bluetoothScanner.isDiscovering()) {
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
 					resetUI();
+					pseudoBluetoothService.stop();
 				}
 				bluetoothScanner.cancleDiscovery();
 			}
 		};
 		bluetoothScanner = new DefaultBluetoothScanner(adapter);
-		scanedDevices = new ArrayList<>();
 		pseudoBluetoothService = new PseudoBluetoothService(getActivity().getApplicationContext(), handler);
-		bluetoothReceiver = new BluetoothReceiver();
 		bluetoothReceiver.register(getActivity().getApplicationContext());
 		bluetoothReceiver.setListener(new AbstractBluetoothListener() {
 			@Override
 			public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
 				if (!scanedDevices.contains(remoteDevice)) {
-					if (getDeviceName().equalsIgnoreCase(remoteDevice.getName())) {
+					if (getDeviceName().equalsIgnoreCase(remoteName)) {
 						pseudoBluetoothService.connect(remoteDevice, false);
 						bluetoothScanner.cancleDiscovery();
 					}
@@ -255,11 +255,13 @@ public class MonitorFragment extends BaseFragment {
 
 	public void resetUI() {
 		tvBluetooth.setText("start");
+		tvBluetooth.setClickable(true);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
 		hint.setVisibility(View.GONE);
 		bpm.setVisibility(View.GONE);
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
+		scanedDevices.clear();
 	}
 
 	public void connectBondedDeviceOrSearch() {
@@ -282,13 +284,14 @@ public class MonitorFragment extends BaseFragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		handler = null;
 		bluetoothReceiver.unRegister(getActivity().getApplicationContext());
 		ButterKnife.unbind(this);
 	}
 
 	public String getDeviceName() {
-//		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
-		return "IHB2LC9P2UUZ"; //IHB2LD1X7CUC   IHB2LC9JUHPB
+		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
+//		return "IHB2LC9P2UUZ"; //IHB2LD1X7CUC   IHB2LC9JUHPB
 //		String serialnum = "";
 //		User user = WeiTaiXinApplication.user;
 //		if (user != null) {
