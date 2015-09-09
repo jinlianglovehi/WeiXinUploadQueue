@@ -33,8 +33,7 @@ public class WeiTaiXinApplication extends Application {
     public static String accountToken;
     public static String phone_number;
     public static User user;
-//    public boolean isLogin = false;
-public boolean isLogin = true;
+    public boolean isLogin = false;
     public LocalProductData localProductData=new LocalProductData(); //保存商品
     public VolleyAdapter mAdapter;
     private AbstractHttpClientAdapter adapter;
