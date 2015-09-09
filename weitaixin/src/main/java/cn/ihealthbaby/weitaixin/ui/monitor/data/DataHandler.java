@@ -1,11 +1,11 @@
-package cn.ihealthbaby.weitaixin.ui.monitor;
+package cn.ihealthbaby.weitaixin.ui.monitor.data;
 
 import java.util.List;
 
 /**
  * Created by liuhongjian on 15/9/9 12:20.
  */
-public class ResultHandler {
+public class DataHandler {
 	public static String listToArrayString(List<Integer> fhrs) {
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("[");
