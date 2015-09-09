@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="w">#FFFFFFFF</color>
-    <color name="b">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="tab_text_color">#FFDBDBDB</color>
+
+    <!-- 用户名密码 框颜色 -->
+    <color name="frame_color">#FFE5E5E5</color>
+    <!-- title tab  颜色-->
+    <color name="title_tab_bg">#FFEFEFEF</color>
+    <!--内部填充 -->
+    <color name="activity_bg">#FFEBEBEB</color>
+    <!--描边颜色 -->
+    <color name="bottom_line">#FFDADADA</color>
 </resources>
