@@ -75,8 +75,12 @@ public class PayGettingGoodsFragment extends BaseFragment {
                 if (t.isSuccess()) {
                     PageData<Order> data = t.getData();
                     ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
-                    adapter.setDatas(orders);
-                    adapter.notifyDataSetChanged();
+                    if (orders != null && orders.size() <= 0) {
+                        ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据~~~");
+                    } else {
+                        adapter.setDatas(orders);
+                        adapter.notifyDataSetChanged();
+                    }
                 } else {
                     ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
                 }

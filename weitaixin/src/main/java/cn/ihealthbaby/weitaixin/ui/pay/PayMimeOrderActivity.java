@@ -119,21 +119,24 @@ public class PayMimeOrderActivity extends BaseActivity {
     }
 
     private void show(int container, FragmentTransaction fragmentTransaction, Fragment fragment){
-        if (fragment == null) {
-            return;
-        }
-
-        if (!fragment.isAdded()) {
-            if(oldFragment!=null){
-                fragmentTransaction.hide(oldFragment);
-            }
-            fragmentTransaction.add(container, fragment);
-        } else if( oldFragment != fragment){
-            fragmentTransaction.hide(oldFragment);
-            fragmentTransaction.show(fragment);
-        }
-        oldFragment = fragment;
-        LogUtil.d("ChildCountPay==", "ChildCountPay= %s", this.flContainerPay.getChildCount());
+        fragmentTransaction.replace(container,fragment);
+        return;
+//
+//        if (fragment == null) {
+//            return;
+//        }
+//
+//        if (!fragment.isAdded()) {
+//            if(oldFragment!=null){
+//                fragmentTransaction.hide(oldFragment);
+//            }
+//            fragmentTransaction.add(container, fragment);
+//        } else if( oldFragment != fragment){
+//            fragmentTransaction.hide(oldFragment);
+//            fragmentTransaction.show(fragment);
+//        }
+//        oldFragment = fragment;
+//        LogUtil.d("ChildCountPay==", "ChildCountPay= %s", this.flContainerPay.getChildCount());
     }
 
 
