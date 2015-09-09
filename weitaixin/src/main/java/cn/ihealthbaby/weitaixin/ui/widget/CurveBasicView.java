@@ -31,15 +31,6 @@ public class CurveBasicView extends CoordinateView {
 	protected int gridColor = Color.parseColor("#B2DEDEDE");
 	protected int shadowColor = Color.parseColor("#E8F6EF");
 	private Bitmap scaledBitmap;
-
-	public List<Integer> getHearts() {
-		return hearts;
-	}
-
-	public void setHearts(List<Integer> hearts) {
-		this.hearts = hearts;
-	}
-
 	/**
 	 * 保存的是发生胎动的点的位置
 	 */
@@ -68,6 +59,14 @@ public class CurveBasicView extends CoordinateView {
 		paint.setStyle(Paint.Style.STROKE);
 		heartWidth = Util.dip2px(context, 6);
 		scaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.red_heart_small)).getBitmap(), heartWidth, heartWidth, true);
+	}
+
+	public List<Integer> getHearts() {
+		return hearts;
+	}
+
+	public void setHearts(List<Integer> hearts) {
+		this.hearts = hearts;
 	}
 
 	public List<Integer> getFhrs() {
@@ -160,14 +159,14 @@ public class CurveBasicView extends CoordinateView {
 		//
 	}
 
-	protected void drawRedHeart(Canvas canvas) {
+	protected void drawRedHeart(Canvas canvas, int y) {
 		resetPaint();
 		int size = hearts.size();
 		if (size <= 0) {
 			return;
 		}
 		for (int i = 0; i < size; i++) {
-			canvas.drawBitmap(scaledBitmap, convertX(positionToX(hearts.get(i))) - heartWidth / 2, convertY(10) - heartWidth / 2, paint);
+			canvas.drawBitmap(scaledBitmap, convertX(positionToX(hearts.get(i))) - heartWidth / 2, convertY(y) - heartWidth / 2, paint);
 		}
 	}
 
