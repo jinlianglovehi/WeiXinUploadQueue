@@ -1,7 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout
+    android:id="@+id/rl_login"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/rl_logo"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/login_bg">
+
+        <ImageView
+            android:id="@+id/iv_weitaixin"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_weitaixin"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="院内版"
+            android:textColor="@color/white0"/>
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_host_id"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_below="@id/rl_logo"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_text_frame"
+        android:gravity="center"
+        android:text="宿主id"/>
+
+    <TextView
+        android:id="@+id/tv_host_nane"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_below="@id/tv_host_id"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_text_frame"
+        android:gravity="center"
+        android:text="宿主id"/>
+
+    <TextView
+        android:id="@+id/tv_host_department"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_below="@id/tv_host_nane"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_text_frame"
+        android:gravity="center"
+        android:text="宿主id"/>
+
+    <TextView
+        android:id="@+id/tv_device_id"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_below="@id/tv_host_department"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_text_frame"
+        android:gravity="center"
+        android:text="宿主id"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="35dp"
+        android:gravity="center"
+        android:text="宿主id:1234567"/>
+
+    <TextView
+        android:id="@+id/tv_login_action"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="67dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_green_button"
+        android:gravity="center"
+        android:text="登录"
+        android:textColor="@drawable/text_default_selector"
+        android:textSize="@dimen/font_normal"/>
+
+</RelativeLayout>

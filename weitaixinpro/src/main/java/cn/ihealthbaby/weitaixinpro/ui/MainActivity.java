@@ -24,7 +24,7 @@ import cn.ihealthbaby.weitaixinpro.ui.settings.SettingsFragment;
 /**
  * Created by Think on 2015/8/13.
  */
-public class MeMainFragmentActivity extends BaseActivity {
+public class MainActivity extends BaseActivity {
 
     @Bind(R.id.iv_tab_02)
     ImageView iv_tab_02;
