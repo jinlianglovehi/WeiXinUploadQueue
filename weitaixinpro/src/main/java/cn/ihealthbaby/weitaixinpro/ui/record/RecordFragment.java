@@ -2,17 +2,25 @@ package cn.ihealthbaby.weitaixinpro.ui.record;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 
-/**
- * @author by kang on 2015/9/9.
- */
-public class RecordFragment extends Fragment {
+import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
+
+public class RecordFragment extends BaseFragment {
+
+    static RecordFragment instance;
+
+    public static RecordFragment getInstance() {
+        if (instance == null) {
+            instance = new RecordFragment();
+        }
+        return instance;
+    }
 
     @Nullable
     @Override

@@ -1,15 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#FFFFFFFF</color>
-    <color name="black">#FF000000</color>
-    <color name="tab_text_color">#FFDBDBDB</color>
 
+    <!---->
+    <color name="background_navigation_bar">#FFE5E5E5</color>
+    <color name="font_color">#FF4A4A4A</color>
+
+    <!--bisic color-->
+    <color name="white0">#FFFFFFFF</color>
+    <color name="white1">#00000000</color>
+    <color name="white2">#33FFFFFF</color>
     <!-- 用户名密码 框颜色 -->
-    <color name="frame_color">#FFE5E5E5</color>
+    <color name="gray1">#FFE5E5E5</color>
+    <color name="gray2">#FFD8D8D8</color>
+    <color name="gray3">#FF999696</color>
+    <color name="gray4">#FFB8B8B8</color>
+    <color name="gray5">#FFF7F7F7</color>
     <!-- title tab  颜色-->
-    <color name="title_tab_bg">#FFEFEFEF</color>
+    <color name="gray6">#FFEFEFEF</color>
+    <color name="gray7">#FFA9A9A9</color>
+    <color name="gray8">#88A9A9A9</color>
+    <color name="gray9">#FF999999</color>
+    <color name="gray10">#FFBABABA</color>
+    <color name="gray11">#FFF1F1F1</color>
+    <color name="gray12">#FF636363</color>
+    <color name="gray13">#FFF2F2F2</color>
+    <color name="gray14">#FFBDBDBD</color>
+    <color name="gray15">#FFEDEDED</color>
+    <color name="gray16">#FF979797</color>
+    <color name="text_color_hint">#FFC5C7C7</color>
     <!--内部填充 -->
-    <color name="activity_bg">#FFEBEBEB</color>
+    <color name="gray17">#FFEBEBEB</color>
     <!--描边颜色 -->
-    <color name="bottom_line">#FFDADADA</color>
+    <color name="gray18">#FFDADADA</color>
+    <!-- 监护设置里面的横线-->
+    <color name="gray19">#FFE0E0E0</color>
+
+    <!-- 高危评分 button 字体颜色-->
+    <color name="gray20">#FF7B7B7B</color>
+    <color name="black0">#FF222222</color>
+    <color name="black1">#FF000000</color>
+    <color name="black2">#FF353330</color>
+    <color name="black3">#FF2E2E2E</color>
+    <color name="red0">#FFFE0058</color>
+    <color name="red1">#FFea5550</color>
+    <color name="red2">#FFee4f4e</color>
+    <color name="red3">#FFFE2E62</color>
+    <!--主色调-->
+    <color name="green0">#FF01CF97</color>
+    <color name="green1">#FF24AA42</color>
+    <color name="green2">#FF3AD9AE</color>
+    <color name="green3">#FF01CF97</color>
+    <color name="green4">#FFE9fffA</color>
+    <color name="green5">#FF63E1DF</color>
+    <!--background-->
+    <color name="background_white">@color/white0</color>
+    <color name="background_gray">@color/gray6</color>
+    <!--function color-->
+
+
+    <color name="title">@color/gray6</color>
+    <color name="title_back_arrow">@color/black0</color>
+
+    <color name="button_login">@color/green0</color>
+    <!--font color-->
+    <color name="font_title">@color/black0</color>
+    <color name="font_hint">@color/gray4</color>
+    <color name="font_white_on_green">@color/white0</color>
+    <color name="font_black">@color/black0</color>
+    <color name="font_green_on_white">@color/green1</color>
+    <color name="font_gray_on_white">@color/gray3</color>
+
+
+    <color name="text_color">#FF333333</color>
+    <color name="text_content_color">#FF444444</color>
+    <color name="text_subtitle_color">#FFA8A8A8</color>
+
+
 </resources>

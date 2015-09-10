@@ -1,4 +1,67 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="tab_text_size">12sp</dimen>
+    <dimen name="activity_horizontal_margin">20dp</dimen>
+    <dimen name="activity_vertical_margin">20dp</dimen>
+    <dimen name="title_height">40dp</dimen>
+
+    <!--Font Size-->
+
+    <dimen name="font8">8sp</dimen>
+    <dimen name="font10">10sp</dimen>
+    <dimen name="font12">12sp</dimen>
+    <dimen name="font14">14sp</dimen>
+    <dimen name="font16">16sp</dimen>
+    <dimen name="font18">18sp</dimen>
+    <dimen name="font20">20sp</dimen>
+    <dimen name="font22">22sp</dimen>
+    <dimen name="font24">24sp</dimen>
+    <dimen name="font26">26sp</dimen>
+    <dimen name="font28">28sp</dimen>
+    <dimen name="font30">30sp</dimen>
+    <dimen name="font32">32sp</dimen>
+    <dimen name="font34">34sp</dimen>
+    <dimen name="font50">50sp</dimen>
+    <dimen name="font76">76sp</dimen>
+
+    <dimen name="font_title">@dimen/font18</dimen>
+    <dimen name="font_normal">@dimen/font16</dimen>
+    <dimen name="font_normal14">@dimen/font14</dimen>
+    <dimen name="font_on_button">@dimen/font18</dimen>
+    <dimen name="font_login">@dimen/font18</dimen>
+
+
+    <!-- margin,padding dp-->
+    <dimen name="dimen_dp_3">3dp</dimen>
+    <dimen name="dimen_dp_4">4dp</dimen>
+    <dimen name="dimen_dp_5">5dp</dimen>
+    <dimen name="dimen_dp_6">6dp</dimen>
+    <dimen name="dimen_dp_8">8dp</dimen>
+    <dimen name="dimen_dp_9">9dp</dimen>
+    <dimen name="dimen_dp_10">10dp</dimen>
+    <dimen name="dimen_dp_12">12dp</dimen>
+    <dimen name="dimen_dp_14">14dp</dimen>
+    <dimen name="dimen_dp_15">15dp</dimen>
+    <dimen name="dimen_dp_17">17dp</dimen>
+    <dimen name="dimen_dp_18">18dp</dimen>
+    <dimen name="dimen_dp_20">20dp</dimen>
+    <dimen name="dimen_dp_24">24dp</dimen>
+    <dimen name="dimen_dp_25">25dp</dimen>
+    <dimen name="dimen_dp_28">28dp</dimen>
+    <dimen name="dimen_dp_30">30dp</dimen>
+    <dimen name="dimen_dp_32">32dp</dimen>
+    <dimen name="dimen_dp_34">34dp</dimen>
+    <dimen name="dimen_dp_35">35dp</dimen>
+    <dimen name="dimen_dp_38">38dp</dimen>
+    <dimen name="dimen_dp_40">40dp</dimen>
+    <dimen name="dimen_dp_50">50dp</dimen>
+    <dimen name="dimen_dp_56">56dp</dimen>
+    <dimen name="dimen_dp_60">60dp</dimen>
+    <dimen name="dimen_dp_86">86dp</dimen>
+    <dimen name="dimen_dp_62">62dp</dimen>
+    <dimen name="dimen_dp_80">80dp</dimen>
+    <dimen name="dimen_dp_70">70dp</dimen>
+    <dimen name="dimen_dp_100">100dp</dimen>
+    <dimen name="dimen_dp_120">120dp</dimen>
+
+
 </resources>

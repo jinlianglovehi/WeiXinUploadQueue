@@ -2,17 +2,26 @@ package cn.ihealthbaby.weitaixinpro.ui.monitor;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
 
 /**
- * @author by kang on 2015/9/9.
+ * Created by liuhongjian on 15/8/12 17:52.
  */
-public class Monitorfragment extends Fragment {
+public class MonitorFragment extends BaseFragment {
+
+    private static MonitorFragment instance;
+
+    public static MonitorFragment getInstance() {
+        if (instance == null) {
+            instance = new MonitorFragment();
+        }
+        return instance;
+    }
 
     @Nullable
     @Override
@@ -20,3 +29,6 @@ public class Monitorfragment extends Fragment {
         return inflater.inflate(R.layout.monitor_fragment, null);
     }
 }
+
+
+

@@ -1,12 +1,146 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/gray17"
               android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="设置"/>
+    <include
+        android:id="@+id/head_title_id"
+        layout="@layout/layout_title"/>
+
+
+    <RelativeLayout
+        android:id="@+id/ll_set_system_01"
+        style="@style/wo_info_item"
+        android:layout_marginTop="15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="23dp"
+            android:singleLine="true"
+            android:text="本机device ID"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font_normal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
+            android:text="1234567"
+            android:textColor="@color/gray12"
+            android:textSize="18dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_set_system_02"
+        style="@style/wo_info_item"
+        android:layout_marginTop="15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="23dp"
+            android:singleLine="true"
+            android:text="设备SN"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font_normal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
+            android:text="已绑定：1234567"
+            android:textColor="@color/gray12"
+            android:textSize="18dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_set_system_03"
+        style="@style/wo_info_item"
+        android:layout_marginTop="15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="23dp"
+            android:singleLine="true"
+            android:text="监护设置"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font_normal"/>
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right"
+            android:visibility="visible"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_set_system_04"
+        style="@style/wo_info_item"
+        android:layout_marginTop="15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="23dp"
+            android:singleLine="true"
+            android:text="关于微胎心"
+            android:textColor="@color/gray12"
+            android:textSize="@dimen/font_normal"/>
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wo_head_arrow_right"
+            android:visibility="visible"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_set_system_05"
+        style="@style/wo_info_item"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="23dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="WIFI下自动上传"
+            android:textColor="@drawable/text_color_hei_selector"
+            android:textSize="@dimen/font_normal"/>
+
+        <ImageView
+            android:id="@+id/slide_switch_upload"
+            android:layout_width="48dip"
+            android:layout_height="30dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="22dp"
+            android:src="@drawable/switch_on"/>
+    </RelativeLayout>
 </LinearLayout>
