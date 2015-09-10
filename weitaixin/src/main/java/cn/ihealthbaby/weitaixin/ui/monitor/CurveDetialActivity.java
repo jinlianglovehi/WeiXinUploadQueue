@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixin.ui.monitor;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,10 +14,12 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
+import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
+import de.greenrobot.event.EventBus;
 
 public class CurveDetialActivity extends BaseActivity {
 	@Bind(R.id.chs)
@@ -47,7 +50,7 @@ public class CurveDetialActivity extends BaseActivity {
 	private ExpendableCountDownTimer countDownTimer;
 	private long lastFMTime;
 
-	@OnClick(value = {R.id.rl_function, R.id.tv_record, R.id.btn_start})
+	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
 		long consumedTime = countDownTimer.getConsumedTime();
 		int position = (int) (consumedTime / countDownTimer.getInterval());
@@ -55,6 +58,11 @@ public class CurveDetialActivity extends BaseActivity {
 			savePosition(position);
 			lastFMTime = consumedTime;
 		}
+	}
+
+	@OnClick(R.id.function)
+	public void terminate() {
+		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
 	}
 
 	private void savePosition(int position) {
@@ -67,6 +75,8 @@ public class CurveDetialActivity extends BaseActivity {
 		setContentView(R.layout.activity_monitor_detial);
 		ButterKnife.bind(this);
 		titleText.setText("胎心监测");
+		function.setText("立即结束");
+		function.setVisibility(View.VISIBLE);
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
@@ -85,20 +95,12 @@ public class CurveDetialActivity extends BaseActivity {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-//				DataStorage.fhrPackage
-//				int position = 0;
-//				if (needReset) {
-//					curve.resetPoints();
-//					needReset = !needReset;
-//				} else {
-//					curve.addPoint(position);
-//				}
 				curve.resetPoints();
 				curve.postInvalidate();
 				int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
+				// TODO: 15/9/9   颜色根据数值变化
 				bpm.setText(fhr1 + "");
 				if (!chs.isTouching()) {
-					System.out.println("position" + curve.getCurrentPositionX() + "width" + width);
 					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
 				}
 			}
@@ -114,6 +116,7 @@ public class CurveDetialActivity extends BaseActivity {
 		curve.setFhrs(DataStorage.fhrs);
 		curve.setCellWidth(Util.dip2px(getApplicationContext(), 10));
 		curve.setHearts(DataStorage.hearts);
+		curve.setCurveStrokeWidth(Util.dip2px(getApplicationContext(), 2));
 		ViewGroup.LayoutParams layoutParams = curve.getLayoutParams();
 		layoutParams.width = curve.getMinWidth();
 		layoutParams.height = curve.getMinHeight() + Util.dip2px(getApplicationContext(), 16);

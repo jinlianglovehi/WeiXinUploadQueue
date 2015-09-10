@@ -137,4 +137,9 @@ public abstract class ExpendableCountDownTimer {
 	public abstract void onTick(long millisUntilFinished);
 
 	public abstract void onFinish();
+
+	public void restart() {
+		cancel();
+		start();
+	}
 }

@@ -39,10 +39,11 @@ public class CurveBasicView extends CoordinateView {
 	/**
 	 * 保存胎心数值
 	 */
-	private List<Integer> fhrs;
+	private List<Integer> fhrs = new ArrayList<>();
 	private int position;
 	private boolean moved = true;
 	private int heartWidth;
+	private float curveStrokeWidth = 2;
 
 	public CurveBasicView(Context context) {
 		this(context, null, 0);
@@ -59,6 +60,14 @@ public class CurveBasicView extends CoordinateView {
 		paint.setStyle(Paint.Style.STROKE);
 		heartWidth = Util.dip2px(context, 6);
 		scaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.red_heart_small)).getBitmap(), heartWidth, heartWidth, true);
+	}
+
+	public float getCurveStrokeWidth() {
+		return curveStrokeWidth;
+	}
+
+	public void setCurveStrokeWidth(float curveStrokeWidth) {
+		this.curveStrokeWidth = curveStrokeWidth;
 	}
 
 	public List<Integer> getHearts() {
@@ -113,7 +122,26 @@ public class CurveBasicView extends CoordinateView {
 			path.lineTo(convertX(positionToX(position)), convertY(fhr));
 			moved = false;
 		}
-//		position++;
+	}
+
+	public void autoAddPoint() {
+		if (position < fhrs.size()) {
+			Integer fhr = fhrs.get(position);
+			if (fhr < limitMin || fhr > limitMax) {
+				fhr = 0;
+			}
+			if (fhr == 0 || position == 0) {
+				path.moveTo(convertX(positionToX(position)), convertY(fhr));
+				moved = true;
+			} else if (moved) {
+				path.moveTo(convertX(positionToX(position)), convertY(fhr));
+				moved = false;
+			} else {
+				path.lineTo(convertX(positionToX(position)), convertY(fhr));
+				moved = false;
+			}
+			position++;
+		}
 	}
 
 	public void resetPoints() {
@@ -137,7 +165,7 @@ public class CurveBasicView extends CoordinateView {
 
 	protected void drawCurve(Canvas canvas) {
 		resetPaint();
-		paint.setStrokeWidth(2);
+		paint.setStrokeWidth(curveStrokeWidth);
 		paint.setStyle(Paint.Style.STROKE);
 		canvas.save();
 		paint.setColor(safeLineColor);

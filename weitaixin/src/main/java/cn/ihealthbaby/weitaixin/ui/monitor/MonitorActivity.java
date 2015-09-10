@@ -15,14 +15,17 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
+import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.Util;
-import cn.ihealthbaby.weitaixin.ui.monitor.data.DataHandler;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorSimpleView;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundMaskView;
+import de.greenrobot.event.EventBus;
 
 public class MonitorActivity extends BaseActivity {
+	private final static String TAG = "MonitorActivity";
 	@Bind(R.id.back)
 	RelativeLayout back;
 	@Bind(R.id.title_text)
@@ -56,8 +59,14 @@ public class MonitorActivity extends BaseActivity {
 	private int width;
 
 	@OnClick(R.id.back)
-	void back() {
+	public void back() {
 		finish();
+	}
+
+	@OnClick(R.id.function)
+	public void terminate() {
+		finish();
+		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
 	}
 
 	@OnClick(R.id.curve_simple)
@@ -72,7 +81,7 @@ public class MonitorActivity extends BaseActivity {
 		startActivity(intent);
 	}
 
-	@OnClick(value = {R.id.rl_function, R.id.tv_record, R.id.btn_start})
+	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
 		long consumedTime = countDownTimer.getConsumedTime();
 		int position = (int) (consumedTime / countDownTimer.getInterval());
@@ -91,8 +100,11 @@ public class MonitorActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
 		ButterKnife.bind(this);
+		EventBus.getDefault().register(this);
 		back.setVisibility(View.VISIBLE);
 		titleText.setText("胎心监测");
+		function.setText("立即结束");
+		function.setVisibility(View.VISIBLE);
 		//
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -100,7 +112,8 @@ public class MonitorActivity extends BaseActivity {
 		//
 		roundProgressMask.setBackgroundResource(R.drawable.round_background_3);
 		configCurveSimple();
-		long duration = 20 * 60 * 1000;
+//		long duration = 20 * 60 * 1000;
+		final long duration = 1 * 60 * 1000;
 		final long interval = 500;
 		countDownTimer = new ExpendableCountDownTimer(duration, interval) {
 			private int fhr;
@@ -135,7 +148,10 @@ public class MonitorActivity extends BaseActivity {
 
 			@Override
 			public void onFinish() {
-				String parsed = DataHandler.listToArrayString(DataStorage.fhrs);
+				//
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_AUTO));
+				startActivity(new Intent(getApplicationContext(), GuardianStateActivity.class));
+				//
 			}
 		};
 		reset();
@@ -163,15 +179,30 @@ public class MonitorActivity extends BaseActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		ButterKnife.unbind(this);
+		EventBus.getDefault().unregister(this);
 		if (countDownTimer != null) {
 			countDownTimer.cancel();
 		}
-		reset();
 	}
 
 	private void reset() {
 		lastFetalMoveTime = 0;
 		DataStorage.fhrs.clear();
 		DataStorage.hearts.clear();
+	}
+
+	public void onEventMainThread(MonitorTerminateEvent event) {
+		int reason = event.getEvent();
+		switch (reason) {
+			case MonitorTerminateEvent.EVENT_AUTO:
+				LogUtil.d(TAG, "EVENT_AUTO");
+				break;
+			case MonitorTerminateEvent.EVENT_UNKNOWN:
+				LogUtil.d(TAG, "EVENT_UNKNOWN");
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL:
+				LogUtil.d(TAG, "EVENT_MANUAL");
+				break;
+		}
 	}
 }

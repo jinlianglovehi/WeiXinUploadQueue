@@ -3,19 +3,16 @@ package cn.ihealthbaby.weitaixin.library.data.bluetooth.parser;
 import android.os.Handler;
 import android.os.Message;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.FHRParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ValidationParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
+import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
@@ -59,54 +56,27 @@ public class Parser {
 	private byte[] bytes101 = new byte[101];
 	private int[] soundDataBufferV1 = new int[321];
 	private int[] soundDataBufferV2 = new int[101];
-	private boolean needRecord;
-	private boolean needPlay;
 
 	public Parser(Handler handler) {
 		this.handler = handler;
 	}
-
-	/**
-	 * 生成文件并支持追加数据。
-	 *
-	 * @param path
-	 * @param name
-	 * @return
-	 */
-	public static boolean generateFile(String path, String name, byte[] bytes) {
-		boolean result = true;
-		File file = new File(path, name);
-		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-			fileOutputStream.write(bytes);
-			fileOutputStream.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			result = false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			result = false;
-		}
-		return result;
-	}
-
-	public void printBuffer(String tag, byte[] buffer) {
-		return;
-//		stringBuffer.setLength(0);
-//		for (int i = 0; i < buffer.length; i++) {
-//			stringBuffer.append(" " + Integer.toHexString(buffer[i] & 0xff));
-//		}
-//		Log.d(TAG, tag + stringBuffer.toString());
-	}
-
-	public void printShort(String tag, short[] buffer) {
-		return;
-//		StringBuffer stringBuffer = new StringBuffer();
-//		for (int i = 0; i < buffer.length; i++) {
-//			stringBuffer.append(" " + Integer.toHexString(buffer[i] & 0xff));
-//		}
-//		Log.d(TAG, tag + stringBuffer.toString());
-	}
+//	public void printBuffer(String tag, byte[] buffer) {
+//		return;
+////		stringBuffer.setLength(0);
+////		for (int i = 0; i < buffer.length; i++) {
+////			stringBuffer.append(" " + Integer.toHexString(buffer[i] & 0xff));
+////		}
+////		Log.d(TAG, tag + stringBuffer.toString());
+//	}
+//
+//	public void printShort(String tag, short[] buffer) {
+//		return;
+////		StringBuffer stringBuffer = new StringBuffer();
+////		for (int i = 0; i < buffer.length; i++) {
+////			stringBuffer.append(" " + Integer.toHexString(buffer[i] & 0xff));
+////		}
+////		Log.d(TAG, tag + stringBuffer.toString());
+//	}
 
 	/**
 	 * 协议中中间若干个数据包，最后一个为sum校验数据,校验规则为验证sum%256
@@ -174,19 +144,15 @@ public class Parser {
 				continue;
 			}
 			mmInStream.read(oneByte);
-			printBuffer("oneByte:", oneByte);
 			if (translate(oneByte[0]) == 0x55) {
 				mmInStream.read(oneByte);
-				printBuffer("oneByte:", oneByte);
 				if (translate(oneByte[0]) == 0xaa) {
 					mmInStream.read(oneByte);
-					printBuffer("oneByte:", oneByte);
 					switch (translate(oneByte[0])) {
 						//v1,胎心
 						case CONTROLLER_HEART_BEAT_RATE_V1:
 							mmInStream.read(fetalDataBufferV1);
 							validateData(fetalDataBufferV1);
-//							parseFHR(fetalDataBufferV1, "1");
 							FHRPackage fhrPackage1 = parseFHR(fetalDataBufferV1, "1");
 							Message message1 = Message.obtain(handler);
 							message1.what = Constants.MESSAGE_READ_FETAL_DATA;
@@ -196,7 +162,6 @@ public class Parser {
 						//v2,胎心
 						case CONTROLLER_HEART_BEAT_RATE_V2:
 							mmInStream.read(fetalDataBufferV2);
-//							parseFHR(fetalDataBufferV2, "2");
 							FHRPackage fhrPackage2 = parseFHR(fetalDataBufferV2, "2");
 							Message message2 = Message.obtain(handler);
 							message2.what = Constants.MESSAGE_READ_FETAL_DATA;
@@ -207,28 +172,19 @@ public class Parser {
 						case CONTROLLER_SOUND_V1:
 							int[] voice = getVoice(mmInStream);
 							byte[] v = intForByte(ByteUtil.analysePackage(voice));
-							if (needRecord) {
-								generateFile(Constants.RECORD_PATH, Constants.FILE_NAME + Constants.EXTENTION_NAME, v);
-							}
-							if (needPlay) {
-								AudioPlayer.getInstance().playAudioTrack(v, 0, v.length);
-							}
-//							Message message3 = Message.obtain(handler);
-//							message3.what = Constants.MESSAGE_VOICE;
-//							message3.obj = v;
-//							message3.sendToTarget();
+							Message message3 = Message.obtain(handler);
+							message3.what = Constants.MESSAGE_VOICE;
+							message3.obj = v;
+							message3.sendToTarget();
 							break;
 						//v2,声音
 						case CONTROLLER_SOUND_V2:
 							int[] voiceAd = getVoiceAd(mmInStream);
 							byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
-							if (needPlay) {
-								AudioPlayer.getInstance().playAudioTrack(adv, 0, adv.length);
-							}
-//							Message message4 = Message.obtain(handler);
-//							message4.what = Constants.MESSAGE_VOICE;
-//							message4.obj = adv;
-//							message4.sendToTarget();
+							Message message4 = Message.obtain(handler);
+							message4.what = Constants.MESSAGE_VOICE;
+							message4.obj = adv;
+							message4.sendToTarget();
 							break;
 						default:
 							throw new ParseException("no such controller");
@@ -322,11 +278,18 @@ public class Parser {
 		return bytes;
 	}
 
-	public void setNeedRecord(boolean needRecord) {
-		this.needRecord = needRecord;
-	}
-
-	public void setNeedPlay(boolean needPlay) {
-		this.needPlay = needPlay;
+	public void onEventMainThread(MonitorTerminateEvent event) {
+		int reason = event.getEvent();
+		switch (reason) {
+			case MonitorTerminateEvent.EVENT_AUTO:
+				LogUtil.d(TAG, "EVENT_AUTO");
+				break;
+			case MonitorTerminateEvent.EVENT_UNKNOWN:
+				LogUtil.d(TAG, "EVENT_UNKNOWN");
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL:
+				LogUtil.d(TAG, "EVENT_MANUAL");
+				break;
+		}
 	}
 }

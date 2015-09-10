@@ -17,12 +17,12 @@ public class CoordinateView extends View {
 	protected int safeMin = 110;
 	protected int limitMax = 210;
 	protected int limitMin = 60;
-	protected int timeMinute = 20;
 	/**
 	 * 单位s
 	 */
-	protected int xMax = timeMinute * 60;
+	protected int xMax = 20 * 60;
 	protected int xMin = 0;
+	protected int timeMinute = getTimeMinute();
 	protected int pointsPerMin = 120;
 	/**
 	 * 每个格子代表的时间,单位s
@@ -143,12 +143,12 @@ public class CoordinateView extends View {
 		this.safeMin = safeMin;
 	}
 
-	public int getTimeMinute() {
-		return timeMinute;
+	public void resetTimeMinute() {
+		timeMinute = getTimeMinute();
 	}
 
-	public void setTimeMinute(int timeMinute) {
-		this.timeMinute = timeMinute;
+	public int getTimeMinute() {
+		return (xMax - xMin) / 60;
 	}
 
 	public int getxMax() {

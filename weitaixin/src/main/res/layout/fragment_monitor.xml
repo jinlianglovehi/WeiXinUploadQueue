@@ -17,6 +17,7 @@
         android:layout_below="@id/head_title_id">
 
         <ImageView
+            android:id="@+id/helper"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentEnd="true"
@@ -113,6 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+
             android:layout_marginBottom="40dp"
             android:visibility="gone">
 

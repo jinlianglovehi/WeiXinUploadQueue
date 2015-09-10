@@ -90,7 +90,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     @OnClick(R.id.ll_tab_monitor)
     public void iv_tab_02() {
         showTab(iv_tab_02);
-        if (WeiTaiXinApplication.getInstance().isLogin) {
+        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.getInstance().user.getServiceInfo() != null) {
             if (monitorFragment == null) {
                 monitorFragment = new MonitorFragment();
             }

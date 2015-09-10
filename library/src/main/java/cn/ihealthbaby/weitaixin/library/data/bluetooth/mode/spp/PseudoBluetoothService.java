@@ -252,14 +252,6 @@ public class PseudoBluetoothService {
 //		PseudoBluetoothService.this.start();
 	}
 
-	public void setNeedRecord(boolean record) {
-		parser.setNeedRecord(record);
-	}
-
-	public void setNeedPlay(boolean play) {
-		parser.setNeedPlay(play);
-	}
-
 	/**
 	 * This thread runs while listening for incoming connections. It behaves like a server-side
 	 * client. It runs until a connection is accepted (or until cancelled).

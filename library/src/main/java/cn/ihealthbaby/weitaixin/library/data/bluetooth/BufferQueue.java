@@ -143,7 +143,6 @@ public class BufferQueue {
 			while (true) {
 				try {
 					byte[] buffer = queue.take();
-					parser.printBuffer("buffer", buffer);
 //					parser.validateData(buffer);
 					byte[] bytes = parser.parseSound(buffer, getVersion());
 					play(decode(bytes));

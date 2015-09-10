@@ -20,16 +20,23 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter.Callback;
+import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
@@ -37,14 +44,18 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceive
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.DefaultBluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.PseudoBluetoothService;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.parser.FileUtil;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
+import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by liuhongjian on 15/8/12 17:52.
  */
 public class MonitorFragment extends BaseFragment {
+	private final static String TAG = "MonitorFragment";
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
 	@Bind(R.id.round_background)
@@ -53,6 +64,8 @@ public class MonitorFragment extends BaseFragment {
 //	RoundMaskView roundProgressMask;
 	@Bind(R.id.hint)
 	TextView hint;
+	@Bind(R.id.helper)
+	ImageView helper;
 	@Bind(R.id.tv_record)
 	TextView tvRecord;
 	@Bind(R.id.btn_start)
@@ -80,20 +93,28 @@ public class MonitorFragment extends BaseFragment {
 	private PseudoBluetoothService pseudoBluetoothService;
 	private ArrayList<BluetoothDevice> scanedDevices = new ArrayList<>();
 	private boolean connected;
+	private boolean needPlay;
+	private boolean needRecord;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case Constants.MESSAGE_STATE_CHANGE:
 					switch (msg.arg1) {
 						case PseudoBluetoothService.STATE_CONNECTED:
+							LogUtil.d(TAG, "STATE_CONNECTED");
 							connected = true;
+							bluetoothScanner.cancleDiscovery();
 							onConnectedUI();
 							break;
 						case PseudoBluetoothService.STATE_CONNECTING:
+							LogUtil.d(TAG, "STATE_CONNECTING");
 							break;
 						case PseudoBluetoothService.STATE_LISTEN:
+							LogUtil.d(TAG, "STATE_LISTEN");
 							break;
 						case PseudoBluetoothService.STATE_NONE:
+							LogUtil.d(TAG, "STATE_NONE");
+							resetUI();
 							break;
 					}
 					break;
@@ -110,33 +131,54 @@ public class MonitorFragment extends BaseFragment {
 				case Constants.MESSAGE_DEVICE_NAME:
 					// save the connected device's name
 					String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
+					LogUtil.d(TAG, "connecting " + deviceName);
 					break;
 				case Constants.MESSAGE_CANNOT_CONNECT:
+					LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
 					resetUI();
 					break;
 				case Constants.MESSAGE_CONNECTION_LOST:
+					LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
 					ToastUtil.show(getActivity().getApplicationContext(), "失去连接");
 					resetUI();
 					break;
 				case Constants.MESSAGE_VOICE:
+					byte[] sound = (byte[]) msg.obj;
+					if (needPlay) {
+						AudioPlayer.getInstance().playAudioTrack(sound, 0, sound.length);
+					}
+					if (needRecord) {
+						FileUtil.generateFile(getActivity().getCacheDir().getPath(), getFileName() + Constants.EXTENTION_NAME, sound);
+					}
+					break;
 			}
 		}
 	};
-	private String deviceName;
 	private CountDownTimer countDownTimer;
+	private boolean started;
 
-	@OnClick(R.id.rl_start)
-	public void startRecord(View view) {
-		startActivity(new Intent(getActivity(), MonitorActivity.class));
+	private String getFileName() {
+		return "TEMP";
+//		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
-	public void onConnectedUI() {
-		rlStart.setVisibility(View.VISIBLE);
-		tvBluetooth.setText("--");
-		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88);
-		bpm.setImageResource(R.drawable.bpm_red);
-		hint.setVisibility(View.GONE);
+	@OnClick(R.id.helper)
+	public void help() {
+	}
+
+	@OnClick(R.id.function)
+	public void ternimate() {
+		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
+	}
+
+	@OnClick(R.id.btn_start)
+	public void startRecord(View view) {
+		started = true;
+		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm = new AdviceForm();
+		adviceForm.setTestTime(new Date());
+		adviceForm.setDeviceType(1);
+		startActivity(new Intent(getActivity(), MonitorActivity.class));
 	}
 
 	/**
@@ -146,23 +188,19 @@ public class MonitorFragment extends BaseFragment {
 	 */
 	@OnClick(R.id.round_frontground)
 	void startSearch(View view) {
-		onConnectingUI();
-		if (!bluetoothScanner.isEnable()) {
-			bluetoothScanner.enable();
-		} else {
-			LogUtil.d("bluetoothScanner", "bluetoothScanner");
-			connectBondedDeviceOrSearch();
+		if (!connected) {
+			onConnectingUI();
+			if (!bluetoothScanner.isEnable()) {
+				bluetoothScanner.enable();
+			} else {
+				LogUtil.d("bluetoothScanner", "bluetoothScanner");
+				connectBondedDeviceOrSearch();
+			}
 		}
 	}
 
-	private void onConnectingUI() {
-		tvBluetooth.setText("连接中");
-		tvBluetooth.setClickable(false);
-		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
-		hint.setVisibility(View.VISIBLE);
-		bpm.setImageResource(R.drawable.bpm_dark);
-		bpm.setVisibility(View.VISIBLE);
-		loadSrc(roundBackground, R.drawable.round_background_2);
+	private void clear(AdviceForm adviceForm) {
+		adviceForm = new AdviceForm();
 	}
 
 	@Nullable
@@ -170,6 +208,7 @@ public class MonitorFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_monitor, null);
 		ButterKnife.bind(this, view);
+		EventBus.getDefault().register(this);
 		return view;
 	}
 
@@ -183,6 +222,7 @@ public class MonitorFragment extends BaseFragment {
 		back.setVisibility(View.GONE);
 		titleText.setText("胎心监测");
 		function.setVisibility(View.GONE);
+		getConfig();
 		countDownTimer = new CountDownTimer(20000, 20000) {
 			@Override
 			public void onTick(long millisUntilFinished) {
@@ -207,7 +247,6 @@ public class MonitorFragment extends BaseFragment {
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
 						pseudoBluetoothService.connect(remoteDevice, false);
-						bluetoothScanner.cancleDiscovery();
 					}
 					scanedDevices.add(remoteDevice);
 				}
@@ -216,7 +255,6 @@ public class MonitorFragment extends BaseFragment {
 			@Override
 			public void onConnect(BluetoothDevice remoteDevice) {
 				// TODO: 15/8/13 此处触发与期望不一致
-//				startActivity(new Intent(getActivity().getApplicationContext(), MonitorActivity.class));
 			}
 
 			@Override
@@ -251,6 +289,21 @@ public class MonitorFragment extends BaseFragment {
 		});
 	}
 
+	/**
+	 * 请求医院配置信息
+	 */
+	private void getConfig() {
+		String deviceName = getDeviceName();
+//		ApiManager.getInstance().userApi.getServiceInfo();
+		long hospitalId = WeiTaiXinApplication.getInstance().user.getServiceInfo().getHospitalId();
+		ApiManager.getInstance().adviceApi.getAdviceSetting(hospitalId, new Callback<AdviceSetting>() {
+			@Override
+			public void call(Result<AdviceSetting> t) {
+				WeiTaiXinApplication.getInstance().adviceSetting = t.getData();
+			}
+		}, TAG);
+	}
+
 	private void loadSrc(ImageView imageView, int drawableId) {
 		ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
 		Picasso.with(getActivity().getApplicationContext()).load(drawableId).resize(layoutParams.width, layoutParams.height).into(imageView);
@@ -262,9 +315,31 @@ public class MonitorFragment extends BaseFragment {
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
 		hint.setVisibility(View.GONE);
 		bpm.setVisibility(View.GONE);
+		function.setVisibility(View.GONE);
+		rlStart.setVisibility(View.GONE);
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
 		scanedDevices.clear();
+	}
+
+	private void onConnectingUI() {
+		tvBluetooth.setText("连接中");
+		tvBluetooth.setClickable(false);
+		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
+		hint.setVisibility(View.VISIBLE);
+		bpm.setImageResource(R.drawable.bpm_dark);
+		bpm.setVisibility(View.VISIBLE);
+		loadSrc(roundBackground, R.drawable.round_background_2);
+	}
+
+	public void onConnectedUI() {
+		rlStart.setVisibility(View.VISIBLE);
+		function.setText("立即结束");
+		function.setVisibility(View.VISIBLE);
+		tvBluetooth.setText("--");
+		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88);
+		bpm.setImageResource(R.drawable.bpm_red);
+		hint.setVisibility(View.GONE);
 	}
 
 	public void connectBondedDeviceOrSearch() {
@@ -276,9 +351,11 @@ public class MonitorFragment extends BaseFragment {
 				if (getDeviceName().equalsIgnoreCase(device.getName())) {
 					LogUtil.e("bluetoothScanner", "" + "pseudoBluetoothService.connect()");
 					pseudoBluetoothService.connect(device, false);
+					return;
 				}
 			}
-		} else if (!bluetoothScanner.isDiscovering()) {
+		}
+		if (!bluetoothScanner.isDiscovering()) {
 			bluetoothScanner.discovery();
 		}
 		countDownTimer.start();
@@ -290,6 +367,7 @@ public class MonitorFragment extends BaseFragment {
 		handler = null;
 		bluetoothReceiver.unRegister(getActivity().getApplicationContext());
 		ButterKnife.unbind(this);
+		EventBus.getDefault().unregister(this);
 	}
 
 	public String getDeviceName() {
@@ -305,6 +383,38 @@ public class MonitorFragment extends BaseFragment {
 		}
 		return serialnum;
 		//  TODO: 15/9/7 请求网络
+	}
+
+	public void onEventMainThread(MonitorTerminateEvent event) {
+		int reason = event.getEvent();
+		//断开连接 保存音频数据 保存胎心数据
+		pseudoBluetoothService.stop();
+		resetUI();
+//		String filename = UUID.randomUUID().toString().replace("-", "");
+//		FileUtil.addFileHead(getActivity().getCacheDir().getPath(), filename);
+//		Gson gson = new Gson();
+//		String fhrString = gson.toJson(DataStorage.fhrs);
+//		RecordData recordData = new RecordData();
+//		Data data = new Data();
+//		data.setInterval(500 + "");
+//		data.setHeartRate(fhrString);
+//		recordData.setData(data);
+//		String dataString = gson.toJson(recordData);
+//		DataDao dataDao = new DataDao(getActivity().getApplicationContext());
+//				dataDao.add(dataString);
+		switch (reason) {
+			case MonitorTerminateEvent.EVENT_AUTO:
+				LogUtil.d(TAG, "EVENT_AUTO");
+				break;
+			case MonitorTerminateEvent.EVENT_UNKNOWN:
+				LogUtil.d(TAG, "EVENT_UNKNOWN");
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL:
+				LogUtil.d(TAG, "EVENT_MANUAL");
+				break;
+			default:
+				break;
+		}
 	}
 }
 

@@ -16,6 +16,8 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
@@ -33,7 +35,11 @@ public class WeiTaiXinApplication extends Application {
     public static String accountToken;
     public static String phone_number;
     public static User user;
-    public boolean isLogin = false;
+    public static AdviceSetting adviceSetting;
+    public static AdviceForm adviceForm = new AdviceForm();
+
+        public boolean isLogin = false;
+//public boolean isLogin = true;
     public LocalProductData localProductData=new LocalProductData(); //保存商品
     public VolleyAdapter mAdapter;
     private AbstractHttpClientAdapter adapter;
