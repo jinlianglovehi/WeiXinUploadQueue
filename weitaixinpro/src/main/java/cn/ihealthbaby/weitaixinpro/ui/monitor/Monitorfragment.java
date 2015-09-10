@@ -76,6 +76,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                 break;
         }
     }
+
 }
 
 
