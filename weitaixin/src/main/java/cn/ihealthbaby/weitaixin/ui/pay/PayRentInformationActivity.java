@@ -97,7 +97,7 @@ public class PayRentInformationActivity extends BaseActivity {
 
     @OnClick(R.id.rl1None)
     public void rl1None() {
-        Intent intent=new Intent(this,PayHospitalChooseActivity.class);
+        Intent intent=new Intent(this, PayCityChooseActivity.class);
         startActivityForResult(intent, PayConstant.requestCodeHospitalChoose);
     }
 

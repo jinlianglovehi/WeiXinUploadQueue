@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -47,7 +48,7 @@ public class PayAllOrderFragment extends BaseFragment {
     @Bind(R.id.payPullToRefreshAllOrder) PullToRefreshListView payPullToRefreshAllOrder;
 
     private PayMimeOrderActivity context;
-    private  PayAllOrderAdapter adapter;
+    private PayAllOrderAdapter adapter;
 
 
     private static PayAllOrderFragment instance;
@@ -156,7 +157,9 @@ public class PayAllOrderFragment extends BaseFragment {
         payPullToRefreshAllOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
+                Order order = (Order) adapter.getItem(position - 1);
+                Intent intent=new Intent(getActivity().getApplicationContext(), PayOrderDetailsActivity.class);
+                startActivity(intent);
             }
         });
 

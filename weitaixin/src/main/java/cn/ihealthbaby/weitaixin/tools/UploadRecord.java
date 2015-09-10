@@ -3,6 +3,8 @@ package cn.ihealthbaby.weitaixin.tools;
 import android.app.Dialog;
 import android.content.Context;
 
+import java.util.UUID;
+
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
@@ -23,7 +25,8 @@ public class UploadRecord {
         dialog.show();
 
         AdviceForm adviceForm = new AdviceForm();
-        adviceForm.setClientId(adviceItem.getId() + "");
+        UUID uuid = UUID.randomUUID();
+        adviceForm.setClientId(uuid + "");
         adviceForm.setTestTime(adviceItem.getTestTime());
         adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
         adviceForm.setGestationalWeeks(adviceItem.getGestationalWeeks());

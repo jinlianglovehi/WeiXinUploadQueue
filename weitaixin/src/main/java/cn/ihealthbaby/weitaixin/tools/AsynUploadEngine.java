@@ -51,7 +51,7 @@ public class AsynUploadEngine {
             @Override
             public void complete(String key, ResponseInfo info, JSONObject response) {
                 if (info.statusCode==200) {
-                    finishedToDoWork.onFinishedWork(key,info,response);
+                    finishedToDoWork.onFinishedWork(key, info, response);
                 }else {
                     ToastUtil.show(context, info.error+"");
                 }

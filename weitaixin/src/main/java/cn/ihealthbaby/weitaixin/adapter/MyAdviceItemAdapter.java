@@ -31,19 +31,20 @@ import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
-import cn.ihealthbaby.weitaixin.ui.record.ReplyedActivity;
-import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
-import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
+import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
+import cn.ihealthbaby.weitaixin.ui.record.ReplyedActivity;
 
 
 public class MyAdviceItemAdapter extends BaseAdapter {
 
     private MeMainFragmentActivity context;
-    public ArrayList<AdviceItem> datas;
+    public ArrayList<MyAdviceItem> datas;
 
     private LayoutInflater mInflater;
     private String[] strFlag = new String[]{"问医生", "等待回复", "已回复", "需上传"};
@@ -87,16 +88,16 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     //////
     private TextView tvUsedCount;
 
-    public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas, TextView tvUsedCount) {
+    public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<MyAdviceItem> datas, TextView tvUsedCount) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
         this.tvUsedCount = tvUsedCount;
         setDatas(datas);
     }
 
-    public void setDatas(ArrayList<AdviceItem> datas) {
+    public void setDatas(ArrayList<MyAdviceItem> datas) {
         if (datas == null) {
-            this.datas = new ArrayList<AdviceItem>();
+            this.datas = new ArrayList<MyAdviceItem>();
         } else {
             this.datas.clear();
             this.datas = datas;
@@ -105,7 +106,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
     }
 
 
-    public void addDatas(ArrayList<AdviceItem> datas) {
+    public void addDatas(ArrayList<MyAdviceItem> datas) {
         if (datas != null) {
             this.datas.addAll(datas);
             mySortByTime();
@@ -118,8 +119,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
             Collections.sort(this.datas, comparator);
     }
 
-    public Comparator<AdviceItem> comparator = new Comparator<AdviceItem>() {
-        public int compare(AdviceItem s1, AdviceItem s2) {
+    public Comparator<MyAdviceItem> comparator = new Comparator<MyAdviceItem>() {
+        public int compare(MyAdviceItem s1, MyAdviceItem s2) {
             Date date1 = s1.getTestTime();
             Date date2 = s2.getTestTime();
             if (date1 == null || date2 == null) {
@@ -176,7 +177,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
             }
         });
 
-        final AdviceItem adviceItem = this.datas.get(position);
+        final MyAdviceItem adviceItem = this.datas.get(position);
         String dateStr = adviceItem.getGestationalWeeks();
         String[] split = dateStr.split("\\+");
         viewHolder.tvCircleTime1.setText(split[0]);
@@ -186,7 +187,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
         }
 
         viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()));//
-        viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 hh:mm"));
+        viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 yy:mm"));
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
         viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
         if (adviceItem.getStatus() == 1) {
@@ -220,7 +221,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
     private final int requestCode = 100;
 
-    private void setItemTextView(final AdviceItem adviceItem, int position) {
+    private void setItemTextView(final MyAdviceItem adviceItem, int position) {
         //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
         int status = adviceItem.getStatus();
         if (status == 0) {
@@ -276,7 +277,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
     private void deleteRecordItem(final int position) {
         if (datas.size() > 0) {
-            AdviceItem adviceItem = datas.get(position);
+            MyAdviceItem adviceItem = datas.get(position);
             if (adviceItem.getStatus() != 3) {
                 final CustomDialog customDialog = new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(context, "正在删除...");

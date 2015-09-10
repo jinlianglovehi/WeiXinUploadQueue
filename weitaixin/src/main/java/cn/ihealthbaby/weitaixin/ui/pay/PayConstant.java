@@ -18,4 +18,8 @@ public class PayConstant {
     public static final int resultCodeHospitalChoose =501;
 
 
+    public static final String LeftCityList ="leftCityList";
+    public static final String RightCityList ="rightCityList";
+
+
 }

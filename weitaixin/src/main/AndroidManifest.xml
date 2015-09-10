@@ -75,7 +75,8 @@
         <activity android:name=".ui.pay.PayConfirmOrderActivity" />
         <activity android:name=".ui.pay.PayAffirmPaymentActivity" />
         <activity android:name=".ui.monitor.CurvePlayActivity" />
-         
+        <activity android:name=".ui.pay.PayOrderDetailsActivity" />
+
     </application>
 
 </manifest>
