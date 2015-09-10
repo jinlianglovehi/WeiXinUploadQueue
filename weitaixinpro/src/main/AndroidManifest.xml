@@ -18,6 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.settings.MonitorSetActivity"/>
+        <activity android:name=".ui.monitor.MonitorCommonSense"/>
+        <activity android:name=".ui.login.LoginActivity"/>
     </application>
 
 </manifest>
