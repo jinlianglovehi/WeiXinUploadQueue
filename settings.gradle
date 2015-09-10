@@ -1,2 +1,2 @@
-include ':weitaixin', ':library', ':refreshlib'
+include ':weitaixin', ':library', ':refreshlib','weitaixinpro'
 

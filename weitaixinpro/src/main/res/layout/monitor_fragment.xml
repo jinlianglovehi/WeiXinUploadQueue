@@ -3,12 +3,88 @@
               xmlns:baby="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/gray17"
               android:orientation="vertical">
 
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="监测"/>
+        android:layout_height="wrap_content"
+        android:background="@color/white0"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_no_monitor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="未监测"/>
+
+                <ImageView
+                    android:id="@+id/iv_no_monitor"
+                    android:layout_width="70dp"
+                    android:layout_height="3dp"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/bottom_line"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_already_monitor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="未监测"/>
+
+                <ImageView
+                    android:id="@+id/iv_alreay_monitor"
+                    android:layout_width="70dp"
+                    android:layout_height="3dp"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/bottom_line"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="91dp"
+        android:background="@color/white0"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="海淀区第一妇幼保健"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="已检测"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_monitor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>
