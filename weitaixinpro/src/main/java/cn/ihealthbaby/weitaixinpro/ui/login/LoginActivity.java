@@ -88,7 +88,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initData() {
-//        ApiManager.getInstance().hClientAccountApi.get
+//        ApiManager.getInstance().hClientAccountApi
     }
 
     @Override
