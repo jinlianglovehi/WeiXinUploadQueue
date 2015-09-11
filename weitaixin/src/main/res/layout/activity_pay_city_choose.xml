@@ -15,17 +15,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/rlLeftCity"
+        <ListView
+            android:id="@+id/lvPayLeftCity"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_below="@id/head_title_id" />
 
-        <FrameLayout
-            android:id="@+id/rlRightCity"
+        <ListView
+            android:id="@+id/lvPayRightCity"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_below="@id/head_title_id" />
 
     </LinearLayout>
 
