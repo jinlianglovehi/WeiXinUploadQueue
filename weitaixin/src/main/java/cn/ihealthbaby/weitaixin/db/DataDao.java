@@ -13,7 +13,6 @@ import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
 
 public class DataDao {
-	
 	private static DataDBHelper dbHelper;
 
 	private static DataDao dataDao;
