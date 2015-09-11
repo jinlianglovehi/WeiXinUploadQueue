@@ -14,6 +14,7 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ValidationParse
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.ByteUtil;
 
 /**
  * Created by liuhongjian on 15/7/17 12:52.

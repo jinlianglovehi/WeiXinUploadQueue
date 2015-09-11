@@ -26,6 +26,7 @@ import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
+import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.tools.AsynUploadEngine;
@@ -79,7 +80,7 @@ public class CurvePlayActivity extends BaseActivity {
 	public void upload(View view) {
 		AsynUploadEngine asynUploadEngine = new AsynUploadEngine(getApplicationContext());
 		String filename = null;
-		asynUploadEngine.init(new File(getCacheDir(), filename));
+		asynUploadEngine.init(new File(FileUtil.getVoiceDir(getApplicationContext()), filename));
 		asynUploadEngine.setOnFinishActivity(new AsynUploadEngine.FinishedToDoWork() {
 			@Override
 			public void onFinishedWork(String key, ResponseInfo info, JSONObject response) {

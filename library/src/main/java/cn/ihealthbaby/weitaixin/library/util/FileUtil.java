@@ -1,4 +1,6 @@
-package cn.ihealthbaby.weitaixin.library.data.bluetooth.parser;
+package cn.ihealthbaby.weitaixin.library.util;
+
+import android.content.Context;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +12,14 @@ import java.io.RandomAccessFile;
  * Created by liuhongjian on 15/9/10 10:28.
  */
 public class FileUtil {
+	/**
+	 * @param context
+	 * @return
+	 */
+	public static File getVoiceDir(Context context) {
+		return context.getCacheDir();
+	}
+
 	/**
 	 * 生成文件并支持追加数据。
 	 *

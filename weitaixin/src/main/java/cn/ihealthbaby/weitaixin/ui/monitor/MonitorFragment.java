@@ -17,11 +17,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,6 +38,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.db.DataDao;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
@@ -44,11 +47,15 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceive
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.DefaultBluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.PseudoBluetoothService;
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.parser.FileUtil;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
+import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.ui.monitor.data.Data;
+import cn.ihealthbaby.weitaixin.ui.monitor.data.RecordData;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -61,7 +68,7 @@ public class MonitorFragment extends BaseFragment {
 	@Bind(R.id.round_background)
 	ImageView roundBackground;
 	//	@Bind(R.id.round_progress_mask)
-//	RoundMaskView roundProgressMask;
+	//	RoundMaskView roundProgressMask;
 	@Bind(R.id.hint)
 	TextView hint;
 	@Bind(R.id.helper)
@@ -149,7 +156,7 @@ public class MonitorFragment extends BaseFragment {
 						AudioPlayer.getInstance().playAudioTrack(sound, 0, sound.length);
 					}
 					if (needRecord) {
-						FileUtil.generateFile(getActivity().getCacheDir().getPath(), getFileName() + Constants.EXTENTION_NAME, sound);
+						FileUtil.generateFile(FileUtil.getVoiceDir(getActivity()).getPath(), getFileName() + Constants.EXTENTION_NAME, sound);
 					}
 					break;
 			}
@@ -157,6 +164,8 @@ public class MonitorFragment extends BaseFragment {
 	};
 	private CountDownTimer countDownTimer;
 	private boolean started;
+	private Date testTime;
+	private String uuidString;
 
 	private String getFileName() {
 		return "TEMP";
@@ -175,10 +184,14 @@ public class MonitorFragment extends BaseFragment {
 	@OnClick(R.id.btn_start)
 	public void startRecord(View view) {
 		started = true;
+		uuidString = UUID.randomUUID().toString().replace("-", "");
 		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm = new AdviceForm();
-		adviceForm.setTestTime(new Date());
+		testTime = new Date();
+		adviceForm.setTestTime(testTime);
 		adviceForm.setDeviceType(1);
-		startActivity(new Intent(getActivity(), MonitorActivity.class));
+		Intent intent = new Intent(getActivity(), MonitorActivity.class);
+		intent.putExtra("UUID", uuidString);
+		startActivity(intent);
 	}
 
 	/**
@@ -235,7 +248,9 @@ public class MonitorFragment extends BaseFragment {
 					resetUI();
 					pseudoBluetoothService.stop();
 				}
-				bluetoothScanner.cancleDiscovery();
+				if (bluetoothScanner.isDiscovering()) {
+					bluetoothScanner.cancleDiscovery();
+				}
 			}
 		};
 		bluetoothScanner = new DefaultBluetoothScanner(adapter);
@@ -390,18 +405,7 @@ public class MonitorFragment extends BaseFragment {
 		//断开连接 保存音频数据 保存胎心数据
 		pseudoBluetoothService.stop();
 		resetUI();
-//		String filename = UUID.randomUUID().toString().replace("-", "");
-//		FileUtil.addFileHead(getActivity().getCacheDir().getPath(), filename);
-//		Gson gson = new Gson();
-//		String fhrString = gson.toJson(DataStorage.fhrs);
-//		RecordData recordData = new RecordData();
-//		Data data = new Data();
-//		data.setInterval(500 + "");
-//		data.setHeartRate(fhrString);
-//		recordData.setData(data);
-//		String dataString = gson.toJson(recordData);
-//		DataDao dataDao = new DataDao(getActivity().getApplicationContext());
-//				dataDao.add(dataString);
+		record();
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
@@ -415,6 +419,40 @@ public class MonitorFragment extends BaseFragment {
 			default:
 				break;
 		}
+	}
+
+	private void record() {
+		FileUtil.addFileHead(FileUtil.getVoiceDir(getActivity()).getPath(), uuidString);
+		Gson gson = new Gson();
+		String fhrString = gson.toJson(DataStorage.fhrs);
+		RecordData recordData = new RecordData();
+		Data data = new Data();
+		data.setInterval(500 + "");
+		data.setHeartRate(fhrString);
+		data.setTime(testTime.getTime() + "");
+		recordData.setData(data);
+		String dataString = gson.toJson(recordData);
+		DataDao dao = DataDao.getInstance(getActivity());
+		MyAdviceItem adviceItem = new MyAdviceItem();
+		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm;
+		//
+		adviceItem.setUserid(WeiTaiXinApplication.getInstance().user.getId());
+		adviceItem.setIsNativeRecord(0);
+		adviceItem.setPath(FileUtil.getVoiceDir(getActivity()).getPath());
+		adviceItem.setTestTime(testTime);
+		// TODO: 15/9/11 实际时间
+		adviceItem.setTestTimeLong(DataStorage.fhrs.size() * 500);
+		adviceItem.setFeeling(adviceForm.getFeeling());
+		adviceItem.setPurpose(adviceForm.getAskPurpose());
+		adviceItem.setGestationalWeeks(DateTimeTool.getGestationalWeeks(testTime));
+		adviceItem.setJianceid(uuidString);
+		adviceItem.setRdata(dataString);
+		adviceItem.setSerialnum(WeiTaiXinApplication.getInstance().user.getServiceInfo().getSerialnum());
+		adviceItem.setUploadstate(0);
+		//
+		dao.add(adviceItem, true);
+		MyAdviceItem aNative = dao.findNative(uuidString);
+		LogUtil.d(TAG, aNative.toString());
 	}
 }
 

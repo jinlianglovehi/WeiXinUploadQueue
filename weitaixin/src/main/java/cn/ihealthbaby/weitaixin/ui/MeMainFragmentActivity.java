@@ -28,11 +28,15 @@ import cn.ihealthbaby.weitaixin.ui.record.RecordFragment;
 public class MeMainFragmentActivity extends BaseActivity {
 
 
+    public HomePageFragment homePageFragment;
+    public MonitorFragment monitorFragment;
+    public RecordFragment recordFragment;
+    public WoInfoFragment woInfoFragment;
+    public Fragment oldFragment;
     @Bind(R.id.iv_tab_01)
     ImageView iv_tab_01;
     @Bind(R.id.iv_tab_02)
     ImageView iv_tab_02;
-
     @Bind(R.id.iv_tab_03)
     ImageView iv_tab_03;
     @Bind(R.id.iv_tab_04)
@@ -47,9 +51,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     LinearLayout mLlTabRecord;
     @Bind(R.id.ll_tab_profile)
     LinearLayout mLlTabProfile;
-
     private FragmentManager fragmentManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +73,6 @@ public class MeMainFragmentActivity extends BaseActivity {
         showFragment(R.id.container, homePageFragment);
     }
 
-
-    public HomePageFragment homePageFragment;
-    public MonitorFragment monitorFragment;
-    public RecordFragment recordFragment;
-    public WoInfoFragment woInfoFragment;
-    public Fragment oldFragment;
-
     @OnClick(R.id.ll_tab_home)
     public void iv_tab_01() {
         showTab(iv_tab_01);
@@ -90,11 +85,13 @@ public class MeMainFragmentActivity extends BaseActivity {
     @OnClick(R.id.ll_tab_monitor)
     public void iv_tab_02() {
         showTab(iv_tab_02);
-        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.getInstance().user.getServiceInfo() != null) {
-            if (monitorFragment == null) {
-                monitorFragment = new MonitorFragment();
+        if (WeiTaiXinApplication.getInstance().isLogin   ) {
+            if (WeiTaiXinApplication.getInstance().user.getServiceInfo() != null) {
+	            if (monitorFragment == null) {
+                    monitorFragment = new MonitorFragment();
+	            }
+                showFragment(R.id.container, monitorFragment);
             }
-            showFragment(R.id.container, monitorFragment);
         }
     }
 
