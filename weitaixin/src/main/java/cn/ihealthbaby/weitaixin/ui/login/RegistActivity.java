@@ -286,7 +286,7 @@ public class RegistActivity extends BaseActivity {
                         WeiTaiXinApplication.getInstance().saveUser(data);
 
                         String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
-                        if(!data.getIsInit()){
+                        if(data.getIsInit()){
                             Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
                             startActivity(intent);
                         }
