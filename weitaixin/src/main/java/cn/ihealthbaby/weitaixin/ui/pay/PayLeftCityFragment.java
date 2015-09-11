@@ -33,6 +33,7 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.Product;
+import cn.ihealthbaby.client.model.Province;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.PayAllOrderAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -52,26 +53,26 @@ public class PayLeftCityFragment extends BaseFragment {
     private FragmentManager fragmentManager;
     private Fragment oldFragment;
 
-    private static ArrayList<String> leftCityList=new ArrayList<String>();
-    private ArrayList<String> rightCityList=new ArrayList<String>();
+    private static ArrayList<Province> leftCityList=new ArrayList<Province>();
+    private ArrayList<Province> rightCityList=new ArrayList<Province>();
 
     private MyPayLeftCityAdapter adapter;
 
 
     private static PayLeftCityFragment instance;
 
-    public static PayLeftCityFragment getInstance(ArrayList<String> leftCityList) {
+    public static PayLeftCityFragment getInstance(ArrayList<Province> leftCityList) {
         if (instance == null) {
             instance = new PayLeftCityFragment();
         }
         if (leftCityList==null) {
-            leftCityList=new ArrayList<String>();
+            leftCityList=new ArrayList<Province>();
         }else{
             PayLeftCityFragment.leftCityList=leftCityList;
         }
         return instance;
     }
-
+    PayRightCityFragment rightFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,10 +82,11 @@ public class PayLeftCityFragment extends BaseFragment {
         context = (BaseActivity) getActivity();
         fragmentManager = getFragmentManager();
 
+
         Bundle bundle = getArguments();
-        leftCityList = (ArrayList<String>) bundle.getSerializable(PayConstant.LeftCityList);
+        leftCityList = (ArrayList<Province>) bundle.getSerializable(PayConstant.LeftCityList);
 
-
+         rightFragment = (PayRightCityFragment) fragmentManager.findFragmentByTag(PayConstant.RightCityList);
 
         initView();
 
@@ -97,8 +99,8 @@ public class PayLeftCityFragment extends BaseFragment {
         lvPayLeftCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PayRightCityFragment rightFragment = (PayRightCityFragment) fragmentManager.findFragmentByTag(PayConstant.RightCityList);
-                rightFragment.getRestful(rightCityList);
+                Province item = (Province) adapter.getItem(position);
+                rightFragment.getRestful(item);
             }
         });
     }
@@ -138,19 +140,19 @@ public class PayLeftCityFragment extends BaseFragment {
 
     public class MyPayLeftCityAdapter extends BaseAdapter {
         private Context context;
-        private ArrayList<String> datas;
+        private ArrayList<Province> datas;
         private LayoutInflater mInflater;
         public int currentPosition;
 
-        public MyPayLeftCityAdapter(Context context, ArrayList<String> datas) {
+        public MyPayLeftCityAdapter(Context context, ArrayList<Province> datas) {
             mInflater = LayoutInflater.from(context);
             this.context = context;
             setDatas(datas);
         }
 
-        public void setDatas(ArrayList<String> datas) {
+        public void setDatas(ArrayList<Province> datas) {
             if (datas == null) {
-                this.datas = new ArrayList<String>();
+                this.datas = new ArrayList<Province>();
             } else {
                 this.datas.clear();
                 this.datas = datas;
@@ -158,7 +160,7 @@ public class PayLeftCityFragment extends BaseFragment {
         }
 
 
-        public void addDatas(ArrayList<String> datas) {
+        public void addDatas(ArrayList<Province> datas) {
             if (datas != null) {
                 this.datas.addAll(datas);
             }
@@ -191,8 +193,8 @@ public class PayLeftCityFragment extends BaseFragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            String name = this.datas.get(position);
-            viewHolder.tvName.setText(name+"");
+            Province provinceName = this.datas.get(position);
+            viewHolder.tvName.setText(provinceName.getProvince()+"");
 
             return convertView;
         }

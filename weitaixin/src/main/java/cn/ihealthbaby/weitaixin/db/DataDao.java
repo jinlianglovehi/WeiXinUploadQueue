@@ -79,7 +79,7 @@ public class DataDao {
 		db.beginTransaction();
 		try {
 			if (db.isOpen()) {
-				Cursor cursor = db.rawQuery("select * from " + DataDBHelper.tableName + " where one=?", new String[]{mid + ""});
+				Cursor cursor = db.rawQuery("select * from " + DataDBHelper.tableName + " where mid=?", new String[]{mid + ""});
 				if(cursor.moveToNext()){
 					return true;
 				}else{
@@ -93,6 +93,24 @@ public class DataDao {
 		}
 	}
 
+	public synchronized boolean findNative(long uuid){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			if (db.isOpen()) {
+				Cursor cursor = db.rawQuery("select * from " + DataDBHelper.tableName + " where jianceid=?", new String[]{uuid + ""});
+				if(cursor.moveToNext()){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+			return false;
+		}
+	}
 	
 	public synchronized  void addItemList(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();

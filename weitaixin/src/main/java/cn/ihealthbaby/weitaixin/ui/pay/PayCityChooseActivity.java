@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,8 +37,8 @@ public class PayCityChooseActivity extends BaseActivity {
     @Bind(R.id.rlRightCity) FrameLayout rlRightCity;
 
     private FragmentManager fragmentManager;
-    private ArrayList<String> leftCityList=new ArrayList<String>();
-    private ArrayList<String> rightCityList=new ArrayList<String>();
+    private ArrayList<Province> leftCityList=new ArrayList<Province>();
+    private ArrayList<Province> rightCityList=new ArrayList<Province>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,15 +61,20 @@ public class PayCityChooseActivity extends BaseActivity {
         ApiManager.getInstance().addressApi.getProvinces(1, new HttpClientAdapter.Callback<ApiList<Province>>() {
             @Override
             public void call(Result<ApiList<Province>> t) {
+                ApiList<Province> data = t.getData();
+
+                ArrayList<Province> provinces = (ArrayList<Province>) data.getList();
+
+
                 PayLeftCityFragment payLeftCityFragment=PayLeftCityFragment.getInstance(null);
                 Bundle bundle=new Bundle();
                 bundle.putSerializable(PayConstant.LeftCityList, leftCityList);
                 payLeftCityFragment.setArguments(bundle);
 
-                PayRightCityFragment payRightCityFragment=PayRightCityFragment.getInstance(null);
-                Bundle bundleRight=new Bundle();
-                bundleRight.putSerializable(PayConstant.RightCityList, rightCityList);
-                payRightCityFragment.setArguments(bundleRight);
+                PayRightCityFragment payRightCityFragment=PayRightCityFragment.getInstance();
+//                Bundle bundleRight=new Bundle();
+//                bundleRight.putSerializable(PayConstant.RightCityList, rightCityList);
+//                payRightCityFragment.setArguments(bundleRight);
 
                 showFragment(R.id.rlLeftCity, payLeftCityFragment, PayConstant.LeftCityList);
                 showFragment(R.id.rlRightCity, payRightCityFragment, PayConstant.RightCityList);
