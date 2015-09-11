@@ -165,4 +165,8 @@ public class MyAdviceItem implements Serializable {
 	public void setUserid(long userid) {
 		this.userid = userid;
 	}
+
+	public long getUserid() {
+		return userid;
+	}
 }
