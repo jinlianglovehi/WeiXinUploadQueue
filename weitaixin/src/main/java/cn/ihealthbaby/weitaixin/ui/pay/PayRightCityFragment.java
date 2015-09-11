@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -15,12 +16,21 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.collecton.ApiList;
+import cn.ihealthbaby.client.model.City;
+import cn.ihealthbaby.client.model.Province;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 
 public class PayRightCityFragment extends BaseFragment {
@@ -31,20 +41,14 @@ public class PayRightCityFragment extends BaseFragment {
 
     private BaseActivity context;
 
-    private static ArrayList<String> rightCityList=new ArrayList<String>();
     private MyPayRightCityAdapter adapter;
-
+    private Province province;
 
     private static PayRightCityFragment instance;
 
-    public static PayRightCityFragment getInstance(ArrayList<String> rightCityList) {
+    public static PayRightCityFragment getInstance() {
         if (instance == null) {
             instance = new PayRightCityFragment();
-        }
-        if (rightCityList == null) {
-            PayRightCityFragment.rightCityList = new ArrayList<String>();
-        } else {
-            PayRightCityFragment.rightCityList = rightCityList;
         }
         return instance;
     }
@@ -56,16 +60,39 @@ public class PayRightCityFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         context = (BaseActivity) getActivity();
-        Bundle bundle = getArguments();
-        rightCityList = (ArrayList<String>) bundle.getSerializable(PayConstant.RightCityList);
 
         initView();
+
+        pullData();
 
         return view;
     }
 
+    private void pullData() {
+        CustomDialog customDialog=new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(getActivity(), "数据加载中...");
+        dialog.show();
+        ApiManager.getInstance().addressApi.getCities(province.getProvinceid(), 1, new HttpClientAdapter.Callback<ApiList<City>>() {
+            @Override
+            public void call(Result<ApiList<City>> t) {
+                if (t.isSuccess()) {
+                    ApiList<City> data = t.getData();
+                    ArrayList<City> list = (ArrayList<City>) data.getList();
+                    if (list != null && list.size() > 0) {
+                        adapter.setDatas(list);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据~~~");
+                    }
+                }else {
+                    ToastUtil.show(context,t.getMsgMap()+"");
+                }
+            }
+        },getRequestTag());
+    }
+
     private void initView() {
-        adapter=new MyPayRightCityAdapter(getActivity(), rightCityList);
+        adapter=new MyPayRightCityAdapter(getActivity(), null);
         lvPayRightCity.setAdapter(adapter);
         lvPayRightCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -82,27 +109,26 @@ public class PayRightCityFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    public void getRestful(ArrayList<String> datas) {
-        adapter.setDatas(datas);
-        adapter.notifyDataSetChanged();
+    public void getRestful(Province province) {
+        this.province=province;
     }
 
 
     public class MyPayRightCityAdapter extends BaseAdapter {
         private Context context;
-        private ArrayList<String> datas;
+        private ArrayList<City> datas;
         private LayoutInflater mInflater;
         public int currentPosition;
 
-        public MyPayRightCityAdapter(Context context, ArrayList<String> datas) {
+        public MyPayRightCityAdapter(Context context, ArrayList<City> datas) {
             mInflater = LayoutInflater.from(context);
             this.context = context;
             setDatas(datas);
         }
 
-        public void setDatas(ArrayList<String> datas) {
+        public void setDatas(ArrayList<City> datas) {
             if (datas == null) {
-                this.datas = new ArrayList<String>();
+                this.datas = new ArrayList<City>();
             } else {
                 this.datas.clear();
                 this.datas = datas;
@@ -110,7 +136,7 @@ public class PayRightCityFragment extends BaseFragment {
         }
 
 
-        public void addDatas(ArrayList<String> datas) {
+        public void addDatas(ArrayList<City> datas) {
             if (datas != null) {
                 this.datas.addAll(datas);
             }
@@ -143,8 +169,8 @@ public class PayRightCityFragment extends BaseFragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            String name = this.datas.get(position);
-            viewHolder.tvName.setText(name+"");
+            City provinceName = this.datas.get(position);
+            viewHolder.tvName.setText(provinceName.getCity()+"");
 
             return convertView;
         }

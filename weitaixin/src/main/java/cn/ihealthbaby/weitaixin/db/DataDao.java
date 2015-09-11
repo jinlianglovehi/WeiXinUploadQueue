@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
+import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
@@ -74,25 +75,89 @@ public class DataDao {
 	}
 
 
-	public synchronized boolean find(long mid){
+	public synchronized MyAdviceItem find(long mid){
+		MyAdviceItem adviceItem=null;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			if (db.isOpen()) {
-				Cursor cursor = db.rawQuery("select * from " + DataDBHelper.tableName + " where one=?", new String[]{mid + ""});
+				Cursor cursor = db.rawQuery("select * from " + DataDBHelper.tableName + " where mid=?", new String[]{mid + ""});
 				if(cursor.moveToNext()){
-					return true;
+					adviceItem = new MyAdviceItem();
+					String mmid = cursor.getString(cursor.getColumnIndex("mid"));
+					String gestationalWeeks = cursor.getString(cursor.getColumnIndex("gestationalWeeks"));
+					String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
+					int testTimeLong = cursor.getInt(cursor.getColumnIndex("testTimeLong"));
+					int status = cursor.getInt(cursor.getColumnIndex("status"));
+					int isNativeRecord = cursor.getInt(cursor.getColumnIndex("isNativeRecord"));
+					adviceItem.setId(Long.parseLong(mmid));
+					adviceItem.setGestationalWeeks(gestationalWeeks);
+					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
+					adviceItem.setTestTimeLong(testTimeLong);
+					adviceItem.setStatus(status);
+					adviceItem.setIsNativeRecord(isNativeRecord);
+					return adviceItem;
 				}else{
-					return false;
+					return adviceItem;
 				}
 			}
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
-			return false;
+			return adviceItem;
 		}
 	}
 
+	public synchronized MyAdviceItem findNative(String uuid){
+		MyAdviceItem adviceItem=null;
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			if (db.isOpen()) {
+				Cursor cursor = db.rawQuery("select * from " + DataDBHelper.tableName + " where jianceid=?", new String[]{uuid + ""});
+				if(cursor.moveToNext()){
+					adviceItem = new MyAdviceItem();
+					long mid = cursor.getLong(cursor.getColumnIndex("mid"));
+					String gestationalWeeks = cursor.getString(cursor.getColumnIndex("gestationalWeeks"));
+					String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
+					int testTimeLong = cursor.getInt(cursor.getColumnIndex("testTimeLong"));
+					int status = cursor.getInt(cursor.getColumnIndex("status"));
+
+					int isNativeRecord = cursor.getInt(cursor.getColumnIndex("isNativeRecord"));
+					String feeling = cursor.getString(cursor.getColumnIndex("feeling"));
+					String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
+					int userid = cursor.getInt(cursor.getColumnIndex("userid"));
+					String rdata = cursor.getString(cursor.getColumnIndex("rdata"));
+					String path = cursor.getString(cursor.getColumnIndex("path"));
+					int uploadstate = cursor.getInt(cursor.getColumnIndex("uploadstate"));
+					String serialnum = cursor.getString(cursor.getColumnIndex("serialnum"));
+					String jianceid = cursor.getString(cursor.getColumnIndex("jianceid"));
+
+					adviceItem.setId(mid);
+					adviceItem.setGestationalWeeks(gestationalWeeks);
+					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
+					adviceItem.setTestTimeLong(testTimeLong);
+					adviceItem.setStatus(status);
+					adviceItem.setIsNativeRecord(isNativeRecord);
+					adviceItem.setFeeling(feeling);
+					adviceItem.setPurpose(purpose);
+					adviceItem.setUserid(userid);
+					adviceItem.setRdata(rdata);
+					adviceItem.setPath(path);
+					adviceItem.setUploadstate(uploadstate);
+					adviceItem.setSerialnum(serialnum);
+					adviceItem.setJianceid(jianceid);
+					return adviceItem;
+				}else{
+					return adviceItem;
+				}
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+			return adviceItem;
+		}
+	}
 	
 	public synchronized  void addItemList(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
