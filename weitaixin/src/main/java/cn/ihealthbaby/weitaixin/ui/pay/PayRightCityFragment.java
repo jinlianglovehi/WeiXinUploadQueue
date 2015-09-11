@@ -41,7 +41,6 @@ public class PayRightCityFragment extends BaseFragment {
 
     private BaseActivity context;
 
-    private static ArrayList<Province> rightCityList=new ArrayList<Province>();
     private MyPayRightCityAdapter adapter;
     private Province province;
 
@@ -93,7 +92,7 @@ public class PayRightCityFragment extends BaseFragment {
     }
 
     private void initView() {
-        adapter=new MyPayRightCityAdapter(getActivity(), rightCityList);
+        adapter=new MyPayRightCityAdapter(getActivity(), null);
         lvPayRightCity.setAdapter(adapter);
         lvPayRightCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
