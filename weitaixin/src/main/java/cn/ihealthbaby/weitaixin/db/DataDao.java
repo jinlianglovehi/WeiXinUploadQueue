@@ -256,9 +256,6 @@ public class DataDao {
 					if (myAdviceItem.getSerialnum() != null) {
 						values.put("serialnum", myAdviceItem.getSerialnum());
 					}
-					if (myAdviceItem.getJianceid() != null) {
-						values.put("jianceid", myAdviceItem.getJianceid());
-					}
 					db.update(DataDBHelper.tableName, values, "jianceid=?", new String[]{myAdviceItem.getJianceid() + ""});
 				}
 			}

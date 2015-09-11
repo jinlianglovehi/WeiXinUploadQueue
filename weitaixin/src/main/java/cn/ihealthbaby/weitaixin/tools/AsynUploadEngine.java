@@ -16,14 +16,7 @@ import java.io.File;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.form.UpdateHeadPicForm;
-import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.client.model.UploadModel;
-import cn.ihealthbaby.client.model.User;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
-import cn.ihealthbaby.weitaixin.library.data.net.Business;
-import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
@@ -38,10 +31,11 @@ public class AsynUploadEngine {
     private UpProgressHandler upProgressHandler;
     private UploadManager uploadManager;
     private UploadOptions options;
-    ApiManager instance;
+    ApiManager instance  ;
 
     public AsynUploadEngine(Context context){
         this.context=context;
+        instance = ApiManager.getInstance();
         initHandler();
     }
 
