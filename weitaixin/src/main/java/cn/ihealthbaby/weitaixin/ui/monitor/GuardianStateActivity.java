@@ -125,18 +125,16 @@ public class GuardianStateActivity extends BaseActivity {
 	}
 
 
-	//100全空    200第一个空   300第一个空   400都不空
-	public int isNullText(){
+	public void checkInput(){
 		if (TextUtils.isEmpty(purposeText)&&TextUtils.isEmpty(moodText)) {
-			return 100;
+			ToastUtil.show(getApplicationContext(),"请选择监护心情和监护目的");
 		}
 		if (TextUtils.isEmpty(purposeText)) {
-			return 200;
+			ToastUtil.show(getApplicationContext(),"请选择监护目的");
 		}
 		if (TextUtils.isEmpty(moodText)) {
-			return 300;
+			ToastUtil.show(getApplicationContext(),"请选择监护心情");
 		}
-		return 400;
 	}
 
 
