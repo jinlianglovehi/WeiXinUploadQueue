@@ -159,6 +159,7 @@ public class PayAllOrderFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Order order = (Order) adapter.getItem(position - 1);
                 Intent intent=new Intent(getActivity().getApplicationContext(), PayOrderDetailsActivity.class);
+                intent.putExtra("orderId",order.getId()+"");
                 startActivity(intent);
             }
         });

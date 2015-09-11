@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin.ui.monitor;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -46,6 +47,9 @@ public class GuardianStateActivity extends BaseActivity {
 	TextView tvGuardianMoodText;
 	private MyPoPoWinGuardian myPoPoWinGuardian;
 	private MyPoPoWinGuardian myPoPoWinGuardian1;
+	private String purposeText;
+	private String moodText;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +92,8 @@ public class GuardianStateActivity extends BaseActivity {
 		myPoPoWinGuardian.setOnDismissListener(new PopupWindow.OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				tvGuardianPurposeText.setText(askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue() + "");
+				purposeText = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
+				tvGuardianPurposeText.setText(purposeText + "");
 			}
 		});
 	}
@@ -105,10 +110,22 @@ public class GuardianStateActivity extends BaseActivity {
 		myPoPoWinGuardian1.setOnDismissListener(new PopupWindow.OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				tvGuardianMoodText.setText(feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue() + "");
+				moodText = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
+				tvGuardianMoodText.setText(moodText + "");
 			}
 		});
 	}
+
+
+	public boolean isNullText(){
+		if (TextUtils.isEmpty(purposeText)||TextUtils.isEmpty(moodText)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+
 
 	@OnClick(R.id.ivFooter)
 	public void Footer() {
