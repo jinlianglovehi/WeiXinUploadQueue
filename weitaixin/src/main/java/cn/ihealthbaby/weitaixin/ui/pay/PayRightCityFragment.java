@@ -63,12 +63,12 @@ public class PayRightCityFragment extends BaseFragment {
 
         initView();
 
-        pullData();
+//        pullData();
 
         return view;
     }
 
-    private void pullData() {
+    public void pullData() {
         CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(getActivity(), "数据加载中...");
         dialog.show();
@@ -130,7 +130,6 @@ public class PayRightCityFragment extends BaseFragment {
             if (datas == null) {
                 this.datas = new ArrayList<City>();
             } else {
-                this.datas.clear();
                 this.datas = datas;
             }
         }

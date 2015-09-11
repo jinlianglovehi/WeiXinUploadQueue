@@ -38,6 +38,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.PayAllOrderAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -54,7 +55,6 @@ public class PayLeftCityFragment extends BaseFragment {
     private Fragment oldFragment;
 
     private static ArrayList<Province> leftCityList=new ArrayList<Province>();
-    private ArrayList<Province> rightCityList=new ArrayList<Province>();
 
     private MyPayLeftCityAdapter adapter;
 
@@ -65,11 +65,11 @@ public class PayLeftCityFragment extends BaseFragment {
         if (instance == null) {
             instance = new PayLeftCityFragment();
         }
-        if (leftCityList==null) {
-            leftCityList=new ArrayList<Province>();
-        }else{
-            PayLeftCityFragment.leftCityList=leftCityList;
-        }
+//        if (leftCityList==null) {
+//            leftCityList=new ArrayList<Province>();
+//        }else{
+//            PayLeftCityFragment.leftCityList=leftCityList;
+//        }
         return instance;
     }
     PayRightCityFragment rightFragment;
@@ -86,7 +86,10 @@ public class PayLeftCityFragment extends BaseFragment {
         Bundle bundle = getArguments();
         leftCityList = (ArrayList<Province>) bundle.getSerializable(PayConstant.LeftCityList);
 
-         rightFragment = (PayRightCityFragment) fragmentManager.findFragmentByTag(PayConstant.RightCityList);
+        LogUtil.d("leftCityList","leftCityList=> "+leftCityList.size());
+        rightFragment = (PayRightCityFragment) fragmentManager.findFragmentByTag(PayConstant.RightCityList);
+        rightFragment.getRestful(leftCityList.get(0));
+        rightFragment.pullData();
 
         initView();
 
@@ -94,7 +97,8 @@ public class PayLeftCityFragment extends BaseFragment {
     }
 
     private void initView() {
-        adapter=new MyPayLeftCityAdapter(getActivity(), leftCityList);
+        adapter=new MyPayLeftCityAdapter(getActivity(), null);
+        adapter.setDatas(leftCityList);
         lvPayLeftCity.setAdapter(adapter);
         lvPayLeftCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -154,7 +158,6 @@ public class PayLeftCityFragment extends BaseFragment {
             if (datas == null) {
                 this.datas = new ArrayList<Province>();
             } else {
-                this.datas.clear();
                 this.datas = datas;
             }
         }

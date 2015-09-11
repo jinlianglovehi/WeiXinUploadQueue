@@ -84,7 +84,6 @@ public class PayRentInformationActivity extends BaseActivity {
                 LocalProductData.getLocal().put(LocalProductData.DoctorId, doctor.getId());
             }
         });
-
     }
 
 

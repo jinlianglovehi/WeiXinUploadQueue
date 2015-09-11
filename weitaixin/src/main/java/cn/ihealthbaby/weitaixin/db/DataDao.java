@@ -231,18 +231,18 @@ public class DataDao {
 					ContentValues values = new ContentValues();
 					values.put("mid",myAdviceItem.getId());
 					values.put("gestationalWeeks",myAdviceItem.getId());
-					values.put("testTime",myAdviceItem.getId());
-					values.put("testTimeLong",myAdviceItem.getId());
-					values.put("status",myAdviceItem.getId());
-					values.put("isNativeRecord",myAdviceItem.getId());
-					values.put("feeling",myAdviceItem.getId());
-					values.put("purpose",myAdviceItem.getId());
-					values.put("userid",myAdviceItem.getId());
-					values.put("rdata",myAdviceItem.getId());
-					values.put("path",myAdviceItem.getId());
-					values.put("uploadstate",myAdviceItem.getId());
-					values.put("serialnum",myAdviceItem.getId());
-					values.put("jianceid",myAdviceItem.getId());
+					values.put("testTime",myAdviceItem.getTestTime().getTime());
+					values.put("testTimeLong",myAdviceItem.getTestTimeLong());
+					values.put("status",myAdviceItem.getStatus());
+					values.put("isNativeRecord",myAdviceItem.getIsNativeRecord());
+					values.put("feeling",myAdviceItem.getFeeling());
+					values.put("purpose",myAdviceItem.getPurpose());
+					values.put("userid",myAdviceItem.getUserid());
+					values.put("rdata",myAdviceItem.getRdata());
+					values.put("path",myAdviceItem.getPath());
+					values.put("uploadstate",myAdviceItem.getUploadstate());
+					values.put("serialnum",myAdviceItem.getSerialnum());
+					values.put("jianceid",myAdviceItem.getJianceid());
 
 					db.update(DataDBHelper.tableName, values, "jianceid=?", new String[]{myAdviceItem.getJianceid() + ""});
 				}

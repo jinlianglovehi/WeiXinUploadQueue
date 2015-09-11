@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -121,7 +122,6 @@ public class MyPoPoWinGuardian extends PopupWindow {
         public boolean isFirst = true;
 
 
-
         public MyGuardianPurposeAdapter(Context context) {
             inflater = LayoutInflater.from(context);
         }
@@ -145,35 +145,30 @@ public class MyPoPoWinGuardian extends PopupWindow {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder = null;
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.item_set_system_guardian, null);
+                convertView = inflater.inflate(R.layout.item_popo_win, null);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             viewHolder.tvTime.setText(askPurposetypes.get(position).getValue()+"");
-            if (indexPosition==position) {
+            if (indexPosition == position) {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
-                viewHolder.tvState.setTextColor(context.getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.gray9));
-                viewHolder.tvState.setTextColor(context.getResources().getColor(R.color.gray9));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
             }
             if (isFirst && position == 0) {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
-                viewHolder.tvState.setTextColor(context.getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             }
             return convertView;
         }
 
         class ViewHolder {
-            @Bind(R.id.tvTime)
-            TextView tvTime;
-            @Bind(R.id.tvState)
-            TextView tvState;
+            @Bind(R.id.tvTime) TextView tvTime;
+            @Bind(R.id.tvState) ImageView tvState;
 
             public ViewHolder(View convertView) {
                 ButterKnife.bind(this, convertView);
@@ -229,7 +224,7 @@ public class MyPoPoWinGuardian extends PopupWindow {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder = null;
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.item_set_system_guardian, null);
+                convertView = inflater.inflate(R.layout.item_popo_win, null);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -238,26 +233,21 @@ public class MyPoPoWinGuardian extends PopupWindow {
             viewHolder.tvTime.setText(feelingTypes.get(position).getValue()+"");
             if (indexPosition == position) {//convertView.isSelected()
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
-                viewHolder.tvState.setTextColor(context.getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.gray9));
-                viewHolder.tvState.setTextColor(context.getResources().getColor(R.color.gray9));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
             }
             if (isFirst && position == 0) {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
-                viewHolder.tvState.setTextColor(context.getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             }
             return convertView;
         }
 
         class ViewHolder {
-            @Bind(R.id.tvTime)
-            TextView tvTime;
-            @Bind(R.id.tvState)
-            TextView tvState;
+            @Bind(R.id.tvTime) TextView tvTime;
+            @Bind(R.id.tvState) ImageView tvState;
 
             public ViewHolder(View convertView) {
                 ButterKnife.bind(this, convertView);

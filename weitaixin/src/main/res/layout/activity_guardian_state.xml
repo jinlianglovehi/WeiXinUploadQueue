@@ -70,10 +70,11 @@
                     android:textSize="@dimen/font12" />
 
                 <CheckBox
-                    android:layout_width="40dp"
-                    android:layout_height="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="14dp"
+                    android:layout_marginRight="10dp"
                     android:layout_gravity="right|center_vertical"
-                    android:background="@drawable/eye_selector"
+                    android:background="@drawable/nav_bar_arrow_down"
                     android:button="@null"
                     android:scaleType="fitCenter" />
             </FrameLayout>
@@ -107,10 +108,11 @@
 
 
                 <CheckBox
-                    android:layout_width="40dp"
-                    android:layout_height="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="14dp"
+                    android:layout_marginRight="10dp"
                     android:layout_gravity="right|center_vertical"
-                    android:background="@drawable/eye_selector"
+                    android:background="@drawable/nav_bar_arrow_down"
                     android:button="@null"
                     android:scaleType="fitCenter" />
             </FrameLayout>

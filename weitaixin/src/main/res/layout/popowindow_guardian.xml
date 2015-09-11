@@ -16,7 +16,7 @@
             android:id="@+id/tvTitleGuardian"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:background="@drawable/corner_background_green"
+            android:background="@drawable/corner_background_green3"
             android:gravity="center"
             android:text="监护目的"
             android:textSize="@dimen/font14"
