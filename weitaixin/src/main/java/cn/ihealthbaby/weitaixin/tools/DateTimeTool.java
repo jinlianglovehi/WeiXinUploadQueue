@@ -104,6 +104,15 @@ public class DateTimeTool {
         return hms;
     }
 
+    public static Date longDate2Str(long lSysTime1){
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
+        java.util.Date dt = new Date(lSysTime1);
+        String sDateTime = sdf.format(dt);
+        LogUtil.d("longDate2Str", "longDate2Str"+sDateTime);
+        return dt;
+    }
+
+
 
     public static String getGestationalWeeks(Date deliveryTime) {
         if (deliveryTime==null) {

@@ -336,7 +336,7 @@ public class RecordFragment extends BaseFragment {
         CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(context, "从数据库中加载...");
         dialog.show();
-        //从缓存数据库中展示数据列表 //0本地  1云端
+        //从缓存数据库中展示数据列表 //100本地  1云端
         ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecord(false);
         if (adviceItems.size() > 0) {
             countNumber = adviceItems.size();
@@ -402,7 +402,7 @@ public class RecordFragment extends BaseFragment {
                             @Override
                             public void run() {
                                 LogUtil.d("dataListsize", "myAdviceItems ==> "+myAdviceItems.size());
-                                dataDao.add(myAdviceItems, false);
+                                dataDao.addItemList(myAdviceItems, false);
                             }
                         }).start();
 
@@ -466,15 +466,15 @@ public class RecordFragment extends BaseFragment {
 
     private void saveLocal(){
         final ArrayList<MyAdviceItem> adviceNativeItems=new ArrayList<MyAdviceItem>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             MyAdviceItem dateItem=new MyAdviceItem();
 
-            dateItem.setId(174 + i);
+            dateItem.setId(888 + i*3);
             dateItem.setGestationalWeeks("50周+" + (2 + i * 3));
             dateItem.setTestTime(new Date());
             dateItem.setTestTimeLong(34434 + i * 2000);
             dateItem.setStatus(3);
-            dateItem.setIsNativeRecord(0); //0本地  1云端
+            dateItem.setIsNativeRecord(100); //100本地  1云端
 
             adviceNativeItems.add(dateItem);
         }
@@ -482,7 +482,7 @@ public class RecordFragment extends BaseFragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                dataDao.add(adviceNativeItems, false);
+                dataDao.addItemList(adviceNativeItems, false);
             }
         }).start();
     }

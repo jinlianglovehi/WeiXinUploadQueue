@@ -7,13 +7,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DataDBHelper extends SQLiteOpenHelper{
 
 	public DataDBHelper(Context context) {
-		super(context, "record2.db", null, 1);
+		super(context, "record.db", null, 1);
 	}
 
 	public static String tableName="record";
 //	public static String tableName="recordTable";
 //	public static String tableNativeName="recordNativeTable";
-	public static int isNativeRecord = 0; //0本地  1云端
+	public static int isNativeRecord = 100; //100本地  1云端
 
 
 	@Override
@@ -46,7 +46,7 @@ public class DataDBHelper extends SQLiteOpenHelper{
 				"testTime varchar(100)," + //text - timestamp
 				"testTimeLong integer," + //
 				"status integer," + //
-				"isNativeRecord integer," + //0本地  1云端
+				"isNativeRecord integer," + //100本地  1云端
 				"feeling varchar(50)," + //
 				"purpose varchar(50)," + //
 				"userid integer," + //

@@ -130,7 +130,7 @@ public class PayMimeOrderActivity extends BaseActivity {
 //            if(oldFragment!=null){
 //                fragmentTransaction.hide(oldFragment);
 //            }
-//            fragmentTransaction.add(container, fragment);
+//            fragmentTransaction.addItemList(container, fragment);
 //        } else if( oldFragment != fragment){
 //            fragmentTransaction.hide(oldFragment);
 //            fragmentTransaction.show(fragment);

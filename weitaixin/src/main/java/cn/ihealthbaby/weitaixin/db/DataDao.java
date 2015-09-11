@@ -29,8 +29,72 @@ public class DataDao {
 
 	}
 
-	
+
 	public synchronized  void add(final ArrayList<MyAdviceItem>  adviceItems, final boolean isRecordNative) {
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		if(db.isOpen()) {
+			for (int i = 0; i < adviceItems.size(); i++) {
+				MyAdviceItem adviceItem = adviceItems.get(i);
+				if (isRecordNative) {
+					db.beginTransaction();
+					try {
+						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
+										"isNativeRecord,feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+								new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
+										adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(),adviceItem.getStatus(),
+										adviceItem.getIsNativeRecord(),adviceItem.getFeeling(),adviceItem.getPurpose(),
+										adviceItem.getUserid(),adviceItem.getRdata(),adviceItem.getPath(),adviceItem.getUploadstate(),
+										adviceItem.getSerialnum(),adviceItem.getJianceid()
+								});
+						db.setTransactionSuccessful();
+					} finally {
+						db.endTransaction();
+					}
+				} else {
+					db.beginTransaction();
+					try {
+						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status) values (?,?,?,?,?)",
+								new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime().getTime(),
+										adviceItem.getTestTimeLong(), adviceItem.getStatus()});
+						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
+						db.setTransactionSuccessful();
+					} finally {
+						db.endTransaction();
+					}
+				}
+			}
+		}
+	}
+
+
+	public synchronized  void add(final MyAdviceItem  adviceItem, final boolean isRecordNative) {
+		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
+		adviceItems.add(adviceItem);
+		addItemList(adviceItems, isRecordNative);
+	}
+
+
+	public synchronized boolean find(long mid){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			if (db.isOpen()) {
+				Cursor cursor = db.rawQuery("select * from " + DataDBHelper.tableName + " where one=?", new String[]{mid + ""});
+				if(cursor.moveToNext()){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+			return false;
+		}
+	}
+
+	
+	public synchronized  void addItemList(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		if(db.isOpen()) {
 			for (int i = 0; i < adviceItems.size(); i++) {
@@ -42,7 +106,7 @@ public class DataDao {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
 										"isNativeRecord,feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 								new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
-										DateTimeTool.str2Date(DateTimeTool.date2Str(adviceItem.getTestTime(), "yyyy年MM月dd日 hh:mm:ss")), adviceItem.getTestTimeLong(),adviceItem.getStatus(),
+										adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(),adviceItem.getStatus(),
 										adviceItem.getIsNativeRecord(),adviceItem.getFeeling(),adviceItem.getPurpose(),
 										adviceItem.getUserid(),adviceItem.getRdata(),adviceItem.getPath(),adviceItem.getUploadstate(),
 										adviceItem.getSerialnum(),adviceItem.getJianceid()
@@ -56,9 +120,10 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status) values (?,?,?,?,?)",
-								new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), DateTimeTool.str2Date(DateTimeTool.date2Str(adviceItem.getTestTime(), "yyyy年MM月dd日 hh:mm:ss")),
+								new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime().getTime(),
 										adviceItem.getTestTimeLong(), adviceItem.getStatus()});
-						db.setTransactionSuccessful();
+						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
+								db.setTransactionSuccessful();
 					} finally {
 						db.endTransaction();
 					}
@@ -68,37 +133,10 @@ public class DataDao {
 	}
 
 
-	public synchronized  void addItem(final MyAdviceItem  adviceItem, final boolean isRecordNative){
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		if(db.isOpen()) {
-			if (isRecordNative) {
-				delete(adviceItem.getId());
-				db.beginTransaction();
-				try {
-					db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
-									"isNativeRecord,feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-							new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
-									adviceItem.getTestTime(), adviceItem.getTestTimeLong(),adviceItem.getStatus(),
-									adviceItem.getIsNativeRecord(),adviceItem.getFeeling(),adviceItem.getPurpose(),
-									adviceItem.getUserid(),adviceItem.getRdata(),adviceItem.getPath(),adviceItem.getUploadstate(),
-									adviceItem.getSerialnum(),adviceItem.getJianceid()
-							});
-					db.setTransactionSuccessful();
-				} finally {
-					db.endTransaction();
-				}
-			} else {
-				delete(adviceItem.getId());
-				db.beginTransaction();
-				try {
-					db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status) values (?,?,?,?,?)",
-							new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus()});
-					db.setTransactionSuccessful();
-				} finally {
-					db.endTransaction();
-				}
-			}
-		}
+	public synchronized  void addItem(final MyAdviceItem  adviceItem, final boolean isRecordNative) {
+		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
+		adviceItems.add(adviceItem);
+		addItemList(adviceItems, isRecordNative);
 	}
 
 
@@ -117,16 +155,16 @@ public class DataDao {
 
 
 	public void update(long mid){
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		db.beginTransaction();
-		try {
-			if (db.isOpen()) {
-				db.execSQL("delete from " + DataDBHelper.tableName + " where mid=?", new Object[]{mid});
-			}
-			db.setTransactionSuccessful();
-		} finally {
-			db.endTransaction();
-		}
+//		SQLiteDatabase db = dbHelper.getWritableDatabase();
+//		db.beginTransaction();
+//		try {
+//			if (db.isOpen()) {
+//				db.execSQL("delete from " + DataDBHelper.tableName + " where mid=?", new Object[]{mid});
+//			}
+//			db.setTransactionSuccessful();
+//		} finally {
+//			db.endTransaction();
+//		}
 	}
 
 	
@@ -159,7 +197,7 @@ public class DataDao {
 
 					adviceItem.setId(mid);
 					adviceItem.setGestationalWeeks(gestationalWeeks);
-					adviceItem.setTestTime(DateTimeTool.str2Date(testTime));
+					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 					adviceItem.setTestTimeLong(testTimeLong);
 					adviceItem.setStatus(status);
 					adviceItem.setIsNativeRecord(isNativeRecord);
@@ -172,20 +210,26 @@ public class DataDao {
 					adviceItem.setSerialnum(serialnum);
 					adviceItem.setJianceid(jianceid);
 
-					if (isNativeRecord==0) { //0本地  1云端
+					if (isNativeRecord==100) { //100本地  1云端
 						adviceItemsNative.add(adviceItem);
 					}else {
 						adviceItemsCloud.add(adviceItem);
 					}
-					ArrayList<MyAdviceItem> adviceItemsCloudTenCount = new ArrayList<MyAdviceItem>();
-					if (adviceItemsCloud.size() > 0) {
+				}
+				ArrayList<MyAdviceItem> adviceItemsCloudTenCount = new ArrayList<MyAdviceItem>();
+				if (adviceItemsCloud.size() > 0) {
+					if (adviceItemsCloud.size()>=10) {
 						for (int i = 0; i < 10; i++) {
 							adviceItemsCloudTenCount.add(adviceItemsCloud.get(i));
 						}
+					}else{
+						for (int i = 0; i < adviceItemsCloud.size(); i++) {
+							adviceItemsCloudTenCount.add(adviceItemsCloud.get(i));
+						}
 					}
-					adviceItems.addAll(adviceItemsCloudTenCount);
-					adviceItems.addAll(adviceItemsNative);
 				}
+				adviceItems.addAll(adviceItemsCloudTenCount);
+				adviceItems.addAll(adviceItemsNative);
 				cursor.close();
 			} else {
 				Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status,isNativeRecord from " + DataDBHelper.tableName, null);
@@ -199,27 +243,36 @@ public class DataDao {
 					int isNativeRecord = cursor.getInt(cursor.getColumnIndex("isNativeRecord"));
 					adviceItem.setId(Long.parseLong(mid));
 					adviceItem.setGestationalWeeks(gestationalWeeks);
-					LogUtil.d("testTime", "testTime44 ==>" + testTime);
-					LogUtil.d("testTime", "testTime33 ==>"+DateTimeTool.str2Date(testTime));
-					adviceItem.setTestTime(DateTimeTool.str2Date(testTime.trim()));
+					LogUtil.d("testTime", "testTime44 ==>" + status);
+					LogUtil.d("testTime", "testTime33 ==>"+DateTimeTool.longDate2Str(Long.parseLong(testTime)));
+					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 					adviceItem.setTestTimeLong(testTimeLong);
 					adviceItem.setStatus(status);
-					adviceItem.setStatus(isNativeRecord);
+					adviceItem.setIsNativeRecord(isNativeRecord);
 
-					if (isNativeRecord==0) { //0本地  1云端
+					LogUtil.d("isNativeRecord", "isNativeRecord ==> " + isNativeRecord);
+
+					if (isNativeRecord == 100) { //100本地  1云端
 						adviceItemsNative.add(adviceItem);
-					}else {
+					} else {
 						adviceItemsCloud.add(adviceItem);
 					}
-					ArrayList<MyAdviceItem> adviceItemsCloudTenCount = new ArrayList<MyAdviceItem>();
-					if (adviceItemsCloud.size() > 0) {
+				}
+				ArrayList<MyAdviceItem> adviceItemsCloudTenCount = new ArrayList<MyAdviceItem>();
+				if (adviceItemsCloud.size() > 0) {
+					if (adviceItemsCloud.size()>=10) {
 						for (int i = 0; i < 10; i++) {
 							adviceItemsCloudTenCount.add(adviceItemsCloud.get(i));
 						}
+					}else{
+						for (int i = 0; i < adviceItemsCloud.size(); i++) {
+							adviceItemsCloudTenCount.add(adviceItemsCloud.get(i));
+						}
 					}
-					adviceItems.addAll(adviceItemsCloudTenCount);
-					adviceItems.addAll(adviceItemsNative);
 				}
+				LogUtil.d("adviceItemsNative", adviceItemsCloudTenCount.size() + " <==adviceItemsNative==> " + adviceItemsNative.size());
+				adviceItems.addAll(adviceItemsCloudTenCount);
+				adviceItems.addAll(adviceItemsNative);
 				cursor.close();
 			}
 		}
