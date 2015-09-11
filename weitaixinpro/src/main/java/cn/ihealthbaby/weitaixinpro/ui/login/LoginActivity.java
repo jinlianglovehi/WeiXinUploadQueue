@@ -78,9 +78,12 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void call(Result<HClientUser> t) {
                             if (t.isSuccess()) {
+                                Toast.makeText(getApplication(), t.getData().getHospitalName(), Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
+                                finish();
                             } else {
+                                //TODO
                             }
                         }
                     }, getRequestTag());
@@ -100,6 +103,7 @@ public class LoginActivity extends BaseActivity {
             public void call(Result<ApiList<FetalHeart>> t) {
                 if (t.isSuccess()) {
                     mFetalHeartApiList = t.getData().getList();
+                    mFetalHeart = mFetalHeartApiList.get(0);
                     adapter.addData(mFetalHeartApiList);
                 }
             }
