@@ -125,7 +125,7 @@ public class GuardianStateActivity extends BaseActivity {
 	}
 
 
-	public void checkInput(){
+	public void checkInput() {
 		if (TextUtils.isEmpty(purposeText)&&TextUtils.isEmpty(moodText)) {
 			ToastUtil.show(getApplicationContext(),"请选择监护心情和监护目的");
 		}
