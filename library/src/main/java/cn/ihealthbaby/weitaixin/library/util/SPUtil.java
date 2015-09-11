@@ -11,12 +11,7 @@ public class SPUtil {
 
     private static final String FILE_NAME = "weitaixin_share_data";
 
-    /**
-     * 存数据
-     * @param context
-     * @param key
-     * @param value
-     */
+
     public static void setData(Context context, String key, Object value) {
         String type = value.getClass().getSimpleName();
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
@@ -36,13 +31,7 @@ public class SPUtil {
         editor.commit();
     }
 
-    /**
-     * 取数据
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
+
     public static Object getData(Context context, String key, Object defValue) {
         String type = defValue.getClass().getSimpleName();
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);

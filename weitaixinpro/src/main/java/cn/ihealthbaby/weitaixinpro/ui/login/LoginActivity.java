@@ -1,23 +1,28 @@
 package cn.ihealthbaby.weitaixinpro.ui.login;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.collecton.ApiList;
+import cn.ihealthbaby.client.model.FetalHeart;
+import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
+import cn.ihealthbaby.weitaixinpro.tools.DeviceUuidFactory;
 import cn.ihealthbaby.weitaixinpro.ui.MainActivity;
 import cn.ihealthbaby.weitaixinpro.ui.adapter.PopupHostIdAdapter;
 
@@ -25,17 +30,23 @@ import cn.ihealthbaby.weitaixinpro.ui.adapter.PopupHostIdAdapter;
  * @author by kang on 2015/9/10.
  */
 public class LoginActivity extends BaseActivity {
+
+    PopupHostIdAdapter adapter;
     @Bind(R.id.iv_weitaixin)
     ImageView mIvWeitaixin;
     @Bind(R.id.rl_logo)
     RelativeLayout mRlLogo;
-    @Bind(R.id.tv_host_id)
-    TextView mTvHostId;
+    @Bind(R.id.list)
+    ListView mList;
     @Bind(R.id.tv_login_action)
     TextView mTvLoginAction;
+    @Bind(R.id.tv_device_id)
+    TextView mTvDeviceId;
+    @Bind(R.id.rl_login)
+    RelativeLayout mRlLogin;
 
-    private PopupWindow mPopupWindow;
-    private String[] name = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+    private List<FetalHeart> mFetalHeartApiList;
+    private FetalHeart mFetalHeart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,63 +54,56 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initView();
+        initData();
     }
 
     private void initView() {
-        mTvHostId.setOnClickListener(new View.OnClickListener() {
+        adapter = new PopupHostIdAdapter(this);
+        mList.setAdapter(adapter);
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                initPopWindow();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mFetalHeart = mFetalHeartApiList.get(position);
+                adapter.showSelect(position);
             }
         });
 
         mTvLoginAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+
+                if (mFetalHeart != null) {
+
+                    ApiManager.getInstance().hClientAccountApi.login("863425026498381", new HttpClientAdapter.Callback<HClientUser>() {
+                        @Override
+                        public void call(Result<HClientUser> t) {
+                            if (t.isSuccess()) {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            } else {
+                            }
+                        }
+                    }, getRequestTag());
+                } else {
+                    Toast.makeText(getApplication(), "null", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
+        mTvDeviceId.setText(new DeviceUuidFactory(this).getDeviceUuid());
     }
 
-    private void initPopWindow() {
-
-        View contentView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.popupwindow, null);
-        contentView.setBackgroundColor(Color.WHITE);
-
-        mPopupWindow = new PopupWindow(findViewById(R.id.rl_login), mTvHostId.getWidth(), mTvHostId.getHeight() * 3);
-        mPopupWindow.setContentView(contentView);
-
-        initData();
-        ListView listView = (ListView) contentView.findViewById(R.id.list);
-        PopupHostIdAdapter adapter = new PopupHostIdAdapter(name, this);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mTvHostId.setText(name[position]);
-                mPopupWindow.dismiss();
-            }
-        });
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
-        mPopupWindow.showAsDropDown(mTvHostId);
-    }
 
     private void initData() {
-//        ApiManager.getInstance().hClientAccountApi
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        if (mPopupWindow != null && mPopupWindow.isShowing()) {
-            mPopupWindow.dismiss();
-            mPopupWindow = null;
-        }
-        return super.onTouchEvent(event);
-
+        ApiManager.getInstance().hClientAccountApi.getFetalHearts(new HttpClientAdapter.Callback<ApiList<FetalHeart>>() {
+            @Override
+            public void call(Result<ApiList<FetalHeart>> t) {
+                if (t.isSuccess()) {
+                    mFetalHeartApiList = t.getData().getList();
+                    adapter.addData(mFetalHeartApiList);
+                }
+            }
+        }, getRequestTag());
     }
 
 }

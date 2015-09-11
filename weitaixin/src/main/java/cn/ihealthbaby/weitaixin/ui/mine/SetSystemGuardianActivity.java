@@ -1,8 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.mine;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 
 public class SetSystemGuardianActivity extends BaseActivity {
@@ -41,8 +40,6 @@ public class SetSystemGuardianActivity extends BaseActivity {
     @Bind(R.id.slide_switch_alarm)
     ImageView mSlideSwitchViewAlarm;
 
-    private SharedPreferences mySharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +49,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
 
         title_text.setText("监护设置");
 //      back.setVisibility(View.INVISIBLE);
-        mySharedPreferences = getSharedPreferences("config",
-                Activity.MODE_PRIVATE);
+
         initData();
         initView();
         initListener();
@@ -65,25 +61,24 @@ public class SetSystemGuardianActivity extends BaseActivity {
     }
 
     private void initListener() {
-        final SharedPreferences.Editor editor = mySharedPreferences.edit();
         mSlideSwitchViewBegin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean AutoStart = mySharedPreferences.getBoolean("AutoStart", true);
+                boolean AutoStart = (boolean) SPUtil.getData(SetSystemGuardianActivity.this, "AutoStart", true);
                 if (!AutoStart) {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
                 } else {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
                 }
-                editor.putBoolean("AutoStart", !AutoStart);
-                editor.commit();
+                SPUtil.setData(SetSystemGuardianActivity.this, "AutoStart", !AutoStart);
             }
         });
 
         mSlideSwitchViewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean PoliceSet = mySharedPreferences.getBoolean("PoliceSet", true);
+                boolean PoliceSet = (boolean) SPUtil.getData(SetSystemGuardianActivity.this, "PoliceSet", true);
+
                 if (!PoliceSet) {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
                     meLinearLayout.setVisibility(View.VISIBLE);
@@ -91,8 +86,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
                     meLinearLayout.setVisibility(View.GONE);
                 }
-                editor.putBoolean("PoliceSet", !PoliceSet);
-                editor.commit();
+                SPUtil.setData(SetSystemGuardianActivity.this, "PoliceSet", !PoliceSet);
             }
         });
     }
@@ -100,8 +94,9 @@ public class SetSystemGuardianActivity extends BaseActivity {
 
     private void initView() {
 //        String AutoStart = WeiTaiXinApplication.getInstance().getValue("AutoStart", "0");
-        boolean AutoStart = mySharedPreferences.getBoolean("AutoStart", true);
-        boolean PoliceSet = mySharedPreferences.getBoolean("PoliceSet", true);
+
+        boolean AutoStart = (boolean) SPUtil.getData(SetSystemGuardianActivity.this, "AutoStart", true);
+        boolean PoliceSet = (boolean) SPUtil.getData(SetSystemGuardianActivity.this, "PoliceSet", true);
         if (AutoStart) {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
         } else {
@@ -122,7 +117,6 @@ public class SetSystemGuardianActivity extends BaseActivity {
     MyTimeAdapter myTimeAdapter;
 
     private void initData() {
-        final SharedPreferences.Editor editor = mySharedPreferences.edit();
         myTimeAdapter = new MyTimeAdapter(this);
         lvGuardian.setAdapter(myTimeAdapter);
         lvGuardian.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,8 +124,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 myTimeAdapter.isFirst = false;
 //                view.setSelected(true);
-                editor.putInt("select_num", position);
-                editor.commit();
+                SPUtil.setData(SetSystemGuardianActivity.this, "select_num", position);
                 myTimeAdapter.notifyDataSetChanged();
             }
         });
@@ -181,8 +174,8 @@ public class SetSystemGuardianActivity extends BaseActivity {
             viewHolder.tvTime.setText(titleTimes[position]);
             System.err.println("isFirst: " + isFirst);
 
-            final SharedPreferences.Editor editor = mySharedPreferences.edit();
-            int select_num = mySharedPreferences.getInt("select_num", 0);
+
+            int select_num = (int) SPUtil.getData(SetSystemGuardianActivity.this, "select_num", 0);
             if (select_num == position) {
                 viewHolder.tvTime.setTextColor(getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);

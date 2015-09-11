@@ -30,58 +30,16 @@
     </RelativeLayout>
 
 
-    <TextView
-        android:id="@+id/tv_host_id"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:layout_below="@id/rl_logo"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/shape_text_frame"
-        android:gravity="center"
-        android:text="宿主id"/>
-
-    <TextView
-        android:id="@+id/tv_host_nane"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:layout_below="@id/tv_host_id"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/shape_text_frame"
-        android:gravity="center"
-        android:text="宿主id"/>
-
-    <TextView
-        android:id="@+id/tv_host_department"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:layout_below="@id/tv_host_nane"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/shape_text_frame"
-        android:gravity="center"
-        android:text="宿主id"/>
-
-    <TextView
-        android:id="@+id/tv_device_id"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:layout_below="@id/tv_host_department"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/shape_text_frame"
-        android:gravity="center"
-        android:text="宿主id"/>
-
-    <TextView
+    <ListView
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="35dp"
-        android:gravity="center"
-        android:text="宿主id:1234567"/>
+        android:layout_above="@+id/tv_login_action"
+        android:layout_below="@+id/rl_logo"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        android:listSelector="@color/white0"
+        android:scrollbars="none"/>
 
     <TextView
         android:id="@+id/tv_login_action"
@@ -96,5 +54,14 @@
         android:text="登录"
         android:textColor="@drawable/text_default_selector"
         android:textSize="@dimen/font_normal"/>
+
+    <TextView
+        android:id="@+id/tv_device_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="35dp"
+        android:gravity="center"
+        android:text="本机device ID："/>
 
 </RelativeLayout>
