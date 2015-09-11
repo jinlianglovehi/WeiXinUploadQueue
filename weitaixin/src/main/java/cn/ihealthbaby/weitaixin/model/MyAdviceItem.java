@@ -178,4 +178,3 @@ public class MyAdviceItem  implements Serializable{
     }
 
 }
-
