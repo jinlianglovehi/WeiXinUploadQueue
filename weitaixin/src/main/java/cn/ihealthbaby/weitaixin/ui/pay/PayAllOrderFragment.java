@@ -212,6 +212,14 @@ public class PayAllOrderFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        pullDatas();
+    }
+
+
+
 }
 
 
