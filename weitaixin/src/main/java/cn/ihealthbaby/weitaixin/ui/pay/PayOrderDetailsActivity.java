@@ -188,7 +188,39 @@ public class PayOrderDetailsActivity extends BaseActivity {
 
     @OnClick(R.id.tvPayAffirmGoodsOrGoPay)
     public void PayAffirmGoodsOrGoPay() {
+        if (data.getOrderStatus()==PayConstant.notPay) {
+            Intent intent=new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
+            LocalProductData.getLocal().put(LocalProductData.PriceCount, data.getTotalFee());
+            startActivity(intent);
+        }else if(data.getOrderStatus()==PayConstant.gettingGoods){
+            PayDialog payDialog=new PayDialog(PayOrderDetailsActivity.this,new String[]{"确定收货","不收货","确定收货"});
+            payDialog.show();
+            payDialog.operationAction=new PayDialog.OperationAction() {
+                @Override
+                public void payYes(Object... obj) {
+                    final CustomDialog customDialog=new CustomDialog();
+                    Dialog dialog = customDialog.createDialog1(PayOrderDetailsActivity.this, "确认收货中...");
+                    dialog.show();
+                    ApiManager.getInstance().orderApi.confirmReceive(data.getId(), new HttpClientAdapter.Callback<Void>() {
+                        @Override
+                        public void call(Result<Void> t) {
+                            if (t.isSuccess()) {
+                                ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), "确认收货成功");
+                                PayOrderDetailsActivity.this.finish();
+                            } else {
+                                ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), t.getMsgMap() + "");
+                            }
+                            customDialog.dismiss();
+                        }
+                    }, getRequestTag());
+                }
 
+                @Override
+                public void payNo(Object... obj) {
+
+                }
+            };
+        }
     }
 
 

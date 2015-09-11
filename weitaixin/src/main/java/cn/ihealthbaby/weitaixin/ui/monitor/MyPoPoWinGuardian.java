@@ -114,7 +114,7 @@ public class MyPoPoWinGuardian extends PopupWindow {
         });
     }
 
-    public int indexPosition = 0;
+    public int indexPosition = -1;
     public class MyGuardianPurposeAdapter extends BaseAdapter {
 
         public List<AskPurposeType> askPurposetypes=new ArrayList<AskPurposeType>();

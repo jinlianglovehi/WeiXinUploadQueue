@@ -92,8 +92,12 @@ public class GuardianStateActivity extends BaseActivity {
 		myPoPoWinGuardian.setOnDismissListener(new PopupWindow.OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				purposeText = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
-				tvGuardianPurposeText.setText(purposeText + "");
+				if (myPoPoWinGuardian.indexPosition == -1) {
+					purposeText = null;
+				} else {
+					purposeText = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
+					tvGuardianPurposeText.setText(purposeText + "");
+				}
 			}
 		});
 	}
@@ -110,19 +114,29 @@ public class GuardianStateActivity extends BaseActivity {
 		myPoPoWinGuardian1.setOnDismissListener(new PopupWindow.OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				moodText = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
-				tvGuardianMoodText.setText(moodText + "");
+				if (myPoPoWinGuardian1.indexPosition == -1) {
+					moodText=null;
+				} else {
+					moodText = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
+					tvGuardianMoodText.setText(moodText + "");
+				}
 			}
 		});
 	}
 
 
-	public boolean isNullText(){
-		if (TextUtils.isEmpty(purposeText)||TextUtils.isEmpty(moodText)) {
-			return true;
-		}else {
-			return false;
+	//100全空    200第一个空   300第一个空   400都不空
+	public int isNullText(){
+		if (TextUtils.isEmpty(purposeText)&&TextUtils.isEmpty(moodText)) {
+			return 100;
 		}
+		if (TextUtils.isEmpty(purposeText)) {
+			return 200;
+		}
+		if (TextUtils.isEmpty(moodText)) {
+			return 300;
+		}
+		return 400;
 	}
 
 
