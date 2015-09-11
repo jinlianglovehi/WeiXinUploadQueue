@@ -251,8 +251,8 @@ public class RecordFragment extends BaseFragment {
 
 
     private void pullHeadDatas() {
-        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.user != null) {
-            User user = WeiTaiXinApplication.user;
+        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.getInstance().user != null) {
+            User user = WeiTaiXinApplication.getInstance().user;
             ImageLoader.getInstance().displayImage(user.getHeadPic(), ivWoHeadIcon, setDisplayImageOptions());
             tvWoHeadName.setText(user.getName());
             tvWoHeadDeliveryTime.setText(DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));

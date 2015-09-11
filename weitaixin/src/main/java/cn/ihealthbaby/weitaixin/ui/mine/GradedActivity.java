@@ -49,8 +49,8 @@ public class GradedActivity extends BaseActivity {
         title_text.setText("高危评分");
 
         long hospitalId = 0;
-        if (WeiTaiXinApplication.user != null && WeiTaiXinApplication.user.getServiceInfo() != null) {
-            hospitalId = WeiTaiXinApplication.user.getServiceInfo().getHospitalId();
+        if (WeiTaiXinApplication.getInstance().user != null && WeiTaiXinApplication.getInstance().user.getServiceInfo() != null) {
+            hospitalId = WeiTaiXinApplication.getInstance().user.getServiceInfo().getHospitalId();
             LogUtil.e("hospitalId", "hospitalId: " + hospitalId);
         } else {
             ToastUtil.show(getApplicationContext(), "暂时没有问题~~~");

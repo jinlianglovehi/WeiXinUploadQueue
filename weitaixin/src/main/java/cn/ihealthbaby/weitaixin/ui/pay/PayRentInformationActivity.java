@@ -36,6 +36,7 @@ import cn.ihealthbaby.client.model.Doctor;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
@@ -97,12 +98,19 @@ public class PayRentInformationActivity extends BaseActivity {
     @OnClick(R.id.rl1None)
     public void rl1None() {
         Intent intent=new Intent(this, PayCityChooseActivity.class);
-        startActivityForResult(intent, PayConstant.requestCodeHospitalChoose);
+        startActivityForResult(intent, PayConstant.requestCodeCityChoose);
     }
 
 
     @OnClick(R.id.rl2None)
     public void rl2None() {
+        String cityId = (String) LocalProductData.getLocal().get(LocalProductData.CityId);
+        String cityName = (String) LocalProductData.getLocal().get(LocalProductData.CityName);
+        LogUtil.d("cityNamecityId", cityId+"   =:=  "+cityName);
+        if (TextUtils.isEmpty(cityId)) {
+            ToastUtil.show(getApplicationContext(),"请选择城市"+cityId);
+            return;
+        }
         Intent intent = new Intent(this, PayHospitalChooseActivity.class);
         startActivityForResult(intent, PayConstant.requestCodeHospitalChoose);
     }
@@ -112,8 +120,8 @@ public class PayRentInformationActivity extends BaseActivity {
     @OnClick(R.id.tvGotoOrderAction)
     public void GotoOrderAction() {
         if(TextUtils.isEmpty(tvCityName.getText().toString().trim())){
-//            ToastUtil.show(getApplicationContext(),"请选择城市");
-//            return;
+            ToastUtil.show(getApplicationContext(),"请选择城市");
+            return;
         }
         if(TextUtils.isEmpty(tvHospitalName.getText().toString().trim())){
             ToastUtil.show(getApplicationContext(),"请选择医院");
@@ -129,20 +137,46 @@ public class PayRentInformationActivity extends BaseActivity {
 
     private long hospitalId=-1;
     private String hospitalName="";
+    private long cityId=-1;
+    private String cityName="";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PayConstant.requestCodeCityChoose) {
+            if (resultCode == PayConstant.resultCodeCityChoose) {
+                if (data!=null) {
+                    cityId = data.getLongExtra("cityid", -1);
+                    cityName = data.getStringExtra("cityName");
+//                    if (cityId==-1) {
+//                        ToastUtil.show(getApplicationContext(), "请选择医院");
+//                        return;
+//                    }
+                    if (TextUtils.isEmpty(cityName)) {
+                        tvCityName.setText("");
+                    }else{
+                        tvCityName.setText(cityName+"");
+                    }
+                }
+            }
+        }
+
+
         if (requestCode == PayConstant.requestCodeHospitalChoose) {
             if (resultCode == PayConstant.resultCodeHospitalChoose) {
                 if (data!=null) {
                     hospitalId = data.getLongExtra("hospitalId", -1);
                     hospitalName = data.getStringExtra("hospitalName");
-                    if (hospitalId==-1) {
-                        ToastUtil.show(getApplicationContext(), "请选择医院");
-                        return;
+//                    if (hospitalId==-1) {
+//                        ToastUtil.show(getApplicationContext(), "请选择医院");
+//                        return;
+//                    }
+
+                    if (TextUtils.isEmpty(hospitalName)) {
+                        tvHospitalName.setText("");
+                    }else{
+                        tvHospitalName.setText(hospitalName+"");
                     }
-                    tvHospitalName.setText(hospitalName);
 
 
                     final CustomDialog customDialog=new CustomDialog();

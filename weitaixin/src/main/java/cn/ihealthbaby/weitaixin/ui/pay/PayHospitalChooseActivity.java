@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,10 +67,10 @@ public class PayHospitalChooseActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.currentPosition = position;
                 Hospital hospital = adapter.datas.get(position);
-                long hospitalId=hospital.getId();
+                long hospitalId = hospital.getId();
                 adapter.notifyDataSetChanged();
 
-                Intent intent=new Intent();
+                Intent intent = new Intent();
                 intent.putExtra("hospitalId", hospitalId);
                 intent.putExtra("hospitalName", hospital.getName());
                 LocalProductData.getLocal().put(LocalProductData.HospitalName, hospital.getName());
@@ -87,10 +88,11 @@ public class PayHospitalChooseActivity extends BaseActivity {
         });
 
 
+        String cityId = (String) LocalProductData.getLocal().get(LocalProductData.CityId);
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().hospitalApi.getHospitalsByCity("110100", new HttpClientAdapter.Callback<ApiList<Hospital>>() {
+        ApiManager.getInstance().hospitalApi.getHospitalsByCity(cityId, new HttpClientAdapter.Callback<ApiList<Hospital>>() {
             @Override
             public void call(Result<ApiList<Hospital>> t) {
                 if (t.isSuccess()) {

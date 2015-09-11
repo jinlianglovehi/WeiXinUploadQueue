@@ -137,11 +137,11 @@ public class WoInfoFragment extends BaseFragment {
 
             }
         }, getRequestTag());
-        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.user != null) {
-            ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
-            tv_wo_head_name.setText(WeiTaiXinApplication.user.getName() + "");
-            tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(WeiTaiXinApplication.user.getDeliveryTime()));
-            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(WeiTaiXinApplication.user.getDeliveryTime(), "MM月dd日"));
+        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.getInstance().user != null) {
+            ImageLoader.getInstance().displayImage(WeiTaiXinApplication.getInstance().user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
+            tv_wo_head_name.setText(WeiTaiXinApplication.getInstance().user.getName() + "");
+            tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(WeiTaiXinApplication.getInstance().user.getDeliveryTime()));
+            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(WeiTaiXinApplication.getInstance().user.getDeliveryTime(), "MM月dd日"));
         }
     }
 

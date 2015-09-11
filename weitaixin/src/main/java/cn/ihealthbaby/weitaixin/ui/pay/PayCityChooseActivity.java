@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import cn.ihealthbaby.client.model.Province;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.model.LocalProductData;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class PayCityChooseActivity extends BaseActivity {
@@ -53,6 +55,12 @@ public class PayCityChooseActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("选择城市");
+
+        LocalProductData.getLocal().put(LocalProductData.CityId, "");
+        LocalProductData.getLocal().put(LocalProductData.CityName, "");
+        LocalProductData.getLocal().put(LocalProductData.HospitalId, "");
+        LocalProductData.getLocal().put(LocalProductData.HospitalName,"");
+
         initView();
         pullData();
     }
@@ -67,7 +75,8 @@ public class PayCityChooseActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Province item = (Province) adapterLeft.getItem(position);
                 String provinceid = item.getProvinceid();
-
+                adapterLeft.currentPosition=position;
+                adapterLeft.notifyDataSetChanged();
 
                 final CustomDialog customDialog=new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(PayCityChooseActivity.this, "数据加载中...");
@@ -100,7 +109,20 @@ public class PayCityChooseActivity extends BaseActivity {
         lvPayRightCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                adapterRight.currentPosition=position;
+                City item = (City) adapterRight.getItem(position);
+                String cityid = item.getCityid();
+                String cityName = item.getCity();
+                adapterRight.notifyDataSetChanged();
+                Intent intent=new Intent();
+                intent.putExtra("cityid",cityid);
+                intent.putExtra("cityName",cityName);
 
+                LocalProductData.getLocal().put(LocalProductData.CityId, cityid);
+                LocalProductData.getLocal().put(LocalProductData.CityName,cityName);
+                setResult(PayConstant.resultCodeCityChoose, intent);
+
+                PayCityChooseActivity.this.finish();
             }
         });
     }
@@ -145,7 +167,7 @@ public class PayCityChooseActivity extends BaseActivity {
         private Context context;
         private ArrayList<Province> datas;
         private LayoutInflater mInflater;
-        public int currentPosition;
+        public int currentPosition=-1;
 
         public MyPayLeftCityAdapter(Context context, ArrayList<Province> datas) {
             mInflater = LayoutInflater.from(context);
@@ -198,11 +220,21 @@ public class PayCityChooseActivity extends BaseActivity {
             Province provinceName = this.datas.get(position);
             viewHolder.tvName.setText(provinceName.getProvince()+"");
 
+            if (currentPosition == position) {
+                convertView.setBackgroundColor(getResources().getColor(R.color.white0));
+                viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.white0));
+            }else{
+                convertView.setBackgroundColor(getResources().getColor(R.color.gray1));
+                viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.gray1));
+            }
+            viewHolder.tvState.setVisibility(View.INVISIBLE);
+
             return convertView;
         }
 
         class ViewHolder {
             @Bind(R.id.tvName)  TextView tvName;
+            @Bind(R.id.tvState) ImageView tvState;
 
             public ViewHolder(View itemView) {
                 ButterKnife.bind(this, itemView);
@@ -218,7 +250,7 @@ public class PayCityChooseActivity extends BaseActivity {
         private Context context;
         private ArrayList<City> datas;
         private LayoutInflater mInflater;
-        public int currentPosition;
+        public int currentPosition=-1;
 
         public MyPayRightCityAdapter(Context context, ArrayList<City> datas) {
             mInflater = LayoutInflater.from(context);
@@ -269,13 +301,22 @@ public class PayCityChooseActivity extends BaseActivity {
             }
 
             City provinceName = this.datas.get(position);
-            viewHolder.tvName.setText(provinceName.getCity()+"");
+            viewHolder.tvName.setText(provinceName.getCity() + "");
+
+            if (currentPosition == position) {
+//                viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.white0));
+                viewHolder.tvState.setVisibility(View.VISIBLE);
+            }else{
+//                viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.gray1));
+                viewHolder.tvState.setVisibility(View.INVISIBLE);
+            }
 
             return convertView;
         }
 
         class ViewHolder {
             @Bind(R.id.tvName)  TextView tvName;
+            @Bind(R.id.tvState) ImageView tvState;
 
             public ViewHolder(View itemView) {
                 ButterKnife.bind(this, itemView);

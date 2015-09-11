@@ -24,7 +24,9 @@ public class LocalProductData {
     }
 
     public static String HospitalId="HospitalId";
+    public static String CityId="CityId";
     public static String HospitalName="HospitalName";
+    public static String CityName="CityName";
     public static String DoctorId="DoctorId";
     public static String DoctorName="DoctorName";
     public static String Name01="Name01";

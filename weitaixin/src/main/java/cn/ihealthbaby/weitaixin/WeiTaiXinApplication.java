@@ -34,7 +34,7 @@ public class WeiTaiXinApplication extends Application {
     public static WeiTaiXinApplication app;
     public static String accountToken;
     public static String phone_number;
-    public User user;
+    public static User user;
     public static AdviceSetting adviceSetting;
     public static AdviceForm adviceForm = new AdviceForm();
 
@@ -133,6 +133,9 @@ public class WeiTaiXinApplication extends Application {
         if(user!=null){
             this.user = user;
             putValue("AccountToken",user.getAccountToken());
+            putValue("name",user.getName());
+            putValue("mobile",user.getMobile());
+            putValue("telephone",user.getTelephone());
         }
     }
 
