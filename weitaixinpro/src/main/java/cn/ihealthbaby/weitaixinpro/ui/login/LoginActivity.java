@@ -71,6 +71,7 @@ public class LoginActivity extends BaseActivity {
         mPopupWindow = new PopupWindow(findViewById(R.id.rl_login), mTvHostId.getWidth(), mTvHostId.getHeight() * 3);
         mPopupWindow.setContentView(contentView);
 
+        initData();
         ListView listView = (ListView) contentView.findViewById(R.id.list);
         PopupHostIdAdapter adapter = new PopupHostIdAdapter(name, this);
         listView.setAdapter(adapter);
@@ -86,16 +87,17 @@ public class LoginActivity extends BaseActivity {
         mPopupWindow.showAsDropDown(mTvHostId);
     }
 
-    @Override
+    private void initData() {
+//        ApiManager.getInstance().hClientAccountApi.get
+    }
 
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
             mPopupWindow = null;
-
         }
-
         return super.onTouchEvent(event);
 
     }
