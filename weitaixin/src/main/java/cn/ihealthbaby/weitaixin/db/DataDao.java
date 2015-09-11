@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -219,20 +220,50 @@ public class DataDao {
 	}
 
 
-	public void update(long mid){
-//		SQLiteDatabase db = dbHelper.getWritableDatabase();
-//		db.beginTransaction();
-//		try {
-//			if (db.isOpen()) {
-//				db.execSQL("delete from " + DataDBHelper.tableName + " where mid=?", new Object[]{mid});
-//			}
-//			db.setTransactionSuccessful();
-//		} finally {
-//			db.endTransaction();
-//		}
+	public void update(final ArrayList<MyAdviceItem>  adviceItems){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			if (db.isOpen()) {
+				for (int i = 0; i < adviceItems.size(); i++) {
+					MyAdviceItem myAdviceItem = adviceItems.get(i);
+
+					ContentValues values = new ContentValues();
+					values.put("mid",myAdviceItem.getId());
+					values.put("gestationalWeeks",myAdviceItem.getId());
+					values.put("testTime",myAdviceItem.getId());
+					values.put("testTimeLong",myAdviceItem.getId());
+					values.put("status",myAdviceItem.getId());
+					values.put("isNativeRecord",myAdviceItem.getId());
+					values.put("feeling",myAdviceItem.getId());
+					values.put("purpose",myAdviceItem.getId());
+					values.put("userid",myAdviceItem.getId());
+					values.put("rdata",myAdviceItem.getId());
+					values.put("path",myAdviceItem.getId());
+					values.put("uploadstate",myAdviceItem.getId());
+					values.put("serialnum",myAdviceItem.getId());
+					values.put("jianceid",myAdviceItem.getId());
+
+					db.update(DataDBHelper.tableName, values, "jianceid=?", new String[]{myAdviceItem.getJianceid() + ""});
+				}
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
 	}
 
-	
+
+
+	public void updateItem(final MyAdviceItem  myAdviceItem){
+		ArrayList<MyAdviceItem>  adviceItems=new ArrayList<MyAdviceItem>();
+		adviceItems.add(myAdviceItem);
+		update(adviceItems);
+	}
+
+
+
+
 	public ArrayList<MyAdviceItem> getAllRecord(boolean isRecordNativeed){
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
