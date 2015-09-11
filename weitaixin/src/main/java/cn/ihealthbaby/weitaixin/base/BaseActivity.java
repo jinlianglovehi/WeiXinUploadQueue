@@ -1,7 +1,10 @@
 package cn.ihealthbaby.weitaixin.base;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
 
 import com.android.volley.RequestQueue;
 
@@ -13,12 +16,13 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
  */
 public abstract class BaseActivity extends Activity {
     protected RequestQueue requestQueue;
+    protected InputMethodManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
-
+        manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -36,4 +40,15 @@ public abstract class BaseActivity extends Activity {
     protected Object getRequestTag() {
         return this;
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
+                manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }
+        return super.onTouchEvent(event);
+    }
+
 }

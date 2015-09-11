@@ -120,7 +120,7 @@ public class LoginActivity extends BaseActivity {
                                 WeiTaiXinApplication.accountToken=data.getAccountToken();
                                 WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
                                 WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
-                                WeiTaiXinApplication.user=data;
+                                WeiTaiXinApplication.getInstance().saveUser(data);
                                 ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
                                 WeiTaiXinApplication.getInstance().isLogin=true;
 

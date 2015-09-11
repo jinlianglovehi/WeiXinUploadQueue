@@ -283,7 +283,7 @@ public class RegistActivity extends BaseActivity {
                         WeiTaiXinApplication.accountToken = data.getAccountToken();
                         WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
                         WeiTaiXinApplication.getInstance().phone_number = phone_number;
-                        WeiTaiXinApplication.user = data;
+                        WeiTaiXinApplication.getInstance().saveUser(data);
 
                         String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
                         if(!data.getIsInit()){
