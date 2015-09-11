@@ -138,8 +138,11 @@ public abstract class ExpendableCountDownTimer {
 
 	public abstract void onFinish();
 
+	public abstract void onRestart();
+
 	public void restart() {
 		cancel();
+		onRestart();
 		start();
 	}
 }

@@ -14,7 +14,9 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
@@ -22,6 +24,7 @@ import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 import de.greenrobot.event.EventBus;
 
 public class CurveDetialActivity extends BaseActivity {
+	private final static String TAG = "CurveDetialActivity";
 	@Bind(R.id.chs)
 	CurveHorizontalScrollView chs;
 	@Bind(R.id.bpm)
@@ -74,15 +77,16 @@ public class CurveDetialActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor_detial);
 		ButterKnife.bind(this);
+		EventBus.getDefault().register(this);
 		titleText.setText("胎心监测");
 		function.setText("立即结束");
 		function.setVisibility(View.VISIBLE);
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
-		consumedtime = getIntent().getLongExtra("CONSUMEDTIME", 0);
-		duration = getIntent().getLongExtra("DURATION", 0);
-		interval = getIntent().getLongExtra("INTERVAL", 0);
+		consumedtime = getIntent().getLongExtra(Constants.INTENT_CONSUMED_TIME, 0);
+		duration = getIntent().getLongExtra(Constants.INTENT_DURATION, 0);
+		interval = getIntent().getLongExtra(Constants.INTENT_INTERVAL, 0);
 		configCurve();
 		countDownTimer = new ExpendableCountDownTimer(duration, interval) {
 			@Override
@@ -108,6 +112,10 @@ public class CurveDetialActivity extends BaseActivity {
 			@Override
 			public void onFinish() {
 			}
+
+			@Override
+			public void onRestart() {
+			}
 		};
 		countDownTimer.startAt(consumedtime);
 	}
@@ -130,5 +138,30 @@ public class CurveDetialActivity extends BaseActivity {
 			countDownTimer.cancel();
 			countDownTimer = null;
 		}
+		EventBus.getDefault().unregister(this);
+	}
+
+	public void onEventMainThread(MonitorTerminateEvent event) {
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
+		int reason = event.getEvent();
+		switch (reason) {
+			case MonitorTerminateEvent.EVENT_AUTO:
+				LogUtil.d(TAG, "EVENT_AUTO");
+				break;
+			case MonitorTerminateEvent.EVENT_UNKNOWN:
+				LogUtil.d(TAG, "EVENT_UNKNOWN");
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL:
+				LogUtil.d(TAG, "EVENT_MANUAL");
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
+				LogUtil.d(TAG, "EVENT_MANUAL_NOT_START");
+				break;
+			default:
+				break;
+		}
+		finish();
 	}
 }

@@ -15,6 +15,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
@@ -75,9 +76,9 @@ public class MonitorActivity extends BaseActivity {
 		long consumedTime = countDownTimer.getConsumedTime();
 		long duration = countDownTimer.getDuration();
 		long interval = countDownTimer.getInterval();
-		intent.putExtra("CONSUMEDTIME", consumedTime);
-		intent.putExtra("DURATION", duration);
-		intent.putExtra("INTERVAL", interval);
+		intent.putExtra(Constants.INTENT_CONSUMED_TIME, consumedTime);
+		intent.putExtra(Constants.INTENT_DURATION, duration);
+		intent.putExtra(Constants.INTENT_INTERVAL, interval);
 		startActivity(intent);
 	}
 
@@ -112,8 +113,7 @@ public class MonitorActivity extends BaseActivity {
 		//
 		roundProgressMask.setBackgroundResource(R.drawable.round_background_3);
 		configCurveSimple();
-//		long duration = 20 * 60 * 1000;
-		final long duration = 1 * 60 * 1000;
+		long duration = 20 * 60 * 1000;
 		final long interval = 500;
 		countDownTimer = new ExpendableCountDownTimer(duration, interval) {
 			private int fhr;
@@ -129,6 +129,22 @@ public class MonitorActivity extends BaseActivity {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
+				tick();
+			}
+
+			@Override
+			public void onFinish() {
+				tick();
+				//
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_AUTO));
+				//
+			}
+
+			@Override
+			public void onRestart() {
+			}
+
+			private void tick() {
 				roundProgressMask.setAngel((float) (360 * getConsumedTime() / getDuration()));
 				roundProgressMask.postInvalidate();
 				long time = DataStorage.fhrPackage.getTime();
@@ -144,14 +160,6 @@ public class MonitorActivity extends BaseActivity {
 				if (!hs.isTouching()) {
 					hs.smoothScrollTo((int) (curveSimple.getCurrentPositionX() - width / 2), 0);
 				}
-			}
-
-			@Override
-			public void onFinish() {
-				//
-				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_AUTO));
-				startActivity(new Intent(getApplicationContext(), GuardianStateActivity.class));
-				//
 			}
 		};
 		reset();
@@ -192,6 +200,9 @@ public class MonitorActivity extends BaseActivity {
 	}
 
 	public void onEventMainThread(MonitorTerminateEvent event) {
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
 		int reason = event.getEvent();
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
@@ -204,5 +215,6 @@ public class MonitorActivity extends BaseActivity {
 				LogUtil.d(TAG, "EVENT_MANUAL");
 				break;
 		}
+		finish();
 	}
 }

@@ -1,6 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.monitor;
 
-import android.content.Intent;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -9,11 +9,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qiniu.android.http.ResponseInfo;
 
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,19 +24,26 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
+import cn.ihealthbaby.weitaixin.db.DataDao;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
+import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.AsynUploadEngine;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.monitor.data.Data;
+import cn.ihealthbaby.weitaixin.ui.monitor.data.RecordData;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 
 public class CurvePlayActivity extends BaseActivity {
+	private final static String TAG = "CurvePlayActivity";
 	@Bind(R.id.curve_play)
 	CurveMonitorDetialView curvePlay;
 	@Bind(R.id.chs)
@@ -60,6 +70,11 @@ public class CurvePlayActivity extends BaseActivity {
 	ImageView redHeart;
 	private int width;
 	private ExpendableCountDownTimer countDownTimer;
+	private Data data;
+	private ArrayList<Integer> fhrs;
+	private Dialog dialog;
+	private String uuid;
+	private MyAdviceItem myAdviceItem;
 
 	@OnClick(R.id.back)
 	public void back() {
@@ -79,22 +94,46 @@ public class CurvePlayActivity extends BaseActivity {
 	@OnClick(R.id.btn_start)
 	public void upload(View view) {
 		AsynUploadEngine asynUploadEngine = new AsynUploadEngine(getApplicationContext());
-		String filename = null;
-		asynUploadEngine.init(new File(FileUtil.getVoiceDir(getApplicationContext()), filename));
+		String uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
+		if (uuid == null) {
+			ToastUtil.show(getApplicationContext(), "未获取到本地记录");
+			return;
+		}
+		dialog.show();
+		asynUploadEngine.init(new File(FileUtil.getVoiceDir(getApplicationContext()), uuid));
 		asynUploadEngine.setOnFinishActivity(new AsynUploadEngine.FinishedToDoWork() {
 			@Override
 			public void onFinishedWork(String key, ResponseInfo info, JSONObject response) {
-				ApiManager.getInstance().adviceApi.uploadData(WeiTaiXinApplication.getInstance().adviceForm, new HttpClientAdapter.Callback<Long>() {
+				ApiManager.getInstance().adviceApi.uploadData(getUploadData(myAdviceItem), new HttpClientAdapter.Callback<Long>() {
 					@Override
 					public void call(Result<Long> t) {
+						dialog.dismiss();
 						if (t.isSuccess()) {
+							ToastUtil.show(getApplicationContext(), "上传成功");
 							Long data = t.getData();
 							saveDataToDatabase(data);
+						} else {
+							ToastUtil.show(getApplicationContext(), t.getMsg());
 						}
 					}
 				}, getRequestTag());
 			}
 		});
+	}
+
+	private AdviceForm getUploadData(MyAdviceItem item) {
+		AdviceForm adviceForm = new AdviceForm();
+		adviceForm.setClientId(item.getJianceid());
+		adviceForm.setDataType(1);
+		adviceForm.setDeviceType(1);
+		adviceForm.setFeeling(item.getFeeling());
+		adviceForm.setAskPurpose(item.getPurpose());
+		adviceForm.setData(item.getRdata());
+		adviceForm.setTestTime(item.getTestTime());
+		adviceForm.setTestTimeLong(item.getTestTimeLong());
+		adviceForm.setGestationalWeeks(item.getGestationalWeeks());
+		adviceForm.setClientId(uuid);
+		return adviceForm;
 	}
 
 	//记录保存到数据库
@@ -110,10 +149,11 @@ public class CurvePlayActivity extends BaseActivity {
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
-		Intent intent = getIntent();
 		getData();
 		configCurve();
-		countDownTimer = new ExpendableCountDownTimer(20 * 60 * 1000, 500) {
+		CustomDialog customDialog = new CustomDialog();
+		dialog = customDialog.createDialog1(this, "正在上传胎音文件...");
+		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
 			public int position;
 
 			@Override
@@ -126,14 +166,16 @@ public class CurvePlayActivity extends BaseActivity {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				int fhr = DataStorage.fhrs.get(position);
-				curvePlay.addPoint(fhr);
-				curvePlay.postInvalidate();
-				int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
-				// TODO: 15/9/9   颜色根据数值变化
-				bpm.setText(fhr1 + "");
-				if (!chs.isTouching()) {
-					chs.smoothScrollTo((int) (curvePlay.getCurrentPositionX() - width / 2), 0);
+				int size = fhrs.size();
+				if (position < size - 1) {
+					int fhr = fhrs.get(position);
+					curvePlay.addPoint(fhr);
+					curvePlay.postInvalidate();
+					// TODO: 15/9/9   颜色根据数值变化
+					bpm.setText(fhr + "");
+					if (!chs.isTouching()) {
+						chs.smoothScrollTo((int) (curvePlay.getCurrentPositionX() - width / 2), 0);
+					}
 				}
 				position++;
 			}
@@ -142,6 +184,13 @@ public class CurvePlayActivity extends BaseActivity {
 			public void onFinish() {
 				ToastUtil.show(getApplicationContext(), "播放结束");
 			}
+
+			@Override
+			public void onRestart() {
+				position = 0;
+				curvePlay.reset();
+				chs.smoothScrollBy(0, 0);
+			}
 		};
 	}
 
@@ -149,6 +198,16 @@ public class CurvePlayActivity extends BaseActivity {
 	 * 从网络或者本地数据库获取数据
 	 */
 	private void getData() {
+		DataDao dao = DataDao.getInstance(getApplicationContext());
+		uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
+		myAdviceItem = dao.findNative(uuid);
+		LogUtil.d(TAG, myAdviceItem.toString());
+		String rdata = myAdviceItem.getRdata();
+		Gson gson = new Gson();
+		RecordData recordData = gson.fromJson(rdata, RecordData.class);
+		data = recordData.getData();
+		fhrs = gson.fromJson(data.getHeartRate(), new TypeToken<ArrayList<Integer>>() {
+		}.getType());
 	}
 
 	private void configCurve() {

@@ -144,6 +144,14 @@ public class CurveBasicView extends CoordinateView {
 		}
 	}
 
+	public void reset() {
+		fhrs.clear();
+		hearts.clear();
+		path.reset();
+		position = 0;
+		moved = true;
+	}
+
 	public void resetPoints() {
 		int position = fhrs.size() - 1;
 		path.reset();
