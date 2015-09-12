@@ -29,6 +29,7 @@ import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
@@ -158,7 +159,7 @@ public class WoInfoFragment extends BaseFragment {
 
     @OnClick(R.id.ll_2)
     public void ll_2() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), WoGoldenActivity.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
         startActivity(intent);
     }
 

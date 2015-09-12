@@ -16,7 +16,8 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
  */
 public class SPUtil {
     private static final String FILE_NAME = "weitaixin_share_data";
-    private static final String FILE_NAME_USER = "user";
+    private static final String FILE_NAME_USER = "user_share_data";
+    private static final String FILE_NAME_SERVICEINFO = "serviceinfo_share_data";
 
 
     public static void setLocalSetting(Context context, LocalSetting localSetting) {
@@ -89,7 +90,7 @@ public class SPUtil {
 
 
     public static void saveHeadPic(Context context,String headPic) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("HeadPic", headPic);
         editor.commit();
@@ -97,7 +98,7 @@ public class SPUtil {
 
 
     public static void saveServiceInfo(Context context, User user) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_SERVICEINFO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         ServiceInfo serviceInfo = user.getServiceInfo();
         editor.putString("AreaInfo", serviceInfo.getAreaInfo());
@@ -111,12 +112,12 @@ public class SPUtil {
 
 
     public static ServiceInfo getServiceInfo(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
-        ServiceInfo serviceInfo=new ServiceInfo();
-        serviceInfo.setAreaInfo(sp.getString("AreaInfo",""));
-        serviceInfo.setAreaInfo(sp.getString("Serialnum",""));
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_SERVICEINFO, Context.MODE_PRIVATE);
+        ServiceInfo serviceInfo = new ServiceInfo();
+        serviceInfo.setAreaInfo(sp.getString("AreaInfo", ""));
+        serviceInfo.setAreaInfo(sp.getString("Serialnum", ""));
         serviceInfo.setDoctorId(sp.getLong("DoctorId", -1));
-        serviceInfo.setAreaInfo(sp.getString("DoctorName",""));
+        serviceInfo.setAreaInfo(sp.getString("DoctorName", ""));
         serviceInfo.setHospitalId(sp.getLong("HospitalId", -1));
         serviceInfo.setHospitalName(sp.getString("HospitalName", ""));
         return serviceInfo;
@@ -124,7 +125,7 @@ public class SPUtil {
 
 
     public static boolean isLogin(Context context){
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         String accountToken = sp.getString("AccountToken","");
         if (TextUtils.isEmpty(accountToken)) {
             return false;
@@ -132,9 +133,5 @@ public class SPUtil {
         return true;
     }
 
-
-    public static ServiceInfo getServiceInfo() {
-        return null;
-    }
 
 }
