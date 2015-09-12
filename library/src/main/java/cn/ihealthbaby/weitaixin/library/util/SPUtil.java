@@ -116,9 +116,9 @@ public class SPUtil {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_SERVICEINFO, Context.MODE_PRIVATE);
         ServiceInfo serviceInfo = new ServiceInfo();
         serviceInfo.setAreaInfo(sp.getString("AreaInfo", ""));
-        serviceInfo.setAreaInfo(sp.getString("Serialnum", ""));
+        serviceInfo.setSerialnum(sp.getString("Serialnum", ""));
         serviceInfo.setDoctorId(sp.getLong("DoctorId", -1));
-        serviceInfo.setAreaInfo(sp.getString("DoctorName", ""));
+        serviceInfo.setDoctorName(sp.getString("DoctorName", ""));
         serviceInfo.setHospitalId(sp.getLong("HospitalId", -1));
         serviceInfo.setHospitalName(sp.getString("HospitalName", ""));
         return serviceInfo;
