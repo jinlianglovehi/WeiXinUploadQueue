@@ -11,7 +11,7 @@ public class MyAdviceItem implements Serializable {
 	// 1本地   2云端   3正在上传
 	public static final int NATIVE_RECORD = 1;
 	public static final int CLOUD_RECORD = 2;
-	public static final int UPLOAD_RECORD = 3;
+	public static final int UPLOADING_RECORD = 3;
 	/**
 	 * 检测信息的id
 	 */
