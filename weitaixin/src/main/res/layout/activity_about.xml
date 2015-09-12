@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/white0"
+              android:background="@color/gray17"
               android:orientation="vertical">
 
     <include
@@ -46,135 +46,156 @@
                     android:layout_height="wrap_content"
                     android:text="@string/version"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="@dimen/dimen_dp_20"
-                    android:layout_marginRight="@dimen/dimen_dp_20"
-                    android:background="@color/gray3"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_dp_40"
-                android:layout_marginRight="@dimen/dimen_dp_40"
                 android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/rl_welcome"
                     style="@style/wo_info_item"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginLeft="23dp"
                         android:singleLine="true"
-                        android:text="@string/welcome"
-                        android:textColor="@color/black0"
+                        android:text="欢迎页"
+                        android:textColor="@drawable/text_color_hei_selector"
                         android:textSize="@dimen/font_normal"/>
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_dp_20"
-                        android:layout_height="@dimen/dimen_dp_20"
+                        android:layout_width="10dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/wo_head_arrow_right"/>
+                        android:layout_marginRight="22dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/wo_head_arrow_right"
+                        android:visibility="visible"/>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_feature"
+                    android:id="@+id/rl_function"
                     style="@style/wo_info_item"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginLeft="23dp"
                         android:singleLine="true"
-                        android:text="@string/feature"
-                        android:textColor="@color/black0"
+                        android:text="产品功能"
+                        android:textColor="@drawable/text_color_hei_selector"
                         android:textSize="@dimen/font_normal"/>
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_dp_20"
-                        android:layout_height="@dimen/dimen_dp_20"
+                        android:layout_width="10dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/wo_head_arrow_right"/>
+                        android:layout_marginRight="22dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/wo_head_arrow_right"
+                        android:visibility="visible"/>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_use_process"
+                    android:id="@+id/rl_use"
                     style="@style/wo_info_item"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginLeft="23dp"
                         android:singleLine="true"
-                        android:text="@string/use_process"
-                        android:textColor="@color/black0"
+                        android:text="使用流程"
+                        android:textColor="@drawable/text_color_hei_selector"
                         android:textSize="@dimen/font_normal"/>
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_dp_20"
-                        android:layout_height="@dimen/dimen_dp_20"
+                        android:layout_width="10dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/wo_head_arrow_right"/>
+                        android:layout_marginRight="22dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/wo_head_arrow_right"
+                        android:visibility="visible"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rl_update"
                     style="@style/wo_info_item"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical">
 
                     <TextView
+                        android:id="@+id/tv_version_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginLeft="23dp"
                         android:singleLine="true"
-                        android:text="@string/update"
-                        android:textColor="@color/black0"
+                        android:text="版本更新"
+                        android:textColor="@drawable/text_color_hei_selector"
                         android:textSize="@dimen/font_normal"/>
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_dp_20"
-                        android:layout_height="@dimen/dimen_dp_20"
+                        android:id="@+id/tv_message_count"
+                        android:layout_width="40dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/tv_version_name"
+                        android:src="@drawable/version_new"
+                        android:visibility="visible"/>
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:scaleType="centerCrop"
+                        android:layout_marginRight="22dp"
+                        android:scaleType="fitXY"
                         android:src="@drawable/wo_head_arrow_right"
-                        android:visibility="gone"/>
+                        android:visibility="visible"/>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_use_protocol"
+                    android:id="@+id/rl_protocol"
                     style="@style/wo_info_item"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginLeft="23dp"
                         android:singleLine="true"
-                        android:text="@string/use_protocol"
-                        android:textColor="@color/black0"
+                        android:text="使用条款和协议"
+                        android:textColor="@drawable/text_color_hei_selector"
                         android:textSize="@dimen/font_normal"/>
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_dp_20"
-                        android:layout_height="@dimen/dimen_dp_20"
+                        android:layout_width="10dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/wo_head_arrow_right"/>
+                        android:layout_marginRight="22dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/wo_head_arrow_right"
+                        android:visibility="visible"/>
                 </RelativeLayout>
             </LinearLayout>
 

@@ -18,22 +18,25 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
  */
 public class AboutActivity extends BaseActivity {
 
+
     @Bind(R.id.back)
     RelativeLayout mBack;
     @Bind(R.id.title_text)
     TextView mTitleText;
-    @Bind(R.id.rl_welcome)
-    RelativeLayout mRlWelcome;
-    @Bind(R.id.rl_feature)
-    RelativeLayout mRlFeature;
-    @Bind(R.id.rl_use_process)
-    RelativeLayout mRlUseProcess;
-    @Bind(R.id.rl_update)
-    RelativeLayout mRlUpdate;
-    @Bind(R.id.rl_use_protocol)
-    RelativeLayout mRlUseProtocol;
+    @Bind(R.id.function)
+    TextView mFunction;
     @Bind(R.id.tv_version)
     TextView mTvVersion;
+    @Bind(R.id.rl_welcome)
+    RelativeLayout mRlWelcome;
+    @Bind(R.id.rl_function)
+    RelativeLayout mRlFunction;
+    @Bind(R.id.rl_use)
+    RelativeLayout mRlUse;
+    @Bind(R.id.rl_update)
+    RelativeLayout mRlUpdate;
+    @Bind(R.id.rl_protocol)
+    RelativeLayout mRlProtocol;
 
     @Override
     protected void onResume() {
@@ -62,29 +65,11 @@ public class AboutActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.rl_feature)
-    public void featureOnclick() {
-        Intent intent = new Intent(this, FeatureActiviy.class);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.rl_use_process)
-    public void processOnclick() {
-        Intent intent = new Intent(this, UseProcessActiviy.class);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.rl_use_protocol)
-    public void protocolOnclick() {
-        Intent intent = new Intent(this, UseProtocolActiviy.class);
-        startActivity(intent);
-    }
 
     @OnClick(R.id.back)
-    public void backOnclick(){
+    public void backOnclick() {
         finish();
     }
-
 
 
     /**

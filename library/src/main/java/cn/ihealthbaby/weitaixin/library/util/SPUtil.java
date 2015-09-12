@@ -63,7 +63,7 @@ public class SPUtil {
 
     public static User getUser(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
-        User user =new User();
+        User user = new User();
         user.setAccountToken(sp.getString("AccountToken", ""));
         user.setTelephone(sp.getString("Telephone", ""));
         user.setId(sp.getLong("Id", -1));
@@ -82,7 +82,7 @@ public class SPUtil {
     }
 
 
-    public static void clearUser(Context context){
+    public static void clearUser(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
@@ -90,7 +90,7 @@ public class SPUtil {
     }
 
 
-    public static void saveHeadPic(Context context,String headPic) {
+    public static void saveHeadPic(Context context, String headPic) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("HeadPic", headPic);
@@ -125,9 +125,9 @@ public class SPUtil {
     }
 
 
-    public static boolean isLogin(Context context){
+    public static boolean isLogin(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
-        String accountToken = sp.getString("AccountToken","");
+        String accountToken = sp.getString("AccountToken", "");
         if (TextUtils.isEmpty(accountToken)) {
             return false;
         }
