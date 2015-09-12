@@ -23,6 +23,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapt
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
 
 /**
@@ -72,9 +73,8 @@ public class WeiTaiXinApplication extends Application {
     public void initApiManager() {
         RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
         mAdapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
-//		mAdapter.setAccountToken(WeiTaiXinApplication.accountToken);
+		mAdapter.setAccountToken(SPUtil.getUser(this).getAccountToken());
         ApiManager.init(mAdapter);
-//		ApiManager.getInstance();
     }
 
 
