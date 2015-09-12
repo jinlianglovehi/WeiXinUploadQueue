@@ -28,6 +28,10 @@ public class DataDao {
 		return dataDao;
 	}
 
+
+	/**
+	 * 单纯添加
+	 */
 	public synchronized void add(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		if (db.isOpen()) {
@@ -51,9 +55,9 @@ public class DataDao {
 				} else {
 					db.beginTransaction();
 					try {
-						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status) values (?,?,?,?,?)",
+						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
 								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime().getTime(),
-										                      adviceItem.getTestTimeLong(), adviceItem.getStatus()});
+										                      adviceItem.getTestTimeLong(), adviceItem.getStatus(),adviceItem.getUploadstate()});
 						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
 						db.setTransactionSuccessful();
 					} finally {
@@ -64,13 +68,17 @@ public class DataDao {
 		}
 	}
 
+	/**
+	 * 单纯添加
+	 */
 	public synchronized void add(final MyAdviceItem adviceItem, final boolean isRecordNative) {
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		adviceItems.add(adviceItem);
-		addItemList(adviceItems, isRecordNative);
+		add(adviceItems, isRecordNative);
 	}
 
-	public synchronized MyAdviceItem find(long mid) {
+	
+	public synchronized MyAdviceItem find(long mid) {//找云端记录
 		MyAdviceItem adviceItem = null;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -84,13 +92,13 @@ public class DataDao {
 					String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
 					int testTimeLong = cursor.getInt(cursor.getColumnIndex("testTimeLong"));
 					int status = cursor.getInt(cursor.getColumnIndex("status"));
-					int uploadstate = cursor.getInt(cursor.getColumnIndex("uploadstate"));
+//					int uploadstate = cursor.getInt(cursor.getColumnIndex("uploadstate"));
 					adviceItem.setId(Long.parseLong(mmid));
 					adviceItem.setGestationalWeeks(gestationalWeeks);
 					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 					adviceItem.setTestTimeLong(testTimeLong);
 					adviceItem.setStatus(status);
-					adviceItem.setUploadstate(uploadstate);
+//					adviceItem.setUploadstate(uploadstate);
 					return adviceItem;
 				} else {
 					return adviceItem;
@@ -103,7 +111,7 @@ public class DataDao {
 		}
 	}
 
-	public synchronized MyAdviceItem findNative(String uuid) {
+	public synchronized MyAdviceItem findNative(String uuid) { //找本地记录
 		MyAdviceItem adviceItem = null;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -150,6 +158,9 @@ public class DataDao {
 		}
 	}
 
+	/**
+	 * 带删除记录的add
+	 */
 	public synchronized void addItemList(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		if (db.isOpen()) {
@@ -175,9 +186,9 @@ public class DataDao {
 					delete(adviceItem.getId());
 					db.beginTransaction();
 					try {
-						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status) values (?,?,?,?,?)",
+						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
 								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime().getTime(),
-										                      adviceItem.getTestTimeLong(), adviceItem.getStatus()});
+										                      adviceItem.getTestTimeLong(), adviceItem.getStatus(),adviceItem.getUploadstate()});
 						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
 						db.setTransactionSuccessful();
 					} finally {
@@ -188,6 +199,9 @@ public class DataDao {
 		}
 	}
 
+	/**
+	 * 带删除记录的add
+	 */
 	public synchronized void addItem(final MyAdviceItem adviceItem, final boolean isRecordNative) {
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		adviceItems.add(adviceItem);
@@ -266,14 +280,18 @@ public class DataDao {
 		update(adviceItems);
 	}
 
-	public ArrayList<MyAdviceItem> getAllRecord(boolean isRecordNativeed) {
+
+	/**
+	 * 获取本地记录和云端记录的所有字段
+	 * @return
+	 */
+	public ArrayList<MyAdviceItem> getAllRecordNative() {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsCloud = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
 		if (db.isOpen()) {
-			if (isRecordNativeed) {
-				Cursor cursor = db.rawQuery("mid,gestationalWeeks,testTime,testTimeLong,status," +
+				Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status," +
 						                            "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName, null);
 				while (cursor.moveToNext()) {
 					MyAdviceItem adviceItem = new MyAdviceItem();
@@ -303,10 +321,10 @@ public class DataDao {
 					adviceItem.setUploadstate(uploadstate);
 					adviceItem.setSerialnum(serialnum);
 					adviceItem.setJianceid(jianceid);
-					if (uploadstate == MyAdviceItem.CLOUD_RECORD) {
-						adviceItemsCloud.add(adviceItem);
-					} else {
+					if (uploadstate == MyAdviceItem.NATIVE_RECORD||uploadstate==MyAdviceItem.UPLOADING_RECORD) {
 						adviceItemsNative.add(adviceItem);
+					} else {
+						adviceItemsCloud.add(adviceItem);
 					}
 				}
 				ArrayList<MyAdviceItem> adviceItemsCloudTenCount = new ArrayList<MyAdviceItem>();
@@ -324,7 +342,22 @@ public class DataDao {
 				adviceItems.addAll(adviceItemsCloudTenCount);
 				adviceItems.addAll(adviceItemsNative);
 				cursor.close();
-			} else  {
+		}
+		LogUtil.d("adviceItemsAllAll", adviceItems.size() + " -adviceItemsAllAll ==> " + adviceItems);
+		return adviceItems;
+	}
+
+
+	/**
+	 * 获取记录界面的显示数据的部分字段
+	 * @return
+	 */
+	public ArrayList<MyAdviceItem> getAllRecordOnView() {
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
+		ArrayList<MyAdviceItem> adviceItemsCloud = new ArrayList<MyAdviceItem>();
+		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
+		if (db.isOpen()) {
 				Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate from " + DataDBHelper.tableName, null);
 				while (cursor.moveToNext()) {
 					MyAdviceItem adviceItem = new MyAdviceItem();
@@ -342,10 +375,10 @@ public class DataDao {
 					adviceItem.setTestTimeLong(testTimeLong);
 					adviceItem.setStatus(status);
 					LogUtil.d("uploadstate", "uploadstate ==> " + uploadstate);
-					if (uploadstate == MyAdviceItem.CLOUD_RECORD) {
-						adviceItemsCloud.add(adviceItem);
-					} else {
+					if (uploadstate == MyAdviceItem.NATIVE_RECORD||uploadstate==MyAdviceItem.UPLOADING_RECORD) {
 						adviceItemsNative.add(adviceItem);
+					} else {
+						adviceItemsCloud.add(adviceItem);
 					}
 				}
 				ArrayList<MyAdviceItem> adviceItemsCloudTenCount = new ArrayList<MyAdviceItem>();
@@ -364,11 +397,63 @@ public class DataDao {
 				adviceItems.addAll(adviceItemsCloudTenCount);
 				adviceItems.addAll(adviceItemsNative);
 				cursor.close();
-			}
 		}
 		LogUtil.d("adviceItemsAllAll", adviceItems.size() + " -adviceItemsAllAll ==> " + adviceItems);
 		return adviceItems;
 	}
+
+
+
+	/**
+	 * 只获取本地记录 的所有字段
+	 * @return
+	 */
+	public ArrayList<MyAdviceItem> getAllRecordNativeOnly() {
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
+		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
+		if (db.isOpen()) {
+			Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status," +
+					"feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName, null);
+			while (cursor.moveToNext()) {
+				MyAdviceItem adviceItem = new MyAdviceItem();
+				long mid = cursor.getLong(cursor.getColumnIndex("mid"));
+				String gestationalWeeks = cursor.getString(cursor.getColumnIndex("gestationalWeeks"));
+				String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
+				int testTimeLong = cursor.getInt(cursor.getColumnIndex("testTimeLong"));
+				int status = cursor.getInt(cursor.getColumnIndex("status"));
+				String feeling = cursor.getString(cursor.getColumnIndex("feeling"));
+				String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
+				int userid = cursor.getInt(cursor.getColumnIndex("userid"));
+				String rdata = cursor.getString(cursor.getColumnIndex("rdata"));
+				String path = cursor.getString(cursor.getColumnIndex("path"));
+				int uploadstate = cursor.getInt(cursor.getColumnIndex("uploadstate"));
+				String serialnum = cursor.getString(cursor.getColumnIndex("serialnum"));
+				String jianceid = cursor.getString(cursor.getColumnIndex("jianceid"));
+				adviceItem.setId(mid);
+				adviceItem.setGestationalWeeks(gestationalWeeks);
+				adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
+				adviceItem.setTestTimeLong(testTimeLong);
+				adviceItem.setStatus(status);
+				adviceItem.setFeeling(feeling);
+				adviceItem.setPurpose(purpose);
+				adviceItem.setUserid(userid);
+				adviceItem.setRdata(rdata);
+				adviceItem.setPath(path);
+				adviceItem.setUploadstate(uploadstate);
+				adviceItem.setSerialnum(serialnum);
+				adviceItem.setJianceid(jianceid);
+				if (uploadstate == MyAdviceItem.NATIVE_RECORD||uploadstate==MyAdviceItem.UPLOADING_RECORD) {
+					adviceItemsNative.add(adviceItem);
+				}
+			}
+			adviceItems.addAll(adviceItemsNative);
+			cursor.close();
+		}
+		LogUtil.d("adviceItemsNativeOnly", adviceItems.size() + " -adviceItemsNativeOnly ==> " + adviceItems);
+		return adviceItems;
+	}
+
 
 }
 

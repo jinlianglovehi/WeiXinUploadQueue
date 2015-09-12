@@ -205,6 +205,7 @@ public class RecordFragment extends BaseFragment {
                 return false;
             }
         });
+
         return view;
     }
 
@@ -338,7 +339,7 @@ public class RecordFragment extends BaseFragment {
         Dialog dialog = customDialog.createDialog1(context, "从数据库中加载...");
         dialog.show();
         //从缓存数据库中展示数据列表
-        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecord(false);
+        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordOnView();
         if (adviceItems.size() > 0) {
             countNumber = adviceItems.size();
             tvUsedCount.setText(countNumber + "");
@@ -352,7 +353,7 @@ public class RecordFragment extends BaseFragment {
                 public void run() {
                     pullFirstData(null);
                 }
-            }, 1000);
+            }, 3000);
         } else {
             customDialog.dismiss();
             customDialog = null;
@@ -372,16 +373,10 @@ public class RecordFragment extends BaseFragment {
                     PageData<AdviceItem> data = t.getData();
                     final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
-//                    countNumber = data.getCount();
-//                    if (tvUsedCount != null) {
-//                        tvUsedCount.setText(countNumber + "");
-//                    }
-
-
                     LogUtil.d("dataListsize", "dataListsize ==> "+dataList.size());
                     ArrayList<AdviceItem> dataListPageTen = new ArrayList<AdviceItem>();
 
-                    if (dataList.size() > 0) {
+                    if (dataList != null && dataList.size() > 0) {
                         if (dataList.size() >= pageSize) {
                             for (int i = 0; i < pageSize; i++) {
                                 dataListPageTen.add(dataList.get(i));
@@ -392,7 +387,7 @@ public class RecordFragment extends BaseFragment {
                             }
                         }
 
-                        //合并
+                        //云端和本地记录-合并
                         ArrayList<MyAdviceItem> showMyAdviceItems = switchList(dataListPageTen);
                         mergeAdviceItem(showMyAdviceItems);
 
@@ -415,7 +410,7 @@ public class RecordFragment extends BaseFragment {
                         mAdviceItems = adapter.datas;
                     } else {
                         //从缓存数据库中展示数据列表
-                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecord(false);
+                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordOnView();
                         adapter.setDatas(switchList(dataList));
                         adapter.notifyDataSetChanged();
                         mAdviceItems = adapter.datas;
@@ -460,7 +455,7 @@ public class RecordFragment extends BaseFragment {
 
 
     private void mergeAdviceItem(ArrayList<MyAdviceItem> showMyAdviceItems) {
-        ArrayList<MyAdviceItem> adviceNativeItemsDB = dataDao.getAllRecord(false);
+        ArrayList<MyAdviceItem> adviceNativeItemsDB = dataDao.getAllRecordNativeOnly();
         showMyAdviceItems.addAll(adviceNativeItemsDB);
     }
 
@@ -471,21 +466,21 @@ public class RecordFragment extends BaseFragment {
             MyAdviceItem dateItem=new MyAdviceItem();
 
             dateItem.setId(888 + i*3);
-            dateItem.setGestationalWeeks("50周+" + (2 + i * 3));
+            dateItem.setGestationalWeeks("50周+" + (i * 3));
             dateItem.setTestTime(new Date());
-            dateItem.setTestTimeLong(34434 + i * 2000);
+            dateItem.setTestTimeLong(21500+(i+5)*1000*60);
             dateItem.setStatus(3);
             dateItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
 
             adviceNativeItems.add(dateItem);
         }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                dataDao.addItemList(adviceNativeItems, false);
-            }
-        }).start();
+        dataDao.addItemList(adviceNativeItems, false);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                dataDao.addItemList(adviceNativeItems, false);
+//            }
+//        }).start();
     }
 
 

@@ -73,7 +73,11 @@ public class WeiTaiXinApplication extends Application {
     public void initApiManager() {
         RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
         mAdapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
-		mAdapter.setAccountToken(SPUtil.getUser(this).getAccountToken()+"");
+        User user = SPUtil.getUser(this);
+        if(user!=null){
+            String accountToken = user.getAccountToken();
+            mAdapter.setAccountToken(accountToken+"");
+        }
         ApiManager.init(mAdapter);
     }
 

@@ -11,6 +11,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
+import cn.ihealthbaby.weitaixin.ui.pay.alipay.PayAlipayUtil;
 
 public class PayAffirmPaymentActivity extends BaseActivity {
 
@@ -22,7 +23,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     @Bind(R.id.tvTotalPrice) TextView tvTotalPrice;
     @Bind(R.id.llPaymenyWeixin) LinearLayout llPaymenyWeixin;
-    @Bind(R.id.llPaymenyTaoBao) LinearLayout llPaymenyTaoBao;
+    @Bind(R.id.llPaymenyAlipay) LinearLayout llPaymenyAlipay;
     @Bind(R.id.llPaymenyUnionPay) LinearLayout llPaymenyUnionPay;
 
 
@@ -49,8 +50,10 @@ public class PayAffirmPaymentActivity extends BaseActivity {
     public void PaymenyWeixin() {
     }
 
-    @OnClick(R.id.llPaymenyTaoBao)
-    public void PaymenyTaoBao() {
+    @OnClick(R.id.llPaymenyAlipay)
+    public void PaymenyAlipay() {
+        PayAlipayUtil payAlipayUtil=new PayAlipayUtil(this);
+        payAlipayUtil.payAction();
     }
 
     @OnClick(R.id.llPaymenyUnionPay)

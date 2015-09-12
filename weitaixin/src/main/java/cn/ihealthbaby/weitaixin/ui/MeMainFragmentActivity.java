@@ -24,7 +24,7 @@ import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
 import cn.ihealthbaby.weitaixin.ui.record.RecordFragment;
 
 /**
- * Created by Think on 2015/8/13.n    9369.03
+ * Created by Think on 2015/8/13
  */
 public class MeMainFragmentActivity extends BaseActivity {
 

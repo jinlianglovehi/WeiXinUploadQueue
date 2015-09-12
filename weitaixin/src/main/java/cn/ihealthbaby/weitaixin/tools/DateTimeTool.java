@@ -90,7 +90,7 @@ public class DateTimeTool {
     }
 
     public static String getTime3(int mss){
-        mss=mss*1000;
+//        mss=mss*1000;
         long days = mss / (1000 * 60 * 60 * 24);
         long hours = (mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
         long minutes = (mss % (1000 * 60 * 60)) / (1000 * 60);
@@ -100,7 +100,7 @@ public class DateTimeTool {
 
     public static String getTime2(int time){
         SimpleDateFormat formatter = new SimpleDateFormat("mm分ss秒");
-        String hms = formatter.format(time*1000);
+        String hms = formatter.format(time);
         return hms;
     }
 
