@@ -331,7 +331,7 @@ public class MonitorFragment extends BaseFragment {
 	 */
 	private void getConfig() {
 		user = SPUtil.getUser(getActivity().getApplicationContext());
-		serviceInfo = SPUtil.getServiceInfo();
+		serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
 		ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(), new Callback<AdviceSetting>() {
 			@Override
 			public void call(Result<AdviceSetting> t) {
@@ -412,7 +412,7 @@ public class MonitorFragment extends BaseFragment {
 //		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
 //		return "IHB2LC9P2UUZ"; //IHB2LD1X7CUC   IHB2LC9JUHPB
 		String serialnum = "";
-		ServiceInfo serviceInfo = SPUtil.getServiceInfo();
+		ServiceInfo serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
 		if (serviceInfo != null) {
 			serialnum = serviceInfo.getSerialnum();
 		}

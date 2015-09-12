@@ -59,6 +59,7 @@ public class SPUtil {
         editor.putLong("CreateTime", user.getCreateTime().getTime());
         editor.putBoolean("IsInit", user.getIsInit());
         editor.commit();
+        saveServiceInfo(context, user);
     }
 
 
@@ -77,6 +78,8 @@ public class SPUtil {
         user.setDeliveryTime(new Date(sp.getLong("DeliveryTime", -1)));
         user.setCreateTime(new Date(sp.getLong("CreateTime", -1)));
         user.setIsInit(sp.getBoolean("IsInit", false));
+        ServiceInfo serviceInfo = SPUtil.getServiceInfo(context);
+        user.setServiceInfo(serviceInfo);
         return user;
     }
 
