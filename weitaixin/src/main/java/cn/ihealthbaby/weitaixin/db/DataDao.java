@@ -28,12 +28,12 @@ public class DataDao {
 		return dataDao;
 	}
 
-	public synchronized void add(final ArrayList<MyAdviceItem> adviceItems, final int isRecordNative) {
+	public synchronized void add(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		if (db.isOpen()) {
 			for (int i = 0; i < adviceItems.size(); i++) {
 				MyAdviceItem adviceItem = adviceItems.get(i);
-				if (isRecordNative==MyAdviceItem.NATIVE_RECORD||isRecordNative==MyAdviceItem.UPLOAD_RECORD) {
+				if (isRecordNative) {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
@@ -48,7 +48,7 @@ public class DataDao {
 					} finally {
 						db.endTransaction();
 					}
-				} else if(isRecordNative==MyAdviceItem.CLOUD_RECORD){
+				} else {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status) values (?,?,?,?,?)",
@@ -64,7 +64,7 @@ public class DataDao {
 		}
 	}
 
-	public synchronized void add(final MyAdviceItem adviceItem, final int isRecordNative) {
+	public synchronized void add(final MyAdviceItem adviceItem, final boolean isRecordNative) {
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		adviceItems.add(adviceItem);
 		addItemList(adviceItems, isRecordNative);
@@ -150,12 +150,12 @@ public class DataDao {
 		}
 	}
 
-	public synchronized void addItemList(final ArrayList<MyAdviceItem> adviceItems, final int isRecordNative) {
+	public synchronized void addItemList(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		if (db.isOpen()) {
 			for (int i = 0; i < adviceItems.size(); i++) {
 				MyAdviceItem adviceItem = adviceItems.get(i);
-				if (isRecordNative==MyAdviceItem.NATIVE_RECORD||isRecordNative==MyAdviceItem.UPLOAD_RECORD) {
+				if (isRecordNative) {
 					delete(adviceItem.getId());
 					db.beginTransaction();
 					try {
@@ -171,7 +171,7 @@ public class DataDao {
 					} finally {
 						db.endTransaction();
 					}
-				} else if(isRecordNative==MyAdviceItem.CLOUD_RECORD){
+				} else {
 					delete(adviceItem.getId());
 					db.beginTransaction();
 					try {
@@ -188,7 +188,7 @@ public class DataDao {
 		}
 	}
 
-	public synchronized void addItem(final MyAdviceItem adviceItem, final int isRecordNative) {
+	public synchronized void addItem(final MyAdviceItem adviceItem, final boolean isRecordNative) {
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		adviceItems.add(adviceItem);
 		addItemList(adviceItems, isRecordNative);
@@ -266,13 +266,13 @@ public class DataDao {
 		update(adviceItems);
 	}
 
-	public ArrayList<MyAdviceItem> getAllRecord(int isRecordNativeed) {
+	public ArrayList<MyAdviceItem> getAllRecord(boolean isRecordNativeed) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsCloud = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
 		if (db.isOpen()) {
-			if (isRecordNativeed==MyAdviceItem.NATIVE_RECORD||isRecordNativeed==MyAdviceItem.UPLOAD_RECORD) {
+			if (isRecordNativeed) {
 				Cursor cursor = db.rawQuery("mid,gestationalWeeks,testTime,testTimeLong,status," +
 						                            "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName, null);
 				while (cursor.moveToNext()) {
@@ -324,7 +324,7 @@ public class DataDao {
 				adviceItems.addAll(adviceItemsCloudTenCount);
 				adviceItems.addAll(adviceItemsNative);
 				cursor.close();
-			} else if(isRecordNativeed==MyAdviceItem.CLOUD_RECORD) {
+			} else  {
 				Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate from " + DataDBHelper.tableName, null);
 				while (cursor.moveToNext()) {
 					MyAdviceItem adviceItem = new MyAdviceItem();
@@ -369,6 +369,7 @@ public class DataDao {
 		LogUtil.d("adviceItemsAllAll", adviceItems.size() + " -adviceItemsAllAll ==> " + adviceItems);
 		return adviceItems;
 	}
+
 }
 
 
