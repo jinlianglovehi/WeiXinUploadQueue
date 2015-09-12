@@ -97,6 +97,4 @@ dependencies {
     //时间选择器
     compile 'com.bigkoo:pickerview:1.0.0'
 
-    //画圆
-    compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.3'
 }
