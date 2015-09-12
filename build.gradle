@@ -29,3 +29,7 @@ allprojects {
     }
 }
 
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor 1, 'minutes'
+}
+
