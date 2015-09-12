@@ -433,6 +433,11 @@ public class RecordFragment extends BaseFragment {
     }
 
 
+    /**
+     * 把云端记录转换成自己的集合类型
+     * @param adviceItems
+     * @return
+     */
     public ArrayList<MyAdviceItem> switchList(ArrayList<AdviceItem> adviceItems){
         ArrayList<MyAdviceItem> myAdviceItems=new ArrayList<MyAdviceItem>();
         for (int i = 0; i < adviceItems.size(); i++) {
@@ -445,7 +450,7 @@ public class RecordFragment extends BaseFragment {
             myAdviceItem.setTestTime(adviceItem.getTestTime());
             myAdviceItem.setTestTimeLong(adviceItem.getTestTimeLong());
             myAdviceItem.setStatus(adviceItem.getStatus());
-            myAdviceItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
+            myAdviceItem.setUploadstate(MyAdviceItem.CLOUD_RECORD);
 
             myAdviceItems.add(myAdviceItem);
         }
@@ -456,6 +461,7 @@ public class RecordFragment extends BaseFragment {
 
     private void mergeAdviceItem(ArrayList<MyAdviceItem> showMyAdviceItems) {
         ArrayList<MyAdviceItem> adviceNativeItemsDB = dataDao.getAllRecordNativeOnly();
+        LogUtil.d("adviceNativeItemsDB", adviceNativeItemsDB.size()+" =adviceNativeItemsDB= "+adviceNativeItemsDB);
         showMyAdviceItems.addAll(adviceNativeItemsDB);
     }
 
@@ -474,7 +480,11 @@ public class RecordFragment extends BaseFragment {
 
             adviceNativeItems.add(dateItem);
         }
+
+        LogUtil.d("saveLocal",adviceNativeItems.size()+" =saveLocal= "+adviceNativeItems);
+
         dataDao.addItemList(adviceNativeItems, false);
+
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {

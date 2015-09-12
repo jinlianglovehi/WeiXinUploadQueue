@@ -167,7 +167,10 @@ public class DataDao {
 			for (int i = 0; i < adviceItems.size(); i++) {
 				MyAdviceItem adviceItem = adviceItems.get(i);
 				if (isRecordNative) {
-					delete(adviceItem.getId());
+//					delete(adviceItem.getId());
+					if (findItem(adviceItem.getId())) {
+						break;
+					}
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
@@ -183,7 +186,10 @@ public class DataDao {
 						db.endTransaction();
 					}
 				} else {
-					delete(adviceItem.getId());
+//					delete(adviceItem.getId());
+					if (findItem(adviceItem.getId())) {
+						break;
+					}
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
@@ -213,12 +219,29 @@ public class DataDao {
 		db.beginTransaction();
 		try {
 			if (db.isOpen()) {
-				db.execSQL("delete from " + DataDBHelper.tableName + " where mid=?", new Object[]{mid});
+				db.execSQL("delete from " + DataDBHelper.tableName + " where mid=?", new Object[]{mid+""});
 			}
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
 		}
+	}
+
+	public boolean findItem(long mid) {
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			if (db.isOpen()) {
+				Cursor cursor = db.rawQuery("select * from " + DataDBHelper.tableName + " where mid=?", new String[]{mid + ""});
+				if(cursor.moveToFirst()){
+					return true;
+				}
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		return false;
 	}
 
 	public void update(final ArrayList<MyAdviceItem> adviceItems) {
@@ -410,7 +433,6 @@ public class DataDao {
 	 */
 	public ArrayList<MyAdviceItem> getAllRecordNativeOnly() {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
 		if (db.isOpen()) {
 			Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status," +
@@ -443,15 +465,15 @@ public class DataDao {
 				adviceItem.setUploadstate(uploadstate);
 				adviceItem.setSerialnum(serialnum);
 				adviceItem.setJianceid(jianceid);
+				LogUtil.d("uploadstateNATIVE","uploadstateNATIVE==> "+uploadstate);
 				if (uploadstate == MyAdviceItem.NATIVE_RECORD||uploadstate==MyAdviceItem.UPLOADING_RECORD) {
 					adviceItemsNative.add(adviceItem);
 				}
 			}
-			adviceItems.addAll(adviceItemsNative);
 			cursor.close();
 		}
-		LogUtil.d("adviceItemsNativeOnly", adviceItems.size() + " -adviceItemsNativeOnly ==> " + adviceItems);
-		return adviceItems;
+		LogUtil.d("adviceItemsNativeOnly", adviceItemsNative.size() + " -adviceItemsNativeOnly ==> " + adviceItemsNative);
+		return adviceItemsNative;
 	}
 
 
