@@ -113,9 +113,10 @@ public class SetSystemActivity extends BaseActivity {
             @Override
             public void call(Result<Void> t) {
                 if (t.isSuccess()) {
-                    WeiTaiXinApplication.getInstance().isLogin = false;
+                    SPUtil.clearUser(SetSystemActivity.this);
+//                    WeiTaiXinApplication.getInstance().isLogin = false;
 //                  ToastUtil.show(getApplicationContext(),"退出登录");
-                    WeiTaiXinApplication.accountToken = null;
+//                    WeiTaiXinApplication.accountToken = null;
                     WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
