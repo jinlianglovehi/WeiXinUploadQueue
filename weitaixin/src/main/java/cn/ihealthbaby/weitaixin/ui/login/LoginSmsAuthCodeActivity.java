@@ -22,6 +22,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -231,12 +232,13 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                     if (t.isSuccess()) {
                         User data = t.getData();
                         if (data != null && data.getAccountToken() != null) {
-                            WeiTaiXinApplication.accountToken = data.getAccountToken();
+//                            WeiTaiXinApplication.accountToken = data.getAccountToken();
                             WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                            WeiTaiXinApplication.getInstance().phone_number = phone_number;
-                            WeiTaiXinApplication.getInstance().saveUser(data);
+//                            WeiTaiXinApplication.getInstance().phone_number = phone_number;
+                            SPUtil.saveUser(LoginSmsAuthCodeActivity.this,data);
+//                            WeiTaiXinApplication.getInstance().saveUser(data);
                             ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), "登录成功");
-                            WeiTaiXinApplication.getInstance().isLogin = true;
+//                            WeiTaiXinApplication.getInstance().isLogin = true;
                             if(data.getIsInit()){
                                 Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
                                 startActivity(intent);

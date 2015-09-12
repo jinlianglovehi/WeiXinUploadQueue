@@ -19,6 +19,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInfoFragment;
 import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
@@ -72,7 +73,7 @@ public class PayMimeOrderActivity extends BaseActivity {
 
     @OnClick(R.id.llAllOrder)
     public void AllOrder() {
-        if (WeiTaiXinApplication.getInstance().isLogin) {
+        if (SPUtil.isLogin(this)) {
             chooesTab(tvAllOrderText, viewAllOrderLine);
             payAllOrderFragment = PayAllOrderFragment.getInstance();
             showFragment(R.id.flContainerPay, payAllOrderFragment);
@@ -82,7 +83,7 @@ public class PayMimeOrderActivity extends BaseActivity {
 
     @OnClick(R.id.llPayingOrder)
     public void PayOrder() {
-        if (WeiTaiXinApplication.getInstance().isLogin) {
+        if (SPUtil.isLogin(this)) {
             chooesTab(tvPayOrderText, viewPayOrderLine);
             payPayyingOrderFragment = PayPayyingOrderFragment.getInstance();
             showFragment(R.id.flContainerPay, payPayyingOrderFragment);
@@ -92,7 +93,7 @@ public class PayMimeOrderActivity extends BaseActivity {
 
     @OnClick(R.id.llGetingGoods)
     public void GetGoods() {
-        if (WeiTaiXinApplication.getInstance().isLogin) {
+        if (SPUtil.isLogin(this)) {
             chooesTab(tvGetGoodsText, viewGetGoodsLine);
             payGettingGoodsFragment = PayGettingGoodsFragment.getInstance();
             showFragment(R.id.flContainerPay, payGettingGoodsFragment);

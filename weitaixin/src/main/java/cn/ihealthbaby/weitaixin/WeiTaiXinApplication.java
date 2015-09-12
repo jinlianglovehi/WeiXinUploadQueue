@@ -23,6 +23,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapt
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
 
 /**
@@ -32,13 +33,13 @@ public class WeiTaiXinApplication extends Application {
 
 
     public static WeiTaiXinApplication app;
-    public static String accountToken;
-    public static String phone_number;
-    public static User user;
+//    public static String accountToken;
+//    public static String phone_number;
+//    public static User user;
     public static AdviceSetting adviceSetting;
     public static AdviceForm adviceForm = new AdviceForm();
 
-        public boolean isLogin = false;
+//        public boolean isLogin = false;
 //public boolean isLogin = true;
     public LocalProductData localProductData=new LocalProductData(); //保存商品
     public VolleyAdapter mAdapter;
@@ -72,9 +73,8 @@ public class WeiTaiXinApplication extends Application {
     public void initApiManager() {
         RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
         mAdapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
-//		mAdapter.setAccountToken(WeiTaiXinApplication.accountToken);
+		mAdapter.setAccountToken(SPUtil.getUser(this).getAccountToken());
         ApiManager.init(mAdapter);
-//		ApiManager.getInstance();
     }
 
 
@@ -128,16 +128,6 @@ public class WeiTaiXinApplication extends Application {
         return options;
     }
 
-
-    public void saveUser(User user){
-        if(user!=null){
-            this.user = user;
-            putValue("AccountToken",user.getAccountToken());
-            putValue("name",user.getName());
-            putValue("mobile",user.getMobile());
-            putValue("telephone",user.getTelephone());
-        }
-    }
 
 
 }

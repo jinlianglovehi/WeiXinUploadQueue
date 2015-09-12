@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
             android:singleLine="true"
-            android:text="我的金库"
+            android:text="我的账户"
             android:textColor="@drawable/text_color_hei_selector"
             android:textSize="@dimen/font_normal"/>
 

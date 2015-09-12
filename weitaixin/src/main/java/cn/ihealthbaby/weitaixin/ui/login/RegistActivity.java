@@ -27,6 +27,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -279,13 +280,14 @@ public class RegistActivity extends BaseActivity {
                     User data = t.getData();
                     System.err.println("登录AccountToken： " + data.getAccountToken());
                     if (data.getAccountToken() != null) {
-                        WeiTaiXinApplication.getInstance().isLogin = true;
-                        WeiTaiXinApplication.accountToken = data.getAccountToken();
+//                        WeiTaiXinApplication.getInstance().isLogin = true;
+//                        WeiTaiXinApplication.accountToken = data.getAccountToken();
                         WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                        WeiTaiXinApplication.getInstance().phone_number = phone_number;
-                        WeiTaiXinApplication.getInstance().saveUser(data);
+//                        WeiTaiXinApplication.getInstance().phone_number = phone_number;
+//                        WeiTaiXinApplication.getInstance().saveUser(data);
+                        SPUtil.saveUser(RegistActivity.this,data);
 
-                        String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
+//                        String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
                         if(data.getIsInit()){
                             Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
                             startActivity(intent);

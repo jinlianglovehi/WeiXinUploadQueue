@@ -55,6 +55,7 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
@@ -104,7 +105,7 @@ public class MonitorFragment extends BaseFragment {
 	private PseudoBluetoothService pseudoBluetoothService;
 	private ArrayList<BluetoothDevice> scanedDevices = new ArrayList<>();
 	private boolean connected;
-	private boolean needPlay;
+	private boolean needPlay = true;
 	private boolean needRecord;
 	private CountDownTimer countDownTimer;
 	private boolean started;
@@ -177,6 +178,9 @@ public class MonitorFragment extends BaseFragment {
 			}
 		}
 	};
+	private AdviceSetting adviceSetting;
+	private User user;
+	private ServiceInfo serviceInfo;
 
 	private String getFileName() {
 		return Constants.TEMP_FILE_NAME;
@@ -201,7 +205,7 @@ public class MonitorFragment extends BaseFragment {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm = new AdviceForm();
+		AdviceForm adviceForm = new AdviceForm();
 		testTime = new Date();
 		adviceForm.setTestTime(testTime);
 		adviceForm.setDeviceType(1);
@@ -326,13 +330,12 @@ public class MonitorFragment extends BaseFragment {
 	 * 请求医院配置信息
 	 */
 	private void getConfig() {
-		String deviceName = getDeviceName();
-//		ApiManager.getInstance().userApi.getServiceInfo();
-		long hospitalId = WeiTaiXinApplication.getInstance().user.getServiceInfo().getHospitalId();
-		ApiManager.getInstance().adviceApi.getAdviceSetting(hospitalId, new Callback<AdviceSetting>() {
+		user = SPUtil.getUser(getActivity().getApplicationContext());
+		serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
+		ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(), new Callback<AdviceSetting>() {
 			@Override
 			public void call(Result<AdviceSetting> t) {
-				WeiTaiXinApplication.getInstance().adviceSetting = t.getData();
+				adviceSetting = t.getData();
 			}
 		}, TAG);
 	}
@@ -353,6 +356,7 @@ public class MonitorFragment extends BaseFragment {
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
 		needRecord = false;
+		AudioPlayer.getInstance().play();
 		scanedDevices.clear();
 	}
 
@@ -408,12 +412,9 @@ public class MonitorFragment extends BaseFragment {
 //		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
 //		return "IHB2LC9P2UUZ"; //IHB2LD1X7CUC   IHB2LC9JUHPB
 		String serialnum = "";
-		User user = WeiTaiXinApplication.user;
-		if (user != null) {
-			ServiceInfo serviceInfo = user.getServiceInfo();
-			if (serviceInfo != null) {
-				serialnum = serviceInfo.getSerialnum();
-			}
+		ServiceInfo serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
+		if (serviceInfo != null) {
+			serialnum = serviceInfo.getSerialnum();
 		}
 		return serialnum;
 		//  TODO: 15/9/7 请求网络
@@ -422,6 +423,7 @@ public class MonitorFragment extends BaseFragment {
 	public void onEventMainThread(MonitorTerminateEvent event) {
 		int reason = event.getEvent();
 		//断开连接 保存音频数据 保存胎心数据
+		AudioPlayer.getInstance().release();
 		pseudoBluetoothService.stop();
 		try {
 			fileOutputStream.close();
@@ -474,8 +476,8 @@ public class MonitorFragment extends BaseFragment {
 		MyAdviceItem adviceItem = new MyAdviceItem();
 		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm;
 		//
-		adviceItem.setUserid(WeiTaiXinApplication.getInstance().user.getId());
-//		adviceItem.setIsNativeRecord(0);
+		adviceItem.setUserid(user.getId());
+		adviceItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
 		adviceItem.setPath(FileUtil.getVoiceDir(getActivity()).getPath());
 		adviceItem.setTestTime(testTime);
 		// TODO: 15/9/11 实际时间
@@ -485,8 +487,8 @@ public class MonitorFragment extends BaseFragment {
 		adviceItem.setGestationalWeeks(DateTimeTool.getGestationalWeeks(testTime));
 		adviceItem.setJianceid(uuidString);
 		adviceItem.setRdata(dataString);
-		adviceItem.setSerialnum(WeiTaiXinApplication.getInstance().user.getServiceInfo().getSerialnum());
-		adviceItem.setUploadstate(0);
+		adviceItem.setSerialnum(user.getServiceInfo().getSerialnum());
+		adviceItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
 		//
 		dao.add(adviceItem, true);
 		MyAdviceItem aNative = dao.findNative(uuidString);

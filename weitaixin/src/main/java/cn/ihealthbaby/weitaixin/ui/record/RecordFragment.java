@@ -45,6 +45,7 @@ import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.db.DataDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
@@ -251,8 +252,8 @@ public class RecordFragment extends BaseFragment {
 
 
     private void pullHeadDatas() {
-        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.getInstance().user != null) {
-            User user = WeiTaiXinApplication.getInstance().user;
+        User user = SPUtil.getUser(getActivity().getApplicationContext());
+        if (SPUtil.isLogin(getActivity().getApplicationContext()) && user != null) {
             ImageLoader.getInstance().displayImage(user.getHeadPic(), ivWoHeadIcon, setDisplayImageOptions());
             tvWoHeadName.setText(user.getName());
             tvWoHeadDeliveryTime.setText(DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));

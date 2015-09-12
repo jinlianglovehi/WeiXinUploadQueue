@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:paddingBottom="10dp"
-            android:text="￥76"
+            android:text="￥0"
             android:textColor="@color/red0"
             android:textSize="@dimen/font50" />
 
@@ -52,6 +52,7 @@
         <RelativeLayout
             android:id="@+id/rl2Function"
             android:layout_width="wrap_content"
+            android:paddingBottom="40dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:background="@color/white0">
@@ -116,6 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/rl2Function"
+            android:visibility="gone"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:layout_centerHorizontal="true"

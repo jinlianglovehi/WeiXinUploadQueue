@@ -22,11 +22,14 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
@@ -137,11 +140,14 @@ public class WoInfoFragment extends BaseFragment {
 
             }
         }, getRequestTag());
-        if (WeiTaiXinApplication.getInstance().isLogin && WeiTaiXinApplication.getInstance().user != null) {
-            ImageLoader.getInstance().displayImage(WeiTaiXinApplication.getInstance().user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
-            tv_wo_head_name.setText(WeiTaiXinApplication.getInstance().user.getName() + "");
-            tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(WeiTaiXinApplication.getInstance().user.getDeliveryTime()));
-            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(WeiTaiXinApplication.getInstance().user.getDeliveryTime(), "MM月dd日"));
+
+
+        User user = SPUtil.getUser(getActivity().getApplicationContext());
+        if (SPUtil.isLogin(getActivity().getApplicationContext()) && user != null) {
+            ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
+            tv_wo_head_name.setText(user.getName() + "");
+            tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
+            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(user.getDeliveryTime(), "MM月dd日"));
         }
     }
 
@@ -153,7 +159,7 @@ public class WoInfoFragment extends BaseFragment {
 
     @OnClick(R.id.ll_2)
     public void ll_2() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), WoGoldenActivity.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
         startActivity(intent);
     }
 

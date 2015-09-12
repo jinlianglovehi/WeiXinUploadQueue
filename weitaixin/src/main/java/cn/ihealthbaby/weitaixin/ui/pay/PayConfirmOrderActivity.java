@@ -67,7 +67,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
     private MyGoodsListAdapter myGoodsListAdapter;
     private int priceCount=0;
     private ServiceOrderForm serviceOrderForm=new ServiceOrderForm();
-    ArrayList<OrderItemForm> orderItemForms=new ArrayList<OrderItemForm>();
+    public ArrayList<OrderItemForm> orderItemForms=new ArrayList<OrderItemForm>();
     private boolean isHospitalFlag=false;
     private long addressId=-1;
     private int deliverType=-1;

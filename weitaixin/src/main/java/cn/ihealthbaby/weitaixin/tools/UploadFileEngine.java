@@ -25,6 +25,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
 
@@ -147,7 +148,8 @@ public class UploadFileEngine {
                 if (t.isSuccess()) {
                     User data = t.getData();
                     if (data != null) {
-                        WeiTaiXinApplication.user = data;
+//                        WeiTaiXinApplication.user = data;
+                        SPUtil.saveUser(context,data);
                         if (finishActivity != null) {
                             WeiTaiXinApplication.getInstance().putValue("InfoEdit","true");
                             finishActivity.onFinishActivity(true);
@@ -177,7 +179,8 @@ public class UploadFileEngine {
             public void call(Result<String> t) {
                 if (t.isSuccess()) {
                     String headPicStr = t.getData();
-                    WeiTaiXinApplication.user.setHeadPic(headPicStr);
+                    SPUtil.saveHeadPic(context,headPicStr);
+//                    WeiTaiXinApplication.user.setHeadPic(headPicStr);
                     LogUtil.e("errdata", "errdata服务器头像上传: " + headPicStr);
                     ToastUtil.show(context.getApplicationContext(), "服务器头像上传成功");
                 } else {
