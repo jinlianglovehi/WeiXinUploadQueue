@@ -16,6 +16,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
@@ -48,7 +49,6 @@ public class MonitorSetActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("监护设置");
-//      back.setVisibility(View.INVISIBLE);
         initData();
         initView();
         initListener();
@@ -64,47 +64,46 @@ public class MonitorSetActivity extends BaseActivity {
         mSlideSwitchViewBegin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean AutoStart = (boolean) SPUtil.getData(MonitorSetActivity.this, "AutoStart", true);
-                if (!AutoStart) {
+                LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
+                if (!localSetting.isAutostart()) {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
                 } else {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
                 }
-                SPUtil.setData(MonitorSetActivity.this, "AutoStart", !AutoStart);
+                localSetting.setAutostart(!localSetting.isAutostart());
+                SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
+
             }
         });
 
         mSlideSwitchViewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean PoliceSet = (boolean) SPUtil.getData(MonitorSetActivity.this, "PoliceSet", true);
-                if (!PoliceSet) {
+                LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
+                if (!localSetting.isPoliceset()) {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
                     meLinearLayout.setVisibility(View.VISIBLE);
                 } else {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
                     meLinearLayout.setVisibility(View.GONE);
                 }
-                SPUtil.setData(MonitorSetActivity.this, "PoliceSet", !PoliceSet);
+                localSetting.setPoliceset(!localSetting.isPoliceset());
+                SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
             }
         });
     }
 
 
     private void initView() {
-//        String AutoStart = WeiTaiXinApplication.getInstance().getValue("AutoStart", "0");
 
-        boolean PoliceSet = (boolean) SPUtil.getData(MonitorSetActivity.this, "PoliceSet", true);
-        boolean AutoStart = (boolean) SPUtil.getData(MonitorSetActivity.this, "AutoStart", true);
-
-        if (AutoStart) {
+        LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
+        if (localSetting.isAutostart()) {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
         } else {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
         }
 
-//        String PoliceSet = WeiTaiXinApplication.getInstance().getValue("PoliceSet", "0");
-        if (PoliceSet) {
+        if (localSetting.isPoliceset()) {
             mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
             meLinearLayout.setVisibility(View.VISIBLE);
         } else {
@@ -123,7 +122,6 @@ public class MonitorSetActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 myTimeAdapter.isFirst = false;
-//                view.setSelected(true);
                 SPUtil.setData(MonitorSetActivity.this, "select_num", position);
                 myTimeAdapter.notifyDataSetChanged();
             }
