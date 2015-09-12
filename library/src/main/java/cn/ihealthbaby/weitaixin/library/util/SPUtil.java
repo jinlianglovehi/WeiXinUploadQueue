@@ -2,6 +2,9 @@ package cn.ihealthbaby.weitaixin.library.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import java.util.Date;
 
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
@@ -37,16 +40,89 @@ public class SPUtil {
         return localSetting;
     }
 
+
     public static void saveUser(Context context, User user) {
-
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("AccountToken", user.getAccountToken());
+        editor.putString("Telephone", user.getTelephone());
+        editor.putLong("Id", user.getId());
+        editor.putString("Mobile", user.getMobile());
+        editor.putString("Name", user.getName());
+        editor.putString("HeadPic", user.getHeadPic());
+        editor.putLong("Birthday", user.getBirthday().getTime());
+        editor.putInt("TypeId", user.getTypeId());
+        editor.putBoolean("HasService", user.getHasService());
+        editor.putLong("DeliveryTime", user.getDeliveryTime().getTime());
+        editor.putLong("CreateTime", user.getCreateTime().getTime());
+        editor.putBoolean("IsInit", user.getIsInit());
+        editor.commit();
     }
 
-    public static User getUser() {
-        return null;
+
+    public static User getUser(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        User user =new User();
+        user.setAccountToken(sp.getString("AccountToken", ""));
+        user.setTelephone(sp.getString("Telephone", ""));
+        user.setId(sp.getLong("Id", -1));
+        user.setMobile(sp.getString("Mobile", ""));
+        user.setName(sp.getString("Name", ""));
+        user.setHeadPic(sp.getString("HeadPic", ""));
+        user.setBirthday(new Date(sp.getLong("Birthday", -1)));
+        user.setTypeId(sp.getInt("TypeId", -1));
+        user.setHasService(sp.getBoolean("HasService", false));
+        user.setDeliveryTime(new Date(sp.getLong("DeliveryTime", -1)));
+        user.setCreateTime(new Date(sp.getLong("CreateTime", -1)));
+        user.setIsInit(sp.getBoolean("IsInit", false));
+        return user;
     }
 
-    public static void saveServiceInfo() {
+
+    public static void saveHeadPic(Context context,String headPic) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("HeadPic", headPic);
+        editor.commit();
     }
+
+
+    public static void saveServiceInfo(Context context, User user) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        ServiceInfo serviceInfo = user.getServiceInfo();
+        editor.putString("AreaInfo", serviceInfo.getAreaInfo());
+        editor.putString("Serialnum", serviceInfo.getSerialnum());
+        editor.putLong("DoctorId", serviceInfo.getDoctorId());
+        editor.putString("DoctorName", serviceInfo.getDoctorName());
+        editor.putLong("HospitalId", serviceInfo.getHospitalId());
+        editor.putString("HospitalName", serviceInfo.getHospitalName());
+        editor.commit();
+    }
+
+
+    public static ServiceInfo getServiceInfo(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        ServiceInfo serviceInfo=new ServiceInfo();
+        serviceInfo.setAreaInfo(sp.getString("AreaInfo",""));
+        serviceInfo.setAreaInfo(sp.getString("Serialnum",""));
+        serviceInfo.setDoctorId(sp.getLong("DoctorId", -1));
+        serviceInfo.setAreaInfo(sp.getString("DoctorName",""));
+        serviceInfo.setHospitalId(sp.getLong("HospitalId", -1));
+        serviceInfo.setHospitalName(sp.getString("HospitalName", ""));
+        return serviceInfo;
+    }
+
+
+    public static boolean isLogin(Context context){
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        String accountToken = sp.getString("AccountToken","");
+        if (TextUtils.isEmpty(accountToken)) {
+            return false;
+        }
+        return true;
+    }
+
 
     public static ServiceInfo getServiceInfo() {
         return null;

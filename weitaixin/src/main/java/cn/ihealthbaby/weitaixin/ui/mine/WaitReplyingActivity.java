@@ -19,10 +19,12 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceReply;
 import cn.ihealthbaby.client.model.ReplyDetail;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
@@ -83,8 +85,9 @@ public class WaitReplyingActivity extends BaseActivity {
                     LogUtil.d("WaitReplyDetail","%s",data.toString());
                     System.err.println("WaitReplyDetail： "+data.toString());
                     if (data != null) {
-                        ImageLoader.getInstance().displayImage(WeiTaiXinApplication.user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
-                        tv_wo_head_name.setText(WeiTaiXinApplication.user.getName());
+                        User user = SPUtil.getUser(WaitReplyingActivity.this);
+                        ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
+                        tv_wo_head_name.setText(user.getName());
                         tvAskPurpose.setText("监护目的: " +data.getAskPurpose());
                         tvFeeling.setText("监护心情: " + data.getFeeling());
                         tvQuestion.setText(data.getQuestion());

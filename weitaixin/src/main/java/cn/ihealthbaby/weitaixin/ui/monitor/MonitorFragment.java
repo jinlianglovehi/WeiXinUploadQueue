@@ -330,7 +330,7 @@ public class MonitorFragment extends BaseFragment {
 	 * 请求医院配置信息
 	 */
 	private void getConfig() {
-		user = SPUtil.getUser();
+		user = SPUtil.getUser(getActivity().getApplicationContext());
 		serviceInfo = SPUtil.getServiceInfo();
 		ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(), new Callback<AdviceSetting>() {
 			@Override

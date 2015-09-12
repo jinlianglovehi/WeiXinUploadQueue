@@ -19,9 +19,11 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.ChangePasswordForm;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -150,7 +152,8 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
 
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode() {
-        ApiManager.getInstance().accountApi.getAuthCode(WeiTaiXinApplication.phone_number, 2, new HttpClientAdapter.Callback<Boolean>() {
+        User user = SPUtil.getUser(this);
+        ApiManager.getInstance().accountApi.getAuthCode(user.getMobile(), 2, new HttpClientAdapter.Callback<Boolean>() {
             @Override
             public void call(Result<Boolean> t) {
                 if (t.isSuccess()) {

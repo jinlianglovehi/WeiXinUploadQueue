@@ -16,6 +16,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInfoFragment;
@@ -76,7 +77,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     @OnClick(R.id.ll_tab_home)
     public void iv_tab_01() {
         showTab(iv_tab_01);
-        if (WeiTaiXinApplication.getInstance().isLogin) {
+        if (SPUtil.isLogin(this)) {
             homePageFragment = HomePageFragment.getInstance();
             showFragment(R.id.container, homePageFragment);
         }
@@ -85,8 +86,8 @@ public class MeMainFragmentActivity extends BaseActivity {
     @OnClick(R.id.ll_tab_monitor)
     public void iv_tab_02() {
         showTab(iv_tab_02);
-        if (WeiTaiXinApplication.getInstance().isLogin   ) {
-            if (WeiTaiXinApplication.getInstance().user.getServiceInfo() != null) {
+        if (SPUtil.isLogin(this)) {
+            if (SPUtil.getUser(this).getServiceInfo() != null) {
 	            if (monitorFragment == null) {
                     monitorFragment = new MonitorFragment();
 	            }
@@ -98,7 +99,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     @OnClick(R.id.ll_tab_record)
     public void iv_tab_03() {
         showTab(iv_tab_03);
-        if (WeiTaiXinApplication.getInstance().isLogin) {
+        if (SPUtil.isLogin(this)) {
             recordFragment = RecordFragment.getInstance();
             showFragment(R.id.container, recordFragment);
         }
@@ -108,7 +109,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     @OnClick(R.id.iv_tab_04)
     public void iv_tab_04() {
         showTab(iv_tab_04);
-        if (WeiTaiXinApplication.getInstance().isLogin) {
+        if (SPUtil.isLogin(this)) {
             woInfoFragment = WoInfoFragment.getInstance();
             showFragment(R.id.container, woInfoFragment);
         }
@@ -116,7 +117,7 @@ public class MeMainFragmentActivity extends BaseActivity {
 
 
     public void showTab(ImageView imageView) {
-        if (!WeiTaiXinApplication.getInstance().isLogin) {
+        if (!SPUtil.isLogin(this)) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
             return;

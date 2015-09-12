@@ -22,6 +22,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -117,14 +118,15 @@ public class LoginActivity extends BaseActivity {
                         if (t.isSuccess()) {
                             User data=t.getData();
                             if (data!=null&&data.getAccountToken()!=null) {
-                                WeiTaiXinApplication.accountToken=data.getAccountToken();
+//                                WeiTaiXinApplication.accountToken=data.getAccountToken();
                                 WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                                WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
-                                WeiTaiXinApplication.getInstance().saveUser(data);
+//                                WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
+                                SPUtil.saveUser(LoginActivity.this, data);
+//                                WeiTaiXinApplication.getInstance().saveUser(data);
                                 ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
-                                WeiTaiXinApplication.getInstance().isLogin=true;
+//                                WeiTaiXinApplication.getInstance().isLogin=true;
 
-                                String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
+//                                String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
                                 if(data.getIsInit()){
                                     Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
                                     startActivity(intent);
@@ -162,7 +164,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (WeiTaiXinApplication.getInstance().isLogin) {
+        if (SPUtil.isLogin(this)) {
             finish();
         }
     }

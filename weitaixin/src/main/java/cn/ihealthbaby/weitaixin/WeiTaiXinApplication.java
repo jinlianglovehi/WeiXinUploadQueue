@@ -32,13 +32,13 @@ public class WeiTaiXinApplication extends Application {
 
 
     public static WeiTaiXinApplication app;
-    public static String accountToken;
-    public static String phone_number;
-    public static User user;
+//    public static String accountToken;
+//    public static String phone_number;
+//    public static User user;
     public static AdviceSetting adviceSetting;
     public static AdviceForm adviceForm = new AdviceForm();
 
-        public boolean isLogin = false;
+//        public boolean isLogin = false;
 //public boolean isLogin = true;
     public LocalProductData localProductData=new LocalProductData(); //保存商品
     public VolleyAdapter mAdapter;
@@ -128,16 +128,6 @@ public class WeiTaiXinApplication extends Application {
         return options;
     }
 
-
-    public void saveUser(User user){
-        if(user!=null){
-            this.user = user;
-            putValue("AccountToken",user.getAccountToken());
-            putValue("name",user.getName());
-            putValue("mobile",user.getMobile());
-            putValue("telephone",user.getTelephone());
-        }
-    }
 
 
 }

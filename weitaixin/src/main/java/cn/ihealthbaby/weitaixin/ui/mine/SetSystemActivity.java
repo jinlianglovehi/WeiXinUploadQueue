@@ -12,8 +12,10 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -111,9 +113,10 @@ public class SetSystemActivity extends BaseActivity {
             @Override
             public void call(Result<Void> t) {
                 if (t.isSuccess()) {
-                    WeiTaiXinApplication.getInstance().isLogin = false;
+                    SPUtil.saveUser(SetSystemActivity.this, new User());
+//                    WeiTaiXinApplication.getInstance().isLogin = false;
 //                  ToastUtil.show(getApplicationContext(),"退出登录");
-                    WeiTaiXinApplication.accountToken = null;
+//                    WeiTaiXinApplication.accountToken = null;
                     WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);

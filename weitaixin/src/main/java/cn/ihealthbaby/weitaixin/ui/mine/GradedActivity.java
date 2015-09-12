@@ -19,10 +19,12 @@ import cn.ihealthbaby.client.form.AnswerForm;
 import cn.ihealthbaby.client.form.AnswerForms;
 import cn.ihealthbaby.client.model.Question;
 import cn.ihealthbaby.client.model.RiskScore;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.widget.QuestionDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.ResultDialog;
@@ -49,8 +51,10 @@ public class GradedActivity extends BaseActivity {
         title_text.setText("高危评分");
 
         long hospitalId = 0;
-        if (WeiTaiXinApplication.getInstance().user != null && WeiTaiXinApplication.getInstance().user.getServiceInfo() != null) {
-            hospitalId = WeiTaiXinApplication.getInstance().user.getServiceInfo().getHospitalId();
+
+        User user= SPUtil.getUser(this);
+        if (user != null && user.getServiceInfo() != null) {
+            hospitalId = user.getServiceInfo().getHospitalId();
             LogUtil.e("hospitalId", "hospitalId: " + hospitalId);
         } else {
             ToastUtil.show(getApplicationContext(), "暂时没有问题~~~");

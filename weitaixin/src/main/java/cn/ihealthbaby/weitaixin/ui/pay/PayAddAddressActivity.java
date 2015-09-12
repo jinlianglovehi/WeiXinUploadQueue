@@ -20,6 +20,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 public class PayAddAddressActivity extends BaseActivity {
 
@@ -48,7 +49,8 @@ public class PayAddAddressActivity extends BaseActivity {
     }
 
     private void initView() {
-        User user=WeiTaiXinApplication.getInstance().user;
+//        User user=WeiTaiXinApplication.getInstance().user;
+        User user = SPUtil.getUser(this);
         if (user!=null){
             tvAddAddressName.setText(user.getName());
             tvAddAddressPhone.setText(user.getMobile());
