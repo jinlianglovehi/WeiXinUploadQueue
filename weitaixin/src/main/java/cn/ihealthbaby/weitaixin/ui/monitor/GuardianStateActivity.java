@@ -22,10 +22,15 @@ import cn.ihealthbaby.client.model.CommonConfig;
 import cn.ihealthbaby.client.model.FeelingType;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.db.DataDao;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class GuardianStateActivity extends BaseActivity {
+	private final static String TAG = "GuardianStateActivity";
 	public List<AskPurposeType> askPurposetypes;
 	public List<FeelingType> feelingTypes;
 	@Bind(R.id.back)
@@ -49,7 +54,6 @@ public class GuardianStateActivity extends BaseActivity {
 	private MyPoPoWinGuardian myPoPoWinGuardian1;
 	private String purposeText;
 	private String moodText;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +119,7 @@ public class GuardianStateActivity extends BaseActivity {
 			@Override
 			public void onDismiss() {
 				if (myPoPoWinGuardian1.indexPosition == -1) {
-					moodText=null;
+					moodText = null;
 				} else {
 					moodText = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
 					tvGuardianMoodText.setText(moodText + "");
@@ -124,32 +128,35 @@ public class GuardianStateActivity extends BaseActivity {
 		});
 	}
 
-
-	public void checkInput() {
-		if (TextUtils.isEmpty(purposeText)&&TextUtils.isEmpty(moodText)) {
-			ToastUtil.show(getApplicationContext(),"请选择监护心情和监护目的");
-		}
-		if (TextUtils.isEmpty(purposeText)) {
-			ToastUtil.show(getApplicationContext(),"请选择监护目的");
-		}
-		if (TextUtils.isEmpty(moodText)) {
-			ToastUtil.show(getApplicationContext(),"请选择监护心情");
-		}
-	}
-
-
-
 	@OnClick(R.id.ivFooter)
 	public void Footer() {
-		final CustomDialog customDialog = new CustomDialog();
-		Dialog dialog = customDialog.createDialog1(this, "加载中...");
-		dialog.show();
-//        ApiManager.getInstance().adviceApi.
+		if (TextUtils.isEmpty(purposeText) && TextUtils.isEmpty(moodText)) {
+			ToastUtil.show(getApplicationContext(), "请选择监护心情和监护目的");
+			return;
+		}
+		if (TextUtils.isEmpty(purposeText)) {
+			ToastUtil.show(getApplicationContext(), "请选择监护目的");
+			return;
+		}
+		if (TextUtils.isEmpty(moodText)) {
+			ToastUtil.show(getApplicationContext(), "请选择监护心情");
+			return;
+		}
 		Intent intent = getIntent();
 		intent.setClass(getApplicationContext(), CurvePlayActivity.class);
-		intent.putExtra("AskPurposeType", askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue());
-		intent.putExtra("FeelingType", feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue());
+		String purpose = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
+		String feeling = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
+		DataDao dao = DataDao.getInstance(getApplicationContext());
+		MyAdviceItem myAdviceItem = new MyAdviceItem();
+		String uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
+		myAdviceItem.setFeeling(feeling);
+		myAdviceItem.setPurpose(purpose);
+		myAdviceItem.setJianceid(uuid);
+		dao.updateItem(myAdviceItem);
+		MyAdviceItem aNative = dao.findNative(uuid);
+		LogUtil.d(TAG, aNative.toString());
 		startActivity(intent);
+		finish();
 	}
 }
 

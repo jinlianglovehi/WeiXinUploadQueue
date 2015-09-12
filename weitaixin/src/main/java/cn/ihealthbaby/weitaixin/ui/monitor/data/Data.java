@@ -8,8 +8,8 @@ public class Data {
 	private String fm;
 	private String afm;
 	private String doctor;
-	private String interval;
-	private String time;
+	private int interval;
+	private long time;
 
 	public String getHeartRate() {
 		return heartRate;
@@ -43,19 +43,20 @@ public class Data {
 		this.fm = fm;
 	}
 
-	public String getInterval() {
+	public int getInterval() {
 		return interval;
+
 	}
 
-	public void setInterval(String interval) {
+	public void setTime(long time) {
+		this.time = time;
+	}
+
+	public void setInterval(int interval) {
 		this.interval = interval;
 	}
 
-	public String getTime() {
+	public long getTime() {
 		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
 	}
 }

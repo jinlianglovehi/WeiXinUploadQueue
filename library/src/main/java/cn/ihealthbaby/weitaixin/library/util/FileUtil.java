@@ -66,8 +66,7 @@ public class FileUtil {
 	 * @param name
 	 * @return
 	 */
-	public static boolean addFileHead(String path, String name) {
-		File file = new File(path, name);
+	public static boolean addFileHead(File file) {
 		int[] ints = null;
 		try {
 			ints = ByteUtil.WriteWaveFileHeader(file.length(), 4000, 1, 8);

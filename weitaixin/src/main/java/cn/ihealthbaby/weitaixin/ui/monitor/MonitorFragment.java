@@ -20,6 +20,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -102,6 +106,11 @@ public class MonitorFragment extends BaseFragment {
 	private boolean connected;
 	private boolean needPlay;
 	private boolean needRecord;
+	private CountDownTimer countDownTimer;
+	private boolean started;
+	private Date testTime;
+	private String uuidString;
+	private FileOutputStream fileOutputStream;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -147,7 +156,7 @@ public class MonitorFragment extends BaseFragment {
 					break;
 				case Constants.MESSAGE_CONNECTION_LOST:
 					LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
-					ToastUtil.show(getActivity().getApplicationContext(), "失去连接");
+					ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
 					resetUI();
 					break;
 				case Constants.MESSAGE_VOICE:
@@ -156,20 +165,21 @@ public class MonitorFragment extends BaseFragment {
 						AudioPlayer.getInstance().playAudioTrack(sound, 0, sound.length);
 					}
 					if (needRecord) {
-						FileUtil.generateFile(FileUtil.getVoiceDir(getActivity()).getPath(), getFileName() + Constants.EXTENTION_NAME, sound);
+						if (fileOutputStream != null) {
+							try {
+								fileOutputStream.write(sound);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
 					}
 					break;
 			}
 		}
 	};
-	private CountDownTimer countDownTimer;
-	private boolean started;
-	private Date testTime;
-	private String uuidString;
 
 	private String getFileName() {
-		return "TEMP";
-//		return UUID.randomUUID().toString().replaceAll("-", "");
+		return Constants.TEMP_FILE_NAME;
 	}
 
 	@OnClick(R.id.helper)
@@ -178,19 +188,27 @@ public class MonitorFragment extends BaseFragment {
 
 	@OnClick(R.id.function)
 	public void ternimate() {
-		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
+		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_NOT_START));
 	}
 
 	@OnClick(R.id.btn_start)
 	public void startRecord(View view) {
 		started = true;
 		uuidString = UUID.randomUUID().toString().replace("-", "");
+		File file = new File(FileUtil.getVoiceDir(getActivity()), getFileName());
+		try {
+			fileOutputStream = new FileOutputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm = new AdviceForm();
 		testTime = new Date();
 		adviceForm.setTestTime(testTime);
 		adviceForm.setDeviceType(1);
 		Intent intent = new Intent(getActivity(), MonitorActivity.class);
-		intent.putExtra("UUID", uuidString);
+		intent.putExtra(Constants.INTENT_UUID, uuidString);
+		needRecord = true;
+		needPlay = true;
 		startActivity(intent);
 	}
 
@@ -334,6 +352,7 @@ public class MonitorFragment extends BaseFragment {
 		rlStart.setVisibility(View.GONE);
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
+		needRecord = false;
 		scanedDevices.clear();
 	}
 
@@ -404,17 +423,31 @@ public class MonitorFragment extends BaseFragment {
 		int reason = event.getEvent();
 		//断开连接 保存音频数据 保存胎心数据
 		pseudoBluetoothService.stop();
+		try {
+			fileOutputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		resetUI();
-		record();
+		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
+		intent.putExtra(Constants.INTENT_UUID, uuidString);
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
+				record();
+				startActivity(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_UNKNOWN:
 				LogUtil.d(TAG, "EVENT_UNKNOWN");
+				record();
+				startActivity(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL:
 				LogUtil.d(TAG, "EVENT_MANUAL");
+				record();
+				startActivity(intent);
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
 				break;
 			default:
 				break;
@@ -422,14 +455,19 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	private void record() {
-		FileUtil.addFileHead(FileUtil.getVoiceDir(getActivity()).getPath(), uuidString);
+		File tempFile = new File(FileUtil.getVoiceDir(getActivity()), "TEMP");
+		File file = new File(FileUtil.getVoiceDir(getActivity()), uuidString);
+		if (tempFile.renameTo(file)) {
+			tempFile.delete();
+		}
+		FileUtil.addFileHead(file);
 		Gson gson = new Gson();
 		String fhrString = gson.toJson(DataStorage.fhrs);
 		RecordData recordData = new RecordData();
 		Data data = new Data();
-		data.setInterval(500 + "");
+		data.setInterval(500);
 		data.setHeartRate(fhrString);
-		data.setTime(testTime.getTime() + "");
+		data.setTime(testTime.getTime());
 		recordData.setData(data);
 		String dataString = gson.toJson(recordData);
 		DataDao dao = DataDao.getInstance(getActivity());

@@ -34,6 +34,10 @@ public interface Constants {
 	public static final String DEVICE_NAME = "device_name";
 	public static final UUID COMMON_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	String RECORD_PATH = "";
-	String FILE_NAME = "";
+	String TEMP_FILE_NAME = "TEMP";
 	String EXTENTION_NAME = ".WAV";
+	String INTENT_UUID = "UUID";
+	String INTENT_CONSUMED_TIME = "CONSUMEDTIME";
+	String INTENT_DURATION = "DURATION";
+	String INTENT_INTERVAL = "INTERVAL";
 }
