@@ -336,7 +336,7 @@ public class RecordFragment extends BaseFragment {
         CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(context, "从数据库中加载...");
         dialog.show();
-        //从缓存数据库中展示数据列表 //100本地  1云端
+        //从缓存数据库中展示数据列表
         ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecord(false);
         if (adviceItems.size() > 0) {
             countNumber = adviceItems.size();
@@ -449,7 +449,7 @@ public class RecordFragment extends BaseFragment {
             myAdviceItem.setTestTime(adviceItem.getTestTime());
             myAdviceItem.setTestTimeLong(adviceItem.getTestTimeLong());
             myAdviceItem.setStatus(adviceItem.getStatus());
-            myAdviceItem.setIsNativeRecord(1); //0本地  1云端
+            myAdviceItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
 
             myAdviceItems.add(myAdviceItem);
         }
@@ -474,7 +474,7 @@ public class RecordFragment extends BaseFragment {
             dateItem.setTestTime(new Date());
             dateItem.setTestTimeLong(34434 + i * 2000);
             dateItem.setStatus(3);
-            dateItem.setIsNativeRecord(100); //100本地  1云端
+            dateItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
 
             adviceNativeItems.add(dateItem);
         }

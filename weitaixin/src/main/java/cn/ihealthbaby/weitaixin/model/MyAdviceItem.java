@@ -7,6 +7,11 @@ import java.util.Date;
  * Created by Think on 2015/9/10.
  */
 public class MyAdviceItem implements Serializable {
+
+	// 1本地   2云端   3正在上传
+	public static final int NATIVE_RECORD = 1;
+	public static final int CLOUD_RECORD = 2;
+	public static final int UPLOAD_RECORD = 3;
 	/**
 	 * 检测信息的id
 	 */
@@ -27,14 +32,14 @@ public class MyAdviceItem implements Serializable {
 	 * 咨询的状态 1 提交但为咨询 2咨询未回复 3 咨询已回复 4 咨询已删除
 	 */
 	private int status;
-	//100本地  1云端
-	private int isNativeRecord = -1;
+//	//100本地  1云端
+//	private int isNativeRecord = -1;
 	private String feeling;
 	private String purpose;
 	private long userid = -1;
 	private String rdata;
 	private String path;
-	private int uploadstate = -1;
+	private int uploadstate = -1; // 1本地   2云端   3正在上传
 	private String serialnum;
 	private String jianceid;
 
@@ -78,13 +83,7 @@ public class MyAdviceItem implements Serializable {
 		this.status = status;
 	}
 
-	public int getIsNativeRecord() {
-		return isNativeRecord;
-	}
 
-	public void setIsNativeRecord(int isNativeRecord) {
-		this.isNativeRecord = isNativeRecord;
-	}
 
 	public String getFeeling() {
 		return feeling;
@@ -158,7 +157,6 @@ public class MyAdviceItem implements Serializable {
 				       ", testTime=" + testTime +
 				       ", testTimeLong=" + testTimeLong +
 				       ", status=" + status +
-				       ", isNativeRecord=" + isNativeRecord +
 				       ", feeling='" + feeling + '\'' +
 				       ", purpose='" + purpose + '\'' +
 				       ", userid=" + userid +

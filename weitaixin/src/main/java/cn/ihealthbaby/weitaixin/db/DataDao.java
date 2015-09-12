@@ -37,10 +37,10 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
-								           "isNativeRecord,feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+								           "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
 								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
 										                      adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
-										                      adviceItem.getIsNativeRecord(), adviceItem.getFeeling(), adviceItem.getPurpose(),
+										                      adviceItem.getFeeling(), adviceItem.getPurpose(),
 										                      adviceItem.getUserid(), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
 										                      adviceItem.getSerialnum(), adviceItem.getJianceid()
 								          });
@@ -84,13 +84,13 @@ public class DataDao {
 					String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
 					int testTimeLong = cursor.getInt(cursor.getColumnIndex("testTimeLong"));
 					int status = cursor.getInt(cursor.getColumnIndex("status"));
-					int isNativeRecord = cursor.getInt(cursor.getColumnIndex("isNativeRecord"));
+					int uploadstate = cursor.getInt(cursor.getColumnIndex("uploadstate"));
 					adviceItem.setId(Long.parseLong(mmid));
 					adviceItem.setGestationalWeeks(gestationalWeeks);
 					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 					adviceItem.setTestTimeLong(testTimeLong);
 					adviceItem.setStatus(status);
-					adviceItem.setIsNativeRecord(isNativeRecord);
+					adviceItem.setUploadstate(uploadstate);
 					return adviceItem;
 				} else {
 					return adviceItem;
@@ -117,7 +117,6 @@ public class DataDao {
 					String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
 					int testTimeLong = cursor.getInt(cursor.getColumnIndex("testTimeLong"));
 					int status = cursor.getInt(cursor.getColumnIndex("status"));
-					int isNativeRecord = cursor.getInt(cursor.getColumnIndex("isNativeRecord"));
 					String feeling = cursor.getString(cursor.getColumnIndex("feeling"));
 					String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
 					int userid = cursor.getInt(cursor.getColumnIndex("userid"));
@@ -131,7 +130,6 @@ public class DataDao {
 					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 					adviceItem.setTestTimeLong(testTimeLong);
 					adviceItem.setStatus(status);
-					adviceItem.setIsNativeRecord(isNativeRecord);
 					adviceItem.setFeeling(feeling);
 					adviceItem.setPurpose(purpose);
 					adviceItem.setUserid(userid);
@@ -162,10 +160,10 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
-								           "isNativeRecord,feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+								           "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
 								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
 										                      adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
-										                      adviceItem.getIsNativeRecord(), adviceItem.getFeeling(), adviceItem.getPurpose(),
+										                      adviceItem.getFeeling(), adviceItem.getPurpose(),
 										                      adviceItem.getUserid(), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
 										                      adviceItem.getSerialnum(), adviceItem.getJianceid()
 								          });
@@ -232,9 +230,6 @@ public class DataDao {
 					if (myAdviceItem.getStatus() != -1) {
 						values.put("status", myAdviceItem.getStatus());
 					}
-					if (myAdviceItem.getIsNativeRecord() != -1) {
-						values.put("isNativeRecord", myAdviceItem.getIsNativeRecord());
-					}
 					if (myAdviceItem.getFeeling() != null) {
 						values.put("feeling", myAdviceItem.getFeeling());
 					}
@@ -279,7 +274,7 @@ public class DataDao {
 		if (db.isOpen()) {
 			if (isRecordNativeed) {
 				Cursor cursor = db.rawQuery("mid,gestationalWeeks,testTime,testTimeLong,status," +
-						                            "isNativeRecord,feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName, null);
+						                            "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName, null);
 				while (cursor.moveToNext()) {
 					MyAdviceItem adviceItem = new MyAdviceItem();
 					long mid = cursor.getLong(cursor.getColumnIndex("mid"));
@@ -287,7 +282,6 @@ public class DataDao {
 					String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
 					int testTimeLong = cursor.getInt(cursor.getColumnIndex("testTimeLong"));
 					int status = cursor.getInt(cursor.getColumnIndex("status"));
-					int isNativeRecord = cursor.getInt(cursor.getColumnIndex("isNativeRecord"));
 					String feeling = cursor.getString(cursor.getColumnIndex("feeling"));
 					String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
 					int userid = cursor.getInt(cursor.getColumnIndex("userid"));
@@ -301,7 +295,6 @@ public class DataDao {
 					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 					adviceItem.setTestTimeLong(testTimeLong);
 					adviceItem.setStatus(status);
-					adviceItem.setIsNativeRecord(isNativeRecord);
 					adviceItem.setFeeling(feeling);
 					adviceItem.setPurpose(purpose);
 					adviceItem.setUserid(userid);
@@ -310,10 +303,10 @@ public class DataDao {
 					adviceItem.setUploadstate(uploadstate);
 					adviceItem.setSerialnum(serialnum);
 					adviceItem.setJianceid(jianceid);
-					if (isNativeRecord == 100) { //100本地  1云端
-						adviceItemsNative.add(adviceItem);
-					} else {
+					if (uploadstate == MyAdviceItem.CLOUD_RECORD) {
 						adviceItemsCloud.add(adviceItem);
+					} else {
+						adviceItemsNative.add(adviceItem);
 					}
 				}
 				ArrayList<MyAdviceItem> adviceItemsCloudTenCount = new ArrayList<MyAdviceItem>();
@@ -331,8 +324,8 @@ public class DataDao {
 				adviceItems.addAll(adviceItemsCloudTenCount);
 				adviceItems.addAll(adviceItemsNative);
 				cursor.close();
-			} else {
-				Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status,isNativeRecord from " + DataDBHelper.tableName, null);
+			} else  {
+				Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate from " + DataDBHelper.tableName, null);
 				while (cursor.moveToNext()) {
 					MyAdviceItem adviceItem = new MyAdviceItem();
 					String mid = cursor.getString(cursor.getColumnIndex("mid"));
@@ -340,7 +333,7 @@ public class DataDao {
 					String testTime = cursor.getString(cursor.getColumnIndex("testTime"));
 					int testTimeLong = cursor.getInt(cursor.getColumnIndex("testTimeLong"));
 					int status = cursor.getInt(cursor.getColumnIndex("status"));
-					int isNativeRecord = cursor.getInt(cursor.getColumnIndex("isNativeRecord"));
+					int uploadstate = cursor.getInt(cursor.getColumnIndex("uploadstate"));
 					adviceItem.setId(Long.parseLong(mid));
 					adviceItem.setGestationalWeeks(gestationalWeeks);
 					LogUtil.d("testTime", "testTime44 ==>" + status);
@@ -348,12 +341,11 @@ public class DataDao {
 					adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 					adviceItem.setTestTimeLong(testTimeLong);
 					adviceItem.setStatus(status);
-					adviceItem.setIsNativeRecord(isNativeRecord);
-					LogUtil.d("isNativeRecord", "isNativeRecord ==> " + isNativeRecord);
-					if (isNativeRecord == 100) { //100本地  1云端
-						adviceItemsNative.add(adviceItem);
-					} else {
+					LogUtil.d("uploadstate", "uploadstate ==> " + uploadstate);
+					if (uploadstate == MyAdviceItem.CLOUD_RECORD) {
 						adviceItemsCloud.add(adviceItem);
+					} else {
+						adviceItemsNative.add(adviceItem);
 					}
 				}
 				ArrayList<MyAdviceItem> adviceItemsCloudTenCount = new ArrayList<MyAdviceItem>();
@@ -377,6 +369,7 @@ public class DataDao {
 		LogUtil.d("adviceItemsAllAll", adviceItems.size() + " -adviceItemsAllAll ==> " + adviceItems);
 		return adviceItems;
 	}
+
 }
 
 

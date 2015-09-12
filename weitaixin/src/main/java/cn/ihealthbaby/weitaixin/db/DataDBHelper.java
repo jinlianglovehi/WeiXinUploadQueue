@@ -46,13 +46,12 @@ public class DataDBHelper extends SQLiteOpenHelper{
 				"testTime varchar(100)," + //text - timestamp
 				"testTimeLong integer," + //
 				"status integer," + //
-				"isNativeRecord integer," + //100本地  1云端
 				"feeling varchar(50)," + //
 				"purpose varchar(50)," + //
 				"userid integer," + //
 				"rdata text," + //
 				"path varchar(50)," + //
-				"uploadstate integer," + //
+				"uploadstate integer," + // // 1本地   2云端   3正在上传
 				"serialnum varchar(50)," + //
 				"jianceid varchar(50)" + //uuid
 				")"); //
