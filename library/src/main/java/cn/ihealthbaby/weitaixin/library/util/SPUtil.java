@@ -19,8 +19,7 @@ public class SPUtil {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("autostart", localSetting.isAutostart());
-        editor.putBoolean("alertInterval", localSetting.isAlertInterval());
-        editor.putInt("selectPosition", localSetting.getSelectPosition());
+        editor.putBoolean("alert", localSetting.isAlert());
         editor.putInt("monitorTime", localSetting.getMonitorTime());
         editor.putBoolean("auto_uploading", localSetting.isAuto_uploading());
         editor.commit();
@@ -30,8 +29,7 @@ public class SPUtil {
         LocalSetting localSetting = new LocalSetting();
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         localSetting.setAutostart(sp.getBoolean("autostart", true));
-        localSetting.setSelectPosition(sp.getInt("selectPosition", LocalSetting.DEFAULT_SELECT_POSITION));
-        localSetting.setAlertInterval(sp.getBoolean("alertInterval", true));
+        localSetting.setAlert(sp.getBoolean("alert", true));
         localSetting.setMonitorTime(sp.getInt("monitorTime", LocalSetting.DEFAULT_MONITOR_TIME));
         localSetting.setAuto_uploading(sp.getBoolean("auto_uploading", true));
         return localSetting;

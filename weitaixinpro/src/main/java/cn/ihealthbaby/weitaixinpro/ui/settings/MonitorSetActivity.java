@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixinpro.ui.settings;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
@@ -81,14 +84,14 @@ public class MonitorSetActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
-                if (!localSetting.isAlertInterval()) {
+                if (!localSetting.isAlert()) {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
                     meLinearLayout.setVisibility(View.VISIBLE);
                 } else {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
                     meLinearLayout.setVisibility(View.GONE);
                 }
-                localSetting.setAlertInterval(!localSetting.isAlertInterval());
+                localSetting.setAlert(!localSetting.isAlert());
                 SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
             }
         });
@@ -96,7 +99,8 @@ public class MonitorSetActivity extends BaseActivity {
 
 
     private void initView() {
-
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.TAI_XIN_YI, Activity.MODE_PRIVATE);
+        selectPosition = sharedPreferences.getInt("selectPosition", 0);
         LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
         if (localSetting.isAutostart()) {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
@@ -104,7 +108,7 @@ public class MonitorSetActivity extends BaseActivity {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
         }
 
-        if (localSetting.isAlertInterval()) {
+        if (localSetting.isAlert()) {
             mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
             meLinearLayout.setVisibility(View.VISIBLE);
         } else {
@@ -123,9 +127,10 @@ public class MonitorSetActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectPosition = position;
-                LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
-                localSetting.setSelectPosition(position);
-                SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
+                SharedPreferences sharedPreferences = getSharedPreferences(Constants.TAI_XIN_YI, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("selectPosition", position);
+                editor.commit();
                 myTimeAdapter.notifyDataSetChanged();
             }
         });

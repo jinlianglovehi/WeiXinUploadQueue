@@ -8,12 +8,9 @@ public class LocalSetting {
     //自动开始
     private boolean autostart;
     //报警设置
-    private boolean alertInterval;
-    //监护设置，选择时间间隔 position
-    private int selectPosition;
+    private boolean alert;
     //监护时间
     private int monitorTime;
-
     //自动上传
     private boolean auto_uploading;
 
@@ -39,13 +36,6 @@ public class LocalSetting {
         this.monitorTime = monitorTime;
     }
 
-    public int getSelectPosition() {
-        return selectPosition;
-    }
-
-    public void setSelectPosition(int selectPosition) {
-        this.selectPosition = selectPosition;
-    }
 
     public boolean isAutostart() {
         return autostart;
@@ -55,13 +45,11 @@ public class LocalSetting {
         this.autostart = autostart;
     }
 
-    public boolean isAlertInterval() {
-        return alertInterval;
+    public boolean isAlert() {
+        return alert;
     }
 
-    public void setAlertInterval(boolean alertInterval) {
-        this.alertInterval = alertInterval;
+    public void setAlert(boolean alert) {
+        this.alert = alert;
     }
-
-
 }

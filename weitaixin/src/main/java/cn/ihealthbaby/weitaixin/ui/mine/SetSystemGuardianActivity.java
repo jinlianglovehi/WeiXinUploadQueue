@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixin.ui.mine;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 
@@ -41,6 +44,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
     ImageView mSlideSwitchViewAlarm;
     private int selectPosition;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,33 +62,37 @@ public class SetSystemGuardianActivity extends BaseActivity {
     }
 
     private void initListener() {
+
         mSlideSwitchViewBegin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LocalSetting localSetting = SPUtil.getLocalSetting(SetSystemGuardianActivity.this);
+                LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
                 if (!localSetting.isAutostart()) {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
                 } else {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
                 }
                 localSetting.setAutostart(!localSetting.isAutostart());
-                SPUtil.setLocalSetting(SetSystemGuardianActivity.this, localSetting);
+                SPUtil.setLocalSetting(getApplicationContext(), localSetting);
+
             }
         });
 
         mSlideSwitchViewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LocalSetting localSetting = SPUtil.getLocalSetting(SetSystemGuardianActivity.this);
-                if (!localSetting.isAlertInterval()) {
+                LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+                if (!localSetting.isAlert()) {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
                     meLinearLayout.setVisibility(View.VISIBLE);
+                    meLinearLayout.setBackgroundResource(R.color.white0);
                 } else {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
-                    meLinearLayout.setVisibility(View.GONE);
+                    meLinearLayout.setVisibility(View.INVISIBLE);
+                    meLinearLayout.setBackgroundResource(R.color.gray17);
                 }
-                localSetting.setAlertInterval(!localSetting.isAlertInterval());
-                SPUtil.setLocalSetting(SetSystemGuardianActivity.this, localSetting);
+                localSetting.setAlert(!localSetting.isAlert());
+                SPUtil.setLocalSetting(getApplicationContext(), localSetting);
             }
         });
     }
@@ -92,20 +100,21 @@ public class SetSystemGuardianActivity extends BaseActivity {
 
     private void initView() {
 
-        LocalSetting localSetting = SPUtil.getLocalSetting(SetSystemGuardianActivity.this);
-
+        LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
         if (localSetting.isAutostart()) {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
         } else {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
         }
 
-        if (localSetting.isAlertInterval()) {
+        if (localSetting.isAlert()) {
             mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
             meLinearLayout.setVisibility(View.VISIBLE);
+            meLinearLayout.setBackgroundResource(R.color.white0);
         } else {
             mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
-            meLinearLayout.setVisibility(View.GONE);
+            meLinearLayout.setVisibility(View.INVISIBLE);
+            meLinearLayout.setBackgroundResource(R.color.gray17);
         }
 
     }
@@ -119,9 +128,10 @@ public class SetSystemGuardianActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectPosition = position;
-                LocalSetting localSetting = SPUtil.getLocalSetting(SetSystemGuardianActivity.this);
-                localSetting.setSelectPosition(position);
-                SPUtil.setLocalSetting(SetSystemGuardianActivity.this, localSetting);
+                SharedPreferences sharedPreferences = getSharedPreferences(Constants.TAI_XIN_YI, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("selectPosition", position);
+                editor.commit();
                 myTimeAdapter.notifyDataSetChanged();
             }
         });
@@ -178,7 +188,6 @@ public class SetSystemGuardianActivity extends BaseActivity {
                 viewHolder.tvTime.setTextColor(getResources().getColor(R.color.gray9));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
             }
-
             return convertView;
         }
 

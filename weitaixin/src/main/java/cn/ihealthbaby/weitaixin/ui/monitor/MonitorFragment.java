@@ -475,7 +475,7 @@ public class MonitorFragment extends BaseFragment {
 		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm;
 		//
 		adviceItem.setUserid(WeiTaiXinApplication.getInstance().user.getId());
-		adviceItem.setIsNativeRecord(0);
+//		adviceItem.setIsNativeRecord(0);
 		adviceItem.setPath(FileUtil.getVoiceDir(getActivity()).getPath());
 		adviceItem.setTestTime(testTime);
 		// TODO: 15/9/11 实际时间
