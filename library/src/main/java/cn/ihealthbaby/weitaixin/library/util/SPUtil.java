@@ -44,17 +44,40 @@ public class SPUtil {
     public static void saveUser(Context context, User user) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString("AccountToken", user.getAccountToken());
-        editor.putString("Telephone", user.getTelephone());
+        if (user.getAccountToken() != null) {
+            editor.putString("AccountToken", user.getAccountToken());
+        }
+        if (user.getTelephone() != null) {
+            editor.putString("Telephone", user.getTelephone());
+        }
+
         editor.putLong("Id", user.getId());
-        editor.putString("Mobile", user.getMobile());
-        editor.putString("Name", user.getName());
-        editor.putString("HeadPic", user.getHeadPic());
-        editor.putLong("Birthday", user.getBirthday().getTime());
+        if (user.getMobile() != null) {
+            editor.putString("Mobile", user.getMobile());
+        }
+        if (user.getName() != null) {
+            editor.putString("Name", user.getName());
+        }
+
+        if (user.getHeadPic() != null) {
+            editor.putString("HeadPic", user.getHeadPic());
+        }
+
+        if (user.getBirthday() != null) {
+            editor.putLong("Birthday", user.getBirthday().getTime());
+        }
+
         editor.putInt("TypeId", user.getTypeId());
         editor.putBoolean("HasService", user.getHasService());
-        editor.putLong("DeliveryTime", user.getDeliveryTime().getTime());
-        editor.putLong("CreateTime", user.getCreateTime().getTime());
+
+        if (user.getDeliveryTime() != null) {
+            editor.putLong("DeliveryTime", user.getDeliveryTime().getTime());
+        }
+
+        if (user.getCreateTime() != null) {
+            editor.putLong("CreateTime", user.getCreateTime().getTime());
+        }
+
         editor.putBoolean("IsInit", user.getIsInit());
         editor.commit();
         saveServiceInfo(context, user);
@@ -102,12 +125,14 @@ public class SPUtil {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_SERVICEINFO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         ServiceInfo serviceInfo = user.getServiceInfo();
-        editor.putString("AreaInfo", serviceInfo.getAreaInfo());
-        editor.putString("Serialnum", serviceInfo.getSerialnum());
-        editor.putLong("DoctorId", serviceInfo.getDoctorId());
-        editor.putString("DoctorName", serviceInfo.getDoctorName());
-        editor.putLong("HospitalId", serviceInfo.getHospitalId());
-        editor.putString("HospitalName", serviceInfo.getHospitalName());
+        if (serviceInfo != null) {
+            editor.putString("AreaInfo", serviceInfo.getAreaInfo());
+            editor.putString("Serialnum", serviceInfo.getSerialnum());
+            editor.putLong("DoctorId", serviceInfo.getDoctorId());
+            editor.putString("DoctorName", serviceInfo.getDoctorName());
+            editor.putLong("HospitalId", serviceInfo.getHospitalId());
+            editor.putString("HospitalName", serviceInfo.getHospitalName());
+        }
         editor.commit();
     }
 
