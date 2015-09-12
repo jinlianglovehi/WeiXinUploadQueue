@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 
@@ -29,7 +30,6 @@ public class SetSystemGuardianActivity extends BaseActivity {
     TextView title_text;
     @Bind(R.id.function)
     TextView function;
-    //
 
     @Bind(R.id.lvGuardian)
     ListView lvGuardian;
@@ -39,17 +39,14 @@ public class SetSystemGuardianActivity extends BaseActivity {
     ImageView mSlideSwitchViewBegin;
     @Bind(R.id.slide_switch_alarm)
     ImageView mSlideSwitchViewAlarm;
+    private int selectPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_system_guardian);
-
         ButterKnife.bind(this);
-
         title_text.setText("监护设置");
-//      back.setVisibility(View.INVISIBLE);
-
         initData();
         initView();
         initListener();
@@ -64,47 +61,46 @@ public class SetSystemGuardianActivity extends BaseActivity {
         mSlideSwitchViewBegin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean AutoStart = (boolean) SPUtil.getData(SetSystemGuardianActivity.this, "AutoStart", true);
-                if (!AutoStart) {
+                LocalSetting localSetting = SPUtil.getLocalSetting(SetSystemGuardianActivity.this);
+                if (!localSetting.isAutostart()) {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
                 } else {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
                 }
-                SPUtil.setData(SetSystemGuardianActivity.this, "AutoStart", !AutoStart);
+                localSetting.setAutostart(!localSetting.isAutostart());
+                SPUtil.setLocalSetting(SetSystemGuardianActivity.this, localSetting);
             }
         });
 
         mSlideSwitchViewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean PoliceSet = (boolean) SPUtil.getData(SetSystemGuardianActivity.this, "PoliceSet", true);
-
-                if (!PoliceSet) {
+                LocalSetting localSetting = SPUtil.getLocalSetting(SetSystemGuardianActivity.this);
+                if (!localSetting.isAlertInterval()) {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
                     meLinearLayout.setVisibility(View.VISIBLE);
                 } else {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
                     meLinearLayout.setVisibility(View.GONE);
                 }
-                SPUtil.setData(SetSystemGuardianActivity.this, "PoliceSet", !PoliceSet);
+                localSetting.setAlertInterval(!localSetting.isAlertInterval());
+                SPUtil.setLocalSetting(SetSystemGuardianActivity.this, localSetting);
             }
         });
     }
 
 
     private void initView() {
-//        String AutoStart = WeiTaiXinApplication.getInstance().getValue("AutoStart", "0");
 
-        boolean AutoStart = (boolean) SPUtil.getData(SetSystemGuardianActivity.this, "AutoStart", true);
-        boolean PoliceSet = (boolean) SPUtil.getData(SetSystemGuardianActivity.this, "PoliceSet", true);
-        if (AutoStart) {
+        LocalSetting localSetting = SPUtil.getLocalSetting(SetSystemGuardianActivity.this);
+
+        if (localSetting.isAutostart()) {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
         } else {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
         }
 
-//        String PoliceSet = WeiTaiXinApplication.getInstance().getValue("PoliceSet", "0");
-        if (PoliceSet) {
+        if (localSetting.isAlertInterval()) {
             mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
             meLinearLayout.setVisibility(View.VISIBLE);
         } else {
@@ -122,9 +118,10 @@ public class SetSystemGuardianActivity extends BaseActivity {
         lvGuardian.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                myTimeAdapter.isFirst = false;
-//                view.setSelected(true);
-                SPUtil.setData(SetSystemGuardianActivity.this, "select_num", position);
+                selectPosition = position;
+                LocalSetting localSetting = SPUtil.getLocalSetting(SetSystemGuardianActivity.this);
+                localSetting.setSelectPosition(position);
+                SPUtil.setLocalSetting(SetSystemGuardianActivity.this, localSetting);
                 myTimeAdapter.notifyDataSetChanged();
             }
         });
@@ -172,11 +169,9 @@ public class SetSystemGuardianActivity extends BaseActivity {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             viewHolder.tvTime.setText(titleTimes[position]);
-            System.err.println("isFirst: " + isFirst);
 
 
-            int select_num = (int) SPUtil.getData(SetSystemGuardianActivity.this, "select_num", 0);
-            if (select_num == position) {
+            if (selectPosition == position) {
                 viewHolder.tvTime.setTextColor(getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             } else {

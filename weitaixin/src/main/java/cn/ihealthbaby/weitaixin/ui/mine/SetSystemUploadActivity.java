@@ -11,6 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 
@@ -51,13 +52,14 @@ public class SetSystemUploadActivity extends BaseActivity {
         mSlideSwitchViewUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean upload = (boolean) SPUtil.getData(SetSystemUploadActivity.this, "upload", true);
-                if (!upload) {
+                LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+                if (!localSetting.isAuto_uploading()) {
                     mSlideSwitchViewUpload.setImageResource(R.drawable.switch_on);
                 } else {
                     mSlideSwitchViewUpload.setImageResource(R.drawable.switch_off);
                 }
-                SPUtil.setData(SetSystemUploadActivity.this, "upload", !upload);
+                localSetting.setAuto_uploading(!localSetting.isAuto_uploading());
+                SPUtil.setLocalSetting(getApplicationContext(), localSetting);
             }
         });
     }
@@ -70,9 +72,8 @@ public class SetSystemUploadActivity extends BaseActivity {
 
 
     private void initView() {
-//        String SetSystemUpload = WeiTaiXinApplication.getInstance().getValue("SetSystemUpload", "0");
-        boolean upload = (boolean) SPUtil.getData(SetSystemUploadActivity.this, "upload", true);
-        if (upload) {
+        LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+        if (localSetting.isAuto_uploading()) {
             mSlideSwitchViewUpload.setImageResource(R.drawable.switch_on);
         } else {
             mSlideSwitchViewUpload.setImageResource(R.drawable.switch_off);

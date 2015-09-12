@@ -39,6 +39,7 @@ public class MonitorSetActivity extends BaseActivity {
     ImageView mSlideSwitchViewBegin;
     @Bind(R.id.slide_switch_alarm)
     ImageView mSlideSwitchViewAlarm;
+    private int selectPosition;
 
 
     @Override
@@ -80,14 +81,14 @@ public class MonitorSetActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
-                if (!localSetting.isPoliceset()) {
+                if (!localSetting.isAlertInterval()) {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
                     meLinearLayout.setVisibility(View.VISIBLE);
                 } else {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
                     meLinearLayout.setVisibility(View.GONE);
                 }
-                localSetting.setPoliceset(!localSetting.isPoliceset());
+                localSetting.setAlertInterval(!localSetting.isAlertInterval());
                 SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
             }
         });
@@ -103,7 +104,7 @@ public class MonitorSetActivity extends BaseActivity {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
         }
 
-        if (localSetting.isPoliceset()) {
+        if (localSetting.isAlertInterval()) {
             mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
             meLinearLayout.setVisibility(View.VISIBLE);
         } else {
@@ -121,8 +122,10 @@ public class MonitorSetActivity extends BaseActivity {
         lvGuardian.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                myTimeAdapter.isFirst = false;
-                SPUtil.setData(MonitorSetActivity.this, "select_num", position);
+                selectPosition = position;
+                LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
+                localSetting.setSelectPosition(position);
+                SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
                 myTimeAdapter.notifyDataSetChanged();
             }
         });
@@ -171,8 +174,7 @@ public class MonitorSetActivity extends BaseActivity {
             }
             viewHolder.tvTime.setText(titleTimes[position]);
 
-            int select_num = (int) SPUtil.getData(MonitorSetActivity.this, "select_num", position);
-            if (select_num == position) {
+            if (selectPosition == position) {
                 viewHolder.tvTime.setTextColor(getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             } else {
