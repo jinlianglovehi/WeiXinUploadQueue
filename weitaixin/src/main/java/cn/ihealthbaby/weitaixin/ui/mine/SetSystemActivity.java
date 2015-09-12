@@ -113,7 +113,7 @@ public class SetSystemActivity extends BaseActivity {
             @Override
             public void call(Result<Void> t) {
                 if (t.isSuccess()) {
-                    SPUtil.saveUser(SetSystemActivity.this, new User());
+                    SPUtil.clearUser(SetSystemActivity.this);
 //                    WeiTaiXinApplication.getInstance().isLogin = false;
 //                  ToastUtil.show(getApplicationContext(),"退出登录");
 //                    WeiTaiXinApplication.accountToken = null;

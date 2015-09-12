@@ -16,6 +16,7 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
  */
 public class SPUtil {
     private static final String FILE_NAME = "weitaixin_share_data";
+    private static final String FILE_NAME_USER = "user";
 
 
     public static void setLocalSetting(Context context, LocalSetting localSetting) {
@@ -42,7 +43,7 @@ public class SPUtil {
 
 
     public static void saveUser(Context context, User user) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("AccountToken", user.getAccountToken());
         editor.putString("Telephone", user.getTelephone());
@@ -61,7 +62,7 @@ public class SPUtil {
 
 
     public static User getUser(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         User user =new User();
         user.setAccountToken(sp.getString("AccountToken", ""));
         user.setTelephone(sp.getString("Telephone", ""));
@@ -76,6 +77,14 @@ public class SPUtil {
         user.setCreateTime(new Date(sp.getLong("CreateTime", -1)));
         user.setIsInit(sp.getBoolean("IsInit", false));
         return user;
+    }
+
+
+    public static void clearUser(Context context){
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
     }
 
 
