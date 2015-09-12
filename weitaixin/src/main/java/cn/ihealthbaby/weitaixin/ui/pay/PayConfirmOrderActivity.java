@@ -3,28 +3,20 @@ package cn.ihealthbaby.weitaixin.ui.pay;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.handmark.pulltorefresh.library.ILoadingLayout;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,18 +24,15 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.form.OrderItemForm;
 import cn.ihealthbaby.client.form.ServiceOrderForm;
 import cn.ihealthbaby.client.model.Address;
+import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.client.model.Product;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
-import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.model.GoodsList;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
@@ -205,26 +194,24 @@ public class PayConfirmOrderActivity extends BaseActivity {
         serviceOrderForm.setItemForms(orderItemForms);
         serviceOrderForm.setDeliverType(deliverType);
         serviceOrderForm.setAddressId(addressId);
-        ApiManager.getInstance().orderApi.submitServiceOrder(serviceOrderForm, new HttpClientAdapter.Callback<Integer>() {
+        ApiManager.getInstance().orderApi.submitServiceOrder(serviceOrderForm, new HttpClientAdapter.Callback<Order>() {
             @Override
-            public void call(Result<Integer> t) {
-                if (t.isSuccess()) {
-                    Integer data = t.getData();
+            public void call(Result<Order> result) {
+                if (result.isSuccess()) {
+                    Order data = result.getData();
                     LogUtil.d("dataInteger", "dataInteger  =  " + data);
-                    if (data == 0) {
+                    if (data !=null) {
                         Intent intent = new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
                         startActivity(intent);
-                    } else if (data == 1) {
+                    } else {
                         ToastUtil.show(getApplicationContext(), "尚有未结束的服务");
-                    } else if (data == 2) {
-                        ToastUtil.show(getApplicationContext(), "该医院不支持线上服务");
                     }
                 }else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
+                    ToastUtil.show(getApplicationContext(), result.getMsgMap()+"");
                 }
                 customDialog.dismiss();
             }
-        },getRequestTag());
+        }, getRequestTag());
     }
 
 
