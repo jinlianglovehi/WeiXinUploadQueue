@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.media.AudioTrack;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -32,15 +33,9 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter.Callback;
-import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.form.AdviceForm;
-import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.db.DataDao;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
@@ -81,7 +76,7 @@ public class MonitorFragment extends BaseFragment {
 	@Bind(R.id.tv_record)
 	TextView tvRecord;
 	@Bind(R.id.btn_start)
-	ImageView btn;
+	ImageView btnStart;
 	@Bind(R.id.tv_bluetooth)
 	TextView tvBluetooth;
 	@Bind(R.id.rl_start)
@@ -105,13 +100,18 @@ public class MonitorFragment extends BaseFragment {
 	private PseudoBluetoothService pseudoBluetoothService;
 	private ArrayList<BluetoothDevice> scanedDevices = new ArrayList<>();
 	private boolean connected;
-	private boolean needPlay = true;
+	private boolean needPlay;
 	private boolean needRecord;
 	private CountDownTimer countDownTimer;
 	private boolean started;
 	private Date testTime;
 	private String uuidString;
 	private FileOutputStream fileOutputStream;
+	private User user;
+	private ServiceInfo serviceInfo;
+	private AudioTrack audioTrack = AudioPlayer.getInstance().getmAudioTrack();
+	private int autoStartTime;
+	private CountDownTimer autoStartTimer;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -131,7 +131,7 @@ public class MonitorFragment extends BaseFragment {
 							break;
 						case PseudoBluetoothService.STATE_NONE:
 							LogUtil.d(TAG, "STATE_NONE");
-							resetUI();
+							reset();
 							break;
 					}
 					break;
@@ -153,17 +153,17 @@ public class MonitorFragment extends BaseFragment {
 				case Constants.MESSAGE_CANNOT_CONNECT:
 					LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-					resetUI();
+					reset();
 					break;
 				case Constants.MESSAGE_CONNECTION_LOST:
 					LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
 					ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
-					resetUI();
+					reset();
 					break;
 				case Constants.MESSAGE_VOICE:
 					byte[] sound = (byte[]) msg.obj;
 					if (needPlay) {
-						AudioPlayer.getInstance().playAudioTrack(sound, 0, sound.length);
+						audioTrack.write(sound, 0, sound.length);
 					}
 					if (needRecord) {
 						if (fileOutputStream != null) {
@@ -178,9 +178,6 @@ public class MonitorFragment extends BaseFragment {
 			}
 		}
 	};
-	private AdviceSetting adviceSetting;
-	private User user;
-	private ServiceInfo serviceInfo;
 
 	private String getFileName() {
 		return Constants.TEMP_FILE_NAME;
@@ -197,22 +194,30 @@ public class MonitorFragment extends BaseFragment {
 
 	@OnClick(R.id.btn_start)
 	public void startRecord(View view) {
+		autoStartTimer.cancel();
 		started = true;
 		uuidString = UUID.randomUUID().toString().replace("-", "");
+		LogUtil.d(TAG, "uuid:", uuidString);
 		File file = new File(FileUtil.getVoiceDir(getActivity()), getFileName());
 		try {
-			fileOutputStream = new FileOutputStream(file);
+			if (file.createNewFile()) {
+				fileOutputStream = new FileOutputStream(file);
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		AdviceForm adviceForm = new AdviceForm();
 		testTime = new Date();
-		adviceForm.setTestTime(testTime);
-		adviceForm.setDeviceType(1);
-		Intent intent = new Intent(getActivity(), MonitorActivity.class);
-		intent.putExtra(Constants.INTENT_UUID, uuidString);
 		needRecord = true;
 		needPlay = true;
+		DataDao dao = DataDao.getInstance(getActivity().getApplicationContext());
+		MyAdviceItem myAdviceItem = new MyAdviceItem();
+		myAdviceItem.setJianceid(uuidString);
+		myAdviceItem.setTestTime(new Date());
+		dao.addItem(myAdviceItem, true);
+		Intent intent = new Intent(getActivity(), MonitorActivity.class);
+		intent.putExtra(Constants.INTENT_UUID, uuidString);
 		startActivity(intent);
 	}
 
@@ -234,10 +239,6 @@ public class MonitorFragment extends BaseFragment {
 		}
 	}
 
-	private void clear(AdviceForm adviceForm) {
-		adviceForm = new AdviceForm();
-	}
-
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -257,6 +258,7 @@ public class MonitorFragment extends BaseFragment {
 		back.setVisibility(View.GONE);
 		titleText.setText("胎心监测");
 		function.setVisibility(View.GONE);
+		reset();
 		getConfig();
 		countDownTimer = new CountDownTimer(20000, 20000) {
 			@Override
@@ -267,7 +269,7 @@ public class MonitorFragment extends BaseFragment {
 			public void onFinish() {
 				if (!connected || bluetoothScanner.isDiscovering()) {
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-					resetUI();
+					reset();
 					pseudoBluetoothService.stop();
 				}
 				if (bluetoothScanner.isDiscovering()) {
@@ -296,7 +298,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onDisconnect(BluetoothDevice remoteDevice) {
-				resetUI();
+				reset();
 			}
 
 			@Override
@@ -332,12 +334,12 @@ public class MonitorFragment extends BaseFragment {
 	private void getConfig() {
 		user = SPUtil.getUser(getActivity().getApplicationContext());
 		serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
-		ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(), new Callback<AdviceSetting>() {
-			@Override
-			public void call(Result<AdviceSetting> t) {
-				adviceSetting = t.getData();
-			}
-		}, TAG);
+//		ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(), new Callback<AdviceSetting>() {
+//			@Override
+//			public void call(Result<AdviceSetting> t) {
+//				adviceSetting = t.getData();
+//			}
+//		}, TAG);
 	}
 
 	private void loadSrc(ImageView imageView, int drawableId) {
@@ -345,7 +347,7 @@ public class MonitorFragment extends BaseFragment {
 		Picasso.with(getActivity().getApplicationContext()).load(drawableId).resize(layoutParams.width, layoutParams.height).into(imageView);
 	}
 
-	public void resetUI() {
+	public void reset() {
 		tvBluetooth.setText("start");
 		tvBluetooth.setClickable(true);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
@@ -356,7 +358,27 @@ public class MonitorFragment extends BaseFragment {
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
 		needRecord = false;
-		AudioPlayer.getInstance().play();
+		needPlay = true;
+		if (audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
+			audioTrack.flush();
+			audioTrack.play();
+		}
+		// TODO: 15/9/13
+		if (true) {
+			autoStartTime = 2 * 60 * 1000;
+		} else {
+			autoStartTime = 3 * 1000;
+		}
+		autoStartTimer = new CountDownTimer(autoStartTime, 1000) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+			}
+
+			@Override
+			public void onFinish() {
+				btnStart.performClick();
+			}
+		};
 		scanedDevices.clear();
 	}
 
@@ -378,6 +400,7 @@ public class MonitorFragment extends BaseFragment {
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88);
 		bpm.setImageResource(R.drawable.bpm_red);
 		hint.setVisibility(View.GONE);
+		autoStartTimer.start();
 	}
 
 	public void connectBondedDeviceOrSearch() {
@@ -409,54 +432,94 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	public String getDeviceName() {
-//		return "IHB2LD1X7CUC"; //IHB2LD1X7CUC   IHB2LC9JUHPB
-//		return "IHB2LC9P2UUZ"; //IHB2LD1X7CUC   IHB2LC9JUHPB
-		String serialnum = "";
-		ServiceInfo serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
+		String serialnum = null;
 		if (serviceInfo != null) {
 			serialnum = serviceInfo.getSerialnum();
 		}
-		return serialnum;
-		//  TODO: 15/9/7 请求网络
+//		return serialnum == null ? "" : serialnum;
+		return "IHB2LD1X7CUC";
 	}
 
-	public void onEventMainThread(MonitorTerminateEvent event) {
+	public void onEventAsync(MonitorTerminateEvent event) {
 		int reason = event.getEvent();
 		//断开连接 保存音频数据 保存胎心数据
-		AudioPlayer.getInstance().release();
 		pseudoBluetoothService.stop();
-		try {
-			fileOutputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		needPlay = false;
+		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+			audioTrack.pause();
+			audioTrack.flush();
 		}
-		resetUI();
-		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
-		intent.putExtra(Constants.INTENT_UUID, uuidString);
+		if (fileOutputStream != null) {
+			try {
+				fileOutputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
-				record();
-				startActivity(intent);
+				runRecord();
 				break;
 			case MonitorTerminateEvent.EVENT_UNKNOWN:
 				LogUtil.d(TAG, "EVENT_UNKNOWN");
-				record();
-				startActivity(intent);
+				runRecord();
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL:
 				LogUtil.d(TAG, "EVENT_MANUAL");
-				record();
-				startActivity(intent);
+				runRecord();
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
+				LogUtil.d(TAG, "EVENT_MANUAL_NOT_START");
 				break;
 			default:
 				break;
 		}
 	}
 
-	private void record() {
+	public void onEvent(MonitorTerminateEvent event) {
+		int reason = event.getEvent();
+		reset();
+		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
+		intent.putExtra(Constants.INTENT_UUID, uuidString);
+		switch (reason) {
+			case MonitorTerminateEvent.EVENT_AUTO:
+				LogUtil.d(TAG, "EVENT_AUTO");
+				startActivity(intent);
+				break;
+			case MonitorTerminateEvent.EVENT_UNKNOWN:
+				LogUtil.d(TAG, "EVENT_UNKNOWN");
+				startActivity(intent);
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL:
+				LogUtil.d(TAG, "EVENT_MANUAL");
+				startActivity(intent);
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
+				if (autoStartTimer != null) {
+					autoStartTimer.cancel();
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void runRecord() {
+		new Thread() {
+			@Override
+			public void run() {
+				super.run();
+				try {
+					record();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+
+	private void record() throws Exception {
 		File tempFile = new File(FileUtil.getVoiceDir(getActivity()), "TEMP");
 		File file = new File(FileUtil.getVoiceDir(getActivity()), uuidString);
 		if (tempFile.renameTo(file)) {
@@ -469,21 +532,25 @@ public class MonitorFragment extends BaseFragment {
 		Data data = new Data();
 		data.setInterval(500);
 		data.setHeartRate(fhrString);
+		ArrayList<Long> longs = new ArrayList<>();
+		for (int i = 0; i < DataStorage.hearts.size(); i++) {
+			longs.add((long) (DataStorage.hearts.get(i) * 500));
+		}
+		String fmString = gson.toJson(longs);
+		data.setFm(fmString);
 		data.setTime(testTime.getTime());
 		recordData.setData(data);
 		String dataString = gson.toJson(recordData);
 		DataDao dao = DataDao.getInstance(getActivity());
 		MyAdviceItem adviceItem = new MyAdviceItem();
-		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm;
+//		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm;
 		//
 		adviceItem.setUserid(user.getId());
 		adviceItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
-		adviceItem.setPath(FileUtil.getVoiceDir(getActivity()).getPath());
+		adviceItem.setPath(file.getPath());
 		adviceItem.setTestTime(testTime);
 		// TODO: 15/9/11 实际时间
 		adviceItem.setTestTimeLong(DataStorage.fhrs.size() * 500);
-		adviceItem.setFeeling(adviceForm.getFeeling());
-		adviceItem.setPurpose(adviceForm.getAskPurpose());
 		adviceItem.setGestationalWeeks(DateTimeTool.getGestationalWeeks(testTime));
 		adviceItem.setJianceid(uuidString);
 		adviceItem.setRdata(dataString);
@@ -493,6 +560,9 @@ public class MonitorFragment extends BaseFragment {
 		dao.add(adviceItem, true);
 		MyAdviceItem aNative = dao.findNative(uuidString);
 		LogUtil.d(TAG, aNative.toString());
+		DataStorage.fhrs.clear();
+		DataStorage.hearts.clear();
+		DataStorage.fhrPackage.recycle();
 	}
 }
 
