@@ -138,7 +138,7 @@ public class Parser {
 		return FHRPackage2;
 	}
 
-	public void parsePackageData(InputStream mmInStream) throws IOException, ParseException {
+	public void parsePackageData(InputStream mmInStream) throws IOException, ParseException, Exception {
 		byte[] oneByte = new byte[1];
 		while (true) {
 			if (mmInStream.available() < 324) {
