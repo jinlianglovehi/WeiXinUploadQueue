@@ -16,7 +16,6 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
@@ -52,6 +51,7 @@ public class CurveDetialActivity extends BaseActivity {
 	private boolean needReset = true;
 	private ExpendableCountDownTimer countDownTimer;
 	private long lastFMTime;
+	private boolean terminate;
 
 	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
@@ -66,6 +66,8 @@ public class CurveDetialActivity extends BaseActivity {
 	@OnClick(R.id.function)
 	public void terminate() {
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
+		terminate = true;
+//		finish();
 	}
 
 	private void savePosition(int position) {
@@ -77,7 +79,6 @@ public class CurveDetialActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor_detial);
 		ButterKnife.bind(this);
-		EventBus.getDefault().register(this);
 		titleText.setText("胎心监测");
 		function.setText("立即结束");
 		function.setVisibility(View.VISIBLE);
@@ -91,6 +92,7 @@ public class CurveDetialActivity extends BaseActivity {
 		countDownTimer = new ExpendableCountDownTimer(duration, interval) {
 			@Override
 			public void onStart(long startTime) {
+				terminate = false;
 			}
 
 			@Override
@@ -99,11 +101,13 @@ public class CurveDetialActivity extends BaseActivity {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				curve.resetPoints();
-				curve.postInvalidate();
-				int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
-				// TODO: 15/9/9   颜色根据数值变化
-				bpm.setText(fhr1 + "");
+				if (DataStorage.fhrs.size() > 0 || !terminate) {
+					curve.resetPoints();
+					curve.postInvalidate();
+					int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
+					// TODO: 15/9/9   颜色根据数值变化
+					bpm.setText(fhr1 + "");
+				}
 				if (!chs.isTouching()) {
 					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
 				}
@@ -138,30 +142,5 @@ public class CurveDetialActivity extends BaseActivity {
 			countDownTimer.cancel();
 			countDownTimer = null;
 		}
-		EventBus.getDefault().unregister(this);
-	}
-
-	public void onEventMainThread(MonitorTerminateEvent event) {
-		if (countDownTimer != null) {
-			countDownTimer.cancel();
-		}
-		int reason = event.getEvent();
-		switch (reason) {
-			case MonitorTerminateEvent.EVENT_AUTO:
-				LogUtil.d(TAG, "EVENT_AUTO");
-				break;
-			case MonitorTerminateEvent.EVENT_UNKNOWN:
-				LogUtil.d(TAG, "EVENT_UNKNOWN");
-				break;
-			case MonitorTerminateEvent.EVENT_MANUAL:
-				LogUtil.d(TAG, "EVENT_MANUAL");
-				break;
-			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
-				LogUtil.d(TAG, "EVENT_MANUAL_NOT_START");
-				break;
-			default:
-				break;
-		}
-		finish();
 	}
 }
