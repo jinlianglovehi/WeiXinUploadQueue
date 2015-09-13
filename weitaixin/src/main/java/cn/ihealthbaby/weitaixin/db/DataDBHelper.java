@@ -53,7 +53,7 @@ public class DataDBHelper extends SQLiteOpenHelper{
 				"path varchar(50)," + //
 				"uploadstate integer," + // // 1本地   2云端   3正在上传
 				"serialnum varchar(50)," + //
-				"jianceid varchar(50)" + //uuid
+				"jianceid varchar(50) UNIQUE" + //uuid
 				")"); //
 
 	}
