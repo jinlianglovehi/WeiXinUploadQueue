@@ -18,6 +18,24 @@ public class SPUtil {
     private static final String FILE_NAME = "weitaixin_share_data";
     private static final String FILE_NAME_USER = "user_share_data";
     private static final String FILE_NAME_SERVICEINFO = "serviceinfo_share_data";
+    private static final String FILE_NAME_TEMP = "temp_share_data";
+
+    public static void setUUID(Context context, String uuid) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_TEMP, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("uuid", uuid);
+        editor.apply();
+    }
+
+    public static String getUUID(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_TEMP, Context.MODE_PRIVATE);
+        return sp.getString("uuid", "");
+    }
+
+    public static void clearUUID(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_TEMP, Context.MODE_PRIVATE);
+        sp.edit().clear();
+    }
 
 
     public static void setLocalSetting(Context context, LocalSetting localSetting) {
