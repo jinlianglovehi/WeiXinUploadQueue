@@ -62,8 +62,13 @@ public class AudioPlayer {
 		mAudioTrack.play();
 	}
 
+	public boolean isPlaying() {
+		return mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING;
+	}
+
 	public void pause() {
 		mAudioTrack.pause();
+		mAudioTrack.flush();
 	}
 
 	public void release() {
@@ -75,6 +80,15 @@ public class AudioPlayer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void stop() {
+		try {
+			mAudioTrack.pause();
+			mAudioTrack.flush();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -105,5 +119,9 @@ public class AudioPlayer {
 	public int getPrimePlaySize() {
 		int minBufSize = AudioTrack.getMinBufferSize(mFrequency, mChannel, mSampBit);
 		return minBufSize * 2;
+	}
+
+	public AudioTrack getmAudioTrack() {
+		return mAudioTrack;
 	}
 }
