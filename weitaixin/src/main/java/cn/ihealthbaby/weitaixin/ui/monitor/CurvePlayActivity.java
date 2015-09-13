@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.monitor;
 
 import android.app.Dialog;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.qiniu.android.http.ResponseInfo;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -75,6 +77,8 @@ public class CurvePlayActivity extends BaseActivity {
 	private Dialog dialog;
 	private String uuid;
 	private MyAdviceItem myAdviceItem;
+	private ArrayList<Integer> fetalMove;
+	private MediaPlayer mediaPlayer;
 
 	@OnClick(R.id.back)
 	public void back() {
@@ -83,7 +87,7 @@ public class CurvePlayActivity extends BaseActivity {
 
 	@OnClick(R.id.play)
 	public void play() {
-		countDownTimer.start();
+		countDownTimer.restart();
 	}
 
 	@OnClick(R.id.replay)
@@ -151,13 +155,27 @@ public class CurvePlayActivity extends BaseActivity {
 		width = metric.widthPixels;
 		getData();
 		configCurve();
+		mediaPlayer = new MediaPlayer();
+		String path = myAdviceItem.getPath();
+		try {
+			mediaPlayer.setDataSource(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		CustomDialog customDialog = new CustomDialog();
 		dialog = customDialog.createDialog1(this, "正在上传胎音文件...");
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
+			public int fmposition;
 			public int position;
 
 			@Override
 			public void onStart(long startTime) {
+				try {
+					mediaPlayer.prepare();
+					mediaPlayer.start();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 			@Override
@@ -167,9 +185,13 @@ public class CurvePlayActivity extends BaseActivity {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				int size = fhrs.size();
-				if (position < size - 1) {
+				if (position < size ) {
 					int fhr = fhrs.get(position);
 					curvePlay.addPoint(fhr);
+					if (fmposition<fetalMove.size()&&fetalMove.get(fmposition)/getInterval() == position) {
+						curvePlay.addRedHeart(position);
+						fmposition++;
+					}
 					curvePlay.postInvalidate();
 					// TODO: 15/9/9   颜色根据数值变化
 					bpm.setText(fhr + "");
@@ -183,13 +205,14 @@ public class CurvePlayActivity extends BaseActivity {
 			@Override
 			public void onFinish() {
 				ToastUtil.show(getApplicationContext(), "播放结束");
+				mediaPlayer.stop();
 			}
 
 			@Override
 			public void onRestart() {
 				position = 0;
 				curvePlay.reset();
-				chs.smoothScrollBy(0, 0);
+				chs.smoothScrollTo(0, 0);
 			}
 		};
 	}
@@ -208,6 +231,8 @@ public class CurvePlayActivity extends BaseActivity {
 		data = recordData.getData();
 		fhrs = gson.fromJson(data.getHeartRate(), new TypeToken<ArrayList<Integer>>() {
 		}.getType());
+		fetalMove = gson.fromJson(data.getFm(), new TypeToken<ArrayList<Integer>>() {
+		}.getType());
 	}
 
 	private void configCurve() {
@@ -219,5 +244,13 @@ public class CurvePlayActivity extends BaseActivity {
 		layoutParams.width = curvePlay.getMinWidth();
 		layoutParams.height = curvePlay.getMinHeight() + Util.dip2px(getApplicationContext(), 16);
 		curvePlay.setLayoutParams(layoutParams);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (mediaPlayer != null) {
+			mediaPlayer.release();
+		}
 	}
 }
