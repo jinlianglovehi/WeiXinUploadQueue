@@ -438,10 +438,14 @@ public class PseudoBluetoothService {
 					Log.e(TAG, "disconnected", e);
 					connectionLost();
 					// Start the service over to restart listening mode
-					PseudoBluetoothService.this.start();
+//					PseudoBluetoothService.this.start();
 					break;
 				} catch (ParseException e) {
 					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+
 				}
 			}
 		}
