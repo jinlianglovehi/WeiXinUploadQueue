@@ -130,7 +130,7 @@ public class RecordFragment extends BaseFragment {
         function.setText("编辑");
 
         dataDao = DataDao.getInstance(getActivity().getApplicationContext());
-        saveLocal();
+//        saveLocal();
 
 
         context = (MeMainFragmentActivity) getActivity();

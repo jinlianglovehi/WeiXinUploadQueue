@@ -10,6 +10,7 @@ import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
  */
 public class DataDaoTest extends AndroidTestCase {
 	public final static String JIANCEID = "012345678901213";
+	public final static String JIANCEID2 = "012345679999213";
 	private Context context;
 	private DataDao dao;
 	private MyAdviceItem myAdviceItem;
@@ -27,8 +28,9 @@ public class DataDaoTest extends AndroidTestCase {
 
 	public void test() {
 		try {
-			testAddItem();
-			testFindNative();
+//			testAddItem();
+//			testFindNative();
+//			testUpdateOrInsert();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,7 +61,16 @@ public class DataDaoTest extends AndroidTestCase {
 		assertEquals(aNative.getSerialnum(), myAdviceItem.getSerialnum());
 	}
 
-	public void testUpdateOrInsert() {
 
+	public void testUpdateOrInsert() {
+		myAdviceItem.setJianceid(JIANCEID2);
+		dao.update(myAdviceItem);
+		MyAdviceItem aNative = dao.findNative(JIANCEID2);
+		assertNotNull(aNative);
+//		assertTrue(aNative.getJianceid().equals(myAdviceItem.getJianceid()));
+//		assertTrue(aNative.getFeeling().equals(myAdviceItem.getFeeling()));
+//		assertTrue(aNative.getPurpose().equals(myAdviceItem.getPurpose()));
 	}
+
+
 }
