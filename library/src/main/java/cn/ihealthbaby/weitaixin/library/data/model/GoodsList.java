@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.model;
+package cn.ihealthbaby.weitaixin.library.data.model;
 
 /**
  * Created by Think on 2015/9/7.

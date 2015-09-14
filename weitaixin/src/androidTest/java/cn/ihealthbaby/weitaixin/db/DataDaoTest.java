@@ -3,7 +3,7 @@ package cn.ihealthbaby.weitaixin.db;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
-import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
+import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 
 /**
  * Created by liuhongjian on 15/9/13 16:26.

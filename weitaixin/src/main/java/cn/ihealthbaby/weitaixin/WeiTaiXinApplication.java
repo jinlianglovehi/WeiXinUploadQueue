@@ -26,7 +26,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.Connecti
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
-import cn.ihealthbaby.weitaixin.model.LocalProductData;
+import cn.ihealthbaby.weitaixin.library.data.model.LocalProductData;
 
 /**
  * @author by liuhongjian on 15/7/23 14:09.

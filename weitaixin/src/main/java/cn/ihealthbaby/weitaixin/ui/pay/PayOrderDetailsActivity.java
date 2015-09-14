@@ -25,7 +25,7 @@ import cn.ihealthbaby.client.model.OrderItem;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.model.LocalProductData;
+import cn.ihealthbaby.weitaixin.library.data.model.LocalProductData;
 import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 

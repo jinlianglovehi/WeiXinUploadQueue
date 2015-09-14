@@ -36,11 +36,11 @@ import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
-import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
+import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.library.tools.AsynUploadEngine;
 import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
-import cn.ihealthbaby.weitaixin.ui.monitor.data.Data;
-import cn.ihealthbaby.weitaixin.ui.monitor.data.RecordData;
+import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
+import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 

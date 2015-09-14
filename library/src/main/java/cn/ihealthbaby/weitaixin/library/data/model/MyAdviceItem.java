@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.model;
+package cn.ihealthbaby.weitaixin.library.data.model;
 
 import java.io.Serializable;
 import java.util.Date;

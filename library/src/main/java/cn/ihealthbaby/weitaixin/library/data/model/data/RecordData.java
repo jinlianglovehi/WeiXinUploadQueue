@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.ui.monitor.data;
+package cn.ihealthbaby.weitaixin.library.data.model.data;
 
 /**
  * Created by liuhongjian on 15/9/9 13:31.

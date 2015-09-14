@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
+import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 
 public class DataDao {
