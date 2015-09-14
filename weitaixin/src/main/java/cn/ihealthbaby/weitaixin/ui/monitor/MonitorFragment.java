@@ -548,7 +548,7 @@ public class MonitorFragment extends BaseFragment {
 //		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm;
         //
         adviceItem.setUserid(user.getId());
-        adviceItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
+        adviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
         adviceItem.setPath(file.getPath());
         adviceItem.setTestTime(testTime);
         // TODO: 15/9/11 实际时间
@@ -557,7 +557,7 @@ public class MonitorFragment extends BaseFragment {
         adviceItem.setJianceid(uuidString);
         adviceItem.setRdata(dataString);
         adviceItem.setSerialnum(user.getServiceInfo().getSerialnum());
-        adviceItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
+        adviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
         //
         dao.add(adviceItem, true);
         MyAdviceItem aNative = dao.findNative(uuidString);
