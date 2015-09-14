@@ -396,17 +396,20 @@ public class RecordFragment extends BaseFragment {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                LogUtil.d("dataListsize", "myAdviceItems ==> "+myAdviceItems.size());
-                                dataDao.addItemList(myAdviceItems, false);
+                                if (myAdviceItems != null && myAdviceItems.size() > 0) {
+                                    LogUtil.d("dataListsize", "myAdviceItems ==> " + myAdviceItems.size());
+                                    dataDao.addItemList(myAdviceItems, false);
+                                }
                             }
                         }).start();
 
 
-                        //
-                        adapter.datas.clear();
-                        adapter.setDatas(showMyAdviceItems);
-                        adapter.notifyDataSetChanged();
-                        mAdviceItems = adapter.datas;
+                        if (showMyAdviceItems != null && showMyAdviceItems.size() > 0) {
+                            adapter.datas.clear();
+                            adapter.setDatas(showMyAdviceItems);
+                            adapter.notifyDataSetChanged();
+                            mAdviceItems = adapter.datas;
+                        }
                     } else {
                         //从缓存数据库中展示数据列表
                         ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView();
