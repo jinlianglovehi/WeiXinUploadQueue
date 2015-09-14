@@ -77,10 +77,15 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.rl_protocol)
     public void rlProtocolOnclick() {
-        Intent intent = new Intent(this, UseProcessActiviy.class);
+        Intent intent = new Intent(this, UseProtocolActiviy.class);
         startActivity(intent);
     }
 
+    @OnClick(R.id.rl_use)
+    public void rlUseOnclick() {
+        Intent intent = new Intent(this, UseProcessActiviy.class);
+        startActivity(intent);
+    }
 
     @OnClick(R.id.back)
     public void backOnclick() {

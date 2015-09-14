@@ -2,9 +2,10 @@ package cn.ihealthbaby.weitaixin.ui.monitor;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.webkit.WebChromeClient;
+import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,7 +50,13 @@ public class MonitorCommonSense extends BaseActivity {
         mWebSettings.setSaveFormData(false);
         mWebSettings.setJavaScriptEnabled(true);
         mWebSettings.setSupportZoom(false);
-        mWvMonitorCommonSence.setWebChromeClient(new WebChromeClient());
+        mWvMonitorCommonSence.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
 
         customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "加载中...");
@@ -66,6 +73,17 @@ public class MonitorCommonSense extends BaseActivity {
 
     @OnClick(R.id.back)
     public void backOnclick() {
-        finish();
+        if (mWvMonitorCommonSence.canGoBack()) mWvMonitorCommonSence.goBack();
+        else super.onBackPressed();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mWvMonitorCommonSence.canGoBack())
+                mWvMonitorCommonSence.goBack();
+            else super.onBackPressed();
+        }
+        return true;
     }
 }

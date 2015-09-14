@@ -51,6 +51,7 @@
 
     <!--cn.ihealthbaby.weitaixin.ui.mine.UseProcessActiviy-->
     <string name="use_process_title">使用流程</string>
+    <string name="use_protocol_title">使用协议</string>
     <string name="title_activity_pay_account">PayAccountActivity</string>
     <string name="title_activity_record_play">RecordPlayActivity</string>
     <string name="title_activity_curve_play">CurvePlayActivity</string>

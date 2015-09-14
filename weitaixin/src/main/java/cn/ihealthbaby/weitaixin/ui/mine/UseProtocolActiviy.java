@@ -42,7 +42,7 @@ public class UseProtocolActiviy extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_use_protocol);
         ButterKnife.bind(this);
-        mTitleText.setText(getString(R.string.use_process_title));
+        mTitleText.setText(getString(R.string.use_protocol_title));
 
         mWebSettings = mWvWelcome.getSettings();
         mWebSettings.setSavePassword(false);
