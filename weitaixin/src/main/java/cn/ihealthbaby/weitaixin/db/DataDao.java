@@ -46,13 +46,13 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
-								           "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
-												  adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
-										                      adviceItem.getFeeling(), adviceItem.getPurpose(),
-										                      adviceItem.getUserid(), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
-										                      adviceItem.getSerialnum(), adviceItem.getJianceid()
-								          });
+										"feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+								new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
+										adviceItem.getTestTime() == null ? -1 : adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
+										adviceItem.getFeeling(), adviceItem.getPurpose(),
+										adviceItem.getUserid(), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
+										adviceItem.getSerialnum(), adviceItem.getJianceid()
+								});
 						db.setTransactionSuccessful();
 					} finally {
 						db.endTransaction();
@@ -61,7 +61,8 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
-								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime().getTime(),
+								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
+												  adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(),
 										                      adviceItem.getTestTimeLong(), adviceItem.getStatus(), adviceItem.getUploadstate()});
 						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
 						db.setTransactionSuccessful();
@@ -361,7 +362,7 @@ public class DataDao {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
 								           "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
 								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
-										                      adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
+												  adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
 										                      adviceItem.getFeeling(), adviceItem.getPurpose(),
 										                      adviceItem.getUserid(), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
 										                      adviceItem.getSerialnum(), adviceItem.getJianceid()
@@ -378,7 +379,7 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
-								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime().getTime(),
+								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(),
 										                      adviceItem.getTestTimeLong(), adviceItem.getStatus(), adviceItem.getUploadstate()});
 						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
 						db.setTransactionSuccessful();

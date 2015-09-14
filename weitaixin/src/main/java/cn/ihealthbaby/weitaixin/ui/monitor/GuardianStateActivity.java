@@ -152,7 +152,7 @@ public class GuardianStateActivity extends BaseActivity {
 		myAdviceItem.setFeeling(feeling);
 		myAdviceItem.setPurpose(purpose);
 		myAdviceItem.setJianceid(uuid);
-		dao.updateItem(myAdviceItem);
+		dao.update(myAdviceItem);
 		MyAdviceItem aNative = dao.findNative(uuid);
 		LogUtil.d(TAG, aNative.toString());
 		startActivity(intent);

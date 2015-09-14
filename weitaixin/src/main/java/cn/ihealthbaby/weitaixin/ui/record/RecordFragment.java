@@ -339,7 +339,7 @@ public class RecordFragment extends BaseFragment {
         Dialog dialog = customDialog.createDialog1(context, "从数据库中加载...");
         dialog.show();
         //从缓存数据库中展示数据列表
-        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordOnView();
+        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView();
         if (adviceItems.size() > 0) {
             countNumber = adviceItems.size();
             tvUsedCount.setText(countNumber + "");
@@ -410,7 +410,7 @@ public class RecordFragment extends BaseFragment {
                         mAdviceItems = adapter.datas;
                     } else {
                         //从缓存数据库中展示数据列表
-                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordOnView();
+                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView();
                         adapter.setDatas(switchList(dataList));
                         adapter.notifyDataSetChanged();
                         mAdviceItems = adapter.datas;

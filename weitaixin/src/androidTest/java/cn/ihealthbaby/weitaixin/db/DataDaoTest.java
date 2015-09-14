@@ -36,12 +36,12 @@ public class DataDaoTest extends AndroidTestCase {
 
 
 	public void testAddItem() throws Exception {
-
 		assertTrue(true);
 	}
 
 	public void testFindNative() throws Exception {
-		dao.addItem(myAdviceItem, true);
+		dao.add(myAdviceItem,true);
+//		dao.addItem(myAdviceItem, true);
 		MyAdviceItem aNative = dao.findNative(JIANCEID);
 		assertNotNull(aNative);
 		assertTrue(aNative.getJianceid().equals(myAdviceItem.getJianceid()));
