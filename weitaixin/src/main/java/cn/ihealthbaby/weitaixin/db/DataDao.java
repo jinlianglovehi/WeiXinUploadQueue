@@ -76,7 +76,10 @@ public class DataDao {
 		add(adviceItems, isRecordNative);
 	}
 
-	public synchronized MyAdviceItem find(long mid) {//找云端记录
+	/**
+	 * 找云端记录
+	 */
+	public synchronized MyAdviceItem find(long mid) {
 		MyAdviceItem adviceItem = null;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -109,7 +112,11 @@ public class DataDao {
 		}
 	}
 
-	public synchronized MyAdviceItem findNative(String uuid) { //找本地记录
+
+	/**
+	 * 根据uuid或jianceid找本地记录
+	 */
+	public synchronized MyAdviceItem findNative(String uuid) {
 		MyAdviceItem adviceItem = null;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -157,7 +164,8 @@ public class DataDao {
 	}
 
 	/**
-	 * 带删除记录的add
+	 * 根据mid带删除记录的add
+	 * 只适用于记录界面，其他地方不适合使用，其他地方调用单纯添加
 	 */
 	public synchronized void addItemList(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -204,7 +212,8 @@ public class DataDao {
 	}
 
 	/**
-	 * 带删除记录的add
+	 * 根据mid带删除记录的add
+	 * 只适用于记录界面，其他地方不适合使用，其他地方调用单纯添加
 	 */
 	public synchronized void addItem(final MyAdviceItem adviceItem, final boolean isRecordNative) {
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
@@ -212,6 +221,9 @@ public class DataDao {
 		addItemList(adviceItems, isRecordNative);
 	}
 
+	/**
+	 * 根据mid删除记录，而不是根据uuid删除
+	 */
 	public void delete(long mid) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -225,6 +237,9 @@ public class DataDao {
 		}
 	}
 
+	/**
+	 * 根据mid查找记录
+	 */
 	public boolean findItem(long mid) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -242,6 +257,10 @@ public class DataDao {
 		return false;
 	}
 
+
+	/**
+	 * 根据 jianceid 更新记录
+	 */
 	public void update(final ArrayList<MyAdviceItem> adviceItems) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -289,7 +308,7 @@ public class DataDao {
 					if (myAdviceItem.getJianceid() != null) {
 						values.put("jianceid", myAdviceItem.getJianceid());
 					}
-					db.update(DataDBHelper.tableName, values, "jianceid=?", new String[]{"\""+myAdviceItem.getJianceid() + "\""});
+					db.update(DataDBHelper.tableName, values, "jianceid=?", new String[]{myAdviceItem.getJianceid() + ""});
 				}
 			}
 			db.setTransactionSuccessful();
@@ -298,18 +317,21 @@ public class DataDao {
 		}
 	}
 
-	public void updateItem(final MyAdviceItem myAdviceItem) {
+
+	/**
+	 * 根据 jianceid 更新记录
+	 */
+	public void update(final MyAdviceItem myAdviceItem) {
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		adviceItems.add(myAdviceItem);
 		update(adviceItems);
 	}
 
+
 	/**
 	 * 获取本地记录和云端记录的所有字段
-	 *
-	 * @return
 	 */
-	public ArrayList<MyAdviceItem> getAllRecordNative() {
+	public ArrayList<MyAdviceItem> getAllRecordNativeAndCloud() {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsCloud = new ArrayList<MyAdviceItem>();
@@ -371,12 +393,11 @@ public class DataDao {
 		return adviceItems;
 	}
 
+
 	/**
-	 * 获取记录界面的显示数据的部分字段
-	 *
-	 * @return
+	 * 获取记录界面的显示数据的部分字段(包含本地和云端记录)
 	 */
-	public ArrayList<MyAdviceItem> getAllRecordOnView() {
+	public ArrayList<MyAdviceItem> getAllRecordNativeAndCloudOnView() {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsCloud = new ArrayList<MyAdviceItem>();
@@ -426,10 +447,9 @@ public class DataDao {
 		return adviceItems;
 	}
 
+
 	/**
 	 * 只获取本地记录 的所有字段
-	 *
-	 * @return
 	 */
 	public ArrayList<MyAdviceItem> getAllRecordNativeOnly() {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -475,6 +495,8 @@ public class DataDao {
 		LogUtil.d("adviceItemsNativeOnly", adviceItemsNative.size() + " -adviceItemsNativeOnly ==> " + adviceItemsNative);
 		return adviceItemsNative;
 	}
+
+
 }
 
 
