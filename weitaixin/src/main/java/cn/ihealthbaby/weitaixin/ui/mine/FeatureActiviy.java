@@ -12,10 +12,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.model.Urls;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.net.Business;
+import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 /**
@@ -41,7 +42,6 @@ public class FeatureActiviy extends BaseActivity {
         setContentView(R.layout.activity_feature);
         ButterKnife.bind(this);
         mTitleText.setText(getString(R.string.feature_title));
-
         mWebSettings = mWvWelcome.getSettings();
         mWebSettings.setSavePassword(false);
         mWebSettings.setSaveFormData(false);
@@ -54,19 +54,17 @@ public class FeatureActiviy extends BaseActivity {
         Dialog dialog = customDialog.createDialog1(this, "加载中...");
         dialog.show();
 
-        ApiManager.getInstance().urlApi.getPrivacyAgreementUrl(new HttpClientAdapter.Callback<String>() {
+        ApiManager.getInstance().urlApi.getUrls(new DefaultCallback<Urls>(getApplicationContext(), new Business<Urls>() {
             @Override
-            public void call(Result<String> t) {
-                if (t.isSuccess()) {
-                    mWvWelcome.loadUrl(t.getData());
-                }
+            public void handleData(Urls data) throws Exception {
+                mWvWelcome.loadUrl(data.getFeatures());
                 customDialog.dismiss();
             }
-        }, getRequestTag());
+        }), getRequestTag());
     }
 
     @OnClick(R.id.back)
-    public void backOnclick(){
+    public void backOnclick() {
         finish();
     }
 }

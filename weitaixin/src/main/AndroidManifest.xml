@@ -76,6 +76,7 @@
         <activity android:name=".ui.pay.PayAffirmPaymentActivity" />
         <activity android:name=".ui.monitor.CurvePlayActivity" />
         <activity android:name=".ui.pay.PayOrderDetailsActivity" />
+        <activity android:name=".ui.monitor.MonitorCommonSense" />
 
     </application>
 

@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.iv_tab_04)
+    @OnClick(R.id.ll_tab_profile)
     public void iv_tab_04() {
         showTab(iv_tab_04);
         if (WeiTaiXinProApplication.getInstance().isLogin) {

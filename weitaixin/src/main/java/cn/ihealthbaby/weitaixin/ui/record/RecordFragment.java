@@ -40,7 +40,6 @@ import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.db.DataDao;
@@ -68,7 +67,6 @@ public class RecordFragment extends BaseFragment {
     @Nullable
     @Bind(R.id.function)
     TextView function;
-//
 
     @Nullable
     @Bind(R.id.pullToRefresh)
@@ -401,7 +399,6 @@ public class RecordFragment extends BaseFragment {
                                 dataDao.addItemList(myAdviceItems, false);
                             }
                         }).start();
-
 
                         //
                         adapter.datas.clear();

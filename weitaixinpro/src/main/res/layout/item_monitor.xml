@@ -31,6 +31,7 @@
             android:src="@drawable/shape_white_circle"/>
 
         <TextView
+            android:id="@+id/tv_begin"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_alignParentRight="true"

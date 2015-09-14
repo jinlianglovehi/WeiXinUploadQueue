@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import java.util.Date;
 
+import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
@@ -19,6 +20,8 @@ public class SPUtil {
     private static final String FILE_NAME_USER = "user_share_data";
     private static final String FILE_NAME_SERVICEINFO = "serviceinfo_share_data";
     private static final String FILE_NAME_TEMP = "temp_share_data";
+    private static final String FILE_NAME_FETALHEART = "fetalheart_share_data";
+
 
     public static void setUUID(Context context, String uuid) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_TEMP, Context.MODE_PRIVATE);
@@ -175,6 +178,21 @@ public class SPUtil {
             return false;
         }
         return true;
+    }
+
+
+    public static void saveHClientUser(Context context, HClientUser user) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong("departmentId", user.getDepartmentId());
+        editor.commit();
+    }
+
+    public static HClientUser getHClientUser(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
+        HClientUser user = new HClientUser();
+        user.setDepartmentId(sp.getLong("departmentId", -1));
+        return user;
     }
 
 

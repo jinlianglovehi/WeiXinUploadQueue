@@ -20,7 +20,9 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.FetalHeart;
 import cn.ihealthbaby.client.model.HClientUser;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.WeiTaiXinProApplication;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
 import cn.ihealthbaby.weitaixinpro.tools.DeviceUuidFactory;
 import cn.ihealthbaby.weitaixinpro.ui.MainActivity;
@@ -77,9 +79,13 @@ public class LoginActivity extends BaseActivity {
                     ApiManager.getInstance().hClientAccountApi.login("863425026498381", new HttpClientAdapter.Callback<HClientUser>() {
                         @Override
                         public void call(Result<HClientUser> t) {
-                            if (t.isSuccess()) {
-                                Toast.makeText(getApplication(), t.getData().getHospitalName(), Toast.LENGTH_LONG).show();
+                            if (t.isSuccess() && t.getData().getLoginToken() != null) {
+                                HClientUser user = t.getData();
+                                WeiTaiXinProApplication.getInstance().mAdapter.setAccountToken(user.getLoginToken());
+                                Toast.makeText(getApplicationContext(), user.getLoginToken(), Toast.LENGTH_LONG).show();
+                                System.out.println("token:" + user.getLoginToken());
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                SPUtil.saveHClientUser(getApplication(), user);
                                 startActivity(intent);
                                 finish();
                             } else {

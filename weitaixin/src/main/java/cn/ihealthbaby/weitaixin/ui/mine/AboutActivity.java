@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,14 +26,18 @@ public class AboutActivity extends BaseActivity {
     TextView mTitleText;
     @Bind(R.id.function)
     TextView mFunction;
-    @Bind(R.id.tv_version)
-    TextView mTvVersion;
+    @Bind(R.id.tv_subtitle)
+    TextView mTvSubtitle;
     @Bind(R.id.rl_welcome)
     RelativeLayout mRlWelcome;
     @Bind(R.id.rl_function)
     RelativeLayout mRlFunction;
     @Bind(R.id.rl_use)
     RelativeLayout mRlUse;
+    @Bind(R.id.tv_version_name)
+    TextView mTvVersionName;
+    @Bind(R.id.tv_message_count)
+    ImageView mTvMessageCount;
     @Bind(R.id.rl_update)
     RelativeLayout mRlUpdate;
     @Bind(R.id.rl_protocol)
@@ -48,20 +53,31 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
-
         mTitleText.setText(getString(R.string.about_title));
         initView();
 
     }
 
     private void initView() {
-        mTvVersion.setText(getVersion());
+        mTvSubtitle.setText(getString(R.string.subtitle) + " " + getVersion());
     }
 
 
     @OnClick(R.id.rl_welcome)
     public void welcomeOnclick() {
         Intent intent = new Intent(this, WelcomeActiviy.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.rl_function)
+    public void rlFunctionOnclick() {
+        Intent intent = new Intent(this, FeatureActiviy.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.rl_protocol)
+    public void rlProtocolOnclick() {
+        Intent intent = new Intent(this, UseProcessActiviy.class);
         startActivity(intent);
     }
 
