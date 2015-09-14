@@ -225,6 +225,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			Intent intent = new Intent(context, AskDoctorActivity.class);
 			LogUtil.d("AskDocgetId", "AskDocgetId = " + adviceItem.getId());
 			intent.putExtra("adviceItemId", adviceItem.getId());
+			intent.putExtra("adviceItemPurpose", adviceItem.getPurpose());
+			intent.putExtra("adviceItemFeeling", adviceItem.getFeeling());
 			intent.putExtra("position", position);
 			context.startActivityForResult(intent, requestCode);
 		} else if (status == 1) {

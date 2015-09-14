@@ -83,6 +83,7 @@ public class WeiTaiXinApplication extends Application {
             }
             LogUtil.d("mAdapter.setAccountToken","mAdapter.setAccountToken==> "+accountToken);
         }
+        LogUtil.d("UserAccountToken","UserAccountToken==> "+user);
         ApiManager.init(mAdapter);
     }
 

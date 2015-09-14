@@ -40,12 +40,16 @@ public class AskDoctorActivity extends BaseActivity {
     @Bind(R.id.tvSendDoctorAction) TextView tvSendDoctorAction;
     @Bind(R.id.tvOtherInfo) TextView tvOtherInfo;
     @Bind(R.id.tvAskDoctorTextCount) TextView tvAskDoctorTextCount;
+    @Bind(R.id.tvPurpose) TextView tvPurpose;
+    @Bind(R.id.tvFeeling) TextView tvFeeling;
 
 
     private long adviceItemId=-1;
     private int position;
     private final int resultCoded = 200;
     private final int statused = 1;
+    private String adviceItemPurpose;
+    private String adviceItemFeeling;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,13 @@ public class AskDoctorActivity extends BaseActivity {
 
         adviceItemId = getIntent().getLongExtra("adviceItemId", -1);
         position = getIntent().getIntExtra("position", -1);
+        adviceItemPurpose = getIntent().getStringExtra("adviceItemPurpose");
+        adviceItemFeeling = getIntent().getStringExtra("adviceItemFeeling");
         LogUtil.d("getIntent==",position+ " getIntent= " +adviceItemId);
+
+        tvPurpose.setText("监护目的:" + adviceItemPurpose);
+        tvFeeling.setText("监护心情:" + adviceItemFeeling);
+
 
         etAskDoctorText.setMovementMethod(ScrollingMovementMethod.getInstance());
         etAskDoctorText.setOnTouchListener(new View.OnTouchListener() {

@@ -436,8 +436,8 @@ public class MonitorFragment extends BaseFragment {
 		if (serviceInfo != null) {
 			serialnum = serviceInfo.getSerialnum();
 		}
-		return serialnum == null ? "" : serialnum;
-//		return "IHB2LD1X7CUC";
+//		return serialnum == null ? "" : serialnum;
+		return "IHB2LD2525WA";
 	}
 
 	public void onEventAsync(MonitorTerminateEvent event) {
