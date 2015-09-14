@@ -186,7 +186,12 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()));//
 		viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 yy:mm"));
 		//1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
-		viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
+		if(adviceItem.getStatus()<0||adviceItem.getStatus()>4){
+			viewHolder.tvAdviceStatus.setText("");
+		}else{
+			viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
+		}
+
 		if (adviceItem.getStatus() == 1) {
 			viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle_un);
 			viewHolder.iv_circle.setVisibility(View.GONE);

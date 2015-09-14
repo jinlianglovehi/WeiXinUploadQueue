@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/iv1None"
-            android:text=""
+            android:text="请选择城市"
             android:textColor="@color/gray12"
             android:textSize="@dimen/font10" />
 
@@ -75,7 +75,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/iv2None"
-            android:text=""
+            android:text="请选择医院"
             android:textColor="@color/gray12"
             android:textSize="@dimen/font10" />
 
@@ -118,9 +118,11 @@
             android:id="@+id/gvChooseDoctorList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scrollbars="none"
             android:layout_below="@id/tv2None"
             android:background="@color/white0"
             android:fadingEdge="none"
+            android:listSelector="@android:color/transparent"
             android:horizontalSpacing="10dp"
             android:numColumns="3"
             android:paddingBottom="30dp"

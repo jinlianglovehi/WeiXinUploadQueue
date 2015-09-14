@@ -9,9 +9,18 @@ import java.util.Date;
 public class MyAdviceItem implements Serializable {
 
 	// 1本地   2云端   3正在上传
-	public static final int NATIVE_RECORD = 1;
-	public static final int CLOUD_RECORD = 2;
-	public static final int UPLOADING_RECORD = 3;
+	public static final int UPLOADSTATE_NATIVE_RECORD = 1;
+	public static final int UPLOADSTATE_CLOUD_RECORD = 2;
+	public static final int UPLOADSTATE_UPLOADING_RECORD = 3;
+
+
+	//0"问医生", 1"等待回复", 2"已回复", 3"需上传"
+	public static final int STATUS_ASK_DOCTOR= 0;
+	public static final int STATUS_WAIT_REPLY = 1;
+	public static final int STATUS_REPLYED= 2;
+	public static final int STATUS_NATIVE = 3;
+
+
 	/**
 	 * 检测信息的id
 	 */
@@ -30,8 +39,9 @@ public class MyAdviceItem implements Serializable {
 	private int testTimeLong = -1;
 	/**
 	 * 咨询的状态 1 提交但为咨询 2咨询未回复 3 咨询已回复 4 咨询已删除
+	 * "问医生", "等待回复", "已回复", "需上传"
 	 */
-	private int status=-1;
+	private int status= STATUS_NATIVE;
 //	//100本地  1云端
 //	private int isNativeRecord = -1;
 	private String feeling;

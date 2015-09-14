@@ -61,6 +61,13 @@ public class PayMimeAddressActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pullData();
+    }
+
+
     @OnClick(R.id.tvAddNewAddress)
     public void AddNewAddress() {
         Intent intent=new Intent(this,PayAddAddressActivity.class);

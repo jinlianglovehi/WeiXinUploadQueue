@@ -119,26 +119,31 @@ public class PayRentInformationActivity extends BaseActivity {
 
     @OnClick(R.id.tvGotoOrderAction)
     public void GotoOrderAction() {
-        if(TextUtils.isEmpty(tvCityName.getText().toString().trim())){
-            ToastUtil.show(getApplicationContext(),"请选择城市");
+        String cityName = tvCityName.getText().toString().trim();
+        if (TextUtils.isEmpty(cityName) || "请选择城市".equals(cityName)) {
+            ToastUtil.show(getApplicationContext(), "请选择城市");
             return;
         }
-        if(TextUtils.isEmpty(tvHospitalName.getText().toString().trim())){
-            ToastUtil.show(getApplicationContext(),"请选择医院");
+
+        String hospitalName = tvHospitalName.getText().toString().trim();
+        if (TextUtils.isEmpty(hospitalName) || "请选择医院".equals(hospitalName)) {
+            ToastUtil.show(getApplicationContext(), "请选择医院");
             return;
         }
-        if(adapter.currentPosition==-1){
-            ToastUtil.show(getApplicationContext(),"请选择医生");
+
+        if (adapter.currentPosition == -1) {
+            ToastUtil.show(getApplicationContext(), "请选择医生");
             return;
         }
+
         Intent intent = new Intent(this, PayGoingOrderActivity.class);
         startActivity(intent);
     }
 
-    private long hospitalId=-1;
-    private String hospitalName="";
-    private long cityId=-1;
-    private String cityName="";
+    private long hospitalId = -1;
+    private String hospitalName = "";
+    private long cityId = -1;
+    private String cityName = "";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

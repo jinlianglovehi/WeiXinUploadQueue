@@ -108,7 +108,7 @@ public class DataDao {
 					if (myAdviceItem.getTestTimeLong() != -1) {
 						values.put("testTimeLong", myAdviceItem.getTestTimeLong());
 					}
-					if (myAdviceItem.getStatus() != -1) {
+					if (myAdviceItem.getStatus() != MyAdviceItem.STATUS_NATIVE) {
 						values.put("status", myAdviceItem.getStatus());
 					}
 					if (myAdviceItem.getFeeling() != null) {
@@ -193,7 +193,7 @@ public class DataDao {
 				adviceItem.setSerialnum(serialnum);
 				adviceItem.setJianceid(jianceid);
 				LogUtil.d("uploadstateNATIVE", "uploadstateNATIVE==> " + uploadstate);
-				if (uploadstate == MyAdviceItem.NATIVE_RECORD || uploadstate == MyAdviceItem.UPLOADING_RECORD) {
+				if (uploadstate == MyAdviceItem.UPLOADSTATE_NATIVE_RECORD || uploadstate == MyAdviceItem.UPLOADSTATE_UPLOADING_RECORD) {
 					adviceItemsNative.add(adviceItem);
 				}
 			}
@@ -442,7 +442,7 @@ public class DataDao {
 				adviceItem.setUploadstate(uploadstate);
 				adviceItem.setSerialnum(serialnum);
 				adviceItem.setJianceid(jianceid);
-				if (uploadstate == MyAdviceItem.NATIVE_RECORD || uploadstate == MyAdviceItem.UPLOADING_RECORD) {
+				if (uploadstate == MyAdviceItem.UPLOADSTATE_NATIVE_RECORD || uploadstate == MyAdviceItem.UPLOADSTATE_UPLOADING_RECORD) {
 					adviceItemsNative.add(adviceItem);
 				} else {
 					adviceItemsCloud.add(adviceItem);
@@ -495,7 +495,7 @@ public class DataDao {
 				adviceItem.setTestTimeLong(testTimeLong);
 				adviceItem.setStatus(status);
 //				LogUtil.d("uploadstate", "uploadstate ==> " + uploadstate);
-				if (uploadstate == MyAdviceItem.NATIVE_RECORD || uploadstate == MyAdviceItem.UPLOADING_RECORD) {
+				if (uploadstate == MyAdviceItem.UPLOADSTATE_NATIVE_RECORD || uploadstate == MyAdviceItem.UPLOADSTATE_UPLOADING_RECORD) {
 					adviceItemsNative.add(adviceItem);
 				} else {
 					adviceItemsCloud.add(adviceItem);

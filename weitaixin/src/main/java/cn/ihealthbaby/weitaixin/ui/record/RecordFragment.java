@@ -40,7 +40,6 @@ import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.db.DataDao;
@@ -353,7 +352,7 @@ public class RecordFragment extends BaseFragment {
                 public void run() {
                     pullFirstData(null);
                 }
-            }, 3000);
+            }, 1000);
         } else {
             customDialog.dismiss();
             customDialog = null;
@@ -450,7 +449,7 @@ public class RecordFragment extends BaseFragment {
             myAdviceItem.setTestTime(adviceItem.getTestTime());
             myAdviceItem.setTestTimeLong(adviceItem.getTestTimeLong());
             myAdviceItem.setStatus(adviceItem.getStatus());
-            myAdviceItem.setUploadstate(MyAdviceItem.CLOUD_RECORD);
+            myAdviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_CLOUD_RECORD);
             myAdviceItem.setJianceid(adviceItem.getClientId());
             myAdviceItem.setFeeling(adviceItem.getFeeling());
             myAdviceItem.setPurpose(adviceItem.getAskPurpose());
@@ -479,7 +478,7 @@ public class RecordFragment extends BaseFragment {
             dateItem.setTestTime(new Date());
             dateItem.setTestTimeLong(21500+(i+5)*1000*60);
             dateItem.setStatus(3);
-            dateItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
+            dateItem.setUploadstate(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
 
             adviceNativeItems.add(dateItem);
         }
