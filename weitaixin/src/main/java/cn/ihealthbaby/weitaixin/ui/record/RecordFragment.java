@@ -128,7 +128,7 @@ public class RecordFragment extends BaseFragment {
         function.setText("编辑");
 
         dataDao = DataDao.getInstance(getActivity().getApplicationContext());
-        saveLocal();
+//        saveLocal();
 
 
         context = (MeMainFragmentActivity) getActivity();
@@ -337,7 +337,7 @@ public class RecordFragment extends BaseFragment {
         Dialog dialog = customDialog.createDialog1(context, "从数据库中加载...");
         dialog.show();
         //从缓存数据库中展示数据列表
-        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordOnView();
+        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView();
         if (adviceItems.size() > 0) {
             countNumber = adviceItems.size();
             tvUsedCount.setText(countNumber + "");
@@ -351,7 +351,7 @@ public class RecordFragment extends BaseFragment {
                 public void run() {
                     pullFirstData(null);
                 }
-            }, 3000);
+            }, 1000);
         } else {
             customDialog.dismiss();
             customDialog = null;
@@ -407,7 +407,7 @@ public class RecordFragment extends BaseFragment {
                         mAdviceItems = adapter.datas;
                     } else {
                         //从缓存数据库中展示数据列表
-                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordOnView();
+                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView();
                         adapter.setDatas(switchList(dataList));
                         adapter.notifyDataSetChanged();
                         mAdviceItems = adapter.datas;
@@ -447,7 +447,10 @@ public class RecordFragment extends BaseFragment {
             myAdviceItem.setTestTime(adviceItem.getTestTime());
             myAdviceItem.setTestTimeLong(adviceItem.getTestTimeLong());
             myAdviceItem.setStatus(adviceItem.getStatus());
-            myAdviceItem.setUploadstate(MyAdviceItem.CLOUD_RECORD);
+            myAdviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_CLOUD_RECORD);
+            myAdviceItem.setJianceid(adviceItem.getClientId());
+            myAdviceItem.setFeeling(adviceItem.getFeeling());
+            myAdviceItem.setPurpose(adviceItem.getAskPurpose());
 
             myAdviceItems.add(myAdviceItem);
         }
@@ -473,7 +476,7 @@ public class RecordFragment extends BaseFragment {
             dateItem.setTestTime(new Date());
             dateItem.setTestTimeLong(21500+(i+5)*1000*60);
             dateItem.setStatus(3);
-            dateItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
+            dateItem.setUploadstate(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
 
             adviceNativeItems.add(dateItem);
         }

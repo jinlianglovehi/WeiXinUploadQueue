@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -22,6 +23,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
@@ -76,8 +78,12 @@ public class WeiTaiXinApplication extends Application {
         User user = SPUtil.getUser(this);
         if(user!=null){
             String accountToken = user.getAccountToken();
-            mAdapter.setAccountToken(accountToken+"");
+            if (!TextUtils.isEmpty(accountToken)) {
+                mAdapter.setAccountToken(accountToken+"");
+            }
+            LogUtil.d("mAdapter.setAccountToken","mAdapter.setAccountToken==> "+accountToken);
         }
+        LogUtil.d("UserAccountToken","UserAccountToken==> "+user);
         ApiManager.init(mAdapter);
     }
 

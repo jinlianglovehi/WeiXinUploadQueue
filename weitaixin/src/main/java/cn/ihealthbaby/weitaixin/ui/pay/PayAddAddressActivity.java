@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -15,12 +17,18 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.form.AddressForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class PayAddAddressActivity extends BaseActivity {
 
@@ -33,6 +41,8 @@ public class PayAddAddressActivity extends BaseActivity {
     @Bind(R.id.tvAddAddressPhone)   EditText tvAddAddressPhone;
     @Bind(R.id.tvAddAddressDetailAddress)   EditText tvAddAddressDetailAddress;
     @Bind(R.id.tvSubmitAddress)   TextView tvSubmitAddress;
+    @Bind(R.id.tvAddAddressProvince)   TextView tvAddAddressProvince;
+    @Bind(R.id.tvAddAddressArea)   TextView tvAddAddressArea;
 
 
     @Override
@@ -70,7 +80,54 @@ public class PayAddAddressActivity extends BaseActivity {
 
     @OnClick(R.id.tvSubmitAddress)
     public void SubmitAddress() {
+        String addressName = tvAddAddressName.getText().toString().trim();
+        String addressPhone = tvAddAddressPhone.getText().toString().trim();
+        String addressDetailAddress = tvAddAddressDetailAddress.getText().toString().trim();
+        String addAddressProvince = tvAddAddressProvince.getText().toString().trim();
+        String addAddressArea = tvAddAddressArea.getText().toString().trim();
 
+        if (TextUtils.isEmpty(addressName)) {
+            ToastUtil.show(getApplicationContext(),"请填写收货人");
+            return;
+        }
+        if (TextUtils.isEmpty(addressPhone)) {
+            ToastUtil.show(getApplicationContext(),"请填写收货人的手机");
+            return;
+        }
+        if (TextUtils.isEmpty(addAddressProvince)) {
+            ToastUtil.show(getApplicationContext(),"请选择省份");
+            return;
+        }
+        if (TextUtils.isEmpty(addAddressArea)) {
+            ToastUtil.show(getApplicationContext(),"请选择地区");
+            return;
+        }
+        if (TextUtils.isEmpty(addressDetailAddress)) {
+            ToastUtil.show(getApplicationContext(),"请填写收货人的详细地址");
+            return;
+        }
+
+        final CustomDialog customDialog=new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
+        dialog.show();
+
+        AddressForm addressForm=new AddressForm();
+        addressForm.setLinkMan(addressName);
+        addressForm.setMobile(addressPhone);
+        addressForm.setArea("dsada");
+        addressForm.setAddress(addressDetailAddress);
+        ApiManager.getInstance().addressApi.create(addressForm, new HttpClientAdapter.Callback<Void>() {
+            @Override
+            public void call(Result<Void> t) {
+                if (t.isSuccess()) {
+                    Void data = t.getData();
+                    finish();
+                }else{
+                    ToastUtil.show(getApplicationContext(),t.getMsgMap()+"");
+                }
+                customDialog.dismiss();
+            }
+        },getRequestTag());
     }
 
 

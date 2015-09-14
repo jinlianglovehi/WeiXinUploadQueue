@@ -224,15 +224,19 @@ public class CurvePlayActivity extends BaseActivity {
 		DataDao dao = DataDao.getInstance(getApplicationContext());
 		uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
 		myAdviceItem = dao.findNative(uuid);
-		LogUtil.d(TAG, myAdviceItem.toString());
-		String rdata = myAdviceItem.getRdata();
-		Gson gson = new Gson();
-		RecordData recordData = gson.fromJson(rdata, RecordData.class);
-		data = recordData.getData();
-		fhrs = gson.fromJson(data.getHeartRate(), new TypeToken<ArrayList<Integer>>() {
-		}.getType());
-		fetalMove = gson.fromJson(data.getFm(), new TypeToken<ArrayList<Integer>>() {
-		}.getType());
+		if (myAdviceItem != null) {
+			LogUtil.d(TAG, myAdviceItem.toString());
+			String rdata = myAdviceItem.getRdata();
+			Gson gson = new Gson();
+			RecordData recordData = gson.fromJson(rdata, RecordData.class);
+			data = recordData.getData();
+			fhrs = gson.fromJson(data.getHeartRate(), new TypeToken<ArrayList<Integer>>() {
+			}.getType());
+			fetalMove = gson.fromJson(data.getFm(), new TypeToken<ArrayList<Integer>>() {
+			}.getType());
+		} else {
+			ToastUtil.show(getApplicationContext(),"获取数据失败");
+		}
 	}
 
 	private void configCurve() {

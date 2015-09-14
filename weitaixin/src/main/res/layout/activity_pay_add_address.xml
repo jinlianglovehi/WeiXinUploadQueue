@@ -118,7 +118,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
                 android:gravity="center"
-                android:text="北京"
+                android:text="请选择省份"
                 android:textColor="@color/font_color"
                 android:textSize="@dimen/font12" />
 
@@ -157,7 +157,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
                 android:gravity="center"
-                android:text="海淀区"
+                android:text="请选择地区"
                 android:textColor="@color/font_color"
                 android:textSize="@dimen/font12" />
 

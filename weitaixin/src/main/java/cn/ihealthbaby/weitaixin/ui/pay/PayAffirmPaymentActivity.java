@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -8,9 +10,14 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
+import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.alipay.PayAlipayUtil;
 
 public class PayAffirmPaymentActivity extends BaseActivity {
@@ -48,17 +55,38 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     @OnClick(R.id.llPaymenyWeixin)
     public void PaymenyWeixin() {
+
     }
 
     @OnClick(R.id.llPaymenyAlipay)
     public void PaymenyAlipay() {
-        PayAlipayUtil payAlipayUtil=new PayAlipayUtil(this);
-        payAlipayUtil.payAction();
+
+
+        final CustomDialog customDialog=new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
+        dialog.show();
+        ApiManager.getInstance().payApi.getAlipayOrderInfo(0, new HttpClientAdapter.Callback<String>() {
+            @Override
+            public void call(Result<String> t) {
+                if (t.isSuccess()) {
+                    String data = t.getData();
+                    if (TextUtils.isEmpty(data)) {
+                        PayAlipayUtil payAlipayUtil=new PayAlipayUtil(PayAffirmPaymentActivity.this);
+//                        payAlipayUtil.payAction(data);
+                    }
+                } else {
+                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
+                }
+            }
+        }, getRequestTag());
     }
 
     @OnClick(R.id.llPaymenyUnionPay)
     public void PaymenyUnionPay() {
+
     }
+
+
 
 }
 
