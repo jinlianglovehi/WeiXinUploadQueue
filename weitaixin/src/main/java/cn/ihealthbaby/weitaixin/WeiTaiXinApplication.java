@@ -62,9 +62,9 @@ public class WeiTaiXinApplication extends Application {
         initApiManager();
 
 //		RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
-//		adapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
-//		HttpClientAdapter adapter = new XiaoCaoVolleyAdapter(getApplicationContext(), Constants.SERVER_URL);
-//		HttpClientAdapter adapter = new LoopjAdapter(getApplicationContext(), Constants.SERVER_URL);
+//		adapter = new VolleyAdapter(getApplicationContext(), Temp.SERVER_URL, requestQueue);
+//		HttpClientAdapter adapter = new XiaoCaoVolleyAdapter(getApplicationContext(), Temp.SERVER_URL);
+//		HttpClientAdapter adapter = new LoopjAdapter(getApplicationContext(), Temp.SERVER_URL);
 //		ApiManager.init(adapter);
     }
 

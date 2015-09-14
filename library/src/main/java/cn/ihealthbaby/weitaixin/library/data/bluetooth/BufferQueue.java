@@ -12,8 +12,8 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.FHRParseExcepti
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ValidationParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.parser.Parser;
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 
 /**
  * Created by liuhongjian on 15/8/12 09:51.

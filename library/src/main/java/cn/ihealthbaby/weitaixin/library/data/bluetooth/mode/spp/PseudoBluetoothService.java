@@ -31,8 +31,8 @@ import java.io.OutputStream;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.parser.Parser;
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 
 /**
  * This class does all the work for setting up and managing Bluetooth connections with other
@@ -40,7 +40,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
  * device, and a thread for performing data transmissions when connected.
  */
 public class PseudoBluetoothService {
-	// Constants that indicate the current connection state
+	// Temp that indicate the current connection state
 	public static final int STATE_NONE = 0;       // we're doing nothing
 	public static final int STATE_LISTEN = 1;     // now listening for incoming connections
 	public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
@@ -432,7 +432,7 @@ public class PseudoBluetoothService {
 					// Read from the InputStream
 //					bytes = mmInStream.read(buffer);
 					// Send the obtained bytes to the UI Activity
-//					mHandler.obtainMessage(Constants.MESSAGE_READ_FETAL_DATA, bytes, -1, buffer)
+//					mHandler.obtainMessage(Temp.MESSAGE_READ_FETAL_DATA, bytes, -1, buffer)
 //							.sendToTarget();
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);

@@ -46,9 +46,9 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceive
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.DefaultBluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.PseudoBluetoothService;
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.test.Constants;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -115,7 +115,7 @@ public class MonitorFragment extends BaseFragment {
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Constants.MESSAGE_STATE_CHANGE:
+                case MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case PseudoBluetoothService.STATE_CONNECTED:
                             LogUtil.d(TAG, "STATE_CONNECTED");
@@ -135,32 +135,32 @@ public class MonitorFragment extends BaseFragment {
                             break;
                     }
                     break;
-                case Constants.MESSAGE_WRITE:
+                case MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;
                     break;
-                case Constants.MESSAGE_READ_FETAL_DATA:
+                case MESSAGE_READ_FETAL_DATA:
                     FHRPackage fhrPackage = (FHRPackage) msg.obj;
                     DataStorage.fhrPackage.setFHRPackage(fhrPackage);
                     if (tvBluetooth != null) {
                         tvBluetooth.setText(fhrPackage.getFHR1() + "");
                     }
                     break;
-                case Constants.MESSAGE_DEVICE_NAME:
+                case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
                     LogUtil.d(TAG, "connecting " + deviceName);
                     break;
-                case Constants.MESSAGE_CANNOT_CONNECT:
+                case MESSAGE_CANNOT_CONNECT:
                     LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
                     ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
                     reset();
                     break;
-                case Constants.MESSAGE_CONNECTION_LOST:
+                case MESSAGE_CONNECTION_LOST:
                     LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
                     ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
                     reset();
                     break;
-                case Constants.MESSAGE_VOICE:
+                case MESSAGE_VOICE:
                     byte[] sound = (byte[]) msg.obj;
                     if (needPlay) {
                         audioTrack.write(sound, 0, sound.length);
@@ -438,8 +438,8 @@ public class MonitorFragment extends BaseFragment {
         if (serviceInfo != null) {
             serialnum = serviceInfo.getSerialnum();
         }
-//		return serialnum == null ? "" : serialnum;
-        return "IHB2LD1X7CUC";
+		return serialnum == null ? "" : serialnum;
+//        return "IHB2LD1X7CUC";
     }
 
     public void onEventAsync(MonitorTerminateEvent event) {
