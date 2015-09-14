@@ -85,11 +85,9 @@ public class SetSystemGuardianActivity extends BaseActivity {
                 if (!localSetting.isAlert()) {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
                     meLinearLayout.setVisibility(View.VISIBLE);
-                    meLinearLayout.setBackgroundResource(R.color.white0);
                 } else {
                     mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
-                    meLinearLayout.setVisibility(View.INVISIBLE);
-                    meLinearLayout.setBackgroundResource(R.color.gray17);
+                    meLinearLayout.setVisibility(View.GONE);
                 }
                 localSetting.setAlert(!localSetting.isAlert());
                 SPUtil.setLocalSetting(getApplicationContext(), localSetting);
@@ -110,11 +108,9 @@ public class SetSystemGuardianActivity extends BaseActivity {
         if (localSetting.isAlert()) {
             mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
             meLinearLayout.setVisibility(View.VISIBLE);
-            meLinearLayout.setBackgroundResource(R.color.white0);
         } else {
             mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
-            meLinearLayout.setVisibility(View.INVISIBLE);
-            meLinearLayout.setBackgroundResource(R.color.gray17);
+            meLinearLayout.setVisibility(View.GONE);
         }
 
     }

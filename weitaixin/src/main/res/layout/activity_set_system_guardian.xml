@@ -40,82 +40,76 @@
             android:src="@drawable/switch_on"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/ll_set_system_02"
+        style="@style/wo_info_item"
         android:layout_marginTop="15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="报警设置"
+            android:textColor="@drawable/text_color_hei_selector"
+            android:textSize="@dimen/font_normal"/>
+
+        <ImageView
+            android:id="@+id/slide_switch_alarm"
+            android:layout_width="48dip"
+            android:layout_height="30dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/switch_off"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/meLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
         android:background="@color/white0"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/ll_set_system_02"
-            style="@style/wo_info_item"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/gray19"/>
 
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="报警设置"
-                android:textColor="@drawable/text_color_hei_selector"
-                android:textSize="@dimen/font_normal"/>
-
-            <ImageView
-                android:id="@+id/slide_switch_alarm"
-                android:layout_width="48dip"
-                android:layout_height="30dip"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:src="@drawable/switch_off"/>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/meLinearLayout"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
+            android:layout_centerVertical="true"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="请选择时间间隔，间隔时间之内不重复报警"
+            android:textColor="@color/gray3"
+            android:textSize="@dimen/font_normal"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/gray19"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="请选择时间间隔，间隔时间之内不重复报警"
-                android:textColor="@color/gray3"
-                android:textSize="@dimen/font_normal"/>
-
-            <ListView
-                android:id="@+id/lvGuardian"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="60dp"
-                android:layout_marginRight="60dp"
-                android:layout_marginTop="10dp"
-                android:cacheColorHint="#00000000"
-                android:divider="@color/gray19"
-                android:dividerHeight="1dp"
-                android:fadingEdge="none"
-                android:scrollbars="none"
-                android:transcriptMode="normal"/>
-        </LinearLayout>
+        <ListView
+            android:id="@+id/lvGuardian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="10dp"
+            android:cacheColorHint="#00000000"
+            android:divider="@color/gray19"
+            android:dividerHeight="1dp"
+            android:fadingEdge="none"
+            android:scrollbars="none"
+            android:transcriptMode="normal"/>
     </LinearLayout>
 </LinearLayout>
 
