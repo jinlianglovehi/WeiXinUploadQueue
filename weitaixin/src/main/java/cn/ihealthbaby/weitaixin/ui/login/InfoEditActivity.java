@@ -31,9 +31,9 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.library.tools.ImageTool;
-import cn.ihealthbaby.weitaixin.library.tools.UploadFileEngine;
+import cn.ihealthbaby.weitaixin.UploadFileEngine;
 import cn.ihealthbaby.weitaixin.ui.widget.MyPoPoWin;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 

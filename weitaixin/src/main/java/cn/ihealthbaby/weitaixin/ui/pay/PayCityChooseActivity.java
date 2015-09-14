@@ -28,8 +28,8 @@ import cn.ihealthbaby.client.model.Province;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.library.data.model.LocalProductData;
-import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.LocalProductData;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 
 public class PayCityChooseActivity extends BaseActivity {
 
