@@ -25,29 +25,29 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 public class PayAlipayUtil  {
 
-	// 商户PID
-	public static final String PARTNER = "2088021104297042";
-
-	// 商户收款账号
-	public static final String SELLER = "dabao@ihealthbaby.cn";
-
-	// 商户私钥，pkcs8格式
-	public static final String RSA_PRIVATE = "MIICeQIBADANBgkqhkiG9w0BAQEFAASCAmMwggJfAgEAAoGBANraYl42vCDCybYR" +
-			"nJVzinbg3XtNcOBR7lcT/DaemHgTDbnghl3KE9vKkb7CNG2Cybij/S+sCiVoUilD" +
-			"3R6dOJkw+RKJl+rnse6PiBLjqav87fZ+lWV1uY5TucjN5LWYP55hMB/p7ahraJb1" +
-			"nV27aaDC47W3Gy/S7ta6+LmeM8DDAgMBAAECgYEAla2CVVkt9WIDPshwxS4OZxuH" +
-			"nsrqBiFC1r9OYbS6JnUxkAzlGMQaLNowL7z2ymcGu4c8pBwPnGHqv1owor14dNlj" +
-			"Uffsk8IU+gFKGfvbTkIe5GGKj5TZLiROQzkWTzMoqewnBqZqux2qU7OVN3/Axsrx" +
-			"OJHq/Z/xsCrRN9+WJQECQQDvy0n0Qi18hqa8p2FJ37lNPmJP+umbWoOKLKUbSENK" +
-			"zf/RNPM6LsReFkst9xbMgXwX5eTX71X1wZalBAyeWIWDAkEA6aTKp7v0UzX+q2ko" +
-			"F2NtHvBd9GvB6dVmtfhV0F7gBen9BpGlB9Tn0cD/4uBp7Xo0nbHvmr0kbX+WHuFv" +
-			"gUozwQJBANyv8EkPWsN/PRbkyMHvV5/CaUKIftSOUf8ppW5dbCj9O5GztKH4hpq8" +
-			"08Xi4KWoCagI2TruNuNtnhISjvZwK7cCQQCGKu18+L/K8Ny3jgFJvPyyoZEyhJas" +
-			"MrFymZKdv32hp8Z2+TftkWM13kCTBg+OIXkJfV58W1UJ1BRe01H2yqeBAkEAsHJn" +
-			"40pnG5x6MrQc+pos9jeVwWHshZIkackt/v/WN3Gmuw0j0PNe+7PLLy1sPlEgaIrG" +
-			"jIqjeQD6rHD6jI27Xw==";
-	// 支付宝公钥
-	public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi";
+//	// 商户PID
+//	public static final String PARTNER = "2088021104297042";
+//
+//	// 商户收款账号
+//	public static final String SELLER = "dabao@ihealthbaby.cn";
+//
+//	// 商户私钥，pkcs8格式
+//	public static final String RSA_PRIVATE = "MIICeQIBADANBgkqhkiG9w0BAQEFAASCAmMwggJfAgEAAoGBANraYl42vCDCybYR" +
+//			"nJVzinbg3XtNcOBR7lcT/DaemHgTDbnghl3KE9vKkb7CNG2Cybij/S+sCiVoUilD" +
+//			"3R6dOJkw+RKJl+rnse6PiBLjqav87fZ+lWV1uY5TucjN5LWYP55hMB/p7ahraJb1" +
+//			"nV27aaDC47W3Gy/S7ta6+LmeM8DDAgMBAAECgYEAla2CVVkt9WIDPshwxS4OZxuH" +
+//			"nsrqBiFC1r9OYbS6JnUxkAzlGMQaLNowL7z2ymcGu4c8pBwPnGHqv1owor14dNlj" +
+//			"Uffsk8IU+gFKGfvbTkIe5GGKj5TZLiROQzkWTzMoqewnBqZqux2qU7OVN3/Axsrx" +
+//			"OJHq/Z/xsCrRN9+WJQECQQDvy0n0Qi18hqa8p2FJ37lNPmJP+umbWoOKLKUbSENK" +
+//			"zf/RNPM6LsReFkst9xbMgXwX5eTX71X1wZalBAyeWIWDAkEA6aTKp7v0UzX+q2ko" +
+//			"F2NtHvBd9GvB6dVmtfhV0F7gBen9BpGlB9Tn0cD/4uBp7Xo0nbHvmr0kbX+WHuFv" +
+//			"gUozwQJBANyv8EkPWsN/PRbkyMHvV5/CaUKIftSOUf8ppW5dbCj9O5GztKH4hpq8" +
+//			"08Xi4KWoCagI2TruNuNtnhISjvZwK7cCQQCGKu18+L/K8Ny3jgFJvPyyoZEyhJas" +
+//			"MrFymZKdv32hp8Z2+TftkWM13kCTBg+OIXkJfV58W1UJ1BRe01H2yqeBAkEAsHJn" +
+//			"40pnG5x6MrQc+pos9jeVwWHshZIkackt/v/WN3Gmuw0j0PNe+7PLLy1sPlEgaIrG" +
+//			"jIqjeQD6rHD6jI27Xw==";
+//	// 支付宝公钥
+//	public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi";
 
 
 	private Activity context;
@@ -103,47 +103,7 @@ public class PayAlipayUtil  {
 	/**
 	 * 调用SDK支付
 	 */
-	public void payAction() {
-		if (TextUtils.isEmpty(PARTNER) || TextUtils.isEmpty(RSA_PRIVATE)|| TextUtils.isEmpty(SELLER)) {
-			new AlertDialog.Builder(context)
-					.setTitle("警告")
-					.setMessage("需要配置PARTNER | RSA_PRIVATE| SELLER")
-					.setPositiveButton("确定",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialoginterface, int i) {
-//									finish();
-								}
-							}).show();
-			return;
-		}
-
-
-		// 订单,创建订单信息
-		String orderInfo = getOrderInfo("测试的商品", "该测试商品的详细描述", "0.01");
-		Log.d("orderInfomsg", "orderInfomsg ==> " + orderInfo);
-
-		// 对订单做RSA 签名
-		String sign = sign(orderInfo);
-		Log.d("signmsg", "signmsg ==> " + sign);
-
-		if (TextUtils.isEmpty(sign)) {
-			ToastUtil.show(context, "(对订单做RSA签名)sign是null");
-			return;
-		}
-
-		try {
-			// 仅需对sign 做URL编码
-			sign = URLEncoder.encode(sign, "UTF-8");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// 完整的符合支付宝参数规范的订单信息
-//		final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
-
-		final String payInfo="_input_charset=\"utf-8\"&body=\"开通微胎心检测仪租赁服务\"&notify_url=\"http://notify.msp.hk/notify.htm\"&out_trade_no=\"1\"&partner=\"2088021104297042\"&payment_type=\"1\"&seller_id=\"dabao@ihealthbaby.cn\"&service=\"mobile.securitypay.pay\"&subject=\"开通微胎心检测仪租赁服务\"&total_fee=\"0.01\"&sign=\"JKUijt1mqAkgLxGVCwBVj73TYZu%2Bo7rXwQAvBRvg0nx8FYEH6cvtYOPostJE1C5hbK2ywriQKyr5Ulbe0x3UjR8WEbZYcKwZqQORzF%2BOynaxkEOwZ5W2GG1sDQlYUXbgPJN%2F71BhyY5MqLe1TWUBv5SDR%2BxjGWkUdPsOsmz8LqY%3D\"&sign_type=\"RSA\"";
-
-
+	public void payAction(final String payInfo) {
 		Runnable payRunnable = new Runnable() {
 			@Override
 			public void run() {
@@ -200,61 +160,61 @@ public class PayAlipayUtil  {
 	}
 
 
-
-	/**
-	 * create the order info. 创建订单信息
-	 */
-	public String getOrderInfo(String subject, String body, String price) {
-
-		// 签约合作者身份ID
-		String orderInfo = "partner=" + "\"" + PARTNER + "\"";
-
-		// 签约卖家支付宝账号
-		orderInfo += "&seller_id=" + "\"" + SELLER + "\"";
-
-		// 商户网站唯一订单号
-		orderInfo += "&out_trade_no=" + "\"" + getOutTradeNo() + "\"";
-
-		// 商品名称
-		orderInfo += "&subject=" + "\"" + subject + "\"";
-
-		// 商品详情
-		orderInfo += "&body=" + "\"" + body + "\"";
-
-		// 商品金额
-		orderInfo += "&total_fee=" + "\"" + price + "\"";
-
-		// 服务器异步通知页面路径
-		orderInfo += "&notify_url=" + "\"" + "http://notify.msp.hk/notify.htm"
-				+ "\"";
-
-		// 服务接口名称， 固定值
-		orderInfo += "&service=\"mobile.securitypay.pay\"";
-
-		// 支付类型， 固定值
-		orderInfo += "&payment_type=\"1\"";
-
-		// 参数编码， 固定值
-		orderInfo += "&_input_charset=\"utf-8\"";
-
-		// 设置未付款交易的超时时间
-		// 默认30分钟，一旦超时，该笔交易就会自动被关闭。
-		// 取值范围：1m～15d。
-		// m-分钟，h-小时，d-天，1c-当天（无论交易何时创建，都在0点关闭）。
-		// 该参数数值不接受小数点，如1.5h，可转换为90m。
-		orderInfo += "&it_b_pay=\"30m\"";
-
-		// extern_token为经过快登授权获取到的alipay_open_id,带上此参数用户将使用授权的账户进行支付
-		// orderInfo += "&extern_token=" + "\"" + extern_token + "\"";
-
-		// 支付宝处理完请求后，当前页面跳转到商户指定页面的路径，可空
-		orderInfo += "&return_url=\"m.alipay.com\"";
-
-		// 调用银行卡支付，需配置此参数，参与签名， 固定值 （需要签约《无线银行卡快捷支付》才能使用）
-		// orderInfo += "&paymethod=\"expressGateway\"";
-
-		return orderInfo;
-	}
+//
+//	/**
+//	 * create the order info. 创建订单信息
+//	 */
+//	public String getOrderInfo(String subject, String body, String price) {
+//
+//		// 签约合作者身份ID
+//		String orderInfo = "partner=" + "\"" + PARTNER + "\"";
+//
+//		// 签约卖家支付宝账号
+//		orderInfo += "&seller_id=" + "\"" + SELLER + "\"";
+//
+//		// 商户网站唯一订单号
+//		orderInfo += "&out_trade_no=" + "\"" + getOutTradeNo() + "\"";
+//
+//		// 商品名称
+//		orderInfo += "&subject=" + "\"" + subject + "\"";
+//
+//		// 商品详情
+//		orderInfo += "&body=" + "\"" + body + "\"";
+//
+//		// 商品金额
+//		orderInfo += "&total_fee=" + "\"" + price + "\"";
+//
+//		// 服务器异步通知页面路径
+//		orderInfo += "&notify_url=" + "\"" + "http://notify.msp.hk/notify.htm"
+//				+ "\"";
+//
+//		// 服务接口名称， 固定值
+//		orderInfo += "&service=\"mobile.securitypay.pay\"";
+//
+//		// 支付类型， 固定值
+//		orderInfo += "&payment_type=\"1\"";
+//
+//		// 参数编码， 固定值
+//		orderInfo += "&_input_charset=\"utf-8\"";
+//
+//		// 设置未付款交易的超时时间
+//		// 默认30分钟，一旦超时，该笔交易就会自动被关闭。
+//		// 取值范围：1m～15d。
+//		// m-分钟，h-小时，d-天，1c-当天（无论交易何时创建，都在0点关闭）。
+//		// 该参数数值不接受小数点，如1.5h，可转换为90m。
+//		orderInfo += "&it_b_pay=\"30m\"";
+//
+//		// extern_token为经过快登授权获取到的alipay_open_id,带上此参数用户将使用授权的账户进行支付
+//		// orderInfo += "&extern_token=" + "\"" + extern_token + "\"";
+//
+//		// 支付宝处理完请求后，当前页面跳转到商户指定页面的路径，可空
+//		orderInfo += "&return_url=\"m.alipay.com\"";
+//
+//		// 调用银行卡支付，需配置此参数，参与签名， 固定值 （需要签约《无线银行卡快捷支付》才能使用）
+//		// orderInfo += "&paymethod=\"expressGateway\"";
+//
+//		return orderInfo;
+//	}
 
 	/**
 	 * get the out_trade_no for an order. 生成商户订单号，该值在商户端应保持唯一（可自定义格式规范）
@@ -276,9 +236,9 @@ public class PayAlipayUtil  {
 	 * @param content
 	 *            待签名订单信息
 	 */
-	public String sign(String content) {
-		return SignUtils.sign(content, RSA_PRIVATE);
-	}
+//	public String sign(String content) {
+//		return SignUtils.sign(content, RSA_PRIVATE);
+//	}
 
 	/**
 	 * get the sign type we use. 获取签名方式

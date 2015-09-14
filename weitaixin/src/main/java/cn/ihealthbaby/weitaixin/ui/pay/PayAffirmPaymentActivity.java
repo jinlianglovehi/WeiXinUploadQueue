@@ -60,8 +60,6 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     @OnClick(R.id.llPaymenyAlipay)
     public void PaymenyAlipay() {
-
-
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
@@ -72,7 +70,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
                     String data = t.getData();
                     if (TextUtils.isEmpty(data)) {
                         PayAlipayUtil payAlipayUtil=new PayAlipayUtil(PayAffirmPaymentActivity.this);
-//                        payAlipayUtil.payAction(data);
+                        payAlipayUtil.payAction(data);
                     }
                 } else {
                     ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");

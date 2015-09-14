@@ -78,6 +78,7 @@
         <activity android:name=".ui.pay.PayOrderDetailsActivity" />
         <activity android:name=".ui.monitor.MonitorCommonSense" />
 
+        <service android:name=".service.AdviceSettingService"/>
     </application>
 
 </manifest>

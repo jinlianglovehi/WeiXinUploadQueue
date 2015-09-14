@@ -6,7 +6,11 @@ import android.text.TextUtils;
 
 import java.util.Date;
 
+
 import cn.ihealthbaby.client.model.HClientUser;
+
+import cn.ihealthbaby.client.model.AdviceSetting;
+
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
@@ -20,7 +24,11 @@ public class SPUtil {
     private static final String FILE_NAME_USER = "user_share_data";
     private static final String FILE_NAME_SERVICEINFO = "serviceinfo_share_data";
     private static final String FILE_NAME_TEMP = "temp_share_data";
+
     private static final String FILE_NAME_FETALHEART = "fetalheart_share_data";
+
+
+    private static final String FILE_NAME_ADVICE_SETTING = "advice_setting_share_data";
 
 
     public static void setUUID(Context context, String uuid) {
@@ -131,6 +139,33 @@ public class SPUtil {
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.commit();
+    }
+
+
+    public static void saveAdviceSetting(Context context, AdviceSetting adviceSetting) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("AlarmHeartrateLimit", adviceSetting.getAlarmHeartrateLimit());
+        editor.putInt("AskMinTime", adviceSetting.getAskMinTime());
+        editor.putInt("AutoAdviceTimeLong", adviceSetting.getAutoAdviceTimeLong());
+        editor.putInt("AutoBeginAdvice", adviceSetting.getAutoBeginAdvice());
+        editor.putInt("AutoBeginAdviceMax", adviceSetting.getAutoBeginAdviceMax());
+        editor.putInt("FetalMoveTime", adviceSetting.getFetalMoveTime());
+        editor.putLong("HospitalId", adviceSetting.getHospitalId());
+        editor.commit();
+    }
+
+    public static AdviceSetting getAdviceSetting(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
+        AdviceSetting adviceSetting=new AdviceSetting();
+        adviceSetting.setAlarmHeartrateLimit(sp.getString("AlarmHeartrateLimit", ""));
+        adviceSetting.setAskMinTime(sp.getInt("AskMinTime", -1));
+        adviceSetting.setAutoBeginAdvice(sp.getInt("AutoAdviceTimeLong", -1));
+        adviceSetting.setAutoBeginAdvice(sp.getInt("AutoBeginAdvice", -1));
+        adviceSetting.setAutoBeginAdviceMax(sp.getInt("AutoBeginAdviceMax", -1));
+        adviceSetting.setFetalMoveTime(sp.getInt("FetalMoveTime", -1));
+        adviceSetting.setHospitalId(sp.getLong("HospitalId", -1));
+        return adviceSetting;
     }
 
 

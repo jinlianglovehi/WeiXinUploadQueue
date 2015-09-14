@@ -24,6 +24,7 @@ import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.tools.CustomDialog;
 
 public class LoginActivity extends BaseActivity {
@@ -131,6 +132,8 @@ public class LoginActivity extends BaseActivity {
                                     Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
                                     startActivity(intent);
                                 }
+                                Intent intent=new Intent(getApplicationContext(), AdviceSettingService.class);
+                                startService(intent);
 
                                 LoginActivity.this.finish();
                             }else{
