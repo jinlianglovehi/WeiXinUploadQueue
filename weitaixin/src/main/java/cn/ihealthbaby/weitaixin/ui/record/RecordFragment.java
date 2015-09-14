@@ -451,6 +451,9 @@ public class RecordFragment extends BaseFragment {
             myAdviceItem.setTestTimeLong(adviceItem.getTestTimeLong());
             myAdviceItem.setStatus(adviceItem.getStatus());
             myAdviceItem.setUploadstate(MyAdviceItem.CLOUD_RECORD);
+            myAdviceItem.setJianceid(adviceItem.getClientId());
+            myAdviceItem.setFeeling(adviceItem.getFeeling());
+            myAdviceItem.setPurpose(adviceItem.getAskPurpose());
 
             myAdviceItems.add(myAdviceItem);
         }

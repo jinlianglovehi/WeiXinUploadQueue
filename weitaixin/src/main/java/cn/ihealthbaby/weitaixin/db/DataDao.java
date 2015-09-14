@@ -352,7 +352,7 @@ public class DataDao {
 		if (db.isOpen()) {
 			for (int i = 0; i < adviceItems.size(); i++) {
 				MyAdviceItem adviceItem = adviceItems.get(i);
-				if (isRecordNative) {
+//				if (isRecordNative) {
 //					delete(adviceItem.getId());
 					if (findById(adviceItem.getId())) {
 						break;
@@ -371,22 +371,22 @@ public class DataDao {
 					} finally {
 						db.endTransaction();
 					}
-				} else {
-//					delete(adviceItem.getId());
-					if (findById(adviceItem.getId())) {
-						break;
-					}
-					db.beginTransaction();
-					try {
-						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
-								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(),
-										                      adviceItem.getTestTimeLong(), adviceItem.getStatus(), adviceItem.getUploadstate()});
-						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
-						db.setTransactionSuccessful();
-					} finally {
-						db.endTransaction();
-					}
-				}
+//				} else {
+////					delete(adviceItem.getId());
+//					if (findById(adviceItem.getId())) {
+//						break;
+//					}
+//					db.beginTransaction();
+//					try {
+//						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
+//								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(), adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(),
+//										                      adviceItem.getTestTimeLong(), adviceItem.getStatus(), adviceItem.getUploadstate()});
+//						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
+//						db.setTransactionSuccessful();
+//					} finally {
+//						db.endTransaction();
+//					}
+//				}
 			}
 		}
 	}
@@ -489,12 +489,12 @@ public class DataDao {
 				int uploadstate = cursor.getInt(cursor.getColumnIndex("uploadstate"));
 				adviceItem.setId(Long.parseLong(mid));
 				adviceItem.setGestationalWeeks(gestationalWeeks);
-				LogUtil.d("testTime", "testTime44 ==>" + status);
-				LogUtil.d("testTime", "testTime33 ==>" + DateTimeTool.longDate2Str(Long.parseLong(testTime)));
+//				LogUtil.d("testTime", "testTime44 ==>" + status);
+//				LogUtil.d("testTime", "testTime33 ==>" + DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 				adviceItem.setTestTime(DateTimeTool.longDate2Str(Long.parseLong(testTime)));
 				adviceItem.setTestTimeLong(testTimeLong);
 				adviceItem.setStatus(status);
-				LogUtil.d("uploadstate", "uploadstate ==> " + uploadstate);
+//				LogUtil.d("uploadstate", "uploadstate ==> " + uploadstate);
 				if (uploadstate == MyAdviceItem.NATIVE_RECORD || uploadstate == MyAdviceItem.UPLOADING_RECORD) {
 					adviceItemsNative.add(adviceItem);
 				} else {
@@ -513,12 +513,12 @@ public class DataDao {
 					}
 				}
 			}
-			LogUtil.d("adviceItemsNative", adviceItemsCloudTenCount.size() + " <==adviceItemsNative==> " + adviceItemsNative.size());
+//			LogUtil.d("adviceItemsNative", adviceItemsCloudTenCount.size() + " <==adviceItemsNative==> " + adviceItemsNative.size());
 			adviceItems.addAll(adviceItemsCloudTenCount);
 			adviceItems.addAll(adviceItemsNative);
 			cursor.close();
 		}
-		LogUtil.d("adviceItemsAllAll", adviceItems.size() + " -adviceItemsAllAll ==> " + adviceItems);
+//		LogUtil.d("adviceItemsAllAll", adviceItems.size() + " -adviceItemsAllAll ==> " + adviceItems);
 		return adviceItems;
 	}
 
