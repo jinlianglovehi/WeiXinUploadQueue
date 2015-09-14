@@ -215,7 +215,7 @@ public class MonitorFragment extends BaseFragment {
 		MyAdviceItem myAdviceItem = new MyAdviceItem();
 		myAdviceItem.setJianceid(uuidString);
 		myAdviceItem.setTestTime(new Date());
-		dao.addItem(myAdviceItem, true);
+		dao.add(myAdviceItem, true);
 		Intent intent = new Intent(getActivity(), MonitorActivity.class);
 		intent.putExtra(Constants.INTENT_UUID, uuidString);
 		startActivity(intent);
@@ -436,8 +436,8 @@ public class MonitorFragment extends BaseFragment {
 		if (serviceInfo != null) {
 			serialnum = serviceInfo.getSerialnum();
 		}
-//		return serialnum == null ? "" : serialnum;
-		return "IHB2LD1X7CUC";
+		return serialnum == null ? "" : serialnum;
+//		return "IHB2LD1X7CUC";
 	}
 
 	public void onEventAsync(MonitorTerminateEvent event) {
@@ -557,7 +557,7 @@ public class MonitorFragment extends BaseFragment {
 		adviceItem.setSerialnum(user.getServiceInfo().getSerialnum());
 		adviceItem.setUploadstate(MyAdviceItem.NATIVE_RECORD);
 		//
-		dao.add(adviceItem, true);
+		dao.update(adviceItem);
 		MyAdviceItem aNative = dao.findNative(uuidString);
 		LogUtil.d(TAG, aNative.toString());
 		DataStorage.fhrs.clear();
