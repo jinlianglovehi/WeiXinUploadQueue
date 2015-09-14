@@ -351,7 +351,7 @@ public class RecordFragment extends BaseFragment {
                 public void run() {
                     pullFirstData(null);
                 }
-            }, 1000);
+            }, 200);
         } else {
             customDialog.dismiss();
             customDialog = null;

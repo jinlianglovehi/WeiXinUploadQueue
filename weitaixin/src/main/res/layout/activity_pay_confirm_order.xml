@@ -362,6 +362,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv"
+            android:fadingEdge="none"
+            android:scrollbars="none"
+            android:listSelector="@android:color/transparent"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             android:layout_marginLeft="20dp"
@@ -385,7 +388,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="18dp"
-            android:text="总计￥3424"
+            android:text=""
             android:textColor="@color/red0"
             android:textSize="@dimen/font12" />
 

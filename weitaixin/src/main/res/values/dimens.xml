@@ -21,6 +21,7 @@
     <dimen name="font32">32sp</dimen>
     <dimen name="font34">34sp</dimen>
     <dimen name="font50">50sp</dimen>
+    <dimen name="font40">40sp</dimen>
     <dimen name="font76">76sp</dimen>
 
     <dimen name="font_title">@dimen/font18</dimen>

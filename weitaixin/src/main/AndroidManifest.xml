@@ -71,7 +71,6 @@
         <activity android:name=".ui.pay.PayHospitalChooseActivity" />
         <activity android:name=".ui.pay.PayCityChooseActivity" />
         <activity android:name=".ui.pay.PayOrderInformationActivity" />
-        <activity android:name=".ui.pay.PayGoingOrderActivity" />
         <activity android:name=".ui.pay.PayConfirmOrderActivity" />
         <activity android:name=".ui.pay.PayAffirmPaymentActivity" />
         <activity android:name=".ui.monitor.CurvePlayActivity" />
