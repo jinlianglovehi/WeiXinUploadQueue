@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.library.tools;
+package cn.ihealthbaby.weitaixin;
 
 import android.app.Dialog;
 

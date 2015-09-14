@@ -1,8 +1,6 @@
-package cn.ihealthbaby.weitaixin.library.data.model;
+package cn.ihealthbaby.weitaixin;
 
 import java.util.HashMap;
-
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 
 /**
  * Created by Think on 2015/9/7.
