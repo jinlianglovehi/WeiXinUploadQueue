@@ -13,7 +13,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
@@ -106,7 +105,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.iv_tab_04)
+    @OnClick(R.id.ll_tab_profile)
     public void iv_tab_04() {
         showTab(iv_tab_04);
         if (SPUtil.isLogin(this)) {
