@@ -24,11 +24,10 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
-import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 

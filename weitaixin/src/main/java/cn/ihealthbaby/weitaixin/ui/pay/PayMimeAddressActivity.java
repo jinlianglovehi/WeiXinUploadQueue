@@ -14,7 +14,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,15 +23,12 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Address;
-import cn.ihealthbaby.client.model.Order;
-import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.adapter.PayAllOrderAdapter;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
 
 public class PayMimeAddressActivity extends BaseActivity {
 

@@ -27,7 +27,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
 
 public class GuardianStateActivity extends BaseActivity {
 	private final static String TAG = "GuardianStateActivity";

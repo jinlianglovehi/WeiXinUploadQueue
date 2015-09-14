@@ -18,7 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.model.Information;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder> {

@@ -25,7 +25,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
 
 public class LoginSmsAuthCodeActivity extends BaseActivity {
 

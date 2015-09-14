@@ -1,15 +1,12 @@
 package cn.ihealthbaby.weitaixin.adapter;
 
-import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -17,33 +14,21 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.form.AdviceForm;
-import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.Order;
-import cn.ihealthbaby.client.model.OrderItem;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
-import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
-import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
-import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.pay.PayAffirmPaymentActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
-import cn.ihealthbaby.weitaixin.ui.pay.PayMimeOrderActivity;
-import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
-import cn.ihealthbaby.weitaixin.ui.record.ReplyedActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 
 

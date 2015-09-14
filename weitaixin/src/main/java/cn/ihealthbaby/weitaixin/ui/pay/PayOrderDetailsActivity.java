@@ -8,16 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,18 +20,13 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.form.OrderItemForm;
-import cn.ihealthbaby.client.form.ServiceOrderForm;
-import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.client.model.OrderDetail;
 import cn.ihealthbaby.client.model.OrderItem;
-import cn.ihealthbaby.client.model.Product;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.LocalProductData;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 
 public class PayOrderDetailsActivity extends BaseActivity {

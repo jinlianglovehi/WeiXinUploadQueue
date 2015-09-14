@@ -18,14 +18,13 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AskForm;
-import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
-import cn.ihealthbaby.weitaixin.tools.MaxLengthWatcher;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.MaxLengthWatcher;
 
 
 public class AskDoctorActivity extends BaseActivity {

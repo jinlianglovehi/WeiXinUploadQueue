@@ -3,16 +3,9 @@ package cn.ihealthbaby.weitaixin.ui.pay;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.handmark.pulltorefresh.library.ILoadingLayout;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,12 +16,10 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AddressForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
-import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
 
 public class PayAddAddressActivity extends BaseActivity {
 

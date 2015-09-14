@@ -15,8 +15,8 @@ import cn.ihealthbaby.client.model.SysMsg;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
-import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 
 
 public class WoMessagOfSystemMessageActivity extends BaseActivity {

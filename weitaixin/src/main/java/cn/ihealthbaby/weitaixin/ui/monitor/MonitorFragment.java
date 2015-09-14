@@ -53,7 +53,7 @@ import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.model.MyAdviceItem;
-import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.monitor.data.Data;
 import cn.ihealthbaby.weitaixin.ui.monitor.data.RecordData;
 import de.greenrobot.event.EventBus;

@@ -21,11 +21,10 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.ChangePasswordForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
 
 
 public class SetSystemResetPasswordActivity extends BaseActivity {

@@ -22,13 +22,12 @@ import cn.ihealthbaby.client.model.AdviceReply;
 import cn.ihealthbaby.client.model.ReplyDetail;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.tools.CustomDialog;
-import cn.ihealthbaby.weitaixin.tools.DateTimeTool;
-import cn.ihealthbaby.weitaixin.tools.RelativeDateFormat;
+import cn.ihealthbaby.weitaixin.library.tools.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.tools.RelativeDateFormat;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
