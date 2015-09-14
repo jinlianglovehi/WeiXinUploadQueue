@@ -43,5 +43,5 @@ public class Constants {
 	public static final String INTENT_DURATION = "DURATION";
 	public static final String INTENT_INTERVAL = "INTERVAL";
 
-	 
+
 }

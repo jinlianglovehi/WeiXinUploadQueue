@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.library.data.bluetooth;
+package cn.ihealthbaby.weitaixin.library.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
