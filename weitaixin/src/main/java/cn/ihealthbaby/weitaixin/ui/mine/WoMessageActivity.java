@@ -59,8 +59,6 @@ public class WoMessageActivity extends BaseActivity {
 
         ButterKnife.bind(this);
         title_text.setText("我的消息");
-        back.setVisibility(View.INVISIBLE);
-
 
         adapter = new MyRefreshAdapter(this, null);
         pullToRefresh.setAdapter(adapter);
@@ -219,5 +217,10 @@ public class WoMessageActivity extends BaseActivity {
         if (receiveBroadCast != null) {
             unregisterReceiver(receiveBroadCast);
         }
+    }
+
+    @OnClick(R.id.back)
+    public void backOnclick(){
+        finish();
     }
 }

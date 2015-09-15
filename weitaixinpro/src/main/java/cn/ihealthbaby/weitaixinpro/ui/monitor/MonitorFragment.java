@@ -97,7 +97,6 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                     page = alreadyPage++;
                 }
 
-
                 ApiManager.getInstance().hClientAccountApi.getServiceInsides(SPUtil.getHClientUser(getActivity()).getDepartmentId(), status, page, pageSize,
                         new HttpClientAdapter.Callback<PageData<ServiceInside>>() {
                             @Override
@@ -106,7 +105,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                                     mServiceInsidePageData = t.getData();
                                     if (mServiceInsidePageData.getCount() > 0) {
                                         mAdapter.addData(mServiceInsidePageData.getValue());
-                                    }else {
+                                    } else {
 
                                     }
                                 }

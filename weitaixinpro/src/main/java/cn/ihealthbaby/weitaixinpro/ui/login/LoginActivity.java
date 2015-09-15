@@ -90,6 +90,8 @@ public class LoginActivity extends BaseActivity {
                                 finish();
                             } else {
                                 //TODO
+                                Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_LONG).show();
+
                             }
                         }
                     }, getRequestTag());
@@ -111,6 +113,8 @@ public class LoginActivity extends BaseActivity {
                     mFetalHeartApiList = t.getData().getList();
                     mFetalHeart = mFetalHeartApiList.get(0);
                     adapter.addData(mFetalHeartApiList);
+                }else {
+                    Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_LONG).show();
                 }
             }
         }, getRequestTag());
