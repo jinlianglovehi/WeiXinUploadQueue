@@ -27,20 +27,20 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.db.DataDao;
+import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
+import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
+import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.AsynUploadEngine;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
-import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
-import cn.ihealthbaby.weitaixin.library.tools.AsynUploadEngine;
-import cn.ihealthbaby.weitaixin.CustomDialog;
-import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
-import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 
@@ -135,7 +135,6 @@ public class CurvePlayActivity extends BaseActivity {
 		adviceForm.setData(item.getRdata());
 		adviceForm.setTestTime(item.getTestTime());
 		adviceForm.setTestTimeLong(item.getTestTimeLong());
-		adviceForm.setGestationalWeeks(item.getGestationalWeeks());
 		adviceForm.setClientId(uuid);
 		return adviceForm;
 	}
@@ -185,10 +184,10 @@ public class CurvePlayActivity extends BaseActivity {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				int size = fhrs.size();
-				if (position < size ) {
+				if (position < size) {
 					int fhr = fhrs.get(position);
 					curvePlay.addPoint(fhr);
-					if (fmposition<fetalMove.size()&&fetalMove.get(fmposition)/getInterval() == position) {
+					if (fmposition < fetalMove.size() && fetalMove.get(fmposition) / getInterval() == position) {
 						curvePlay.addRedHeart(position);
 						fmposition++;
 					}
@@ -235,7 +234,7 @@ public class CurvePlayActivity extends BaseActivity {
 			fetalMove = gson.fromJson(data.getFm(), new TypeToken<ArrayList<Integer>>() {
 			}.getType());
 		} else {
-			ToastUtil.show(getApplicationContext(),"获取数据失败");
+			ToastUtil.show(getApplicationContext(), "获取数据失败");
 		}
 	}
 
@@ -255,6 +254,9 @@ public class CurvePlayActivity extends BaseActivity {
 		super.onDestroy();
 		if (mediaPlayer != null) {
 			mediaPlayer.release();
+		}
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
 		}
 	}
 }

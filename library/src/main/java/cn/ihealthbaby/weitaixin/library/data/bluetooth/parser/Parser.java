@@ -6,6 +6,7 @@ import android.os.Message;
 import java.io.IOException;
 import java.io.InputStream;
 
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.FHRParseException;
@@ -173,6 +174,7 @@ public class Parser {
 						case CONTROLLER_SOUND_V1:
 							int[] voice = getVoice(mmInStream);
 							byte[] v = intForByte(ByteUtil.analysePackage(voice));
+							AudioPlayer.getInstance().getmAudioTrack().write(v, 0, v.length);
 							Message message3 = Message.obtain(handler);
 							message3.what = Constants.MESSAGE_VOICE;
 							message3.obj = v;
@@ -182,6 +184,7 @@ public class Parser {
 						case CONTROLLER_SOUND_V2:
 							int[] voiceAd = getVoiceAd(mmInStream);
 							byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
+							AudioPlayer.getInstance().getmAudioTrack().write(adv, 0, adv.length);
 							Message message4 = Message.obtain(handler);
 							message4.what = Constants.MESSAGE_VOICE;
 							message4.obj = adv;

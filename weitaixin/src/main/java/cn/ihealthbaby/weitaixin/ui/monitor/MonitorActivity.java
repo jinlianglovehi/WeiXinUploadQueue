@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.monitor;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -12,13 +13,16 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.util.DataStorage;
+import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorSimpleView;
@@ -27,6 +31,9 @@ import de.greenrobot.event.EventBus;
 
 public class MonitorActivity extends BaseActivity {
 	private final static String TAG = "MonitorActivity";
+	public int alertInterval;
+	public boolean alert;
+	public int duration;
 	@Bind(R.id.back)
 	RelativeLayout back;
 	@Bind(R.id.title_text)
@@ -58,6 +65,8 @@ public class MonitorActivity extends BaseActivity {
 	private ExpendableCountDownTimer countDownTimer;
 	private long lastFetalMoveTime;
 	private int width;
+	private int safemin = 110;
+	private int safemax = 160;
 
 	@OnClick(R.id.back)
 	public void back() {
@@ -106,13 +115,14 @@ public class MonitorActivity extends BaseActivity {
 		function.setText("立即结束");
 		function.setVisibility(View.VISIBLE);
 		//
+		//
+		getAdviceSetting();
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
 		//
 		roundProgressMask.setBackgroundResource(R.drawable.round_background_3);
 		configCurveSimple();
-		long duration = 20 * 60 * 1000;
 		final long interval = 500;
 		countDownTimer = new ExpendableCountDownTimer(duration, interval) {
 			private int fhr;
@@ -149,13 +159,20 @@ public class MonitorActivity extends BaseActivity {
 				long time = DataStorage.fhrPackage.getTime();
 				if (lasttime < time) {
 					fhr = DataStorage.fhrPackage.getFHR1();
+					if (tvBluetooth != null) {
+						if (fhr >= safemin && fhr <= safemax) {
+							tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
+						} else {
+							tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
+						}
+						tvBluetooth.setText(fhr + "");
+					}
 					lasttime = time;
 				} else {
 					fhr = 0;
 				}
 				curveSimple.addPoint(fhr);
 				curveSimple.postInvalidate();
-				tvBluetooth.setText(String.valueOf(fhr));
 				if (!hs.isTouching()) {
 					hs.smoothScrollTo((int) (curveSimple.getCurrentPositionX() - width / 2), 0);
 				}
@@ -169,6 +186,8 @@ public class MonitorActivity extends BaseActivity {
 		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 4));
 //		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 8));
 		curveSimple.setyMax(210);
+		curveSimple.setSafeMax(safemax);
+		curveSimple.setSafeMin(safemin);
 		curveSimple.setHearts(DataStorage.hearts);
 		//TODO 根据配置设置
 //		WeiTaiXinApplication.user.getServiceInfo();
@@ -199,9 +218,6 @@ public class MonitorActivity extends BaseActivity {
 	}
 
 	public void onEventMainThread(MonitorTerminateEvent event) {
-		if (countDownTimer != null) {
-			countDownTimer.cancel();
-		}
 		int reason = event.getEvent();
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
@@ -215,5 +231,25 @@ public class MonitorActivity extends BaseActivity {
 				break;
 		}
 		finish();
+	}
+
+	/**
+	 * 获取监测的配置
+	 */
+	private void getAdviceSetting() {
+		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+		AdviceSetting adviceSetting = SPUtil.getAdviceSetting(getApplicationContext());
+		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
+		String[] split = alarmHeartrateLimit.split("-");
+		try {
+			if (split != null && split.length == 2) {
+				safemin = Integer.parseInt(split[0]);
+				safemax = Integer.parseInt(split[1]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		duration = adviceSetting.getAutoAdviceTimeLong() * 1000;
+		LogUtil.d(TAG, "safemin:%s,safemax:%s,alertSound:%s,alertInterval:%s,duration:%s", safemin, safemax, alert, alertInterval, duration);
 	}
 }

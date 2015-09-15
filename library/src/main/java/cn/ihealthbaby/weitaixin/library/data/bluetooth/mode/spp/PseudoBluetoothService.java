@@ -309,6 +309,8 @@ public class PseudoBluetoothService {
 									socket.close();
 								} catch (IOException e) {
 									Log.e(TAG, "Could not close unwanted socket", e);
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
 								break;
 						}
@@ -324,6 +326,8 @@ public class PseudoBluetoothService {
 				mmServerSocket.close();
 			} catch (IOException e) {
 				Log.e(TAG, "Socket Type" + mSocketType + "close() of server failed", e);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -375,6 +379,9 @@ public class PseudoBluetoothService {
 				} catch (IOException e2) {
 					Log.e(TAG, "unable to close() " + mSocketType +
 							           " socket during connection failure", e2);
+				} catch (Exception e3) {
+					e3.printStackTrace();
+
 				}
 				connectionFailed();
 				return;
@@ -392,6 +399,8 @@ public class PseudoBluetoothService {
 				mmSocket.close();
 			} catch (IOException e) {
 				Log.e(TAG, "close() of connect " + mSocketType + " socket failed", e);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -416,6 +425,8 @@ public class PseudoBluetoothService {
 				tmpOut = socket.getOutputStream();
 			} catch (IOException e) {
 				Log.e(TAG, "temp sockets not created", e);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			mmInStream = tmpIn;
 			mmOutStream = tmpOut;
@@ -445,7 +456,7 @@ public class PseudoBluetoothService {
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
-
+					System.out.println("finally finish");
 				}
 			}
 		}
@@ -471,6 +482,8 @@ public class PseudoBluetoothService {
 				mmSocket.close();
 			} catch (IOException e) {
 				Log.e(TAG, "close() of connect socket failed", e);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

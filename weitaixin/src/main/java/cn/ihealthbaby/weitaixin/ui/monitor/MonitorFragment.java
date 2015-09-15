@@ -4,7 +4,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -33,29 +36,32 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.db.DataDao;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
-import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceiver;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.DefaultBluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.PseudoBluetoothService;
+import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
+import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
+import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
+import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.util.DataStorage;
+import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
-import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
-import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
-import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -63,6 +69,7 @@ import de.greenrobot.event.EventBus;
  */
 public class MonitorFragment extends BaseFragment {
 	private final static String TAG = "MonitorFragment";
+	public SoundPool alertSound;
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
 	@Bind(R.id.round_background)
@@ -110,8 +117,12 @@ public class MonitorFragment extends BaseFragment {
 	private User user;
 	private ServiceInfo serviceInfo;
 	private AudioTrack audioTrack = AudioPlayer.getInstance().getmAudioTrack();
-	private int autoStartTime;
-	private CountDownTimer autoStartTimer;
+	private int autoStartTime = 2 * 60 * 1000;
+	private ExpendableCountDownTimer autoStartTimer;
+	private int safemin;
+	private int safemax;
+	private long lastAlert;
+	private boolean alert;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -140,9 +151,21 @@ public class MonitorFragment extends BaseFragment {
 					break;
 				case Constants.MESSAGE_READ_FETAL_DATA:
 					FHRPackage fhrPackage = (FHRPackage) msg.obj;
+					int fhr1 = fhrPackage.getFHR1();
 					DataStorage.fhrPackage.setFHRPackage(fhrPackage);
 					if (tvBluetooth != null) {
-						tvBluetooth.setText(fhrPackage.getFHR1() + "");
+						if (fhr1 >= safemin && fhr1 <= safemax) {
+							tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
+						} else {
+							tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
+							if (alert && connected && fhr1 != 0) {
+								long currentTimeMillis = System.currentTimeMillis();
+								if (currentTimeMillis - lastAlert >= alertInterval)
+									alertSound.play(1, 1, 1, 0, 0, 1);
+								lastAlert = currentTimeMillis;
+							}
+						}
+						tvBluetooth.setText(fhr1 + "");
 					}
 					break;
 				case Constants.MESSAGE_DEVICE_NAME:
@@ -162,9 +185,9 @@ public class MonitorFragment extends BaseFragment {
 					break;
 				case Constants.MESSAGE_VOICE:
 					byte[] sound = (byte[]) msg.obj;
-					if (needPlay) {
-						audioTrack.write(sound, 0, sound.length);
-					}
+//					if (needPlay) {
+//						audioTrack.write(sound, 0, sound.length);
+//					}
 					if (needRecord) {
 						if (fileOutputStream != null) {
 							try {
@@ -178,6 +201,7 @@ public class MonitorFragment extends BaseFragment {
 			}
 		}
 	};
+	private int alertInterval;
 
 	private String getFileName() {
 		return Constants.TEMP_FILE_NAME;
@@ -228,7 +252,7 @@ public class MonitorFragment extends BaseFragment {
 	 *
 	 * @param view
 	 */
-	@OnClick(R.id.round_frontground)
+	@OnClick({R.id.round_frontground, R.id.tv_bluetooth})
 	void startSearch(View view) {
 		if (!connected) {
 			onConnectingUI();
@@ -260,9 +284,41 @@ public class MonitorFragment extends BaseFragment {
 		back.setVisibility(View.GONE);
 		titleText.setText("胎心监测");
 		function.setVisibility(View.GONE);
+		getAdviceSetting();
+
+		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
+		alertSound.load(getActivity().getApplicationContext(), R.raw.didi, 1);
+		autoStartTimer = new ExpendableCountDownTimer(autoStartTime, 1000) {
+			@Override
+			public void onStart(long startTime) {
+				hint.setText("");
+				hint.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onExtra(long duration, long extraTime, long stopTime) {
+			}
+
+			@Override
+			public void onTick(long millisUntilFinished) {
+				if (millisUntilFinished <= 5000) {
+					hint.setText(millisUntilFinished / 1000 + "秒后倾听宝宝心跳");
+				}
+			}
+
+			@Override
+			public void onFinish() {
+				hint.setText("");
+				hint.setVisibility(View.GONE);
+				btnStart.performClick();
+			}
+
+			@Override
+			public void onRestart() {
+			}
+		};
 		reset();
-		getConfig();
-		countDownTimer = new CountDownTimer(20000, 20000) {
+		countDownTimer = new CountDownTimer(10000, 10000) {
 			@Override
 			public void onTick(long millisUntilFinished) {
 			}
@@ -330,29 +386,45 @@ public class MonitorFragment extends BaseFragment {
 		});
 	}
 
-	/**
-	 * 请求医院配置信息
-	 */
-	private void getConfig() {
-		user = SPUtil.getUser(getActivity().getApplicationContext());
-		serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
-//		ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(), new Callback<AdviceSetting>() {
-//			@Override
-//			public void call(Result<AdviceSetting> t) {
-//				adviceSetting = t.getData();
-//			}
-//		}, TAG);
-	}
-
 	private void loadSrc(ImageView imageView, int drawableId) {
 		ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
 		Picasso.with(getActivity().getApplicationContext()).load(drawableId).resize(layoutParams.width, layoutParams.height).into(imageView);
 	}
 
+	/**
+	 * 获取开始前的配置
+	 */
+	private void getAdviceSetting() {
+		user = SPUtil.getUser(getActivity().getApplicationContext());
+		serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
+		LocalSetting localSetting = SPUtil.getLocalSetting(getActivity().getApplicationContext());
+		AdviceSetting adviceSetting = SPUtil.getAdviceSetting(getActivity().getApplicationContext());
+		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
+		String[] split = alarmHeartrateLimit.split("-");
+		try {
+			if (split != null && split.length == 2) {
+				safemin = Integer.parseInt(split[0]);
+				safemax = Integer.parseInt(split[1]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (localSetting.isAutostart()) {
+			autoStartTime = adviceSetting.getAutoBeginAdvice() * 1000;
+		} else {
+			autoStartTime = adviceSetting.getAutoBeginAdviceMax() * 1000;
+		}
+		alert = localSetting.isAlert();
+		alertInterval = localSetting.getMonitorTime();
+		LogUtil.d(TAG, "safemin:%s,safemax:%s,autoStartTime:%s", safemin, safemax, autoStartTime);
+	}
+
 	public void reset() {
+		tvBluetooth.setTextColor(getResources().getColor(R.color.green0));
 		tvBluetooth.setText("start");
 		tvBluetooth.setClickable(true);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
+		hint.setText("");
 		hint.setVisibility(View.GONE);
 		bpm.setVisibility(View.GONE);
 		function.setVisibility(View.GONE);
@@ -366,21 +438,6 @@ public class MonitorFragment extends BaseFragment {
 			audioTrack.play();
 		}
 		// TODO: 15/9/13
-		if (true) {
-			autoStartTime = 2 * 60 * 1000;
-		} else {
-			autoStartTime = 3 * 1000;
-		}
-		autoStartTimer = new CountDownTimer(autoStartTime, 1000) {
-			@Override
-			public void onTick(long millisUntilFinished) {
-			}
-
-			@Override
-			public void onFinish() {
-				btnStart.performClick();
-			}
-		};
 		scanedDevices.clear();
 	}
 
@@ -388,6 +445,7 @@ public class MonitorFragment extends BaseFragment {
 		tvBluetooth.setText("连接中");
 		tvBluetooth.setClickable(false);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
+		hint.setText("请耐心等待");
 		hint.setVisibility(View.VISIBLE);
 		bpm.setImageResource(R.drawable.bpm_dark);
 		bpm.setVisibility(View.VISIBLE);
@@ -438,13 +496,37 @@ public class MonitorFragment extends BaseFragment {
 		if (serviceInfo != null) {
 			serialnum = serviceInfo.getSerialnum();
 		}
+		LogUtil.d(TAG,"serialNumber:"+serialnum);
 		return serialnum == null ? "" : serialnum;
 //        return "IHB2LD1X7CUC";
 	}
+//	public void onEventAsync(MonitorTerminateEvent event) {
+//		int reason = event.getEvent();
+//		//断开连接 保存音频数据 保存胎心数据
+//
+//		switch (reason) {
+//			case MonitorTerminateEvent.EVENT_AUTO:
+//				LogUtil.d(TAG, "EVENT_AUTO");
+//				runRecord();
+//				break;
+//			case MonitorTerminateEvent.EVENT_UNKNOWN:
+//				LogUtil.d(TAG, "EVENT_UNKNOWN");
+//				runRecord();
+//				break;
+//			case MonitorTerminateEvent.EVENT_MANUAL:
+//				LogUtil.d(TAG, "EVENT_MANUAL");
+//				runRecord();
+//				break;
+//			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
+//				LogUtil.d(TAG, "EVENT_MANUAL_NOT_START");
+//				break;
+//			default:
+//				break;
+//		}
+//	}
 
-	public void onEventAsync(MonitorTerminateEvent event) {
+	public void onEventMainThread(MonitorTerminateEvent event) {
 		int reason = event.getEvent();
-		//断开连接 保存音频数据 保存胎心数据
 		pseudoBluetoothService.stop();
 		needPlay = false;
 		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
@@ -458,43 +540,23 @@ public class MonitorFragment extends BaseFragment {
 				e.printStackTrace();
 			}
 		}
-		switch (reason) {
-			case MonitorTerminateEvent.EVENT_AUTO:
-				LogUtil.d(TAG, "EVENT_AUTO");
-				runRecord();
-				break;
-			case MonitorTerminateEvent.EVENT_UNKNOWN:
-				LogUtil.d(TAG, "EVENT_UNKNOWN");
-				runRecord();
-				break;
-			case MonitorTerminateEvent.EVENT_MANUAL:
-				LogUtil.d(TAG, "EVENT_MANUAL");
-				runRecord();
-				break;
-			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
-				LogUtil.d(TAG, "EVENT_MANUAL_NOT_START");
-				break;
-			default:
-				break;
-		}
-	}
-
-	public void onEvent(MonitorTerminateEvent event) {
-		int reason = event.getEvent();
 		reset();
 		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
 		intent.putExtra(Constants.INTENT_UUID, uuidString);
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
+				runRecord();
 				startActivity(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_UNKNOWN:
 				LogUtil.d(TAG, "EVENT_UNKNOWN");
+				runRecord();
 				startActivity(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL:
 				LogUtil.d(TAG, "EVENT_MANUAL");
+				runRecord();
 				startActivity(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
