@@ -4,17 +4,17 @@ public class Constants {
 
 
     //appid
-    //ÇëÍ¬Ê±ĞŞ¸Ä  androidmanifest.xmlÀïÃæ£¬.PayActivitydÀïµÄÊôĞÔ<data android:scheme="wxb4ba3c02aa476ea1"/>ÎªĞÂÉèÖÃµÄappid
-  public static final String APP_ID = "wxf2f565574a968187";
+    //è¯·åŒæ—¶ä¿®æ”¹  androidmanifest.xmlé‡Œé¢ï¼Œ.PayActivitydé‡Œçš„å±æ€§<data android:scheme="wxb4ba3c02aa476ea1"/>ä¸ºæ–°è®¾ç½®çš„appid
+    public static final String APP_ID = "wxf2f565574a968187";
 
 
 
 
-  //ÉÌ»§ºÅ
-   public static final String MCH_ID = "1233848001";
+    //å•†æˆ·å·
+    public static final String MCH_ID = "1233848001";
 
 
-//  APIÃÜÔ¿£¬ÔÚÉÌ»§Æ½Ì¨ÉèÖÃ
+    //  APIå¯†é’¥ï¼Œåœ¨å•†æˆ·å¹³å°è®¾ç½®
     public static final String API_KEY="412fde4e9c2e2bb619514ecea142e449";
 
 

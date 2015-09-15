@@ -21,26 +21,26 @@ import cn.ihealthbaby.weitaixin.ui.pay.wxpay.Constants;
 
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
-	
-	private static final String TAG = "MicroMsg.SDKSample.WXPayEntryActivity";
-	
-    private IWXAPI api;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.pay_result);
-        
-    	api = WXAPIFactory.createWXAPI(this, Constants.APP_ID);
 
-        api.handleIntent(getIntent(), this);
-    }
+	private static final String TAG = "MicroMsg.SDKSample.WXPayEntryActivity";
+
+	private IWXAPI api;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.pay_result);
+
+		api = WXAPIFactory.createWXAPI(this, Constants.APP_ID);
+
+		api.handleIntent(getIntent(), this);
+	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-        api.handleIntent(intent, this);
+		api.handleIntent(intent, this);
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 
 		if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Ã· æ");
-			builder.setMessage(String.format("Œ¢–≈÷ß∏∂Ω·π˚£∫%s", resp.errStr + ";code=" + String.valueOf(resp.errCode)));
+			builder.setTitle("ÊèêÁ§∫");
+			builder.setMessage(String.format("ÂæÆ‰ø°ÊîØ‰ªòÁªìÊûúÔºö%s", resp.errStr + ";code=" + String.valueOf(resp.errCode)));
 			builder.show();
 		}else {
 			Toast.makeText(this, "sssss", Toast.LENGTH_SHORT).show();

@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Random;
 
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.LoginUtil;
 
 
 public class PayActivity extends Activity {
@@ -51,7 +53,7 @@ public class PayActivity extends Activity {
 
         msgApi.registerApp(Constants.APP_ID);
 
-        //Éú³Éprepay_id£¬APPÖ§¸¶Éú³ÉÔ¤Ö§¸¶¶©µ¥
+        //ç”Ÿæˆprepay_idï¼ŒAPPæ”¯ä»˜ç”Ÿæˆé¢„æ”¯ä»˜è®¢å•
         Button payBtn = (Button) findViewById(R.id.rl_id);
         payBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +64,7 @@ public class PayActivity extends Activity {
         });
 
 
-        //Éú³ÉÇ©Ãû²ÎÊı£¬Éú³ÉAPPÎ¢ĞÅÖ§¸¶²ÎÊı
+        //ç”Ÿæˆç­¾åå‚æ•°ï¼Œç”ŸæˆAPPå¾®ä¿¡æ”¯ä»˜å‚æ•°
         Button appay_pre_btn = (Button) findViewById(R.id.rl_id);
         appay_pre_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +75,7 @@ public class PayActivity extends Activity {
 
 
 
-        //µ÷ÆğÎ¢ĞÅÖ§¸¶
+        //è°ƒèµ·å¾®ä¿¡æ”¯ä»˜
         Button appayBtn = (Button) findViewById(R.id.rl_id);
         appayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +92,7 @@ public class PayActivity extends Activity {
 
 
     /**
-     * Éú³ÉÇ©Ãû
+     * ç”Ÿæˆç­¾å
      */
     private String genPackageSign(List<NameValuePair> params) {
         StringBuilder sb = new StringBuilder();
@@ -153,7 +155,7 @@ public class PayActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            dialog = ProgressDialog.show(PayActivity.this, "ÌáÊ¾", "ÕıÔÚ»ñÈ¡Ô¤Ö§¸¶¶©µ¥...");
+            dialog = ProgressDialog.show(PayActivity.this, "æç¤º", "æ­£åœ¨è·å–é¢„æ”¯ä»˜è®¢å•...");
         }
 
         @Override
@@ -209,7 +211,7 @@ public class PayActivity extends Activity {
                     case XmlPullParser.START_TAG:
 
                         if ("xml".equals(nodeName) == false) {
-                            //ÊµÀı»¯student¶ÔÏó
+                            //å®ä¾‹åŒ–studentå¯¹è±¡
                             xml.put(nodeName, parser.nextText());
                         }
                         break;
@@ -274,7 +276,7 @@ public class PayActivity extends Activity {
             return xmlstring;
 
         } catch (Exception e) {
-            Log.e(TAG, "genProductArgs fail, ex = " + e.getMessage());
+            LogUtil.d(TAG, "genProductArgs fail, ex = " + e.getMessage());
             return null;
         }
 

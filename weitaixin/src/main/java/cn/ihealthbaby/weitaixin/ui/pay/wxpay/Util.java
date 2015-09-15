@@ -48,23 +48,23 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class Util {
-	
+
 	private static final String TAG = "SDK_Sample.Util";
-	
+
 	public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		bmp.compress(CompressFormat.PNG, 100, output);
 		if (needRecycle) {
 			bmp.recycle();
 		}
-		
+
 		byte[] result = output.toByteArray();
 		try {
 			output.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
@@ -92,22 +92,22 @@ public class Util {
 			return null;
 		}
 	}
-	
+
 	public static byte[] httpPost(String url, String entity) {
 		if (url == null || url.length() == 0) {
 			Log.e(TAG, "httpPost, url is null");
 			return null;
 		}
-		
+
 		HttpClient httpClient = getNewHttpClient();
-		
+
 		HttpPost httpPost = new HttpPost(url);
-		
+
 		try {
 			httpPost.setEntity(new StringEntity(entity));
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
-			
+
 			HttpResponse resp = httpClient.execute(httpPost);
 			if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 				Log.e(TAG, "httpGet fail, status code = " + resp.getStatusLine().getStatusCode());
@@ -121,32 +121,32 @@ public class Util {
 			return null;
 		}
 	}
-	
+
 	private static class SSLSocketFactoryEx extends SSLSocketFactory {
-	      
-	    SSLContext sslContext = SSLContext.getInstance("TLS");
-	      
-	    public SSLSocketFactoryEx(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
-	        super(truststore);      
-	      
-	        TrustManager tm = new X509TrustManager() {
-	      
-	            public X509Certificate[] getAcceptedIssuers() {
-	                return null;      
-	            }      
-	      
+
+		SSLContext sslContext = SSLContext.getInstance("TLS");
+
+		public SSLSocketFactoryEx(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
+			super(truststore);
+
+			TrustManager tm = new X509TrustManager() {
+
+				public X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+
 				@Override
 				public void checkClientTrusted(X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
 				}
 
 				@Override
 				public void checkServerTrusted(X509Certificate[] chain,	String authType) throws java.security.cert.CertificateException {
-				}  
-	        };      
-	      
-	        sslContext.init(null, new TrustManager[] { tm }, null);
-	    }      
-	      
+				}
+			};
+
+			sslContext.init(null, new TrustManager[] { tm }, null);
+		}
+
 		@Override
 		public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
 			return sslContext.getSocketFactory().createSocket(socket, host,	port, autoClose);
@@ -155,33 +155,33 @@ public class Util {
 		@Override
 		public Socket createSocket() throws IOException {
 			return sslContext.getSocketFactory().createSocket();
-		} 
-	}  
+		}
+	}
 
 	private static HttpClient getNewHttpClient() {
-	   try { 
-	       KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-	       trustStore.load(null, null); 
+		try {
+			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			trustStore.load(null, null);
 
-	       SSLSocketFactory sf = new SSLSocketFactoryEx(trustStore);
-	       sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			SSLSocketFactory sf = new SSLSocketFactoryEx(trustStore);
+			sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-	       HttpParams params = new BasicHttpParams();
-	       HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-	       HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+			HttpParams params = new BasicHttpParams();
+			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 
-	       SchemeRegistry registry = new SchemeRegistry();
-	       registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-	       registry.register(new Scheme("https", sf, 443));
+			SchemeRegistry registry = new SchemeRegistry();
+			registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+			registry.register(new Scheme("https", sf, 443));
 
-	       ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
+			ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
 
-	       return new DefaultHttpClient(ccm, params);
-	   } catch (Exception e) {
-	       return new DefaultHttpClient();
-	   } 
+			return new DefaultHttpClient(ccm, params);
+		} catch (Exception e) {
+			return new DefaultHttpClient();
+		}
 	}
-	
+
 	public static byte[] readFromFile(String fileName, int offset, int len) {
 		if (fileName == null) {
 			return null;
@@ -215,7 +215,7 @@ public class Util {
 		byte[] b = null;
 		try {
 			RandomAccessFile in = new RandomAccessFile(fileName, "r");
-			b = new byte[len]; // ???¡§?????????¨®??????¡Á¨¦
+			b = new byte[len]; // ???Â¨?????????Ã³??????Ã—Ã©
 			in.seek(offset);
 			in.readFully(b);
 			in.close();
@@ -226,7 +226,7 @@ public class Util {
 		}
 		return b;
 	}
-	
+
 	private static final int MAX_DECODE_PICTURE_SIZE = 1920 * 1440;
 	public static Bitmap extractThumbNail(final String path, final int height, final int width, final boolean crop) {
 		Assert.assertTrue(path != null && !path.equals("") && height > 0 && width > 0);
@@ -306,18 +306,18 @@ public class Util {
 
 		return null;
 	}
-	
+
 	public static String sha1(String str) {
 		if (str == null || str.length() == 0) {
 			return null;
 		}
-		
+
 		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-		
+
 		try {
 			MessageDigest mdTemp = MessageDigest.getInstance("SHA1");
 			mdTemp.update(str.getBytes());
-			
+
 			byte[] md = mdTemp.digest();
 			int j = md.length;
 			char buf[] = new char[j * 2];
@@ -332,7 +332,7 @@ public class Util {
 			return null;
 		}
 	}
-	
+
 	public static List<String> stringsToList(final String[] src) {
 		if (src == null || src.length == 0) {
 			return null;
