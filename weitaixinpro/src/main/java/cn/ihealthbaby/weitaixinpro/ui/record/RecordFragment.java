@@ -41,12 +41,18 @@ public class RecordFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         mTitleText.setText("检测记录");
         initView();
+        initData();
         return view;
+    }
+
+    private void initData() {
+
     }
 
     private void initView() {
 
     }
+
 
     @Override
     public void onDestroyView() {

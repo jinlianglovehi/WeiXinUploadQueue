@@ -86,6 +86,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void initView() {
+
         mTvHostName.setText(SPUtil.getHClientUser(getActivity()).getHospitalName());
         mAdapter = new MonitorAdapter(getActivity());
         mIvNoMonitor.setVisibility(View.VISIBLE);
@@ -140,6 +141,12 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                         } else {
                             mPullToRefresh.onRefreshComplete();
                         }
+                        if (status == 0) {
+                            mTvTitle.setText(getString(R.string.no_monitor) + data.getCount() + "条");
+                        } else {
+                            mTvTitle.setText(getString(R.string.already_monitor) + data.getCount() + "条");
+                        }
+
                     }
                 }), getRequestTag());
     }
@@ -157,7 +164,6 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
             case R.id.rl_already_monitor:
                 status = 1;
                 mAdapter.clearData();
-                mTvTitle.setText(getString(R.string.already_monitor));
                 initData(1);
                 mIvNoMonitor.setVisibility(View.INVISIBLE);
                 mIvAlreayMonitor.setVisibility(View.VISIBLE);
@@ -167,7 +173,6 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                 mIvNoMonitor.setVisibility(View.VISIBLE);
                 mIvAlreayMonitor.setVisibility(View.INVISIBLE);
                 mAdapter.clearData();
-                mTvTitle.setText(getString(R.string.no_monitor));
                 initData(1);
                 break;
         }
