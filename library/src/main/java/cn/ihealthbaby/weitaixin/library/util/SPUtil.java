@@ -172,7 +172,7 @@ public class SPUtil {
         AdviceSetting adviceSetting = new AdviceSetting();
         adviceSetting.setAlarmHeartrateLimit(sp.getString("AlarmHeartrateLimit", ""));
         adviceSetting.setAskMinTime(sp.getInt("AskMinTime", -1));
-        adviceSetting.setAutoBeginAdvice(sp.getInt("AutoAdviceTimeLong", -1));
+        adviceSetting.setAutoAdviceTimeLong(sp.getInt("AutoAdviceTimeLong", -1));
         adviceSetting.setAutoBeginAdvice(sp.getInt("AutoBeginAdvice", -1));
         adviceSetting.setAutoBeginAdviceMax(sp.getInt("AutoBeginAdviceMax", -1));
         adviceSetting.setFetalMoveTime(sp.getInt("FetalMoveTime", -1));
