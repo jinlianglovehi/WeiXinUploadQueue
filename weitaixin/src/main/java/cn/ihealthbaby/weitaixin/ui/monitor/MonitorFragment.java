@@ -123,6 +123,7 @@ public class MonitorFragment extends BaseFragment {
 	private int safemax;
 	private long lastAlert;
 	private boolean alert;
+	private int alertInterval;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -158,7 +159,7 @@ public class MonitorFragment extends BaseFragment {
 							tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
 						} else {
 							tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
-							if (alert && connected && fhr1 != 0) {
+							if (alert && connected) {
 								long currentTimeMillis = System.currentTimeMillis();
 								if (currentTimeMillis - lastAlert >= alertInterval)
 									alertSound.play(1, 1, 1, 0, 0, 1);
@@ -201,7 +202,6 @@ public class MonitorFragment extends BaseFragment {
 			}
 		}
 	};
-	private int alertInterval;
 
 	private String getFileName() {
 		return Constants.TEMP_FILE_NAME;
@@ -285,7 +285,6 @@ public class MonitorFragment extends BaseFragment {
 		titleText.setText("胎心监测");
 		function.setVisibility(View.GONE);
 		getAdviceSetting();
-
 		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
 		alertSound.load(getActivity().getApplicationContext(), R.raw.didi, 1);
 		autoStartTimer = new ExpendableCountDownTimer(autoStartTime, 1000) {
@@ -496,7 +495,7 @@ public class MonitorFragment extends BaseFragment {
 		if (serviceInfo != null) {
 			serialnum = serviceInfo.getSerialnum();
 		}
-		LogUtil.d(TAG,"serialNumber:"+serialnum);
+		LogUtil.d(TAG, "serialNumber:" + serialnum);
 		return serialnum == null ? "" : serialnum;
 //        return "IHB2LD1X7CUC";
 	}
