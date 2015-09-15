@@ -295,10 +295,11 @@ public class DataDao {
 					adviceItem.setUploadstate(uploadstate);
 					adviceItem.setSerialnum(serialnum);
 					adviceItem.setJianceid(jianceid);
-					return adviceItem;
-				} else {
-					return adviceItem;
+//					return adviceItem;
 				}
+//				else {
+//					return adviceItem;
+//				}
 			}
 			db.setTransactionSuccessful();
 		} finally {
