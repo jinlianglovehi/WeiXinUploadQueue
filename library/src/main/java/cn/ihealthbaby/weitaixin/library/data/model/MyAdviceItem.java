@@ -46,6 +46,7 @@ public class MyAdviceItem implements Serializable {
 //	private int isNativeRecord = -1;
 	private String feeling;
 	private String purpose;
+	private String url;
 	private long userid = -1;
 	private String rdata;
 	private String path;
@@ -93,6 +94,13 @@ public class MyAdviceItem implements Serializable {
 		this.status = status;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
 
 	public String getFeeling() {

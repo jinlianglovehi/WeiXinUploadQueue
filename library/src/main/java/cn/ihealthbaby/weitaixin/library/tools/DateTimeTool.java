@@ -100,8 +100,9 @@ public class DateTimeTool {
 
     public static String getTime2(int time){
         SimpleDateFormat formatter = new SimpleDateFormat("mm分ss秒");
-        String hms = formatter.format(time);
-        return hms;
+        Date dt = new Date(time);
+        String sDateTime = formatter.format(dt);
+        return sDateTime;
     }
 
     public static Date longDate2Str(long lSysTime1){
@@ -124,6 +125,19 @@ public class DateTimeTool {
         int days = getGestationalDay % 7;
         return weeks + "周+" + days + "天";
     }
+
+
+    public static String getGestationalWeeks(long deliveryTime, Date testTime) {
+        if (deliveryTime==-1) {
+            return "";
+        }
+        int getGestationalDay = (int) ((testTime.getTime() / 1000
+                - deliveryTime / 1000 + 280 * 24 * 3600) / 3600 / 24);
+        int weeks = getGestationalDay / 7;
+        int days = getGestationalDay % 7;
+        return weeks + "周+" + days;
+    }
+
 
     public static void main(String[] args) {
         String s = getGestationalWeeks(new Date(new Date().getTime() + 1000

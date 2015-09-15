@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,9 @@ import java.util.Locale;
 import java.util.Random;
 
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.ui.pay.PayEvent;
+import cn.ihealthbaby.weitaixin.ui.pay.PayMimeOrderActivity;
+import de.greenrobot.event.EventBus;
 
 public class PayAlipayUtil  {
 
@@ -78,6 +82,10 @@ public class PayAlipayUtil  {
 					// 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
 					if (TextUtils.equals(resultStatus, "9000")) {
 						ToastUtil.show(context, "支付成功");
+						//
+						EventBus.getDefault().post(new PayEvent());
+						Intent intent=new Intent(context,PayMimeOrderActivity.class);
+						context.startActivity(intent);
 					} else {
 						// 判断resultStatus 为非“9000”则代表可能支付失败
 						// “8000”代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）

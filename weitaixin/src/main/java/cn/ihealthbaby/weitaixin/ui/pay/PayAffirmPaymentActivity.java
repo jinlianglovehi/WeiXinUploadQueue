@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.alipay.PayAlipayUtil;
+import de.greenrobot.event.EventBus;
 
 public class PayAffirmPaymentActivity extends BaseActivity {
 
@@ -46,9 +48,22 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
         title_text.setText("确认支付");
 
+        EventBus.getDefault().register(this);
+
         orderId=getIntent().getLongExtra("OrderId", -1);
 
         tvTotalPrice.setText("￥"+LocalProductData.getLocal().get(LocalProductData.PriceCount)+"");
+    }
+
+
+    public void onEventMainThread(PayEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -56,6 +71,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
     public void onBack() {
         this.finish();
     }
+
 
     @OnClick(R.id.llPaymenyWeixin)
     public void PaymenyWeixin() {
@@ -96,6 +112,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
             ToastUtil.show(getApplicationContext(),"订单id生成有误");
             return;
         }
+
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "支付宝支付请求中...");
         dialog.show();

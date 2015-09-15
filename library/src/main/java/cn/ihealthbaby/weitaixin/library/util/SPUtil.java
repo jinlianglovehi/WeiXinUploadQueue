@@ -69,6 +69,18 @@ public class SPUtil {
         return localSetting;
     }
 
+    public static long getUserID(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
+        long userId=sp.getLong("Id", -1);
+        return userId;
+    }
+
+    public static long getDeliveryTime(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
+        long eliveryTime=sp.getLong("DeliveryTime", -1);
+        return eliveryTime;
+    }
+
 
     public static void saveUser(Context context, User user) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);

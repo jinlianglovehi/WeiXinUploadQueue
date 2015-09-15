@@ -32,10 +32,11 @@
     <TextView
         android:id="@+id/function"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="14dp"
+        android:gravity="center"
         android:textColor="@drawable/text_color_hei_selector"
         android:textSize="@dimen/font_normal"
         android:visibility="invisible"/>

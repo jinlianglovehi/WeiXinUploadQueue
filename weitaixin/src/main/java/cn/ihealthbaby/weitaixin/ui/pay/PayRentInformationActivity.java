@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
+import de.greenrobot.event.EventBus;
 
 public class PayRentInformationActivity extends BaseActivity {
 
@@ -63,9 +65,21 @@ public class PayRentInformationActivity extends BaseActivity {
 
         title_text.setText("租凭信息");
 
+        EventBus.getDefault().register(this);
+
         pullData();
     }
 
+
+    public void onEventMainThread(PayEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     MyDoctorChooseAdapter adapter;
     private void pullData() {

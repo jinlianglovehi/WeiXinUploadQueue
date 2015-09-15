@@ -35,6 +35,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import de.greenrobot.event.EventBus;
 
 public class PayConfirmOrderActivity extends BaseActivity {
 
@@ -85,6 +86,9 @@ public class PayConfirmOrderActivity extends BaseActivity {
 
         title_text.setText("确认订单");
 
+        EventBus.getDefault().register(this);
+
+
         //0 未启用,1 开通院内,2 开通院外,3 开通院外线上但不支持邮寄, 4 开通院外线上且支持邮寄
         hospitalStatus = (int) LocalProductData.getLocal().get(LocalProductData.HospitalStatus);
         hospitalAddress = (String) LocalProductData.getLocal().get(LocalProductData.HospitalAddress);
@@ -97,6 +101,18 @@ public class PayConfirmOrderActivity extends BaseActivity {
         HospitalAction();
         pullData();
     }
+
+
+    public void onEventMainThread(PayEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
 
     private HashMap<Integer,Integer>  countGoods=new HashMap<Integer,Integer>();
     private void pullData() {

@@ -29,6 +29,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import de.greenrobot.event.EventBus;
 
 public class PayOrderInformationActivity extends BaseActivity {
 
@@ -55,8 +56,23 @@ public class PayOrderInformationActivity extends BaseActivity {
 
         title_text.setText("订单信息");
 
+        EventBus.getDefault().register(this);
+
         pullData();
     }
+
+
+    public void onEventMainThread(PayEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+
 
     private ArrayList<Product> cashPledgeProduct = new ArrayList<Product>();
     private ArrayList<Product> rentProduct = new ArrayList<Product>();

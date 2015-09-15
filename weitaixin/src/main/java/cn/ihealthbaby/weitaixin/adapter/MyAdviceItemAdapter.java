@@ -28,8 +28,10 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -169,21 +171,25 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		LogUtil.d("adapter", "size: %s, position: %s", datas.size(), position);
 		LogUtil.d("adapter", "size: %s, position: %s", datas.size(), position);
 		final MyAdviceItem adviceItem = this.datas.get(position);
-		String dateStr = adviceItem.getGestationalWeeks();
-		LogUtil.d("adapter", "dateStr: %s", dateStr);
-//	    String[] split = dateStr.split("\\+");
-		if (dateStr.length() >= 4) {
-			String substring1 = dateStr.substring(0, 2);
-			String substring2 = dateStr.substring(2, 4);
-			String[] split = new String[]{substring1, substring2} ;
 
-			viewHolder.tvCircleTime1.setText(split[0]);
-			viewHolder.tvCircleTime2.setText(split[1]);
-			if (split[1] != null && split[1].length() == 1) {
-				viewHolder.tvCircleTime2.setText(0 + "" + split[1]);
+
+
+		String dateStr =DateTimeTool.getGestationalWeeks(SPUtil.getDeliveryTime(context), adviceItem.getTestTime());
+		LogUtil.d("adapter", "dateStr: %s", dateStr);
+	    String[] split = dateStr.split("\\+");
+		if (split.length ==1 ) {
+			viewHolder.tvCircleTime2.setText(split[0]+"");
+		}
+		if (split.length ==2 ) {
+			viewHolder.tvCircleTime1.setText(split[0]+"");
+			viewHolder.tvCircleTime2.setText(split[1]+"");
+			if (split[1].length()==1) {
+				viewHolder.tvCircleTime2.setText("0"+split[1]);
 			}
 		}
-		viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()));//
+
+
+		viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()*1000));//
 		viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 yy:mm"));
 		//1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
 		if(adviceItem.getStatus()<0||adviceItem.getStatus()>4){

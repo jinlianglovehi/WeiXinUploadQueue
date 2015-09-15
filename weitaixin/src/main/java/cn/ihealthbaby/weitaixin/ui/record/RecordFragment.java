@@ -337,7 +337,7 @@ public class RecordFragment extends BaseFragment {
         Dialog dialog = customDialog.createDialog1(context, "从数据库中加载...");
         dialog.show();
         //从缓存数据库中展示数据列表
-        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView();
+        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView(SPUtil.getUserID(getActivity().getApplicationContext()));
         if (adviceItems.size() > 0) {
             countNumber = adviceItems.size();
             tvUsedCount.setText(countNumber + "");
@@ -407,7 +407,7 @@ public class RecordFragment extends BaseFragment {
                         mAdviceItems = adapter.datas;
                     } else {
                         //从缓存数据库中展示数据列表
-                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView();
+                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView(SPUtil.getUserID(getActivity().getApplicationContext()));
                         adapter.setDatas(switchList(dataList));
                         adapter.notifyDataSetChanged();
                         mAdviceItems = adapter.datas;
@@ -446,6 +446,7 @@ public class RecordFragment extends BaseFragment {
             myAdviceItem.setGestationalWeeks(adviceItem.getGestationalWeeks());
             myAdviceItem.setTestTime(adviceItem.getTestTime());
             myAdviceItem.setTestTimeLong(adviceItem.getTestTimeLong());
+//            myAdviceItem.setUrl(adviceItem.ge);
             myAdviceItem.setStatus(adviceItem.getStatus());
             myAdviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_CLOUD_RECORD);
             myAdviceItem.setJianceid(adviceItem.getClientId());
@@ -460,7 +461,7 @@ public class RecordFragment extends BaseFragment {
 
 
     private void mergeAdviceItem(ArrayList<MyAdviceItem> showMyAdviceItems) {
-        ArrayList<MyAdviceItem> adviceNativeItemsDB = dataDao.getAllRecordNativeOnly();
+        ArrayList<MyAdviceItem> adviceNativeItemsDB = dataDao.getAllRecordNativeOnly(SPUtil.getUserID(getActivity().getApplicationContext()));
         LogUtil.d("adviceNativeItemsDB", adviceNativeItemsDB.size()+" =adviceNativeItemsDB= "+adviceNativeItemsDB);
         showMyAdviceItems.addAll(adviceNativeItemsDB);
     }

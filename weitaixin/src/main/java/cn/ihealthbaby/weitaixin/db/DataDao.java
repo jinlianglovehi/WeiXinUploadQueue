@@ -7,9 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 public class DataDao {
 	private static DataDBHelper dbHelper;
@@ -37,38 +39,39 @@ public class DataDao {
 	/**
 	 * 单纯添加，本地记录一定要设置uploadstate字段，不然查询不到记录
 	 */
-	public synchronized void add(final ArrayList<MyAdviceItem> adviceItems, final boolean isRecordNative) {
+	public synchronized void add(final ArrayList<MyAdviceItem> adviceItems, boolean isRecordNative) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		if (db.isOpen()) {
 			for (int i = 0; i < adviceItems.size(); i++) {
 				MyAdviceItem adviceItem = adviceItems.get(i);
+				isRecordNative=true;
 				if (isRecordNative) {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
-										"feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+										"feeling,purpose,url,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 								new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
 										adviceItem.getTestTime() == null ? -1 : adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
-										adviceItem.getFeeling(), adviceItem.getPurpose(),
-										adviceItem.getUserid(), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
+										adviceItem.getFeeling(), adviceItem.getPurpose(),adviceItem.getUrl(),
+										SPUtil.getUserID(WeiTaiXinApplication.getInstance()), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
 										adviceItem.getSerialnum(), adviceItem.getJianceid()
 								});
 						db.setTransactionSuccessful();
 					} finally {
 						db.endTransaction();
 					}
-				} else {
-					db.beginTransaction();
-					try {
-						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
-								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
-												  adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(),
-										                      adviceItem.getTestTimeLong(), adviceItem.getStatus(), adviceItem.getUploadstate()});
-						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
-						db.setTransactionSuccessful();
-					} finally {
-						db.endTransaction();
-					}
+//				} else {
+//					db.beginTransaction();
+//					try {
+//						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate) values (?,?,?,?,?,?)",
+//								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
+//												  adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(),
+//										                      adviceItem.getTestTimeLong(), adviceItem.getStatus(), adviceItem.getUploadstate()});
+//						LogUtil.d("DateTimegetTime", "DateTimegetTime==> " + adviceItem.getStatus());
+//						db.setTransactionSuccessful();
+//					} finally {
+//						db.endTransaction();
+//					}
 				}
 			}
 		}
@@ -158,12 +161,12 @@ public class DataDao {
 	/**
 	 * 根据 uploadstate 只获取本地记录 的所有字段，
 	 */
-	public ArrayList<MyAdviceItem> getAllRecordNativeOnly() {
+	public ArrayList<MyAdviceItem> getAllRecordNativeOnly(long user_id) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
 		if (db.isOpen()) {
 			Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status," +
-					"feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName, null);
+					"feeling,purpose,url,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName +" where userid=?", new String[]{user_id+""});
 			while (cursor.moveToNext()) {
 				MyAdviceItem adviceItem = new MyAdviceItem();
 				long mid = cursor.getLong(cursor.getColumnIndex("mid"));
@@ -173,6 +176,7 @@ public class DataDao {
 				int status = cursor.getInt(cursor.getColumnIndex("status"));
 				String feeling = cursor.getString(cursor.getColumnIndex("feeling"));
 				String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
+				String url = cursor.getString(cursor.getColumnIndex("url"));
 				int userid = cursor.getInt(cursor.getColumnIndex("userid"));
 				String rdata = cursor.getString(cursor.getColumnIndex("rdata"));
 				String path = cursor.getString(cursor.getColumnIndex("path"));
@@ -186,6 +190,7 @@ public class DataDao {
 				adviceItem.setStatus(status);
 				adviceItem.setFeeling(feeling);
 				adviceItem.setPurpose(purpose);
+				adviceItem.setUrl(url);
 				adviceItem.setUserid(userid);
 				adviceItem.setRdata(rdata);
 				adviceItem.setPath(path);
@@ -360,11 +365,11 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
-								           "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+								           "feeling,purpose,url,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
 												  adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
-										                      adviceItem.getFeeling(), adviceItem.getPurpose(),
-										                      adviceItem.getUserid(), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
+										                      adviceItem.getFeeling(), adviceItem.getPurpose(),adviceItem.getUrl(),
+										                      SPUtil.getUserID(WeiTaiXinApplication.getInstance()), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
 										                      adviceItem.getSerialnum(), adviceItem.getJianceid()
 								          });
 						db.setTransactionSuccessful();
@@ -406,14 +411,14 @@ public class DataDao {
 	/**
 	 * 获取本地记录和云端记录的所有字段
 	 */
-	public ArrayList<MyAdviceItem> getAllRecordNativeAndCloud() {
+	public ArrayList<MyAdviceItem> getAllRecordNativeAndCloud(long user_id) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsCloud = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
 		if (db.isOpen()) {
 			Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status," +
-					                            "feeling,purpose,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName, null);
+					                            "feeling,purpose,url,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName +" where userid=?", new String[]{user_id+""});
 			while (cursor.moveToNext()) {
 				MyAdviceItem adviceItem = new MyAdviceItem();
 				long mid = cursor.getLong(cursor.getColumnIndex("mid"));
@@ -423,6 +428,7 @@ public class DataDao {
 				int status = cursor.getInt(cursor.getColumnIndex("status"));
 				String feeling = cursor.getString(cursor.getColumnIndex("feeling"));
 				String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
+				String url = cursor.getString(cursor.getColumnIndex("url"));
 				int userid = cursor.getInt(cursor.getColumnIndex("userid"));
 				String rdata = cursor.getString(cursor.getColumnIndex("rdata"));
 				String path = cursor.getString(cursor.getColumnIndex("path"));
@@ -436,6 +442,7 @@ public class DataDao {
 				adviceItem.setStatus(status);
 				adviceItem.setFeeling(feeling);
 				adviceItem.setPurpose(purpose);
+				adviceItem.setUrl(url);
 				adviceItem.setUserid(userid);
 				adviceItem.setRdata(rdata);
 				adviceItem.setPath(path);
@@ -472,13 +479,13 @@ public class DataDao {
 	/**
 	 * 获取记录界面的显示数据的部分字段(包含本地和云端记录)
 	 */
-	public ArrayList<MyAdviceItem> getAllRecordNativeAndCloudOnView() {
+	public ArrayList<MyAdviceItem> getAllRecordNativeAndCloudOnView(long user_id) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsCloud = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
 		if (db.isOpen()) {
-			Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate from " + DataDBHelper.tableName, null);
+			Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status,uploadstate from " + DataDBHelper.tableName +" where userid=?", new String[]{user_id+""});
 			while (cursor.moveToNext()) {
 				MyAdviceItem adviceItem = new MyAdviceItem();
 				String mid = cursor.getString(cursor.getColumnIndex("mid"));
