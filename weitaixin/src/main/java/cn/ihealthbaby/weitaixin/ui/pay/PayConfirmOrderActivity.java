@@ -98,7 +98,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
         pullData();
     }
 
-
+    private HashMap<Integer,Integer>  countGoods=new HashMap<Integer,Integer>();
     private void pullData() {
         tvPrice.setText("总计￥"+priceCount+"");
         myGoodsListAdapter=new MyGoodsListAdapter(this,null);
@@ -110,10 +110,12 @@ public class PayConfirmOrderActivity extends BaseActivity {
         ArrayList<Product> products03= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name03);
         ArrayList<Product> products04= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name04);
 
-        productFor(products01);
-        productFor(products02);
-        productFor(products03);
-        productFor(products04);
+        countGoods= (HashMap<Integer, Integer>) LocalProductData.getLocal().get(LocalProductData.CountGoods);
+
+        productFor(products01,LocalProductData.Name01);
+        productFor(products02,LocalProductData.Name02);
+        productFor(products03,LocalProductData.Name03);
+        productFor(products04,LocalProductData.Name04);
 
         HashMap<String, String> expressDataMap=new HashMap<String, String>();
         expressDataMap.put("快递费用", "0");
@@ -127,20 +129,32 @@ public class PayConfirmOrderActivity extends BaseActivity {
         LocalProductData.getLocal().put(LocalProductData.PriceCount, priceCount);
     }
 
-    public void productFor(ArrayList<Product> productDatas){
+    public void productFor(ArrayList<Product> productDatas,String flag){
         if (productDatas==null) {
             return;
         }
+
+
         for(int i=0;i<productDatas.size();i++){
             Product product = productDatas.get(i);
-            priceCount+=product.getPrice();
+//            priceCount+=product.getPrice();
 
             HashMap<String, String> dataMap=new HashMap<String, String>();
-            dataMap.put(product.getName(), product.getPrice()+"");
+            if (flag == LocalProductData.Name03) {
+                dataMap.put(product.getName() + "*" + countGoods.get(i), product.getPrice() * countGoods.get(i) + "");
+                priceCount += product.getPrice() * countGoods.get(i);
+            } else {
+                dataMap.put(product.getName(), product.getPrice() + "");
+                priceCount += product.getPrice();
+            }
+
             datas.add(dataMap);
 
             OrderItemForm itemForm=new OrderItemForm();
             itemForm.setAmount(1);
+            if (flag == LocalProductData.Name03) {
+                itemForm.setAmount(countGoods.get(i));
+            }
             itemForm.setProductId(product.getId());
             orderItemForms.add(itemForm);
             serviceOrderForm.setItemForms(orderItemForms);
@@ -201,7 +215,9 @@ public class PayConfirmOrderActivity extends BaseActivity {
                     Order data = result.getData();
                     LogUtil.d("dataInteger", "dataInteger  =  " + data);
                     if (data !=null) {
+                        long orderId=data.getId();
                         Intent intent = new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
+                        intent.putExtra("OrderId",orderId);
                         startActivity(intent);
                     } else {
                         ToastUtil.show(getApplicationContext(), "尚有未结束的服务");

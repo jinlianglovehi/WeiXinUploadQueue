@@ -35,7 +35,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
     @Bind(R.id.llPaymenyAlipay) LinearLayout llPaymenyAlipay;
     @Bind(R.id.llPaymenyUnionPay) LinearLayout llPaymenyUnionPay;
 
-
+    public long orderId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,8 @@ public class PayAffirmPaymentActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("确认支付");
+
+        orderId=getIntent().getLongExtra("OrderId", -1);
 
         tvTotalPrice.setText("￥"+LocalProductData.getLocal().get(LocalProductData.PriceCount)+"");
     }
@@ -57,11 +59,18 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     @OnClick(R.id.llPaymenyWeixin)
     public void PaymenyWeixin() {
+        if (orderId == -1) {
+            ToastUtil.show(getApplicationContext(),"订单id生成有误");
+            return;
+        }
+
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "微支付请求中...");
         dialog.show();
 
         WXPayForm wxPayForm=new WXPayForm();
+        wxPayForm.setOrderId(orderId);
+//        wxPayForm.setSpbillCreateIp();
         ApiManager.getInstance().payApi.getWXPrePay(wxPayForm, new HttpClientAdapter.Callback<WXPrePay>() {
             @Override
             public void call(Result<WXPrePay> t) {
@@ -83,10 +92,14 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     @OnClick(R.id.llPaymenyAlipay)
     public void PaymenyAlipay() {
+        if (orderId == -1) {
+            ToastUtil.show(getApplicationContext(),"订单id生成有误");
+            return;
+        }
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "支付宝支付请求中...");
         dialog.show();
-        ApiManager.getInstance().payApi.getAlipayOrderInfo(0, new HttpClientAdapter.Callback<String>() {
+        ApiManager.getInstance().payApi.getAlipayOrderInfo(orderId, new HttpClientAdapter.Callback<String>() {
             @Override
             public void call(Result<String> t) {
                 if (t.isSuccess()) {

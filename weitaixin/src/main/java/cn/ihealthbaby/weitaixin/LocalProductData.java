@@ -32,6 +32,7 @@ public class LocalProductData {
     public static String Name03="Name03";
     public static String Name04="Name04";
     public static String Name05="Name05";
+    public static String CountGoods="CountGoods";
     public static String PriceCount="PriceCount";
     public static String HospitalStatus="HospitalStatus";
     public static String HospitalAddress="HospitalAddress";

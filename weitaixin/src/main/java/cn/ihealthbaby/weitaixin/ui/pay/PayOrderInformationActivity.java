@@ -161,7 +161,6 @@ public class PayOrderInformationActivity extends BaseActivity {
             if (datas == null) {
                 this.datas = new ArrayList<Product>();
             } else {
-                this.datas.clear();
                 this.datas = datas;
             }
         }
@@ -234,7 +233,6 @@ public class PayOrderInformationActivity extends BaseActivity {
             if (datas == null) {
                 this.datas = new ArrayList<Product>();
             } else {
-                this.datas.clear();
                 this.datas = datas;
             }
         }
@@ -302,19 +300,20 @@ public class PayOrderInformationActivity extends BaseActivity {
             mInflater = LayoutInflater.from(context);
             this.context = context;
             setDatas(datas);
+            LocalProductData.getLocal().put(LocalProductData.CountGoods, countGoods);
         }
 
         public void setDatas(ArrayList<Product> datas) {
             if (datas == null) {
                 this.datas = new ArrayList<Product>();
             } else {
-                this.datas.clear();
                 this.datas = datas;
             }
             initSet();
         }
 
         public void initSet(){
+            countGoods.clear();
             for (int i = 0; i < this.datas.size(); i++) {
                 countGoods.put(i,1);
             }
