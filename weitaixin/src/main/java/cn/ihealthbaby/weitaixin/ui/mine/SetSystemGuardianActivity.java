@@ -67,12 +67,12 @@ public class SetSystemGuardianActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
-                if (!localSetting.isAutostart()) {
+                if (!localSetting.isAutoStart()) {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
                 } else {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
                 }
-                localSetting.setAutostart(!localSetting.isAutostart());
+                localSetting.setAutoStart(!localSetting.isAutoStart());
                 SPUtil.setLocalSetting(getApplicationContext(), localSetting);
 
             }
@@ -99,7 +99,7 @@ public class SetSystemGuardianActivity extends BaseActivity {
     private void initView() {
 
         LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
-        if (localSetting.isAutostart()) {
+        if (localSetting.isAutoStart()) {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
         } else {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);

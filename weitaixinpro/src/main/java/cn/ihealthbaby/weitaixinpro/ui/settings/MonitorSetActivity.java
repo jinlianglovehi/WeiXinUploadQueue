@@ -69,12 +69,12 @@ public class MonitorSetActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
-                if (!localSetting.isAutostart()) {
+                if (!localSetting.isAutoStart()) {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
                 } else {
                     mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
                 }
-                localSetting.setAutostart(!localSetting.isAutostart());
+                localSetting.setAutoStart(!localSetting.isAutoStart());
                 SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
 
             }
@@ -102,7 +102,7 @@ public class MonitorSetActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.TAI_XIN_YI, Activity.MODE_PRIVATE);
         selectPosition = sharedPreferences.getInt("selectPosition", 0);
         LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
-        if (localSetting.isAutostart()) {
+        if (localSetting.isAutoStart()) {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
         } else {
             mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);

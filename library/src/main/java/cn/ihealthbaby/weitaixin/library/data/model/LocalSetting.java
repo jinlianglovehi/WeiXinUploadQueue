@@ -6,43 +6,41 @@ package cn.ihealthbaby.weitaixin.library.data.model;
  */
 public class LocalSetting {
     //自动开始
-    private boolean autostart;
+    private boolean autoStart;
     //报警设置
     private boolean alert;
-    //监护时间
-    private int monitorTime;
+    //间隔时间，间隔时间之内不重复报警
+    private int alertInterval;
     //自动上传
-    private boolean auto_uploading;
+    private boolean autoUploading;
 
     //默认监护 间隔时间
     public static int DEFAULT_MONITOR_TIME = 5;
 
-    //默认选中 position
-    public static int DEFAULT_SELECT_POSITION = 0;
 
-    public boolean isAuto_uploading() {
-        return auto_uploading;
+    public boolean isAutoUploading() {
+        return autoUploading;
     }
 
-    public void setAuto_uploading(boolean auto_uploading) {
-        this.auto_uploading = auto_uploading;
+    public void setAutoUploading(boolean autoUploading) {
+        this.autoUploading = autoUploading;
     }
 
-    public int getMonitorTime() {
-        return monitorTime;
+    public int getAlertInterval() {
+        return alertInterval;
     }
 
-    public void setMonitorTime(int monitorTime) {
-        this.monitorTime = monitorTime;
+    public void setAlertInterval(int alertInterval) {
+        this.alertInterval = alertInterval;
     }
 
 
-    public boolean isAutostart() {
-        return autostart;
+    public boolean isAutoStart() {
+        return autoStart;
     }
 
-    public void setAutostart(boolean autostart) {
-        this.autostart = autostart;
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
     }
 
     public boolean isAlert() {

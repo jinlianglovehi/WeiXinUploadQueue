@@ -52,32 +52,32 @@ public class SPUtil {
     public static void setLocalSetting(Context context, LocalSetting localSetting) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("autostart", localSetting.isAutostart());
+        editor.putBoolean("autostart", localSetting.isAutoStart());
         editor.putBoolean("alert", localSetting.isAlert());
-        editor.putInt("monitorTime", localSetting.getMonitorTime());
-        editor.putBoolean("auto_uploading", localSetting.isAuto_uploading());
+        editor.putInt("monitorTime", localSetting.getAlertInterval());
+        editor.putBoolean("auto_uploading", localSetting.isAutoUploading());
         editor.commit();
     }
 
     public static LocalSetting getLocalSetting(Context context) {
         LocalSetting localSetting = new LocalSetting();
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
-        localSetting.setAutostart(sp.getBoolean("autostart", true));
+        localSetting.setAutoStart(sp.getBoolean("autostart", true));
         localSetting.setAlert(sp.getBoolean("alert", true));
-        localSetting.setMonitorTime(sp.getInt("monitorTime", LocalSetting.DEFAULT_MONITOR_TIME));
-        localSetting.setAuto_uploading(sp.getBoolean("auto_uploading", true));
+        localSetting.setAlertInterval(sp.getInt("monitorTime", LocalSetting.DEFAULT_MONITOR_TIME));
+        localSetting.setAutoUploading(sp.getBoolean("auto_uploading", true));
         return localSetting;
     }
 
     public static long getUserID(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
-        long userId=sp.getLong("Id", -1);
+        long userId = sp.getLong("Id", -1);
         return userId;
     }
 
     public static long getDeliveryTime(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
-        long eliveryTime=sp.getLong("DeliveryTime", -1);
+        long eliveryTime = sp.getLong("DeliveryTime", -1);
         return eliveryTime;
     }
 
@@ -232,15 +232,36 @@ public class SPUtil {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong("departmentId", user.getDepartmentId());
+        editor.putLong("id", user.getId());
+        editor.putLong("indexNumber", user.getIndexNumber());
+        editor.putLong("hospitalId", user.getHospitalId());
         editor.putString("hospitalName", user.getHospitalName());
+        editor.putString("serialnum", user.getSerialnum());
+        editor.putString("deviceId", user.getDeviceId());
+        editor.putString("departmentName", user.getDepartmentName());
+        editor.putInt("status", user.getStatus());
+        editor.putInt("useType", user.getUseType());
+        editor.putLong("updateTime", user.getUpdateTime().getTime());
+        editor.putLong("createTime", user.getCreateTime().getTime());
+        editor.putString("loginToken", user.getLoginToken());
         editor.commit();
     }
 
     public static HClientUser getHClientUser(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
         HClientUser user = new HClientUser();
-        user.setDepartmentId(sp.getLong("departmentId", -1));
         user.setHospitalName(sp.getString("hospitalName", ""));
+        user.setId(sp.getLong("id", 0L));
+        user.setIndexNumber(sp.getLong("indexNumber", 0L));
+        user.setHospitalId(sp.getLong("hospitalId", 0L));
+        user.setSerialnum(sp.getString("serialnum", ""));
+        user.setDeviceId(sp.getString("deviceId", ""));
+        user.setDepartmentName(sp.getString("departmentName", ""));
+        user.setStatus(sp.getInt("status", 0));
+        user.setUseType(sp.getInt("useType", 0));
+        user.setUpdateTime(new Date(sp.getLong("updateTime", 0)));
+        user.setCreateTime(new Date(sp.getLong("createTime", 0)));
+        user.setLoginToken(sp.getString("loginToken", ""));
         return user;
     }
 
