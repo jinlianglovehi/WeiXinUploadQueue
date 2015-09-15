@@ -53,12 +53,12 @@ public class SetSystemUploadActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
-                if (!localSetting.isAuto_uploading()) {
+                if (!localSetting.isAutoUploading()) {
                     mSlideSwitchViewUpload.setImageResource(R.drawable.switch_on);
                 } else {
                     mSlideSwitchViewUpload.setImageResource(R.drawable.switch_off);
                 }
-                localSetting.setAuto_uploading(!localSetting.isAuto_uploading());
+                localSetting.setAutoUploading(!localSetting.isAutoUploading());
                 SPUtil.setLocalSetting(getApplicationContext(), localSetting);
             }
         });
@@ -73,7 +73,7 @@ public class SetSystemUploadActivity extends BaseActivity {
 
     private void initView() {
         LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
-        if (localSetting.isAuto_uploading()) {
+        if (localSetting.isAutoUploading()) {
             mSlideSwitchViewUpload.setImageResource(R.drawable.switch_on);
         } else {
             mSlideSwitchViewUpload.setImageResource(R.drawable.switch_off);

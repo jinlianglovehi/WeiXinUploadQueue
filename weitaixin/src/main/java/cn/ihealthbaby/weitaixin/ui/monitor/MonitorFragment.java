@@ -409,13 +409,13 @@ public class MonitorFragment extends BaseFragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (localSetting.isAutostart()) {
+		if (localSetting.isAutoStart()) {
 			autoStartTime = adviceSetting.getAutoBeginAdvice() * 1000;
 		} else {
 			autoStartTime = adviceSetting.getAutoBeginAdviceMax() * 1000;
 		}
 		alert = localSetting.isAlert();
-		alertInterval = localSetting.getMonitorTime();
+		alertInterval = localSetting.getAlertInterval();
 		LogUtil.d(TAG, "safemin:%s,safemax:%s,autoStartTime:%s", safemin, safemax, autoStartTime);
 	}
 
