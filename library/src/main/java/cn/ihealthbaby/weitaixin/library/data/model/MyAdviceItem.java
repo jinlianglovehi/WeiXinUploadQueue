@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by Think on 2015/9/10.
+ * Created by chenweihua on 2015/9/10.
  */
 public class MyAdviceItem implements Serializable {
 
@@ -46,13 +46,15 @@ public class MyAdviceItem implements Serializable {
 //	private int isNativeRecord = -1;
 	private String feeling;
 	private String purpose;
-	private String url;
 	private long userid = -1;
 	private String rdata;
-	private String path;
+	private String path; //
+	private String LocalPath; //
 	private int uploadstate = -1; // 1本地   2云端   3正在上传
 	private String serialnum;
 	private String jianceid;
+
+
 
 	public long getId() {
 		return id;
@@ -94,14 +96,14 @@ public class MyAdviceItem implements Serializable {
 		this.status = status;
 	}
 
-	public String getUrl() {
-		return url;
+
+	public String getLocalPath() {
+		return LocalPath;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setLocalPath(String localPath) {
+		LocalPath = localPath;
 	}
-
 
 	public String getFeeling() {
 		return feeling;
@@ -167,22 +169,28 @@ public class MyAdviceItem implements Serializable {
 		this.jianceid = jianceid;
 	}
 
+
+
 	@Override
 	public String toString() {
 		return "MyAdviceItem{" +
-				       "id=" + id +
-				       ", gestationalWeeks='" + gestationalWeeks + '\'' +
-				       ", testTime=" + testTime +
-				       ", testTimeLong=" + testTimeLong +
-				       ", status=" + status +
-				       ", feeling='" + feeling + '\'' +
-				       ", purpose='" + purpose + '\'' +
-				       ", userid=" + userid +
-				       ", rdata='" + rdata + '\'' +
-				       ", path='" + path + '\'' +
-				       ", uploadstate=" + uploadstate +
-				       ", serialnum='" + serialnum + '\'' +
-				       ", jianceid='" + jianceid + '\'' +
-				       '}';
+				"id=" + id +
+				", gestationalWeeks='" + gestationalWeeks + '\'' +
+				", testTime=" + testTime +
+				", testTimeLong=" + testTimeLong +
+				", status=" + status +
+				", feeling='" + feeling + '\'' +
+				", purpose='" + purpose + '\'' +
+				", userid=" + userid +
+				", rdata='" + rdata + '\'' +
+				", path='" + path + '\'' +
+				", LocalPath='" + LocalPath + '\'' +
+				", uploadstate=" + uploadstate +
+				", serialnum='" + serialnum + '\'' +
+				", jianceid='" + jianceid + '\'' +
+				'}';
 	}
+
+
+
 }

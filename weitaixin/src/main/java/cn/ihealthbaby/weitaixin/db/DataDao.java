@@ -49,10 +49,10 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
-										"feeling,purpose,url,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+										"feeling,purpose,localpath,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 								new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
 										adviceItem.getTestTime() == null ? -1 : adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
-										adviceItem.getFeeling(), adviceItem.getPurpose(),adviceItem.getUrl(),
+										adviceItem.getFeeling(), adviceItem.getPurpose(),adviceItem.getLocalPath(),
 										SPUtil.getUserID(WeiTaiXinApplication.getInstance()), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
 										adviceItem.getSerialnum(), adviceItem.getJianceid()
 								});
@@ -126,6 +126,9 @@ public class DataDao {
 					if (myAdviceItem.getRdata() != null) {
 						values.put("rdata", myAdviceItem.getRdata());
 					}
+					if (myAdviceItem.getLocalPath() != null) {
+						values.put("localpath", myAdviceItem.getLocalPath());
+					}
 					if (myAdviceItem.getPath() != null) {
 						values.put("path", myAdviceItem.getPath());
 					}
@@ -166,7 +169,7 @@ public class DataDao {
 		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
 		if (db.isOpen()) {
 			Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status," +
-					"feeling,purpose,url,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName +" where userid=?", new String[]{user_id+""});
+					"feeling,purpose,localpath,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName +" where userid=?", new String[]{user_id+""});
 			while (cursor.moveToNext()) {
 				MyAdviceItem adviceItem = new MyAdviceItem();
 				long mid = cursor.getLong(cursor.getColumnIndex("mid"));
@@ -176,7 +179,7 @@ public class DataDao {
 				int status = cursor.getInt(cursor.getColumnIndex("status"));
 				String feeling = cursor.getString(cursor.getColumnIndex("feeling"));
 				String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
-				String url = cursor.getString(cursor.getColumnIndex("url"));
+				String localpath = cursor.getString(cursor.getColumnIndex("localpath"));
 				int userid = cursor.getInt(cursor.getColumnIndex("userid"));
 				String rdata = cursor.getString(cursor.getColumnIndex("rdata"));
 				String path = cursor.getString(cursor.getColumnIndex("path"));
@@ -190,7 +193,7 @@ public class DataDao {
 				adviceItem.setStatus(status);
 				adviceItem.setFeeling(feeling);
 				adviceItem.setPurpose(purpose);
-				adviceItem.setUrl(url);
+				adviceItem.setLocalPath(localpath);
 				adviceItem.setUserid(userid);
 				adviceItem.setRdata(rdata);
 				adviceItem.setPath(path);
@@ -273,6 +276,7 @@ public class DataDao {
 					String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
 					int userid = cursor.getInt(cursor.getColumnIndex("userid"));
 					String rdata = cursor.getString(cursor.getColumnIndex("rdata"));
+					String localpath = cursor.getString(cursor.getColumnIndex("localpath"));
 					String path = cursor.getString(cursor.getColumnIndex("path"));
 					int uploadstate = cursor.getInt(cursor.getColumnIndex("uploadstate"));
 					String serialnum = cursor.getString(cursor.getColumnIndex("serialnum"));
@@ -286,6 +290,7 @@ public class DataDao {
 					adviceItem.setPurpose(purpose);
 					adviceItem.setUserid(userid);
 					adviceItem.setRdata(rdata);
+					adviceItem.setLocalPath(localpath);
 					adviceItem.setPath(path);
 					adviceItem.setUploadstate(uploadstate);
 					adviceItem.setSerialnum(serialnum);
@@ -365,10 +370,10 @@ public class DataDao {
 					db.beginTransaction();
 					try {
 						db.execSQL("insert into " + DataDBHelper.tableName + " (mid,gestationalWeeks,testTime,testTimeLong,status," +
-								           "feeling,purpose,url,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+								           "feeling,purpose,localpath,userid,rdata,path,uploadstate,serialnum,jianceid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 								          new Object[]{adviceItem.getId(), adviceItem.getGestationalWeeks(),
 												  adviceItem.getTestTime()==null?-1:adviceItem.getTestTime().getTime(), adviceItem.getTestTimeLong(), adviceItem.getStatus(),
-										                      adviceItem.getFeeling(), adviceItem.getPurpose(),adviceItem.getUrl(),
+										                      adviceItem.getFeeling(), adviceItem.getPurpose(),adviceItem.getLocalPath(),
 										                      SPUtil.getUserID(WeiTaiXinApplication.getInstance()), adviceItem.getRdata(), adviceItem.getPath(), adviceItem.getUploadstate(),
 										                      adviceItem.getSerialnum(), adviceItem.getJianceid()
 								          });
@@ -418,7 +423,7 @@ public class DataDao {
 		ArrayList<MyAdviceItem> adviceItemsNative = new ArrayList<MyAdviceItem>();
 		if (db.isOpen()) {
 			Cursor cursor = db.rawQuery("select mid,gestationalWeeks,testTime,testTimeLong,status," +
-					                            "feeling,purpose,url,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName +" where userid=?", new String[]{user_id+""});
+					                            "feeling,purpose,localpath,userid,rdata,path,uploadstate,serialnum,jianceid from " + DataDBHelper.tableName +" where userid=?", new String[]{user_id+""});
 			while (cursor.moveToNext()) {
 				MyAdviceItem adviceItem = new MyAdviceItem();
 				long mid = cursor.getLong(cursor.getColumnIndex("mid"));
@@ -428,7 +433,7 @@ public class DataDao {
 				int status = cursor.getInt(cursor.getColumnIndex("status"));
 				String feeling = cursor.getString(cursor.getColumnIndex("feeling"));
 				String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
-				String url = cursor.getString(cursor.getColumnIndex("url"));
+				String localpath = cursor.getString(cursor.getColumnIndex("localpath"));
 				int userid = cursor.getInt(cursor.getColumnIndex("userid"));
 				String rdata = cursor.getString(cursor.getColumnIndex("rdata"));
 				String path = cursor.getString(cursor.getColumnIndex("path"));
@@ -442,7 +447,7 @@ public class DataDao {
 				adviceItem.setStatus(status);
 				adviceItem.setFeeling(feeling);
 				adviceItem.setPurpose(purpose);
-				adviceItem.setUrl(url);
+				adviceItem.setLocalPath(localpath);
 				adviceItem.setUserid(userid);
 				adviceItem.setRdata(rdata);
 				adviceItem.setPath(path);

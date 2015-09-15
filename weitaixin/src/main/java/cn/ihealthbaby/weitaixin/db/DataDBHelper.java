@@ -48,7 +48,7 @@ public class DataDBHelper extends SQLiteOpenHelper{
 				"status integer," + //
 				"feeling varchar(50)," + //
 				"purpose varchar(50)," + //
-				"url varchar(50)," + //
+				"localpath varchar(50)," + //
 				"userid integer," + //
 				"rdata text," + //
 				"path varchar(50)," + //
