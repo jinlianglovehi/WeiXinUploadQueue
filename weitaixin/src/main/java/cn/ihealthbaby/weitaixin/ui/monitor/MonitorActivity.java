@@ -33,7 +33,7 @@ public class MonitorActivity extends BaseActivity {
 	private final static String TAG = "MonitorActivity";
 	public int alertInterval;
 	public boolean alert;
-	public int duration;
+	public int duration = 20 * 60 * 1000;
 	@Bind(R.id.back)
 	RelativeLayout back;
 	@Bind(R.id.title_text)
@@ -249,7 +249,10 @@ public class MonitorActivity extends BaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		duration = adviceSetting.getAutoAdviceTimeLong() * 1000;
+		int autoAdviceTimeLong = adviceSetting.getAutoAdviceTimeLong();
+		if (autoAdviceTimeLong > 0) {
+			duration = autoAdviceTimeLong * 1000;
+		}
 		LogUtil.d(TAG, "safemin:%s,safemax:%s,alertSound:%s,alertInterval:%s,duration:%s", safemin, safemax, alert, alertInterval, duration);
 	}
 }
