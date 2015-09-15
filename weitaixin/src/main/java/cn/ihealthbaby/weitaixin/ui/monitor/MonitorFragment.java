@@ -221,6 +221,7 @@ public class MonitorFragment extends BaseFragment {
 	@OnClick(R.id.btn_start)
 	public void startRecord(View view) {
 		autoStartTimer.cancel();
+
 		started = true;
 		uuidString = UUID.randomUUID().toString().replace("-", "");
 		LogUtil.d(TAG, "uuid:", uuidString);

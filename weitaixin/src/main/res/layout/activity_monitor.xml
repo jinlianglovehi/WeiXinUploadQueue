@@ -67,15 +67,39 @@
             android:layout_below="@id/tv_bluetooth"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
-            android:text="请耐心等待..."
+            android:text="已记录%s"
+            android:textColor="@color/green0"
+            android:textSize="10sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_below="@id/hint"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="%s开始记录"
+            android:textColor="@color/gray1"
+            android:textSize="8sp"
+            />
+
+        <TextView
+            android:id="@+id/fm_count"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_below="@id/tv_start_time"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="第%s次胎动"
             android:textColor="@color/gray1"
             android:textSize="12sp"
-            android:visibility="gone"/>
+            />
     </RelativeLayout>
 
     <cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView
         android:id="@+id/hs"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_round"
         android:fillViewport="false"

@@ -17,8 +17,9 @@
 
         <cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView
             android:id="@+id/chs"
-            android:layout_width="match_parent"
+            android:layout_width="500dp"
             android:layout_height="wrap_content"
+            android:fillViewport="true"
             android:scrollbars="none"
             >
 
@@ -126,7 +127,6 @@
             android:layout_marginBottom="10dp"
             android:src="@drawable/button_movement"/>
     </RelativeLayout>
-
 
 
 </RelativeLayout>

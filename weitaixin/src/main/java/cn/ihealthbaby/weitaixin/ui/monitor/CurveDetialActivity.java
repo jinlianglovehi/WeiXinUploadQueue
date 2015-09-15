@@ -125,6 +125,9 @@ public class CurveDetialActivity extends BaseActivity {
 	}
 
 	private void configCurve() {
+		ViewGroup.LayoutParams hsLayoutParams = chs.getLayoutParams();
+		hsLayoutParams.width = width;
+		chs.setLayoutParams(hsLayoutParams);
 		curve.setFhrs(DataStorage.fhrs);
 		curve.setCellWidth(Util.dip2px(getApplicationContext(), 10));
 		curve.setHearts(DataStorage.hearts);

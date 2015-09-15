@@ -25,7 +25,6 @@ public class UploadRecord {
         adviceForm.setClientId(adviceItem.getId() + "");
         adviceForm.setTestTime(adviceItem.getTestTime());
         adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
-        adviceForm.setGestationalWeeks(adviceItem.getGestationalWeeks());
 //            adviceForm.setData();
 //            adviceForm.setAskPurpose();
 //            adviceForm.setDataType();

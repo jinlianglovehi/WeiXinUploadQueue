@@ -12,11 +12,11 @@ public class CurveHorizontalScrollView extends HorizontalScrollView {
 	private boolean isTouching;
 
 	public CurveHorizontalScrollView(Context context) {
-		super(context);
+		this(context, null, 0);
 	}
 
 	public CurveHorizontalScrollView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+		this(context, attrs, 0);
 	}
 
 	public CurveHorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr) {

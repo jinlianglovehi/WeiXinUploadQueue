@@ -162,13 +162,8 @@ public class CurvePlayActivity extends BaseActivity {
 		width = metric.widthPixels;
 		getData();
 		configCurve();
+		final String path = myAdviceItem.getLocalPath();
 		mediaPlayer = new MediaPlayer();
-		String path = myAdviceItem.getLocalPath();
-		try {
-			mediaPlayer.setDataSource(path);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		CustomDialog customDialog = new CustomDialog();
 		dialog = customDialog.createDialog1(this, "正在上传胎音文件...");
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
@@ -177,13 +172,13 @@ public class CurvePlayActivity extends BaseActivity {
 
 			@Override
 			public void onStart(long startTime) {
-//				try {
-//					mediaPlayer.prepare();
-//
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-				mediaPlayer.start();
+				try {
+					mediaPlayer.setDataSource(path);
+					mediaPlayer.prepare();
+					mediaPlayer.start();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 			@Override
@@ -214,6 +209,7 @@ public class CurvePlayActivity extends BaseActivity {
 			public void onFinish() {
 				ToastUtil.show(getApplicationContext(), "播放结束");
 				mediaPlayer.stop();
+				mediaPlayer.reset();
 			}
 
 			@Override

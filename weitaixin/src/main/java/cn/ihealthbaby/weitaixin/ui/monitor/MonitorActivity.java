@@ -19,6 +19,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
@@ -62,6 +63,10 @@ public class MonitorActivity extends BaseActivity {
 	ImageView roundFrontground;
 	@Bind(R.id.curve_simple)
 	CurveMonitorSimpleView curveSimple;
+	@Bind(R.id.tv_start_time)
+	TextView tvStartTime;
+	@Bind(R.id.fm_count)
+	TextView fmCount;
 	private ExpendableCountDownTimer countDownTimer;
 	private long lastFetalMoveTime;
 	private int width;
@@ -130,6 +135,8 @@ public class MonitorActivity extends BaseActivity {
 
 			@Override
 			public void onStart(long startTime) {
+				tvStartTime.setText(DateTimeTool.second2hhmmss(startTime) + "开始记录");
+				hint.setText("已记录" + DateTimeTool.second2mmss(getConsumedTime()));
 			}
 
 			@Override
@@ -157,6 +164,7 @@ public class MonitorActivity extends BaseActivity {
 				roundProgressMask.setAngel((float) (360 * getConsumedTime() / getDuration()));
 				roundProgressMask.postInvalidate();
 				long time = DataStorage.fhrPackage.getTime();
+				hint.setText("已记录" + DateTimeTool.second2mmss(getConsumedTime()));
 				if (lasttime < time) {
 					fhr = DataStorage.fhrPackage.getFHR1();
 					if (tvBluetooth != null) {
@@ -183,6 +191,9 @@ public class MonitorActivity extends BaseActivity {
 	}
 
 	private void configCurveSimple() {
+		ViewGroup.LayoutParams hsLayoutParams = hs.getLayoutParams();
+		hsLayoutParams.width = width;
+		hs.setLayoutParams(hsLayoutParams);
 		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 4));
 //		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 8));
 		curveSimple.setyMax(210);
