@@ -218,6 +218,9 @@ public class MonitorActivity extends BaseActivity {
 	}
 
 	public void onEventMainThread(MonitorTerminateEvent event) {
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
 		int reason = event.getEvent();
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
@@ -251,7 +254,7 @@ public class MonitorActivity extends BaseActivity {
 		}
 		int autoAdviceTimeLong = adviceSetting.getAutoAdviceTimeLong();
 		if (autoAdviceTimeLong > 0) {
-			duration = autoAdviceTimeLong * 1000;
+			duration = autoAdviceTimeLong * 60 * 1000;
 		}
 		LogUtil.d(TAG, "safemin:%s,safemax:%s,alertSound:%s,alertInterval:%s,duration:%s", safemin, safemax, alert, alertInterval, duration);
 	}
