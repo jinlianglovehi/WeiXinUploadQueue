@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import cn.ihealthbaby.client.form.AddressForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -32,9 +34,11 @@ public class PayAddAddressActivity extends BaseActivity {
     @Bind(R.id.tvAddAddressPhone)   EditText tvAddAddressPhone;
     @Bind(R.id.tvAddAddressDetailAddress)   EditText tvAddAddressDetailAddress;
     @Bind(R.id.tvSubmitAddress)   TextView tvSubmitAddress;
-    @Bind(R.id.tvAddAddressProvince)   TextView tvAddAddressProvince;
     @Bind(R.id.tvAddAddressArea)   TextView tvAddAddressArea;
 
+    public final static int INTENT_REQUEST_CODE = 500;
+    public final static int INTENT_RESULT_CODE = 501;
+    public static String AreasString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +48,29 @@ public class PayAddAddressActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("添加地址");
-
+        AreasString="";
         initView();
+
         pullData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!TextUtils.isEmpty(AreasString)) {
+            tvAddAddressArea.setText(AreasString);
+        }
+    }
+
     private void initView() {
-//        User user=WeiTaiXinApplication.getInstance().user;
+//      User user=WeiTaiXinApplication.getInstance().user;
         User user = SPUtil.getUser(this);
         if (user!=null){
             tvAddAddressName.setText(user.getName());
             tvAddAddressPhone.setText(user.getMobile());
         }
     }
+
 
     private void pullData() {
 
@@ -69,28 +83,55 @@ public class PayAddAddressActivity extends BaseActivity {
     }
 
 
+    @OnClick(R.id.tvAddAddressArea)
+    public void AddAddressArea() {
+        Intent intent=new Intent(this,PayChooseAddressProvinceActivity.class);
+        startActivity(intent);
+    }
+
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        LogUtil.d("AreagEx", "AreagEx==> %s = %s = %s" ,requestCode,resultCode,data!=null);
+//        if (requestCode == INTENT_REQUEST_CODE) {
+//            if (resultCode == RESULT_OK) {
+//                if (data != null) {
+//                    String Areas = data.getStringExtra("Areas");
+//                    LogUtil.d("AreagEx", "AreagEx==> " + Areas);
+//                    if (!TextUtils.isEmpty(Areas)) {
+//                        tvAddAddressArea.setText(Areas);
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     @OnClick(R.id.tvSubmitAddress)
     public void SubmitAddress() {
         String addressName = tvAddAddressName.getText().toString().trim();
         String addressPhone = tvAddAddressPhone.getText().toString().trim();
         String addressDetailAddress = tvAddAddressDetailAddress.getText().toString().trim();
-        String addAddressProvince = tvAddAddressProvince.getText().toString().trim();
         String addAddressArea = tvAddAddressArea.getText().toString().trim();
 
         if (TextUtils.isEmpty(addressName)) {
             ToastUtil.show(getApplicationContext(),"请填写收货人");
             return;
         }
+        if (addressName != null && addressName.length() < 2) {
+            ToastUtil.show(getApplicationContext(), "收货人至少两个字符");
+            return;
+        }
         if (TextUtils.isEmpty(addressPhone)) {
-            ToastUtil.show(getApplicationContext(),"请填写收货人的手机");
+            ToastUtil.show(getApplicationContext(),"请填写收货人的手机号");
             return;
         }
-        if (TextUtils.isEmpty(addAddressProvince)) {
-            ToastUtil.show(getApplicationContext(),"请选择省份");
+        if (addressPhone != null && addressPhone.length() != 11) {
+            ToastUtil.show(getApplicationContext(),"手机号必须是11位数字");
             return;
         }
-        if (TextUtils.isEmpty(addAddressArea)) {
-            ToastUtil.show(getApplicationContext(),"请选择地区");
+        if (TextUtils.isEmpty(addAddressArea)||"请选择所在地区".equals(addAddressArea)) {
+            ToastUtil.show(getApplicationContext(),"请选择所在地区");
             return;
         }
         if (TextUtils.isEmpty(addressDetailAddress)) {

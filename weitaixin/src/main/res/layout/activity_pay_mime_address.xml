@@ -9,8 +9,8 @@
         layout="@layout/layout_title" />
 
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/addressPullToRefreshAllOrder"
+    <ListView
+        android:id="@+id/lvAddressAllOrder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/tvTexted"

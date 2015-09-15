@@ -37,7 +37,7 @@ public class PayMimeAddressActivity extends BaseActivity {
     @Bind(R.id.function) TextView function;
     //
 
-    @Bind(R.id.addressPullToRefreshAllOrder) PullToRefreshListView addressPullToRefreshAllOrder;
+    @Bind(R.id.lvAddressAllOrder) ListView lvAddressAllOrder;
     @Bind(R.id.tvAddNewAddress) TextView tvAddNewAddress;
 
 
@@ -53,7 +53,8 @@ public class PayMimeAddressActivity extends BaseActivity {
         title_text.setText("我的地址");
 
         initView();
-        pullData();
+
+//        pullData();
     }
 
 
@@ -66,7 +67,7 @@ public class PayMimeAddressActivity extends BaseActivity {
 
     @OnClick(R.id.tvAddNewAddress)
     public void AddNewAddress() {
-        Intent intent=new Intent(this,PayAddAddressActivity.class);
+        Intent intent=new Intent(this, PayAddAddressActivity.class);
         startActivity(intent);
     }
 
@@ -81,12 +82,13 @@ public class PayMimeAddressActivity extends BaseActivity {
                 if (t.isSuccess()) {
                     ApiList<Address> data = t.getData();
                     ArrayList<Address> addressList = (ArrayList<Address>) data.getList();
-                    LogUtil.d("addressList","addressList =%s ",addressList);
+                    LogUtil.d("addressList", "addressList =%s ", addressList);
                     if (addressList.size() <= 0) {
                         ToastUtil.show(getApplicationContext(), "没有数据");
+                    } else {
+                        adapter.setDatas(addressList);
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.setDatas(addressList);
-                    adapter.notifyDataSetChanged();
                 } else {
                     ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
                 }
@@ -98,78 +100,36 @@ public class PayMimeAddressActivity extends BaseActivity {
 
     private void initView() {
         adapter = new PayMimeAddressAdapter(getApplicationContext(), null);
-        addressPullToRefreshAllOrder.setAdapter(adapter);
-        addressPullToRefreshAllOrder.setMode(PullToRefreshBase.Mode.DISABLED);
-        init();
+        lvAddressAllOrder.setAdapter(adapter);
 
-        addressPullToRefreshAllOrder.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) { //下拉刷新
-
-                if (addressPullToRefreshAllOrder != null) {
-                    addressPullToRefreshAllOrder.onRefreshComplete();
-                }
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) { //上拉加载更多
-
-                if (addressPullToRefreshAllOrder != null) {
-                    addressPullToRefreshAllOrder.onRefreshComplete();
-                }
-            }
-        });
-
-        addressPullToRefreshAllOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvAddressAllOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-                final CustomDialog customDialog=new CustomDialog();
+                final CustomDialog customDialog = new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(PayMimeAddressActivity.this, "数据加载中...");
                 dialog.show();
 
-                final Address item = (Address) adapter.getItem(position - 1);
+                final Address item = (Address) adapter.getItem(position );
                 ApiManager.getInstance().addressApi.setDef(item.getId(), new HttpClientAdapter.Callback<Void>() {
                     @Override
                     public void call(Result<Void> t) {
                         if (t.isSuccess()) {
-                            adapter.currentPosition = (position - 1);
+                            adapter.currentPosition = (position );
                             item.setIsDef(true);
                             adapter.notifyDataSetChanged();
-                            Intent intent=new Intent();
-                            intent.putExtra("addressItem",item);
+                            Intent intent = new Intent();
+                            intent.putExtra("addressItem", item);
                             setResult(999, intent);
                             PayMimeAddressActivity.this.finish();
-                        }else {
-                            ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
+                        } else {
+                            ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
                         }
                         customDialog.dismiss();
                     }
-                },getRequestTag());
+                }, getRequestTag());
             }
         });
 
-    }
-
-
-    private void init() {
-        ILoadingLayout startLabels = addressPullToRefreshAllOrder.getLoadingLayoutProxy(true, false);
-        startLabels.setPullLabel("下拉刷新...");// 刚下拉时，显示的提示
-        startLabels.setRefreshingLabel("正在载入...");// 刷新时
-        startLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
-
-        ILoadingLayout endLabels = addressPullToRefreshAllOrder.getLoadingLayoutProxy(false, true);
-        endLabels.setPullLabel("上拉刷新...");// 刚下拉时，显示的提示
-        endLabels.setRefreshingLabel("正在载入...");// 刷新时
-        endLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
-
-        // 设置下拉刷新文本
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(false, true).setPullLabel("上拉刷新...");
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(false, true).setReleaseLabel("放开刷新...");
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载...");
-        // 设置上拉刷新文本
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(true, false).setPullLabel("下拉刷新...");
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(true, false).setReleaseLabel("放开刷新...");
-        addressPullToRefreshAllOrder.getLoadingLayoutProxy(true, false).setRefreshingLabel("正在加载...");
     }
 
 

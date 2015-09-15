@@ -75,6 +75,9 @@
         <activity android:name=".ui.pay.PayAffirmPaymentActivity" />
         <activity android:name=".ui.monitor.CurvePlayActivity" />
         <activity android:name=".ui.pay.PayOrderDetailsActivity" />
+        <activity android:name=".ui.pay.PayChooseAddressProvinceActivity" />
+        <activity android:name=".ui.pay.PayChooseAddressCityActivity" />
+        <activity android:name=".ui.pay.PayChooseAddressAreasActivity" />
         <activity android:name=".ui.monitor.MonitorCommonSense" />
 
         <service android:name=".service.AdviceSettingService"/>

@@ -29,7 +29,7 @@ public class PayMimeAddressAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<Address> datas;
     private LayoutInflater mInflater;
-    public int currentPosition=-1;
+    public int currentPosition = -1;
 
     public PayMimeAddressAdapter(Context context, ArrayList<Address> datas) {
         mInflater = LayoutInflater.from(context);
@@ -85,17 +85,20 @@ public class PayMimeAddressAdapter extends BaseAdapter {
         viewHolder.tvAddressPhoneNumber.setText(address.getMobile());
         viewHolder.tvAddressText.setText(address.getAddress());
 
-        LogUtil.d("getIsDef",address.getIsDef()+"  sssssss");
-        if (address.getIsDef()) {
-            viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose);
-        } else {
-            viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose_un);
-        }
+        LogUtil.d("getIsDef", address.getIsDef() + "  sssssss " + position);
+
         if (currentPosition == position) {
             viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose);
         } else {
             viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose_un);
         }
+
+        if (address.getIsDef()) {
+            viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose);
+        } else {
+            viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose_un);
+        }
+
 
         return convertView;
     }

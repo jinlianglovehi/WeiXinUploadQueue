@@ -37,6 +37,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:maxLength="10"
                 android:layout_alignParentRight="true"
                 android:singleLine="true"
                 android:layout_marginRight="14dp"
@@ -76,6 +77,11 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+
+                android:maxLength="11"
+                android:numeric="integer"
+                android:phoneNumber="true"
+
                 android:singleLine="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="14dp"
@@ -105,46 +111,7 @@
                 android:layout_marginLeft="18dp"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="省份"
-                android:textColor="@color/gray4"
-                android:textSize="@dimen/font12" />
-
-
-            <TextView
-                android:id="@+id/tvAddAddressProvince"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="14dp"
-                android:gravity="center"
-                android:text="请选择省份"
-                android:textColor="@color/font_color"
-                android:textSize="@dimen/font12" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/gray1" />
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/rl4Functioned"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/rl3Functioned">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:gravity="center"
-                android:layout_centerVertical="true"
-                android:text="地区"
+                android:text="所在地区"
                 android:textColor="@color/gray4"
                 android:textSize="@dimen/font12" />
 
@@ -154,12 +121,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="14dp"
+                android:layout_marginRight="10dp"
                 android:gravity="center"
-                android:text="请选择地区"
+               android:layout_toLeftOf="@+id/ivarrow"
+                android:text="请选择所在地区"
                 android:textColor="@color/font_color"
                 android:textSize="@dimen/font12" />
+
+
+
+            <ImageView
+                android:id="@+id/ivarrow"
+                android:layout_width="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_height="12dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="14dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/wo_head_arrow_right" />
+
 
             <View
                 android:layout_width="match_parent"
@@ -175,7 +155,7 @@
             android:id="@+id/rl5Functioned"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_below="@id/rl4Functioned">
+            android:layout_below="@id/rl3Functioned">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -196,6 +176,7 @@
                 android:layout_marginRight="14dp"
                 android:gravity="right"
                 android:singleLine="true"
+                android:maxLength="60"
                 android:layout_centerVertical="true"
                 android:text=""
                 android:textColor="@color/font_color"
