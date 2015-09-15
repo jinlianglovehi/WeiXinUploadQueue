@@ -20,14 +20,13 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AskPurposeType;
 import cn.ihealthbaby.client.model.CommonConfig;
 import cn.ihealthbaby.client.model.FeelingType;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.db.DataDao;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
-import cn.ihealthbaby.weitaixin.CustomDialog;
 
 public class GuardianStateActivity extends BaseActivity {
 	private final static String TAG = "GuardianStateActivity";
@@ -153,8 +152,6 @@ public class GuardianStateActivity extends BaseActivity {
 		myAdviceItem.setPurpose(purpose);
 		myAdviceItem.setJianceid(uuid);
 		dao.update(myAdviceItem);
-		MyAdviceItem aNative = dao.findNative(uuid);
-		LogUtil.d(TAG, aNative.toString());
 		startActivity(intent);
 		finish();
 	}
