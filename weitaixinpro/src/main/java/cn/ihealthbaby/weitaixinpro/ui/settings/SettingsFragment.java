@@ -60,6 +60,7 @@ public class SettingsFragment extends BaseFragment {
 
     private void initView() {
         mTitleText.setText("系统设置");
+        mBack.setVisibility(View.INVISIBLE);
         mRlMonitorSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
