@@ -68,6 +68,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_host_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -75,11 +76,11 @@
             android:text="海淀区第一妇幼保健"/>
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="已检测"/>
+            android:gravity="center"/>
     </LinearLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView

@@ -21,6 +21,7 @@ import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.FetalHeart;
 import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.WeiTaiXinProApplication;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
@@ -82,15 +83,13 @@ public class LoginActivity extends BaseActivity {
                             if (t.isSuccess() && t.getData().getLoginToken() != null) {
                                 HClientUser user = t.getData();
                                 WeiTaiXinProApplication.getInstance().mAdapter.setAccountToken(user.getLoginToken());
-                                Toast.makeText(getApplicationContext(), user.getLoginToken(), Toast.LENGTH_LONG).show();
-                                System.out.println("token:" + user.getLoginToken());
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 SPUtil.saveHClientUser(getApplication(), user);
                                 startActivity(intent);
                                 finish();
                             } else {
                                 //TODO
-                                Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_LONG).show();
+                                ToastUtil.show(getApplicationContext(),t.getMsg());
 
                             }
                         }
@@ -113,7 +112,7 @@ public class LoginActivity extends BaseActivity {
                     mFetalHeartApiList = t.getData().getList();
                     mFetalHeart = mFetalHeartApiList.get(0);
                     adapter.addData(mFetalHeartApiList);
-                }else {
+                } else {
                     Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_LONG).show();
                 }
             }

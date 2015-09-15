@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -15,10 +16,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.ServiceInside;
+import cn.ihealthbaby.weitaixin.library.data.net.Business;
+import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
@@ -40,6 +41,10 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     RelativeLayout mRlAlreadyMonitor;
     @Bind(R.id.pullToRefresh)
     PullToRefreshListView mPullToRefresh;
+    @Bind(R.id.tv_title)
+    TextView mTvTitle;
+    @Bind(R.id.tv_host_name)
+    TextView mTvHostName;
 
     //科室id
     private long departmentId;
@@ -51,7 +56,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     private int undetectedPage = 1;
 
     //每页记录数
-    private int pageSize = 10;
+    private int pageSize = 1;
 
 
     private MonitorAdapter mAdapter;
@@ -81,9 +86,11 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void initView() {
+        mTvHostName.setText(SPUtil.getHClientUser(getActivity()).getHospitalName());
         mAdapter = new MonitorAdapter(getActivity());
         mIvNoMonitor.setVisibility(View.VISIBLE);
         mIvAlreayMonitor.setVisibility(View.INVISIBLE);
+        initData(1);
         mPullToRefresh.setAdapter(mAdapter);
         mPullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
 
@@ -91,34 +98,50 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 int page = 1;
+                ApiManager.getInstance().hClientAccountApi.getServiceInsides(SPUtil.getHClientUser(getActivity()).getDepartmentId(), status, page, pageSize,
+                        new DefaultCallback<PageData<ServiceInside>>(getActivity(), new Business<PageData<ServiceInside>>() {
+                            @Override
+                            public void handleData(PageData<ServiceInside> data) throws Exception {
+                                mServiceInsidePageData = data;
+                                if (data.getCount() > 0) {
+                                    mAdapter.clearAddSetData(data.getValue());
+                                    mPullToRefresh.onRefreshComplete();
+                                } else {
+                                    mPullToRefresh.onRefreshComplete();
+                                }
+                            }
+                        }), getRequestTag());
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                int page = 1;
                 if (status == 0) {
                     page = undetectedPage++;
                 } else {
                     page = alreadyPage++;
                 }
 
-                ApiManager.getInstance().hClientAccountApi.getServiceInsides(SPUtil.getHClientUser(getActivity()).getDepartmentId(), status, page, pageSize,
-                        new HttpClientAdapter.Callback<PageData<ServiceInside>>() {
-                            @Override
-                            public void call(Result<PageData<ServiceInside>> t) {
-                                if (t.isSuccess()) {
-                                    mServiceInsidePageData = t.getData();
-                                    if (mServiceInsidePageData.getCount() > 0) {
-                                        mAdapter.addData(mServiceInsidePageData.getValue());
-                                    } else {
-
-                                    }
-                                }
-                            }
-                        }, getRequestTag());
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                initData(page);
             }
         });
 
+    }
+
+    private void initData(int page) {
+        ApiManager.getInstance().hClientAccountApi.getServiceInsides(SPUtil.getHClientUser(getActivity()).getDepartmentId(), status, page, pageSize,
+                new DefaultCallback<PageData<ServiceInside>>(getActivity(), new Business<PageData<ServiceInside>>() {
+                    @Override
+                    public void handleData(PageData<ServiceInside> data) throws Exception {
+                        mServiceInsidePageData = data;
+                        if (data.getCount() > 0) {
+                            mAdapter.addData(data.getValue());
+                            mPullToRefresh.onRefreshComplete();
+                        } else {
+                            mPullToRefresh.onRefreshComplete();
+                        }
+                    }
+                }), getRequestTag());
     }
 
     @Override
@@ -132,8 +155,20 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_already_monitor:
+                status = 1;
+                mAdapter.clearData();
+                mTvTitle.setText(getString(R.string.already_monitor));
+                initData(1);
+                mIvNoMonitor.setVisibility(View.INVISIBLE);
+                mIvAlreayMonitor.setVisibility(View.VISIBLE);
                 break;
             case R.id.rl_no_monitor:
+                status = 0;
+                mIvNoMonitor.setVisibility(View.VISIBLE);
+                mIvAlreayMonitor.setVisibility(View.INVISIBLE);
+                mAdapter.clearData();
+                mTvTitle.setText(getString(R.string.no_monitor));
+                initData(1);
                 break;
         }
     }

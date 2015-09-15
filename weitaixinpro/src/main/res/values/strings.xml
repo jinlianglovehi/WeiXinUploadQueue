@@ -4,4 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="device_id">本机decice ID：</string>
+    <string name="already_monitor">已检测</string>
+    <string name="no_monitor">未检测</string>
 </resources>

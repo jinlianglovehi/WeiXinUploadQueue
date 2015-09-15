@@ -12,6 +12,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.model.ServiceInside;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.tools.DateTimeTool;
 
@@ -44,7 +45,7 @@ public class MonitorAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = View.inflate(mContext, R.layout.item_monitor, null);
@@ -56,12 +57,24 @@ public class MonitorAdapter extends BaseAdapter {
         holder.mTvDate.setText(DateTimeTool.getGestationalWeeks(mServiceInsides.get(position).getDeliveryTime()));
         holder.mTvName.setText(mServiceInsides.get(position).getName());
         holder.mTvTime.setText(DateTimeTool.date2St2(mServiceInsides.get(position).getBirthday(), "MM月dd日 hh:mm"));
+        holder.mTvBegin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO
+                ToastUtil.show(mContext, "开始检测:" + position);
+            }
+        });
         return convertView;
     }
 
     public void clearAddSetData(List<ServiceInside> serviceInsides) {
         mServiceInsides.clear();
         mServiceInsides.addAll(serviceInsides);
+        notifyDataSetChanged();
+    }
+
+    public void clearData() {
+        mServiceInsides.clear();
         notifyDataSetChanged();
     }
 
@@ -85,4 +98,6 @@ public class MonitorAdapter extends BaseAdapter {
             ButterKnife.bind(this, view);
         }
     }
+
+
 }

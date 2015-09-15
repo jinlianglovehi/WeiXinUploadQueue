@@ -157,7 +157,7 @@ public class SPUtil {
 
     public static AdviceSetting getAdviceSetting(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
-        AdviceSetting adviceSetting=new AdviceSetting();
+        AdviceSetting adviceSetting = new AdviceSetting();
         adviceSetting.setAlarmHeartrateLimit(sp.getString("AlarmHeartrateLimit", ""));
         adviceSetting.setAskMinTime(sp.getInt("AskMinTime", -1));
         adviceSetting.setAutoBeginAdvice(sp.getInt("AutoAdviceTimeLong", -1));
@@ -220,6 +220,7 @@ public class SPUtil {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong("departmentId", user.getDepartmentId());
+        editor.putString("hospitalName", user.getHospitalName());
         editor.commit();
     }
 
@@ -227,6 +228,7 @@ public class SPUtil {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
         HClientUser user = new HClientUser();
         user.setDepartmentId(sp.getLong("departmentId", -1));
+        user.setHospitalName(sp.getString("hospitalName", ""));
         return user;
     }
 
