@@ -1,7 +1,11 @@
 package cn.ihealthbaby.weitaixinpro.ui.monitor;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +133,8 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
 
     }
 
-    private void initData(int page) {
+    private void initData(final int page) {
+
         ApiManager.getInstance().hClientAccountApi.getServiceInsides(SPUtil.getHClientUser(getActivity()).getDepartmentId(), status, page, pageSize,
                 new DefaultCallback<PageData<ServiceInside>>(getActivity(), new Business<PageData<ServiceInside>>() {
                     @Override
@@ -141,11 +146,17 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                         } else {
                             mPullToRefresh.onRefreshComplete();
                         }
+                        String tvString = "";
                         if (status == 0) {
-                            mTvTitle.setText(getString(R.string.no_monitor) + data.getCount() + "条");
+                            tvString = getString(R.string.no_monitor) + data.getCount() + "条";
                         } else {
-                            mTvTitle.setText(getString(R.string.already_monitor) + data.getCount() + "条");
+                            tvString = getString(R.string.already_monitor) + data.getCount() + "条";
                         }
+                        SpannableStringBuilder builder = new SpannableStringBuilder(tvString);
+                        int numberLength = Integer.toString(data.getCount()).length();
+                        ForegroundColorSpan green = new ForegroundColorSpan(Color.parseColor("#FF01CF97"));
+                        builder.setSpan(green, 3, 3 + numberLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        mTvTitle.setText(builder);
 
                     }
                 }), getRequestTag());
@@ -177,4 +188,6 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                 break;
         }
     }
+
+
 }
