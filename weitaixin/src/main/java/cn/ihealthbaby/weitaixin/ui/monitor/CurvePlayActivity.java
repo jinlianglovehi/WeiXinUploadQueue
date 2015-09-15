@@ -97,6 +97,10 @@ public class CurvePlayActivity extends BaseActivity {
 
 	@OnClick(R.id.btn_start)
 	public void upload(View view) {
+		DataDao dao = DataDao.getInstance(getApplicationContext());
+		MyAdviceItem myAdviceItem = new MyAdviceItem();
+		myAdviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_UPLOADING_RECORD);
+		dao.update(myAdviceItem);
 		AsynUploadEngine asynUploadEngine = new AsynUploadEngine(getApplicationContext());
 		String uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
 		if (uuid == null) {
@@ -108,7 +112,7 @@ public class CurvePlayActivity extends BaseActivity {
 		asynUploadEngine.setOnFinishActivity(new AsynUploadEngine.FinishedToDoWork() {
 			@Override
 			public void onFinishedWork(String key, ResponseInfo info, JSONObject response) {
-				ApiManager.getInstance().adviceApi.uploadData(getUploadData(myAdviceItem), new HttpClientAdapter.Callback<Long>() {
+				ApiManager.getInstance().adviceApi.uploadData(getUploadData(CurvePlayActivity.this.myAdviceItem), new HttpClientAdapter.Callback<Long>() {
 					@Override
 					public void call(Result<Long> t) {
 						dialog.dismiss();
@@ -141,6 +145,10 @@ public class CurvePlayActivity extends BaseActivity {
 
 	//记录保存到数据库
 	private void saveDataToDatabase(Long data) {
+		DataDao dao = DataDao.getInstance(getApplicationContext());
+		MyAdviceItem myAdviceItem = new MyAdviceItem();
+		myAdviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_CLOUD_RECORD);
+		dao.update(myAdviceItem);
 	}
 
 	@Override
@@ -149,13 +157,13 @@ public class CurvePlayActivity extends BaseActivity {
 		setContentView(R.layout.activity_curve_play);
 		ButterKnife.bind(this);
 		titleText.setText("胎心监测");
-		DisplayMetrics metric = new DisplayMetrics();
+		final DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
 		getData();
 		configCurve();
 		mediaPlayer = new MediaPlayer();
-		String path = myAdviceItem.getPath();
+		String path = myAdviceItem.getLocalPath();
 		try {
 			mediaPlayer.setDataSource(path);
 		} catch (IOException e) {
@@ -169,12 +177,13 @@ public class CurvePlayActivity extends BaseActivity {
 
 			@Override
 			public void onStart(long startTime) {
-				try {
-					mediaPlayer.prepare();
-					mediaPlayer.start();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				try {
+//					mediaPlayer.prepare();
+//
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+				mediaPlayer.start();
 			}
 
 			@Override

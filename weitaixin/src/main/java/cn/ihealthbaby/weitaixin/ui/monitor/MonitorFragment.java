@@ -611,7 +611,7 @@ public class MonitorFragment extends BaseFragment {
 		//
 		adviceItem.setUserid(user.getId());
 		adviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
-		adviceItem.setPath(file.getPath());
+		adviceItem.setLocalPath(file.getPath());
 		adviceItem.setTestTime(testTime);
 		// TODO: 15/9/11 实际时间
 		adviceItem.setTestTimeLong(DataStorage.fhrs.size() * 500);
