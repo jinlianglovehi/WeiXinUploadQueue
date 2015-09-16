@@ -53,7 +53,7 @@ public class PayChooseAddressCityActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        title_text.setText("所选地区");
+        title_text.setText("所选城市");
 
         Provinceid=getIntent().getStringExtra("Provinceid");
         Areas=getIntent().getStringExtra("Areas");

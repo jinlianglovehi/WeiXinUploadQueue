@@ -91,13 +91,13 @@ public class PayAddAddressActivity extends BaseActivity {
 
 //
 //    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        LogUtil.d("AreagEx", "AreagEx==> %s = %s = %s" ,requestCode,resultCode,data!=null);
+//    protected void onActivityResult(int requestCode, int resultCode, Intent orderDetail) {
+//        super.onActivityResult(requestCode, resultCode, orderDetail);
+//        LogUtil.d("AreagEx", "AreagEx==> %s = %s = %s" ,requestCode,resultCode,orderDetail!=null);
 //        if (requestCode == INTENT_REQUEST_CODE) {
 //            if (resultCode == RESULT_OK) {
-//                if (data != null) {
-//                    String Areas = data.getStringExtra("Areas");
+//                if (orderDetail != null) {
+//                    String Areas = orderDetail.getStringExtra("Areas");
 //                    LogUtil.d("AreagEx", "AreagEx==> " + Areas);
 //                    if (!TextUtils.isEmpty(Areas)) {
 //                        tvAddAddressArea.setText(Areas);

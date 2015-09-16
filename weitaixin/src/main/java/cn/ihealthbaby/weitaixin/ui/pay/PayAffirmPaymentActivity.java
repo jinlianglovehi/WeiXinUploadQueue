@@ -50,7 +50,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
         EventBus.getDefault().register(this);
 
-        orderId=getIntent().getLongExtra("OrderId", -1);
+        orderId=getIntent().getLongExtra(PayConstant.ORDERID, -1);
 
         tvTotalPrice.setText("￥"+LocalProductData.getLocal().get(LocalProductData.PriceCount)+"");
     }
@@ -92,9 +92,9 @@ public class PayAffirmPaymentActivity extends BaseActivity {
             public void call(Result<WXPrePay> t) {
                 if (t.isSuccess()) {
                     WXPrePay data = t.getData();
-//                    if (!TextUtils.isEmpty(data)) {
+//                    if (!TextUtils.isEmpty(orderDetail)) {
 //                        PayAlipayUtil payAlipayUtil=new PayAlipayUtil(PayAffirmPaymentActivity.this);
-//                        payAlipayUtil.payAction(data);
+//                        payAlipayUtil.payAction(orderDetail);
 //                    } else {
 //                        ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
 //                    }
@@ -109,7 +109,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
     @OnClick(R.id.llPaymenyAlipay)
     public void PaymenyAlipay() {
         if (orderId == -1) {
-            ToastUtil.show(getApplicationContext(),"订单id生成有误");
+            ToastUtil.show(getApplicationContext(),"订单id生成有误:"+orderId);
             return;
         }
 

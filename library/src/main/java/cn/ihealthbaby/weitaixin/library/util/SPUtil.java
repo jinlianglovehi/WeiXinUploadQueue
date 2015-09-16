@@ -83,6 +83,7 @@ public class SPUtil {
 
 
     public static void saveUser(Context context, User user) {
+        SPUtil.clearUser(context);
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         if (user.getAccountToken() != null) {
@@ -151,6 +152,11 @@ public class SPUtil {
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.commit();
+
+        SharedPreferences sPreferences = context.getSharedPreferences(FILE_NAME_SERVICEINFO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editorService = sPreferences.edit();
+        editorService.clear();
+        editorService.commit();
     }
 
 

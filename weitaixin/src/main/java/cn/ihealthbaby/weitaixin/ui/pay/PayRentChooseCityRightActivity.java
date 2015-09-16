@@ -53,7 +53,7 @@ public class PayRentChooseCityRightActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        title_text.setText("选择城市");
+        title_text.setText("选择区/县");
 
         provinceid = getIntent().getStringExtra("provinceid");
         ProvinceNamed = getIntent().getStringExtra("ProvinceNamed");

@@ -103,6 +103,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
                     ToastUtil.show(context, position + "");
                     Intent intent=new Intent(context.getApplicationContext(), PayAffirmPaymentActivity.class);
                     LocalProductData.getLocal().put(LocalProductData.PriceCount, order.getTotalFee());
+                    intent.putExtra(PayConstant.ORDERID,order.getId());
                     context.startActivity(intent);
                 }
             });

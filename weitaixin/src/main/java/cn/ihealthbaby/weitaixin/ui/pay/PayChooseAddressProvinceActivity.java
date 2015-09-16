@@ -49,7 +49,7 @@ public class PayChooseAddressProvinceActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        title_text.setText("所选地区");
+        title_text.setText("所选省份");
 
         EventBus.getDefault().register(this);
 

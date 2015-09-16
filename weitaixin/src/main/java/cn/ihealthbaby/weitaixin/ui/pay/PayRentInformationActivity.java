@@ -71,6 +71,10 @@ public class PayRentInformationActivity extends BaseActivity {
 
         cityNameText="";
 
+//        LocalProductData.getLocal().localProductDataMap.remove(LocalProductData.CityId);
+//        LocalProductData.getLocal().localProductDataMap.remove(LocalProductData.CityName);
+        LocalProductData.getLocal().localProductDataMap.clear();
+
         EventBus.getDefault().register(this);
 
         pullData();
@@ -175,9 +179,9 @@ public class PayRentInformationActivity extends BaseActivity {
 
 //        if (requestCode == PayConstant.requestCodeCityChoose) {
 //            if (resultCode == PayConstant.resultCodeCityChoose) {
-//                if (data!=null) {
-//                    cityId = data.getLongExtra("cityid", -1);
-//                    cityName = data.getStringExtra("cityName");
+//                if (orderDetail!=null) {
+//                    cityId = orderDetail.getLongExtra("cityid", -1);
+//                    cityName = orderDetail.getStringExtra("cityName");
 ////                    if (cityId==-1) {
 ////                        ToastUtil.show(getApplicationContext(), "请选择医院");
 ////                        return;
