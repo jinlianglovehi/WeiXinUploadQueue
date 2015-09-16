@@ -158,7 +158,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
         if (status == 0) {
             tvString = getString(R.string.no_monitor) + data.getCount() + "条";
         } else {
-            tvString = getString(R.string.already_monitor) + data.getCount() + "条";
+            tvString = getString(R.string.monitor_during) + data.getCount() + "条";
         }
         SpannableStringBuilder builder = new SpannableStringBuilder(tvString);
         int numberLength = Integer.toString(data.getCount()).length();
