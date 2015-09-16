@@ -77,13 +77,15 @@ public class PayRentChooseCityRightActivity extends BaseActivity {
                 String cityName = item.getCity();
                 adapterRight.notifyDataSetChanged();
 
-                Intent intent = new Intent();
-                intent.putExtra("cityid", cityid);
-                intent.putExtra("cityName", ProvinceNamed+cityName);
+//                Intent intent = new Intent();
+//                intent.putExtra("cityid", cityid);
+//                intent.putExtra("cityName", ProvinceNamed+cityName);
+
+                PayRentInformationActivity.cityNameText = ProvinceNamed + cityName;
 
                 LocalProductData.getLocal().put(LocalProductData.CityId, cityid);
-                LocalProductData.getLocal().put(LocalProductData.CityName, cityName);
-                setResult(PayConstant.resultCodeCityChoose, intent);
+                LocalProductData.getLocal().put(LocalProductData.CityName, ProvinceNamed + cityName);
+//                setResult(PayConstant.resultCodeCityChoose, intent);
 
                 EventBus.getDefault().post(new PayChooseCityCloseEvent());
 

@@ -55,6 +55,10 @@ public class PayRentInformationActivity extends BaseActivity {
     @Bind(R.id.tvCityName) TextView tvCityName;
 
 
+    public static String cityNameText;
+    private long hospitalId = -1;
+    private String hospitalName = "";
+//    private String cityName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,8 @@ public class PayRentInformationActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("租凭信息");
+
+        cityNameText="";
 
         EventBus.getDefault().register(this);
 
@@ -79,6 +85,17 @@ public class PayRentInformationActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!TextUtils.isEmpty(cityNameText)) {
+            tvCityName.setText(cityNameText);
+        }
+        if ("请选择城市".equals(cityNameText)||TextUtils.isEmpty(cityNameText)) {
+            tvCityName.setText("请选择城市");
+        }
     }
 
     MyDoctorChooseAdapter adapter;
@@ -149,31 +166,30 @@ public class PayRentInformationActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private long hospitalId = -1;
-    private String hospitalName = "";
-    private long cityId = -1;
-    private String cityName = "";
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PayConstant.requestCodeCityChoose) {
-            if (resultCode == PayConstant.resultCodeCityChoose) {
-                if (data!=null) {
-                    cityId = data.getLongExtra("cityid", -1);
-                    cityName = data.getStringExtra("cityName");
-//                    if (cityId==-1) {
-//                        ToastUtil.show(getApplicationContext(), "请选择医院");
-//                        return;
+
+//        if (requestCode == PayConstant.requestCodeCityChoose) {
+//            if (resultCode == PayConstant.resultCodeCityChoose) {
+//                if (data!=null) {
+//                    cityId = data.getLongExtra("cityid", -1);
+//                    cityName = data.getStringExtra("cityName");
+////                    if (cityId==-1) {
+////                        ToastUtil.show(getApplicationContext(), "请选择医院");
+////                        return;
+////                    }
+//                    if (TextUtils.isEmpty(cityName)) {
+//                        tvCityName.setText("");
+//                    }else{
+//                        tvCityName.setText(cityName+"");
 //                    }
-                    if (TextUtils.isEmpty(cityName)) {
-                        tvCityName.setText("");
-                    }else{
-                        tvCityName.setText(cityName+"");
-                    }
-                }
-            }
-        }
+//                }
+//            }
+//        }
 
 
         if (requestCode == PayConstant.requestCodeHospitalChoose) {
