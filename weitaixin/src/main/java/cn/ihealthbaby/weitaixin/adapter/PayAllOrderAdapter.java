@@ -100,7 +100,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
             viewHolder.tvPayAffirmGoodsOrGoPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtil.show(context, position + "");
+//                    ToastUtil.show(context, position + "");
                     Intent intent=new Intent(context.getApplicationContext(), PayAffirmPaymentActivity.class);
                     LocalProductData.getLocal().put(LocalProductData.PriceCount, order.getTotalFee());
                     intent.putExtra(PayConstant.ORDERID,order.getId());

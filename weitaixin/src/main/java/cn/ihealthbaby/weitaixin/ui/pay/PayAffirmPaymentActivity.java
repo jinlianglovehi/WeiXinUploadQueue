@@ -109,7 +109,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
     @OnClick(R.id.llPaymenyAlipay)
     public void PaymenyAlipay() {
         if (orderId == -1) {
-            ToastUtil.show(getApplicationContext(),"订单id生成有误:"+orderId);
+            ToastUtil.show(getApplicationContext(),"订单Id生成有误");
             return;
         }
 

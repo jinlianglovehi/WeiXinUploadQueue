@@ -15,7 +15,7 @@
         android:paddingTop="20dp"
         android:text=""
         android:textColor="@color/font_color"
-        android:textSize="@dimen/font12" />
+        android:textSize="@dimen/font14" />
 
 
     <TextView
@@ -28,6 +28,6 @@
         android:paddingTop="20dp"
         android:text=""
         android:textColor="@color/red0"
-        android:textSize="@dimen/font12" />
+        android:textSize="@dimen/font14" />
 
 </RelativeLayout>

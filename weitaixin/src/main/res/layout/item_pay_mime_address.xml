@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="收货人:"
             android:textColor="@color/gray4"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/tvAddressName"
@@ -35,7 +35,7 @@
             android:layout_marginLeft="8dp"
             android:text="李香兰"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
     </LinearLayout>
 
 
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:text="电    话:"
             android:textColor="@color/gray4"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/tvAddressPhoneNumber"
@@ -62,7 +62,7 @@
             android:layout_marginLeft="8dp"
             android:text="137645645453"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
     </LinearLayout>
 
 
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:text="收货地址:"
             android:textColor="@color/gray4"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/tvAddressText"
@@ -89,7 +89,7 @@
             android:layout_marginLeft="8dp"
             android:text="北京海淀区的撒大撒旦"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
     </LinearLayout>
 
 

@@ -15,7 +15,7 @@
         android:text=""
         android:gravity="center"
         android:textColor="@color/black0"
-        android:textSize="@dimen/font12" />
+        android:textSize="@dimen/font14" />
 
     <ImageView
         android:id="@+id/tvState"

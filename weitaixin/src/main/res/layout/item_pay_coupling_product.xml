@@ -13,7 +13,7 @@
         android:layout_marginTop="16dp"
         android:text=""
         android:textColor="@color/black0"
-        android:textSize="@dimen/font12" />
+        android:textSize="@dimen/font14" />
 
 
     <TextView

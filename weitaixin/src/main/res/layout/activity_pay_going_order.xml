@@ -20,7 +20,7 @@
 
 
     <TextView
-        android:id="@+id/tv2"
+        android:id="@+id/tv2sy"
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:layout_below="@id/lvCashPledgeProduct"
@@ -29,13 +29,13 @@
         android:paddingLeft="20dp"
         android:text="租凭方式"
         android:textColor="@color/gray12"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font14" />
 
     <ListView
         android:id="@+id/lvRentProduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv2"
+        android:layout_below="@id/tv2sy"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:background="@color/white0" />
@@ -80,7 +80,7 @@
             android:layout_marginLeft="18dp"
             android:text=""
             android:textColor="@color/red0"
-            android:textSize="@dimen/font12" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/tvVerifyOrder"
@@ -93,7 +93,7 @@
             android:gravity="center"
             android:text="确认订单"
             android:textColor="@drawable/text_color_selector"
-            android:textSize="@dimen/font12" />
+            android:textSize="@dimen/font14" />
 
     </RelativeLayout>
 

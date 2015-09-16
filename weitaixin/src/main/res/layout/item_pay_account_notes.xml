@@ -12,7 +12,7 @@
         android:layout_marginTop="20dp"
         android:text="购买耦合剂*4"
         android:textColor="@color/black0"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font14" />
 
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_marginTop="8dp"
         android:text="2015-07-26   15: 01"
         android:textColor="@color/gray7"
-        android:textSize="@dimen/font8" />
+        android:textSize="@dimen/font12" />
 
 
     <TextView
@@ -34,8 +34,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="18dp"
         android:layout_marginTop="20dp"
-        android:text="-￥3425"
+        android:text=""
         android:textColor="@color/red2"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font14" />
 
 </RelativeLayout>

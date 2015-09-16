@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="@color/black0"
-            android:textSize="@dimen/font12" />
+            android:textSize="@dimen/font14" />
 
 
     </LinearLayout>
@@ -43,7 +43,7 @@
             android:singleLine="true"
             android:text=""
             android:textColor="@color/gray7"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
 
     </LinearLayout>

@@ -31,14 +31,14 @@
                 android:layout_marginTop="10dp"
                 android:text="全部订单"
                 android:textColor="@color/green0"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
             <View
                 android:id="@+id/viewAllOrderLine"
-                android:layout_width="48dp"
+                android:layout_width="60dp"
                 android:layout_height="4dp"
                 android:visibility="visible"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="2dp"
                 android:background="@color/green0" />
 
         </LinearLayout>
@@ -58,14 +58,14 @@
                 android:layout_marginTop="10dp"
                 android:text="待付款"
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
             <View
                 android:id="@+id/viewPayOrderLine"
-                android:layout_width="48dp"
+                android:layout_width="60dp"
                 android:layout_height="4dp"
                 android:visibility="invisible"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="2dp"
                 android:background="@color/green0" />
 
         </LinearLayout>
@@ -85,14 +85,14 @@
                 android:layout_marginTop="10dp"
                 android:text="待收货"
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
             <View
                 android:id="@+id/viewGetGoodsLine"
-                android:layout_width="48dp"
+                android:layout_width="60dp"
                 android:visibility="invisible"
                 android:layout_height="4dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="2dp"
                 android:background="@color/green0" />
 
         </LinearLayout>

@@ -29,7 +29,7 @@
                 android:gravity="center"
                 android:text="收货人"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
 
             <EditText
@@ -42,10 +42,11 @@
                 android:background="@android:color/transparent"
                 android:gravity="right"
                 android:maxLength="5"
+                android:hint="请填写收货人"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
             <View
                 android:layout_width="match_parent"
@@ -70,7 +71,7 @@
                 android:gravity="center"
                 android:text="手机"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
 
             <EditText
@@ -82,13 +83,14 @@
                 android:layout_marginRight="34dp"
                 android:background="@android:color/transparent"
                 android:gravity="right"
+                android:hint="请填写手机号"
                 android:maxLength="11"
                 android:numeric="integer"
                 android:phoneNumber="true"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
             <View
                 android:layout_width="match_parent"
@@ -113,7 +115,7 @@
                 android:gravity="center"
                 android:text="所在地区"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
 
             <TextView
@@ -126,7 +128,7 @@
                 android:gravity="center"
                 android:text="请选择所在地区"
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
 
             <ImageView
@@ -164,7 +166,7 @@
                 android:gravity="center"
                 android:text="详细地址"
                 android:textColor="@color/gray4"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
 
             <EditText
@@ -177,10 +179,11 @@
                 android:background="@android:color/transparent"
                 android:gravity="right"
                 android:maxLength="60"
+                android:hint="请填写详细地址"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/font_color"
-                android:textSize="@dimen/font12" />
+                android:textSize="@dimen/font14" />
 
             <View
                 android:layout_width="match_parent"
@@ -208,7 +211,7 @@
         android:gravity="center"
         android:text="保存并返回"
         android:textColor="@drawable/text_color_green0_selector"
-        android:textSize="@dimen/font12" />
+        android:textSize="@dimen/font14" />
 
 </RelativeLayout>
 

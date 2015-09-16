@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
+                android:textSize="@dimen/font16"
                 android:text="租用设备" />
         </LinearLayout>
 
@@ -78,7 +79,7 @@
             android:layout_marginLeft="16dp"
             android:text="我的订单"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font12" />
+            android:textSize="@dimen/font14" />
 
         <ImageView
             android:layout_width="12dp"
@@ -107,7 +108,7 @@
             android:layout_marginLeft="16dp"
             android:text="收货地址"
             android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font12" />
+            android:textSize="@dimen/font14" />
 
         <ImageView
             android:layout_width="12dp"

@@ -83,8 +83,8 @@ public class PayAddAddressActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.tvAddAddressArea)
-    public void AddAddressArea() {
+    @OnClick(R.id.rl3Functioned)
+    public void FunctionedAddAddressArea() {
         Intent intent=new Intent(this,PayChooseAddressProvinceActivity.class);
         startActivity(intent);
     }

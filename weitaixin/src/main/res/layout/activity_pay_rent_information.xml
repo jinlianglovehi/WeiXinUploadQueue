@@ -24,7 +24,7 @@
             android:layout_marginLeft="16dp"
             android:text="所在城市"
             android:textColor="@color/gray12"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/tvCityName"
@@ -35,7 +35,7 @@
             android:layout_toLeftOf="@+id/iv1None"
             android:text="请选择城市"
             android:textColor="@color/gray12"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
 
         <ImageView
@@ -66,7 +66,7 @@
             android:layout_marginLeft="16dp"
             android:text="选医院"
             android:textColor="@color/gray12"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/tvHospitalName"
@@ -77,7 +77,7 @@
             android:layout_toLeftOf="@+id/iv2None"
             android:text="请选择医院"
             android:textColor="@color/gray12"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
 
         <ImageView
@@ -112,7 +112,7 @@
             android:paddingTop="16dp"
             android:text="选医生"
             android:textColor="@color/gray12"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
         <GridView
             android:id="@+id/gvChooseDoctorList"

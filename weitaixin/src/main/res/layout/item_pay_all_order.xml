@@ -13,7 +13,7 @@
         android:layout_marginTop="20dp"
         android:text=""
         android:textColor="@color/green0"
-        android:textSize="@dimen/font12" />
+        android:textSize="@dimen/font14" />
 
 
     <TextView
@@ -25,7 +25,7 @@
         android:layout_toRightOf="@id/tvPayType"
         android:text=""
         android:textColor="@color/font_color"
-        android:textSize="@dimen/font12" />
+        android:textSize="@dimen/font14" />
 
     <TextView
         android:id="@+id/tvGoodsTime"
@@ -36,7 +36,7 @@
         android:layout_marginTop="10dp"
         android:text=""
         android:textColor="@color/font_color"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font14" />
 
 
     <View
@@ -58,7 +58,7 @@
         android:layout_marginLeft="26dp"
         android:text="合计:"
         android:textColor="@color/gray4"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font14" />
 
     <TextView
         android:id="@+id/tvPayPriceText"
@@ -69,7 +69,7 @@
         android:layout_marginRight="18dp"
         android:text=""
         android:textColor="@color/red2"
-        android:textSize="@dimen/font10" />
+        android:textSize="@dimen/font14" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,7 +90,7 @@
             android:visibility="visible"
             android:text="删除"
             android:textColor="@drawable/text_color_gray3_selector"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/tvPayAffirmGoodsOrGoPay"
@@ -103,7 +103,7 @@
             android:gravity="center"
             android:text="确认收货"
             android:textColor="@drawable/text_color_selector"
-            android:textSize="@dimen/font10" />
+            android:textSize="@dimen/font14" />
     </LinearLayout>
 
 </RelativeLayout>
