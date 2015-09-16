@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixinpro.ui.settings;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.ihealthbaby.client.model.HClientUser;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
 
@@ -39,6 +43,16 @@ public class SettingsFragment extends BaseFragment {
     RelativeLayout mRlSections;
     @Bind(R.id.rl_version)
     RelativeLayout mRlVersion;
+    @Bind(R.id.tv_host_id)
+    TextView mTvHostId;
+    @Bind(R.id.tv_index_sn)
+    TextView mTvIndexSn;
+    @Bind(R.id.tv_hospital)
+    TextView mTvHospital;
+    @Bind(R.id.tv_department)
+    TextView mTvDepartment;
+    @Bind(R.id.tv_version)
+    TextView mTvVersion;
 
 
     public static SettingsFragment getInstance() {
@@ -68,6 +82,14 @@ public class SettingsFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
+
+        HClientUser hClientUser = SPUtil.getHClientUser(getActivity());
+        mTvHostId.setText(hClientUser.getDeviceId() + "");
+        mTvIndexSn.setText(hClientUser.getSerialnum());
+        mTvHospital.setText(hClientUser.getHospitalName());
+        mTvDepartment.setText(hClientUser.getDepartmentName());
+        mTvVersion.setText(getVersion());
+
     }
 
     @Override
@@ -75,4 +97,22 @@ public class SettingsFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
+    /**
+     * 获取版本号
+     *
+     * @return 当前应用的版本号
+     */
+    public String getVersion() {
+        try {
+            PackageManager manager = getActivity().getPackageManager();
+            PackageInfo info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+            String version = info.versionName;
+            return this.getString(R.string.version) + version;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getString(R.string.version);
+        }
+    }
+
 }

@@ -76,7 +76,6 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
 
                 if (mFetalHeart != null) {
-
                     ApiManager.getInstance().hClientAccountApi.login("863425026498381", new HttpClientAdapter.Callback<HClientUser>() {
                         @Override
                         public void call(Result<HClientUser> t) {

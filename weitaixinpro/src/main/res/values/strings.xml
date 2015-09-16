@@ -7,4 +7,10 @@
     <string name="already_monitor">已检测</string>
     <string name="no_monitor">未检测</string>
     <string name="no_more_data">没有更多数据了</string>
+    <string name="monitor_settings">监护设置</string>
+    <string name="host_id">宿主ID</string>
+    <string name="index_sn">探头SN</string>
+    <string name="hospital">医院</string>
+    <string name="department">科室</string>
+    <string name="version">版本</string>
 </resources>
