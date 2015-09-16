@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:background="@color/white0"
         android:padding="10dp"
-        android:text="问医生咨询费用"
+        android:text=""
         android:gravity="center"
         android:textColor="@color/black0"
         android:textSize="@dimen/font12" />

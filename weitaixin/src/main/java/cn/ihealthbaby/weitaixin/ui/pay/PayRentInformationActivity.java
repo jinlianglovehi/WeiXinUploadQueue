@@ -127,6 +127,10 @@ public class PayRentInformationActivity extends BaseActivity {
 
     @OnClick(R.id.rl1None)
     public void rl1None() {
+        adapter.getDatas().clear();
+        adapter.notifyDataSetChanged();
+        tvHospitalName.setText("请选择医院");
+
         Intent intent = new Intent(this, PayRentChooseProvincesLeftActivity.class);
         startActivityForResult(intent, PayConstant.requestCodeCityChoose);
     }
@@ -138,7 +142,7 @@ public class PayRentInformationActivity extends BaseActivity {
         String cityName = (String) LocalProductData.getLocal().get(LocalProductData.CityName);
         LogUtil.d("cityNamecityId", cityId + "   =:=  " + cityName);
         if (TextUtils.isEmpty(cityId)) {
-            ToastUtil.show(getApplicationContext(), "请选择城市" + cityId);
+            ToastUtil.show(getApplicationContext(), "请选择城市");
             return;
         }
         Intent intent = new Intent(this, PayHospitalChooseActivity.class);
@@ -258,6 +262,9 @@ public class PayRentInformationActivity extends BaseActivity {
             }
         }
 
+        public ArrayList<Doctor> getDatas(){
+            return this.datas;
+        }
 
         public void addDatas(ArrayList<Doctor> datas) {
             if (datas != null) {

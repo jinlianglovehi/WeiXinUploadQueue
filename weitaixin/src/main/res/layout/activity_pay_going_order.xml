@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="18dp"
-            android:text="总计￥3424"
+            android:text=""
             android:textColor="@color/red0"
             android:textSize="@dimen/font12" />
 

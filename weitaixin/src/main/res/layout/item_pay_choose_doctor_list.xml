@@ -22,7 +22,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="fitXY"
-            android:src="@drawable/pay_choose"
+            android:src="@drawable/pay_choose_doctor_pic"
             android:visibility="gone" />
     </FrameLayout>
 

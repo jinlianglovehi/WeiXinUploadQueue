@@ -15,6 +15,7 @@
 
         <TextView
             android:id="@+id/tvName"
+            android:singleLine="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="问医生咨询费用"
@@ -28,16 +29,18 @@
     <LinearLayout
         android:id="@+id/llTwoFunction"
         android:layout_width="wrap_content"
-        android:layout_marginLeft="26dp"
-        android:paddingBottom="12dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/llOne1Function"
+        android:layout_marginLeft="26dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="12dp">
 
         <TextView
+            android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:text="*按已选择医院规定，一次性收取，不限咨询次数"
             android:textColor="@color/gray7"
             android:textSize="@dimen/font10" />
@@ -46,14 +49,14 @@
     </LinearLayout>
 
 
-
     <TextView
         android:id="@+id/tvPrice"
         android:layout_width="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="26dp"
+        android:singleLine="true"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="26dp"
+        android:layout_marginTop="16dp"
         android:text="￥3213"
         android:textColor="@color/red0"
         android:textSize="@dimen/font16" />

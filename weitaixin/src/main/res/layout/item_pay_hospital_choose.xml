@@ -13,7 +13,7 @@
         android:gravity="center"
         android:paddingBottom="20dp"
         android:paddingTop="20dp"
-        android:text="大撒旦医院"
+        android:text=""
         android:textColor="@color/black3"
         android:textSize="@dimen/font12" />
 

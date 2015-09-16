@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -85,6 +87,9 @@ public class PayOrderInformationActivity extends BaseActivity {
     private MyCouplingProductAdapter myCouplingProductAdapter;
     private MyConsultProductAdapter myConsultProductAdapter;
 
+
+    private boolean isAddPrice=true;
+
     private void pullData() {
         myCashPledgeProductAdapter=new MyCashPledgeProductAdapter(this,null);
         lvCashPledgeProduct.setAdapter(myCashPledgeProductAdapter);
@@ -94,6 +99,24 @@ public class PayOrderInformationActivity extends BaseActivity {
         lvCouplingProduct.setAdapter(myCouplingProductAdapter);
         myConsultProductAdapter=new MyConsultProductAdapter(this,null);
         lvConsultProduct.setAdapter(myConsultProductAdapter);
+
+
+        lvRentProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                myRentProductAdapter.oldPosition = myRentProductAdapter.currentPosition;
+                myRentProductAdapter.currentPosition = position;
+                myRentProductAdapter.notifyDataSetChanged();
+
+                Product product= (Product) myRentProductAdapter.getItem(position);
+                Product oldProduct= (Product) myRentProductAdapter.getItem( myRentProductAdapter.oldPosition);
+
+                priceCount -= oldProduct.getPrice();
+                priceCount += product.getPrice();
+                tvPriceGoingOrder.setText("总计￥"+priceCount+"");
+            }
+        });
+
 
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
@@ -108,16 +131,23 @@ public class PayOrderInformationActivity extends BaseActivity {
                     //商品类型 0 押金, 1 耗材包 , 2 租金 ,3 咨询费
                     for (int i = 0; i < list.size(); i++) {
                         Product product = list.get(i);
-                        priceCount += product.getPrice();
+
                         int productType = product.getProductType();
                         if (productType == 0) {
                             cashPledgeProduct.add(product);
+                            priceCount += product.getPrice();
                         } else if (productType == 1) {
                             couplingProduct.add(product);
+                            priceCount += product.getPrice();
                         } else if (productType == 2) {
                             rentProduct.add(product);
+                            if(isAddPrice){
+                                priceCount += product.getPrice();
+                                isAddPrice=false;
+                            }
                         } else if (productType == 3) {
                             consultProduct.add(product);
+                            priceCount += product.getPrice();
                         }
                     }
 
@@ -156,6 +186,16 @@ public class PayOrderInformationActivity extends BaseActivity {
 
     @OnClick(R.id.tvVerifyOrder)
     public void VerifyOrder() {
+
+        ArrayList<Product> rentProduct = myRentProductAdapter.datas;
+        Product product = rentProduct.get(myRentProductAdapter.currentPosition);
+//        rentProduct.clear();
+
+        ArrayList<Product> rentProductNew=new ArrayList<Product>();
+        rentProductNew.add(product);
+        LocalProductData.getLocal().put(LocalProductData.Name02, rentProductNew);
+
+
         Intent intent=new Intent(this, PayConfirmOrderActivity.class);
         startActivity(intent);
     }
@@ -238,7 +278,8 @@ public class PayOrderInformationActivity extends BaseActivity {
         private Context context;
         private ArrayList<Product> datas;
         private LayoutInflater mInflater;
-        public int currentPosition;
+        public int currentPosition=0;
+        public int oldPosition=0;
 
         public MyRentProductAdapter(Context context, ArrayList<Product> datas) {
             mInflater = LayoutInflater.from(context);
@@ -289,8 +330,15 @@ public class PayOrderInformationActivity extends BaseActivity {
             }
 
             Product product = this.datas.get(position);
-            viewHolder.tvName.setText(product.getName()+"");
+            viewHolder.tvName.setText(product.getName() + "");
             viewHolder.tvPrice.setText("￥"+product.getPrice()+"");
+            viewHolder.tvDescription.setText(product.getDescription()+"");
+
+            if (currentPosition == position) {
+                viewHolder.ivAddressImage.setImageResource(R.drawable.pay_choose);
+            } else {
+                viewHolder.ivAddressImage.setImageResource(R.drawable.pay_choose_un);
+            }
 
             return convertView;
         }
@@ -298,6 +346,8 @@ public class PayOrderInformationActivity extends BaseActivity {
         class ViewHolder {
             @Bind(R.id.tvName) TextView tvName;
             @Bind(R.id.tvPrice) TextView tvPrice;
+            @Bind(R.id.tvDescription) TextView tvDescription;
+            @Bind(R.id.ivAddressImage)  ImageView ivAddressImage;
 
             public ViewHolder(View itemView) {
                 ButterKnife.bind(this, itemView);
@@ -312,6 +362,7 @@ public class PayOrderInformationActivity extends BaseActivity {
         private LayoutInflater mInflater;
         public int currentPosition;
         public HashMap<Integer,Integer> countGoods=new HashMap<Integer,Integer>();
+        public HashMap<Integer,Integer> goodsTotalPrice =new HashMap<Integer,Integer>();
 
         public MyCouplingProductAdapter(Context context, ArrayList<Product> datas) {
             mInflater = LayoutInflater.from(context);
@@ -331,8 +382,12 @@ public class PayOrderInformationActivity extends BaseActivity {
 
         public void initSet(){
             countGoods.clear();
+            goodsTotalPrice.clear();
             for (int i = 0; i < this.datas.size(); i++) {
                 countGoods.put(i,1);
+            }
+            for (int i = 0; i < this.datas.size(); i++) {
+                goodsTotalPrice.put(i, this.datas.get(i).getPrice());
             }
         }
 
@@ -360,7 +415,7 @@ public class PayOrderInformationActivity extends BaseActivity {
 
         ViewHolder viewHolder = null;
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.item_pay_coupling_product, null);
                 viewHolder = new ViewHolder(convertView);
@@ -370,8 +425,9 @@ public class PayOrderInformationActivity extends BaseActivity {
             }
 
             final Product product = this.datas.get(position);
+            final int goodsTPrice=goodsTotalPrice.get(position);
             viewHolder.tvName.setText(product.getName()+"");
-            viewHolder.tvPrice.setText("￥" + product.getPrice() + "");
+            viewHolder.tvPrice.setText("￥" + goodsTPrice + "");
 
             int tCount = countGoods.get(position);
             viewHolder.tvCountText.setText(tCount+"");
@@ -379,13 +435,20 @@ public class PayOrderInformationActivity extends BaseActivity {
             viewHolder.tvReduceOne.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int integer = countGoods.get(position);
-                    LogUtil.d("countGoodsinteger","countGoodsinteger= %s ",integer);
-                    if (integer == 1) {
+                    int coundNumber = countGoods.get(position);
+                    LogUtil.d("countGoodsinteger","countGoodsinteger= %s ",coundNumber);
+                    if (coundNumber == 1) {
                         viewHolder.tvCountText.setText("1");
+//                        int singlePrice=product.getPrice()/countGoods.get(position);
                         countGoods.put(position, 1);
+                        goodsTotalPrice.put(position, product.getPrice() * (countGoods.get(position)));
+//                        product.setPrice(singlePrice * (countGoods.get(position)));
+                        ToastUtil.show(context,"数量至少一个");
                     } else {
-                        countGoods.put(position, (integer - 1));
+//                        int singlePrice=product.getPrice()/countGoods.get(position);
+                        countGoods.put(position, (coundNumber - 1));
+                        goodsTotalPrice.put(position, product.getPrice() * (countGoods.get(position)));
+//                        product.setPrice(singlePrice * (countGoods.get(position)));
                         viewHolder.tvCountText.setText(countGoods.get(position) + "");
                         priceCount -= product.getPrice();
                     }
@@ -397,13 +460,20 @@ public class PayOrderInformationActivity extends BaseActivity {
             viewHolder.tvAddOne.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int integer = countGoods.get(position);
-                    LogUtil.d("countGoodsinteger","countGoodsinteger= %s ",integer);
-                    if (integer == product.getMaxAmount()) {
+                    int coundNumber = countGoods.get(position);
+                    LogUtil.d("countGoodsinteger","countGoodsinteger= %s ",coundNumber);
+                    if (coundNumber == product.getMaxAmount()) {
                         viewHolder.tvCountText.setText(product.getMaxAmount() + "");
+//                        int singlePrice=product.getPrice()/countGoods.get(position);
                         countGoods.put(position, product.getMaxAmount());
+                        goodsTotalPrice.put(position, product.getPrice() * (countGoods.get(position)));
+//                        product.setPrice(singlePrice * (countGoods.get(position)));
+                        ToastUtil.show(context, "数量最多"+product.getMaxAmount()+"个");
                     } else {
-                        countGoods.put(position, (integer + 1));
+//                        int singlePrice=product.getPrice()/countGoods.get(position);
+                        countGoods.put(position, (coundNumber + 1));
+                        goodsTotalPrice.put(position, product.getPrice() * (countGoods.get(position)));
+//                        product.setPrice(singlePrice * (countGoods.get(position)));
                         viewHolder.tvCountText.setText(countGoods.get(position) + "");
                         priceCount += product.getPrice();
                     }
@@ -487,6 +557,7 @@ public class PayOrderInformationActivity extends BaseActivity {
             Product product = this.datas.get(position);
             viewHolder.tvName.setText(product.getName()+"");
             viewHolder.tvPrice.setText("￥"+product.getPrice()+"");
+            viewHolder.tvDescription.setText(product.getDescription()+"");
 
             return convertView;
         }
@@ -494,6 +565,7 @@ public class PayOrderInformationActivity extends BaseActivity {
         class ViewHolder {
             @Bind(R.id.tvName) TextView tvName;
             @Bind(R.id.tvPrice) TextView tvPrice;
+            @Bind(R.id.tvDescription) TextView tvDescription;
 
             public ViewHolder(View itemView) {
                 ButterKnife.bind(this, itemView);
