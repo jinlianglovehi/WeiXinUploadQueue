@@ -526,12 +526,12 @@ public class DataDao {
 					}
 				}
 			}
-//			LogUtil.d("adviceItemsNative", adviceItemsCloudTenCount.size() + " <==adviceItemsNative==> " + adviceItemsNative.size());
+			LogUtil.d("adviceqqqqNative", adviceItemsCloudTenCount.size() + " <==adviceqqqqNative==> " + adviceItemsNative.size());
 			adviceItems.addAll(adviceItemsCloudTenCount);
 			adviceItems.addAll(adviceItemsNative);
 			cursor.close();
 		}
-//		LogUtil.d("adviceItemsAllAll", adviceItems.size() + " -adviceItemsAllAll ==> " + adviceItems);
+		LogUtil.d("advicewwwwwNative", adviceItems.size() + " -advicewwwwwNative ==> " + adviceItems);
 		return adviceItems;
 	}
 

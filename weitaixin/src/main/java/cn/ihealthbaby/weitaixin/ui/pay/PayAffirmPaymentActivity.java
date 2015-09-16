@@ -1,7 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
@@ -22,6 +21,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.alipay.PayAlipayUtil;
+import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
 import de.greenrobot.event.EventBus;
 
 public class PayAffirmPaymentActivity extends BaseActivity {

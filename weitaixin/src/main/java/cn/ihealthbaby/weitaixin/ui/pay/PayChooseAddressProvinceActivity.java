@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,9 +28,7 @@ import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.ui.pay.PayMimeAddressActivity;
-import cn.ihealthbaby.weitaixin.ui.pay.PayMimeOrderActivity;
-import cn.ihealthbaby.weitaixin.ui.pay.PayRentInformationActivity;
+import cn.ihealthbaby.weitaixin.ui.pay.event.PayChooseAreasEvent;
 import de.greenrobot.event.EventBus;
 
 public class PayChooseAddressProvinceActivity extends BaseActivity {

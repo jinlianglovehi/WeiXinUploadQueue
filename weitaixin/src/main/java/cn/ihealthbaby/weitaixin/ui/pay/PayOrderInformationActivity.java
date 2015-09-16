@@ -29,6 +29,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
 import de.greenrobot.event.EventBus;
 
 public class PayOrderInformationActivity extends BaseActivity {

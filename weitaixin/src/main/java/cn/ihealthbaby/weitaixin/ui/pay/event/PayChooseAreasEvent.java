@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.ui.pay;
+package cn.ihealthbaby.weitaixin.ui.pay.event;
 
 public class PayChooseAreasEvent {
 

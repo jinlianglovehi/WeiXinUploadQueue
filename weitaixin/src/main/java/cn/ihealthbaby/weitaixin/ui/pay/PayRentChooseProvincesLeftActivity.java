@@ -30,8 +30,11 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.pay.event.PayChooseCityCloseEvent;
+import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
+import de.greenrobot.event.EventBus;
 
-public class PayCityChooseActivity extends BaseActivity {
+public class PayRentChooseProvincesLeftActivity extends BaseActivity {
 
     @Bind(R.id.back) RelativeLayout back;
     @Bind(R.id.title_text) TextView title_text;
@@ -39,17 +42,17 @@ public class PayCityChooseActivity extends BaseActivity {
 
     //
     @Bind(R.id.lvPayLeftCity) ListView lvPayLeftCity;
-    @Bind(R.id.lvPayRightCity) ListView lvPayRightCity;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay_city_choose);
+        setContentView(R.layout.activity_pay_city_choose_left);
 
         ButterKnife.bind(this);
 
         title_text.setText("选择城市");
+        EventBus.getDefault().register(this);
 
         LocalProductData.getLocal().put(LocalProductData.CityId, "");
         LocalProductData.getLocal().put(LocalProductData.CityName, "");
@@ -60,8 +63,18 @@ public class PayCityChooseActivity extends BaseActivity {
         pullData();
     }
 
+
+    public void onEventMainThread(PayChooseCityCloseEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     MyPayLeftCityAdapter adapterLeft;
-    MyPayRightCityAdapter adapterRight;
     private void initView() {
         adapterLeft=new MyPayLeftCityAdapter(this,null);
         lvPayLeftCity.setAdapter(adapterLeft);
@@ -73,53 +86,13 @@ public class PayCityChooseActivity extends BaseActivity {
                 adapterLeft.currentPosition=position;
                 adapterLeft.notifyDataSetChanged();
 
-                final CustomDialog customDialog=new CustomDialog();
-                Dialog dialog = customDialog.createDialog1(PayCityChooseActivity.this, "数据加载中...");
-                dialog.show();
-                ApiManager.getInstance().addressApi.getCities(provinceid, 1, new HttpClientAdapter.Callback<ApiList<City>>() {
-                    @Override
-                    public void call(Result<ApiList<City>> t) {
-                        if (t.isSuccess()) {
-                            ApiList<City> data = t.getData();
-
-                            ArrayList<City> rightCityList = (ArrayList<City>) data.getList();
-
-                            if (rightCityList != null && rightCityList.size() > 0) {
-                                adapterRight.setDatas(rightCityList);
-                                adapterRight.notifyDataSetChanged();
-                            } else {
-                                ToastUtil.show(getApplicationContext(), "没有数据~~~");
-                            }
-                        } else {
-                            ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                        }
-                        customDialog.dismiss();
-                    }
-                },getRequestTag());
+                Intent intent=new Intent(getApplicationContext(),PayRentChooseCityRightActivity.class);
+                intent.putExtra("provinceid", provinceid);
+                intent.putExtra("ProvinceNamed", item.getProvince());
+                startActivity(intent);
             }
         });
 
-        adapterRight=new MyPayRightCityAdapter(this,null);
-        lvPayRightCity.setAdapter(adapterRight);
-        lvPayRightCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                adapterRight.currentPosition=position;
-                City item = (City) adapterRight.getItem(position);
-                String cityid = item.getCityid();
-                String cityName = item.getCity();
-                adapterRight.notifyDataSetChanged();
-                Intent intent=new Intent();
-                intent.putExtra("cityid",cityid);
-                intent.putExtra("cityName",cityName);
-
-                LocalProductData.getLocal().put(LocalProductData.CityId, cityid);
-                LocalProductData.getLocal().put(LocalProductData.CityName,cityName);
-                setResult(PayConstant.resultCodeCityChoose, intent);
-
-                PayCityChooseActivity.this.finish();
-            }
-        });
     }
 
     private void pullData() {
@@ -223,88 +196,6 @@ public class PayCityChooseActivity extends BaseActivity {
                 viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.gray1));
             }
             viewHolder.tvState.setVisibility(View.INVISIBLE);
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            @Bind(R.id.tvName)  TextView tvName;
-            @Bind(R.id.tvState) ImageView tvState;
-
-            public ViewHolder(View itemView) {
-                ButterKnife.bind(this, itemView);
-            }
-        }
-
-    }
-
-
-
-
-    public class MyPayRightCityAdapter extends BaseAdapter {
-        private Context context;
-        private ArrayList<City> datas;
-        private LayoutInflater mInflater;
-        public int currentPosition=-1;
-
-        public MyPayRightCityAdapter(Context context, ArrayList<City> datas) {
-            mInflater = LayoutInflater.from(context);
-            this.context = context;
-            setDatas(datas);
-        }
-
-        public void setDatas(ArrayList<City> datas) {
-            if (datas == null) {
-                this.datas = new ArrayList<City>();
-            } else {
-                this.datas = datas;
-            }
-        }
-
-
-        public void addDatas(ArrayList<City> datas) {
-            if (datas != null) {
-                this.datas.addAll(datas);
-            }
-        }
-
-
-        @Override
-        public int getCount() {
-            return this.datas.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return datas.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.item_pay_city_choose, null);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            City provinceName = this.datas.get(position);
-            viewHolder.tvName.setText(provinceName.getCity() + "");
-
-            if (currentPosition == position) {
-//                viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.white0));
-                viewHolder.tvState.setVisibility(View.VISIBLE);
-            }else{
-//                viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.gray1));
-                viewHolder.tvState.setVisibility(View.INVISIBLE);
-            }
 
             return convertView;
         }

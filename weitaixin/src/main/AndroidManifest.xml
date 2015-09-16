@@ -69,7 +69,7 @@
         <activity android:name=".ui.pay.PayAddAddressActivity" />
         <activity android:name=".ui.pay.PayRentInformationActivity" />
         <activity android:name=".ui.pay.PayHospitalChooseActivity" />
-        <activity android:name=".ui.pay.PayCityChooseActivity" />
+        <activity android:name=".ui.pay.PayRentChooseProvincesLeftActivity" />
         <activity android:name=".ui.pay.PayOrderInformationActivity" />
         <activity android:name=".ui.pay.PayConfirmOrderActivity" />
         <activity android:name=".ui.pay.PayAffirmPaymentActivity" />
@@ -78,6 +78,7 @@
         <activity android:name=".ui.pay.PayChooseAddressProvinceActivity" />
         <activity android:name=".ui.pay.PayChooseAddressCityActivity" />
         <activity android:name=".ui.pay.PayChooseAddressAreasActivity" />
+        <activity android:name=".ui.pay.PayRentChooseCityRightActivity" />
         <activity android:name=".ui.monitor.MonitorCommonSense" />
 
         <service android:name=".service.AdviceSettingService"/>

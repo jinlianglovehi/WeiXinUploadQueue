@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 import de.greenrobot.event.EventBus;
 
@@ -104,10 +104,9 @@ public class PayRentInformationActivity extends BaseActivity {
     }
 
 
-
     @OnClick(R.id.rl1None)
     public void rl1None() {
-        Intent intent=new Intent(this, PayCityChooseActivity.class);
+        Intent intent = new Intent(this, PayRentChooseProvincesLeftActivity.class);
         startActivityForResult(intent, PayConstant.requestCodeCityChoose);
     }
 
@@ -116,9 +115,9 @@ public class PayRentInformationActivity extends BaseActivity {
     public void rl2None() {
         String cityId = (String) LocalProductData.getLocal().get(LocalProductData.CityId);
         String cityName = (String) LocalProductData.getLocal().get(LocalProductData.CityName);
-        LogUtil.d("cityNamecityId", cityId+"   =:=  "+cityName);
+        LogUtil.d("cityNamecityId", cityId + "   =:=  " + cityName);
         if (TextUtils.isEmpty(cityId)) {
-            ToastUtil.show(getApplicationContext(),"请选择城市"+cityId);
+            ToastUtil.show(getApplicationContext(), "请选择城市" + cityId);
             return;
         }
         Intent intent = new Intent(this, PayHospitalChooseActivity.class);
@@ -215,6 +214,8 @@ public class PayRentInformationActivity extends BaseActivity {
             }
         }
     }
+
+
 
     public class MyDoctorChooseAdapter extends BaseAdapter {
         private Context context;

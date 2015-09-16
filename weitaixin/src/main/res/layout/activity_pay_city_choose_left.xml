@@ -18,17 +18,10 @@
         <ListView
             android:id="@+id/lvPayLeftCity"
             android:background="@color/gray1"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_below="@id/head_title_id" />
 
-        <ListView
-            android:id="@+id/lvPayRightCity"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_below="@id/head_title_id" />
 
     </LinearLayout>
 
