@@ -1,147 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/gray17"
               android:orientation="vertical">
 
     <include
         android:id="@+id/head_title_id"
         layout="@layout/layout_title"/>
 
-
-    <RelativeLayout
-        android:id="@+id/ll_set_system_01"
-        style="@style/wo_info_item"
-        android:layout_marginTop="15dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="23dp"
-            android:singleLine="true"
-            android:text="正常寻找胎心"
-            android:textColor="@color/gray12"
-            android:textSize="@dimen/font_normal"/>
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="22dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/ll_set_system_02"
-        style="@style/wo_info_item"
-        android:layout_marginTop="15dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="23dp"
-            android:singleLine="true"
-            android:text="EFM电子胎心监护"
-            android:textColor="@color/gray12"
-            android:textSize="@dimen/font_normal"/>
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="22dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/ll_set_system_03"
-        style="@style/wo_info_item"
-        android:layout_marginTop="15dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="23dp"
-            android:singleLine="true"
-            android:text="NST无压力测试"
-            android:textColor="@color/gray12"
-            android:textSize="@dimen/font_normal"/>
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="22dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/ll_set_system_04"
-        style="@style/wo_info_item"
-        android:layout_marginTop="15dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="23dp"
-            android:singleLine="true"
-            android:text="CST宫缩压力测试"
-            android:textColor="@color/gray12"
-            android:textSize="@dimen/font_normal"/>
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="22dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/ll_set_system_05"
-        style="@style/wo_info_item"
-        android:layout_marginTop="15dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="23dp"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="NST什么时候开始"
-            android:textColor="@drawable/text_color_hei_selector"
-            android:textSize="@dimen/font_normal"/>
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="22dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/wo_head_arrow_right"
-            android:visibility="visible"/>
-    </RelativeLayout>
+    <WebView
+        android:id="@+id/wv_monitor_common_sence"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

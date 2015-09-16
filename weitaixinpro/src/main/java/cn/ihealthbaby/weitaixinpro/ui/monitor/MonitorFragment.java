@@ -60,7 +60,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     private int undetectedPage = 1;
 
     //每页记录数
-    private int pageSize = 1;
+    private int pageSize = 10;
 
 
     private MonitorAdapter mAdapter;
@@ -122,9 +122,9 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 int page = 1;
                 if (status == 0) {
-                    page = undetectedPage++;
+                    page = ++undetectedPage;
                 } else {
-                    page = alreadyPage++;
+                    page = ++alreadyPage;
                 }
 
                 initData(page);
@@ -146,20 +146,25 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                         } else {
                             mPullToRefresh.onRefreshComplete();
                         }
-                        String tvString = "";
-                        if (status == 0) {
-                            tvString = getString(R.string.no_monitor) + data.getCount() + "条";
-                        } else {
-                            tvString = getString(R.string.already_monitor) + data.getCount() + "条";
-                        }
-                        SpannableStringBuilder builder = new SpannableStringBuilder(tvString);
-                        int numberLength = Integer.toString(data.getCount()).length();
-                        ForegroundColorSpan green = new ForegroundColorSpan(Color.parseColor("#FF01CF97"));
-                        builder.setSpan(green, 3, 3 + numberLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        mTvTitle.setText(builder);
+                        setTvTitle(data);
 
                     }
                 }), getRequestTag());
+    }
+
+
+    private void setTvTitle(PageData<ServiceInside> data) {
+        String tvString = "";
+        if (status == 0) {
+            tvString = getString(R.string.no_monitor) + data.getCount() + "条";
+        } else {
+            tvString = getString(R.string.already_monitor) + data.getCount() + "条";
+        }
+        SpannableStringBuilder builder = new SpannableStringBuilder(tvString);
+        int numberLength = Integer.toString(data.getCount()).length();
+        ForegroundColorSpan green = new ForegroundColorSpan(Color.parseColor("#FF01CF97"));
+        builder.setSpan(green, 3, 3 + numberLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTvTitle.setText(builder);
     }
 
     @Override
@@ -173,7 +178,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_already_monitor:
-                if(status!=1){
+                if (status != 1) {
                     status = 1;
                     mAdapter.clearData();
                     initData(1);
@@ -182,7 +187,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
                 }
                 break;
             case R.id.rl_no_monitor:
-                if(status!=0){
+                if (status != 0) {
                     status = 0;
                     mIvNoMonitor.setVisibility(View.VISIBLE);
                     mIvAlreayMonitor.setVisibility(View.INVISIBLE);
