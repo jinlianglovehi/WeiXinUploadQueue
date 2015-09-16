@@ -108,20 +108,26 @@ public class PayOrderInformationActivity extends BaseActivity {
                 myRentProductAdapter.currentPosition = position;
                 myRentProductAdapter.notifyDataSetChanged();
 
-                Product product= (Product) myRentProductAdapter.getItem(position);
-                Product oldProduct= (Product) myRentProductAdapter.getItem( myRentProductAdapter.oldPosition);
+                Product product = (Product) myRentProductAdapter.getItem(position);
+                Product oldProduct = (Product) myRentProductAdapter.getItem(myRentProductAdapter.oldPosition);
 
                 priceCount -= oldProduct.getPrice();
                 priceCount += product.getPrice();
-                tvPriceGoingOrder.setText("总计￥"+priceCount+"");
+                tvPriceGoingOrder.setText("总计￥" + priceCount + "");
             }
         });
 
+        long HospitalId = (long) LocalProductData.getLocal().get(LocalProductData.HospitalId);
+
+        if (HospitalId <= 0) {
+            ToastUtil.show(getApplicationContext(), "医院Id不正确");
+            return;
+        }
 
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().productApi.getInitProducts(1, new HttpClientAdapter.Callback<ApiList<Product>>() {
+        ApiManager.getInstance().productApi.getInitProducts(HospitalId, new HttpClientAdapter.Callback<ApiList<Product>>() {
             @Override
             public void call(Result<ApiList<Product>> t) {
                 if (t.isSuccess()) {
@@ -430,7 +436,24 @@ public class PayOrderInformationActivity extends BaseActivity {
             viewHolder.tvPrice.setText("￥" + goodsTPrice + "");
 
             int tCount = countGoods.get(position);
-            viewHolder.tvCountText.setText(tCount+"");
+            viewHolder.tvCountText.setText(tCount + "");
+
+
+            if (tCount == 1) {
+                viewHolder.tvReduceOne.setTextColor(getResources().getColor(R.color.black4));
+                viewHolder.tvAddOne.setTextColor(getResources().getColor(R.color.black0));
+            }
+
+            if (tCount == product.getMaxAmount()) {
+                viewHolder.tvReduceOne.setTextColor(getResources().getColor(R.color.black0));
+                viewHolder.tvAddOne.setTextColor(getResources().getColor(R.color.black4));
+            }
+
+            if (tCount > 1 && tCount < product.getMaxAmount()) {
+                viewHolder.tvReduceOne.setTextColor(getResources().getColor(R.color.black0));
+                viewHolder.tvAddOne.setTextColor(getResources().getColor(R.color.black0));
+            }
+
 
             viewHolder.tvReduceOne.setOnClickListener(new View.OnClickListener() {
                 @Override

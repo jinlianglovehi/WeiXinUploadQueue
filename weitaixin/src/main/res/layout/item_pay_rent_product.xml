@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="多萨达as"
+            android:text=""
             android:textColor="@color/black0"
             android:textSize="@dimen/font12" />
 
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="*从租凭日直至归还设备，共计600元"
+            android:text=""
             android:textColor="@color/gray7"
             android:textSize="@dimen/font10" />
 
@@ -65,7 +65,7 @@
         android:layout_marginRight="26dp"
         android:layout_marginTop="16dp"
         android:singleLine="true"
-        android:text="￥3213"
+        android:text=""
         android:textColor="@color/red0"
         android:textSize="@dimen/font16" />
 

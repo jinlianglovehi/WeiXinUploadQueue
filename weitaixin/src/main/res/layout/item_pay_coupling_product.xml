@@ -32,14 +32,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:paddingBottom="10dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="16dp"
         android:paddingTop="54dp"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tvReduceOne"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
             android:text="—"
@@ -48,7 +49,7 @@
 
         <TextView
             android:id="@+id/tvCountText"
-            android:layout_width="90dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:background="@drawable/corner_background_gray16"
@@ -61,7 +62,8 @@
 
         <TextView
             android:id="@+id/tvAddOne"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
+            android:gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

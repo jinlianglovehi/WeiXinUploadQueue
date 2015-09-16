@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="26dp"
         android:layout_marginTop="20dp"
-        android:text="【待收货】"
-        android:textColor="@color/green5"
+        android:text=""
+        android:textColor="@color/green0"
         android:textSize="@dimen/font12" />
 
 
@@ -34,7 +34,7 @@
         android:layout_below="@id/tvPayType"
         android:layout_marginLeft="26dp"
         android:layout_marginTop="10dp"
-        android:text="2015-2-2  15: 11"
+        android:text=""
         android:textColor="@color/font_color"
         android:textSize="@dimen/font10" />
 
@@ -67,7 +67,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/viewLine"
         android:layout_marginRight="18dp"
-        android:text="￥4324"
+        android:text=""
         android:textColor="@color/red2"
         android:textSize="@dimen/font10" />
 

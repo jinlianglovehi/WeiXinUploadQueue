@@ -485,7 +485,7 @@ public class DataDao {
 	/**
 	 * 获取记录界面的显示数据的部分字段(包含本地和云端记录)
 	 */
-	public ArrayList<MyAdviceItem> getAllRecordNativeAndCloudOnView(long user_id) {
+	public ArrayList<MyAdviceItem> getAllRecordNativeAndCloudOnView2(long user_id) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		ArrayList<MyAdviceItem> adviceItems = new ArrayList<MyAdviceItem>();
 		ArrayList<MyAdviceItem> adviceItemsCloud = new ArrayList<MyAdviceItem>();

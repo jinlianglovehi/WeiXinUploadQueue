@@ -18,7 +18,7 @@
             android:singleLine="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="问医生咨询费用"
+            android:text=""
             android:textColor="@color/black0"
             android:textSize="@dimen/font12" />
 
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="*按已选择医院规定，一次性收取，不限咨询次数"
+            android:text=""
             android:textColor="@color/gray7"
             android:textSize="@dimen/font10" />
 
@@ -57,7 +57,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="26dp"
         android:layout_marginTop="16dp"
-        android:text="￥3213"
+        android:text=""
         android:textColor="@color/red0"
         android:textSize="@dimen/font16" />
 

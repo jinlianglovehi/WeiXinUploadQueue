@@ -13,7 +13,7 @@
         android:layout_marginLeft="26dp"
         android:paddingBottom="20dp"
         android:paddingTop="20dp"
-        android:text="【待收货】"
+        android:text=""
         android:textColor="@color/font_color"
         android:textSize="@dimen/font12" />
 
@@ -26,7 +26,7 @@
         android:layout_marginRight="26dp"
         android:paddingBottom="20dp"
         android:paddingTop="20dp"
-        android:text="￥2343"
+        android:text=""
         android:textColor="@color/red0"
         android:textSize="@dimen/font12" />
 

@@ -246,17 +246,18 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			final CustomDialog customDialog = new CustomDialog();
 			Dialog dialog = customDialog.createDialog1(context, "上传中...");
 			dialog.show();
+			
 			AdviceForm adviceForm = new AdviceForm();
-			adviceForm.setClientId(adviceItem.getId() + "");
+			adviceForm.setClientId(adviceItem.getJianceid() + "");
 			adviceForm.setTestTime(adviceItem.getTestTime());
 			adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
-			adviceForm.setData("sd");
-			adviceForm.setAskPurpose("dsda");
+//			adviceForm.setData(adviceForm.getData());
+			adviceForm.setAskPurpose(adviceItem.getPurpose());
 //            adviceForm.setDataType();
 //            adviceForm.setDeviceType();
-			adviceForm.setFeeling("dsadsad");
+			adviceForm.setFeeling(adviceItem.getFeeling());
 			adviceForm.setFetalTonePath("dsaddsa");
-//            adviceForm.setLatitude();
+//            adviceForm.setLatitude(adviceItem.get);
 //            adviceForm.setLongitude();
 			ApiManager.getInstance().adviceApi.uploadData(adviceForm, new HttpClientAdapter.Callback<Long>() {
 				@Override

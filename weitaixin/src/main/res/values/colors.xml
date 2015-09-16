@@ -41,6 +41,8 @@
     <color name="black1">#FF000000</color>
     <color name="black2">#FF353330</color>
     <color name="black3">#FF2E2E2E</color>
+    <color name="black4">#FF919191</color>
+
     <color name="red0">#FFFE0058</color>
     <color name="red1">#FFea5550</color>
     <color name="red2">#FFee4f4e</color>

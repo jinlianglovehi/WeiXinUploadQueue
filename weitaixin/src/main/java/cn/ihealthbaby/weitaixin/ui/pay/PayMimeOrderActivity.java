@@ -108,7 +108,7 @@ public class PayMimeOrderActivity extends BaseActivity {
         viewPayOrderLine.setVisibility(View.INVISIBLE);
         tvGetGoodsText.setTextColor(getResources().getColor(R.color.font_color));
         viewGetGoodsLine.setVisibility(View.INVISIBLE);
-        textView.setTextColor(getResources().getColor(R.color.green5));
+        textView.setTextColor(getResources().getColor(R.color.green0));
         view.setVisibility(View.VISIBLE);
     }
 
