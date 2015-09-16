@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">My Application</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="device_id">本机decice ID：</string>
-    <string name="already_monitor">已检测</string>
-    <string name="no_monitor">未检测</string>
+    <string name="already_monitor">已监测</string>
+    <string name="no_monitor">未监测</string>
+    <string name="monitor_during">监测中</string>
     <string name="no_more_data">没有更多数据了</string>
     <string name="monitor_settings">监护设置</string>
     <string name="host_id">宿主ID</string>
