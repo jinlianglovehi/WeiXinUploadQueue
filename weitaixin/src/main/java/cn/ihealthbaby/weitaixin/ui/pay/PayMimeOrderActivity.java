@@ -10,20 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
-import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
-import cn.ihealthbaby.weitaixin.ui.mine.WoInfoFragment;
-import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
-import cn.ihealthbaby.weitaixin.ui.record.RecordFragment;
 
 public class PayMimeOrderActivity extends BaseActivity {
 

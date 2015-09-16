@@ -12,7 +12,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.model.ServiceInside;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.tools.DateTimeTool;
 
@@ -23,6 +22,8 @@ public class MonitorAdapter extends BaseAdapter {
 
     private List<ServiceInside> mServiceInsides;
     private Context mContext;
+
+    private BeginMoniter mBeginMoniter;
 
     public MonitorAdapter(Context context) {
         mContext = context;
@@ -60,12 +61,12 @@ public class MonitorAdapter extends BaseAdapter {
         holder.mTvBegin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
-                ToastUtil.show(mContext, "开始检测:" + position);
+                mBeginMoniter.begin(mServiceInsides.get(position));
             }
         });
         return convertView;
     }
+
 
     public void clearAddSetData(List<ServiceInside> serviceInsides) {
         mServiceInsides.clear();
@@ -97,6 +98,14 @@ public class MonitorAdapter extends BaseAdapter {
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+    public void setOnLoadListener(BeginMoniter beginMoniter) {
+        mBeginMoniter = beginMoniter;
+    }
+
+    public interface BeginMoniter {
+        void begin(ServiceInside serviceInside);
     }
 
 

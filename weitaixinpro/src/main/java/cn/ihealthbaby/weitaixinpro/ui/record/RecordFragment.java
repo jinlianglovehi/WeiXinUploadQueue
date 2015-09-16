@@ -18,17 +18,11 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.ihealthbaby.client.form.HClientForm;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
-import cn.ihealthbaby.weitaixinpro.model.HAdviceForm;
 import cn.ihealthbaby.weitaixinpro.ui.adapter.RecordAdapter;
 
 public class RecordFragment extends BaseFragment {
@@ -74,32 +68,23 @@ public class RecordFragment extends BaseFragment {
 
     private void initView() {
         mRecordAdapter = new RecordAdapter(getActivity());
-        List<HAdviceForm> hAdviceForms = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
-            hAdviceForms.add(new HAdviceForm());
-        }
-        mRecordAdapter.addData(hAdviceForms);
+        //TODO  取出本地数据
+
         mPullToRefresh.setAdapter(mRecordAdapter);
         mPullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
         mPullToRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                List data = new ArrayList();
-                data.add(new HAdviceForm());
-                Bundle bundleData = new Bundle();
-                bundleData.putSerializable("data", (Serializable) data);
+                //TODO  取出本地数据
                 mHandler.sendEmptyMessage(1);
-                mRecordAdapter.clearAndAddData(data);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                List data = new ArrayList();
-                data.add(new HClientForm());
-                Bundle bundleData = new Bundle();
-                bundleData.putSerializable("data", (Serializable) data);
-                mHandler.sendEmptyMessage(1);
-                mRecordAdapter.addData(data);
+
+                //TODO  取出本地数据 分页
+//                mRecordAdapter.addData(data);
+//                mHandler.sendEmptyMessage(1);
             }
         });
 

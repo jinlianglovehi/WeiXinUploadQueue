@@ -17,6 +17,8 @@ public class RecordBusinessDaoTest extends InstrumentationTestCase {
 	public String LOCAL_RECORD_ID = "1234567890";
 	public Record record0;
 
+
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

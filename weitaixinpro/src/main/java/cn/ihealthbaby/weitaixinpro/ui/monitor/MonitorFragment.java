@@ -20,11 +20,14 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.HttpClientAdapter;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.ServiceInside;
 import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
 import cn.ihealthbaby.weitaixinpro.ui.adapter.MonitorAdapter;
@@ -32,7 +35,7 @@ import cn.ihealthbaby.weitaixinpro.ui.adapter.MonitorAdapter;
 /**
  * @author by kang on 2015/9/11.
  */
-public class MonitorFragment extends BaseFragment implements View.OnClickListener {
+public class MonitorFragment extends BaseFragment implements View.OnClickListener, MonitorAdapter.BeginMoniter {
 
     private static MonitorFragment instance;
     @Bind(R.id.iv_no_monitor)
@@ -60,9 +63,8 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     private int undetectedPage = 1;
 
     //每页记录数
-    private int pageSize = 10;
-
-
+    private int pageSize = 3;
+    
     private MonitorAdapter mAdapter;
     private PageData<ServiceInside> mServiceInsidePageData = new PageData<>();
 
@@ -87,6 +89,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     private void initListener() {
         mRlAlreadyMonitor.setOnClickListener(this);
         mRlNoMonitor.setOnClickListener(this);
+        mAdapter.setOnLoadListener(this);
     }
 
     private void initView() {
@@ -174,6 +177,7 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
         ButterKnife.unbind(this);
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -199,4 +203,22 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     }
 
 
+    @Override
+    public void begin(ServiceInside serviceInside) {
+        try {
+            ApiManager.getInstance().hClientAccountApi.beginServicesinside(serviceInside.getId(), new HttpClientAdapter.Callback<Integer>() {
+                @Override
+                public void call(Result<Integer> t) {
+                    if (t.isSuccess()) {
+                        ToastUtil.show(getActivity(), t.getData() + "");
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        ToastUtil.show(getActivity(), t.getMsg());
+                    }
+                }
+            }, getRequestTag());
+        } catch (Exception e) {
+            ToastUtil.show(getActivity(), e.toString());
+        }
+    }
 }

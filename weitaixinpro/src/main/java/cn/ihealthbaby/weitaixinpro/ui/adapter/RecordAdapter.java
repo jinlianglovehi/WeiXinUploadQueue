@@ -16,8 +16,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixinpro.R;
-import cn.ihealthbaby.weitaixinpro.model.HAdviceForm;
 
 /**
  * @author by kang on 2015/9/12.
@@ -25,7 +25,7 @@ import cn.ihealthbaby.weitaixinpro.model.HAdviceForm;
 public class RecordAdapter extends BaseAdapter {
 
     private Context mContext;
-    public List<HAdviceForm> mMyAdviceItems;
+    public List<Record> mRecords;
     public View selectedView;
     public View selectedViewOld;
     public TextView recordDelete;
@@ -52,28 +52,28 @@ public class RecordAdapter extends BaseAdapter {
 
     public RecordAdapter(Context context) {
         mContext = context;
-        mMyAdviceItems = new ArrayList<>();
+        mRecords = new ArrayList<>();
     }
 
-    public void addData(List<HAdviceForm> myAdviceItems) {
-        mMyAdviceItems.addAll(myAdviceItems);
+    public void addData(List<Record> records) {
+        records.addAll(records);
         notifyDataSetChanged();
     }
 
     public void clearData() {
-        mMyAdviceItems.clear();
+        mRecords.clear();
         notifyDataSetChanged();
     }
 
-    public void clearAndAddData(List<HAdviceForm> myAdviceItems) {
-        mMyAdviceItems.clear();
-        mMyAdviceItems.addAll(myAdviceItems);
+    public void clearAndAddData(List<Record> records) {
+        mRecords.clear();
+        mRecords.addAll(records);
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return mMyAdviceItems.size();
+        return mRecords.size();
     }
 
     @Override
@@ -106,6 +106,13 @@ public class RecordAdapter extends BaseAdapter {
                         break;
                 }
                 return false;
+            }
+        });
+
+        holder.mTvAdviceStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

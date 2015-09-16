@@ -372,7 +372,7 @@ public class RecordFragment extends BaseFragment {
                     PageData<AdviceItem> data = t.getData();
                     final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
-                    LogUtil.d("dataListsize", "dataListsize ==> "+dataList.size());
+                    LogUtil.d("dataListsize", "dataListsize ==> " + dataList.size());
                     ArrayList<AdviceItem> dataListPageTen = new ArrayList<AdviceItem>();
 
                     if (dataList != null && dataList.size() > 0) {
@@ -396,7 +396,7 @@ public class RecordFragment extends BaseFragment {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                LogUtil.d("dataListsize", "myAdviceItems ==> "+myAdviceItems.size());
+                                LogUtil.d("dataListsize", "myAdviceItems ==> " + myAdviceItems.size());
                                 dataDao.addItemList(myAdviceItems, false);
                             }
                         }).start();
@@ -434,11 +434,12 @@ public class RecordFragment extends BaseFragment {
 
     /**
      * 把云端记录转换成自己的集合类型
+     *
      * @param adviceItems
      * @return
      */
-    public ArrayList<MyAdviceItem> switchList(ArrayList<AdviceItem> adviceItems){
-        ArrayList<MyAdviceItem> myAdviceItems=new ArrayList<MyAdviceItem>();
+    public ArrayList<MyAdviceItem> switchList(ArrayList<AdviceItem> adviceItems) {
+        ArrayList<MyAdviceItem> myAdviceItems = new ArrayList<MyAdviceItem>();
         for (int i = 0; i < adviceItems.size(); i++) {
             AdviceItem adviceItem = adviceItems.get(i);
 
@@ -461,30 +462,29 @@ public class RecordFragment extends BaseFragment {
     }
 
 
-
     private void mergeAdviceItem(ArrayList<MyAdviceItem> showMyAdviceItems) {
         ArrayList<MyAdviceItem> adviceNativeItemsDB = dataDao.getAllRecordNativeOnly(SPUtil.getUserID(getActivity().getApplicationContext()));
-        LogUtil.d("adviceNativeItemsDB", adviceNativeItemsDB.size()+" =adviceNativeItemsDB= "+adviceNativeItemsDB);
+        LogUtil.d("adviceNativeItemsDB", adviceNativeItemsDB.size() + " =adviceNativeItemsDB= " + adviceNativeItemsDB);
         showMyAdviceItems.addAll(adviceNativeItemsDB);
     }
 
 
-    private void saveLocal(){
-        final ArrayList<MyAdviceItem> adviceNativeItems=new ArrayList<MyAdviceItem>();
+    private void saveLocal() {
+        final ArrayList<MyAdviceItem> adviceNativeItems = new ArrayList<MyAdviceItem>();
         for (int i = 0; i < 5; i++) {
-            MyAdviceItem dateItem=new MyAdviceItem();
+            MyAdviceItem dateItem = new MyAdviceItem();
 
-            dateItem.setId(888 + i*3);
+            dateItem.setId(888 + i * 3);
             dateItem.setGestationalWeeks("50周+" + (i * 3));
             dateItem.setTestTime(new Date());
-            dateItem.setTestTimeLong(21500+(i+5)*1000*60);
+            dateItem.setTestTimeLong(21500 + (i + 5) * 1000 * 60);
             dateItem.setStatus(3);
             dateItem.setUploadstate(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
 
             adviceNativeItems.add(dateItem);
         }
 
-        LogUtil.d("saveLocal",adviceNativeItems.size()+" =saveLocal= "+adviceNativeItems);
+        LogUtil.d("saveLocal", adviceNativeItems.size() + " =saveLocal= " + adviceNativeItems);
 
         dataDao.addItemList(adviceNativeItems, false);
 
