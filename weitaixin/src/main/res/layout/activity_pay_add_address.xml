@@ -24,8 +24,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
                 android:gravity="center"
                 android:text="收货人"
                 android:textColor="@color/gray4"
@@ -34,14 +34,15 @@
 
             <EditText
                 android:id="@+id/tvAddAddressName"
-                android:layout_width="200dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:maxLength="10"
                 android:layout_alignParentRight="true"
-                android:singleLine="true"
-                android:layout_marginRight="14dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="34dp"
+                android:background="@android:color/transparent"
                 android:gravity="right"
+                android:maxLength="5"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/font_color"
                 android:textSize="@dimen/font12" />
@@ -64,9 +65,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="18dp"
                 android:gravity="center"
-                android:layout_centerVertical="true"
                 android:text="手机"
                 android:textColor="@color/gray4"
                 android:textSize="@dimen/font12" />
@@ -74,18 +75,17 @@
 
             <EditText
                 android:id="@+id/tvAddAddressPhone"
-                android:layout_width="200dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-
+                android:layout_centerVertical="true"
+                android:layout_marginRight="34dp"
+                android:background="@android:color/transparent"
+                android:gravity="right"
                 android:maxLength="11"
                 android:numeric="integer"
                 android:phoneNumber="true"
-
                 android:singleLine="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="14dp"
-                android:gravity="right"
                 android:text=""
                 android:textColor="@color/font_color"
                 android:textSize="@dimen/font12" />
@@ -108,8 +108,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
                 android:gravity="center"
                 android:text="所在地区"
                 android:textColor="@color/gray4"
@@ -122,19 +122,18 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/ivarrow"
                 android:gravity="center"
-               android:layout_toLeftOf="@+id/ivarrow"
                 android:text="请选择所在地区"
                 android:textColor="@color/font_color"
                 android:textSize="@dimen/font12" />
 
 
-
             <ImageView
                 android:id="@+id/ivarrow"
                 android:layout_width="8dp"
-                android:layout_alignParentRight="true"
                 android:layout_height="12dp"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="14dp"
                 android:scaleType="fitXY"
@@ -160,8 +159,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
                 android:gravity="center"
                 android:text="详细地址"
                 android:textColor="@color/gray4"
@@ -170,14 +169,15 @@
 
             <EditText
                 android:id="@+id/tvAddAddressDetailAddress"
-                android:layout_width="200dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="14dp"
-                android:gravity="right"
-                android:singleLine="true"
-                android:maxLength="60"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="34dp"
+                android:background="@android:color/transparent"
+                android:gravity="right"
+                android:maxLength="60"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/font_color"
                 android:textSize="@dimen/font12" />
@@ -185,11 +185,11 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:visibility="gone"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="14dp"
-                android:background="@color/gray1" />
+                android:background="@color/gray1"
+                android:visibility="gone" />
         </RelativeLayout>
 
 
@@ -204,9 +204,9 @@
         android:layout_marginLeft="18dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="26dp"
+        android:background="@drawable/corner_background_green0"
         android:gravity="center"
         android:text="保存并返回"
-        android:background="@drawable/corner_background_green0"
         android:textColor="@drawable/text_color_green0_selector"
         android:textSize="@dimen/font12" />
 
