@@ -3,9 +3,7 @@ package cn.ihealthbaby.weitaixin.library.data.database.dao;
 import android.content.Context;
 import android.test.InstrumentationTestCase;
 
-import java.util.List;
-
-import de.greenrobot.dao.query.WhereCondition;
+import java.util.UUID;
 
 /**
  * Created by liuhongjian on 15/9/16 10:47.
@@ -14,8 +12,10 @@ public class RecordBusinessDaoTest extends InstrumentationTestCase {
 	private static final String SERIAL_NUMBER = "HELLOWORLD";
 	public RecordBusinessDao instance;
 	public RecordDao recordDao;
-	public String LOCAL_RECORD_ID = "1234567890";
+	public String LOCAL_RECORD_ID = "4738c67b-b986-458b-819e-00640bb26b5d";
+	//	public String LOCAL_RECORD_ID = UUID.randomUUID().toString();
 	public Record record0;
+	public String localRecordId;
 
 
 
@@ -25,59 +25,89 @@ public class RecordBusinessDaoTest extends InstrumentationTestCase {
 		Context context = getInstrumentation().getContext();
 		instance = RecordBusinessDao.getInstance(context);
 		recordDao = instance.getRecordDao();
+	}
+
+	public void test() throws Exception {
+		for (int i = 0; i < 10; i++) {
+			testInsert();
+			testUpdate();
+		}
+//		testDelete();
+	}
+
+	public void testInsert() throws Exception {
+		localRecordId = UUID.randomUUID().toString();
 		record0 = new Record();
-//		LOCAL_RECORD_ID = UUID.randomUUID().toString();
-		record0.setLocalRecordId(LOCAL_RECORD_ID);
 		record0.setSerialNumber(SERIAL_NUMBER);
-	}
-
-	public void test() {
-		testInsert();
-		testUpdate();
-		testDelete();
-	}
-
-	public void testInsert() {
-		recordDao.insert(record0);
-		Record record = query(LOCAL_RECORD_ID);
+		record0.setLocalRecordId(localRecordId);
+		instance.insert(record0);
+		Record record = instance.queryByLocalRecordId(localRecordId);
 		assertNotNull(record);
 		assertEquals(record0.getLocalRecordId(), record.getLocalRecordId());
 	}
 
-	public void testUpdate() {
-		Record record = recordDao.queryBuilder().where(RecordDao.Properties.LocalRecordId.eq(LOCAL_RECORD_ID)).uniqueOrThrow();
+	public void testInsertFail() throws Exception {
+		localRecordId = UUID.randomUUID().toString();
+		record0 = new Record();
+		record0.setLocalRecordId(localRecordId);
+		instance.insert(record0);
+		Record record = instance.queryByLocalRecordId(localRecordId);
+		assertNotNull(record);
+		assertEquals(record0.getLocalRecordId(), record.getLocalRecordId());
+	}
+
+	public void testUpdate() throws Exception {
+		Record record = instance.queryByLocalRecordId(localRecordId);
 		record.setDuration(10000l);
 		recordDao.update(record);
-		Record record1 = recordDao.queryBuilder().where(RecordDao.Properties.LocalRecordId.eq(LOCAL_RECORD_ID)).uniqueOrThrow();
-		assertNotNull(record);
+		Record record1 = instance.queryByLocalRecordId(localRecordId);
+		assertNotNull(record1);
 		assertEquals(record.getDuration(), record1.getDuration());
 	}
 
-	public void testDelete() {
-		Record record = query(record0.getLocalRecordId());
+	public void testDelete() throws Exception {
+		Record record = instance.queryByLocalRecordId(record0.getLocalRecordId());
 		assertNotNull(record);
 		recordDao.deleteByKey(record.getId());
-		record = query(record0.getLocalRecordId());
+		record = instance.queryByLocalRecordId(record0.getLocalRecordId());
 		assertNull(record);
 	}
 
-	public void testQuery() {
-		Record record = recordDao.queryBuilder().where(RecordDao.Properties.LocalRecordId.eq(LOCAL_RECORD_ID)).unique();
+	public void testQuery() throws Exception {
+		Record record = instance.queryByLocalRecordId(LOCAL_RECORD_ID);
 		assertNotNull(record);
 		assertEquals(record.getLocalRecordId(), LOCAL_RECORD_ID);
 	}
 
-	public Record query(final String localRecordId) {
-		Record record = recordDao.queryBuilder().where(new WhereCondition() {
-			@Override
-			public void appendTo(StringBuilder builder, String tableAlias) {
-				builder.append("LOCAL_RECORD_ID = " + localRecordId);
-			}
+	public void testQueryFail() throws Exception {
+		Record record = instance.queryByLocalRecordId(LOCAL_RECORD_ID + "1");
+		assertNull(record);
+	}
 
-			@Override
-			public void appendValuesTo(List<Object> values) {
-			}
-		}).unique();
-		return record;
+	public void testQueryId() throws Exception {
+		Record record = instance.queryById(1l);
+		assertNotNull(record);
+		assertEquals(record.getId(), new Long(1));
+	}
+
+	public void testCount() throws Exception {
+		long l = instance.allCount();
+		assertTrue(l == 1028l);
+	}
+
+	public void testDeleteById() throws Exception {
+		Record record1 = instance.queryById(1027l);
+		assertNotNull(record1);
+		instance.deleteById(1027l);
+		Record record = instance.queryById(1027l);
+		assertNull(record);
+	}
+
+	public void testDeleteAll() throws Exception {
+//		long l = instance.allCount();
+//		assertTrue(l > 1000);
+//		instance.deleteAll();
+		long l1 = instance.allCount();
+		assertTrue(l1 == 0);
 	}
 }
