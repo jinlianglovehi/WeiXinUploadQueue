@@ -21,43 +21,44 @@
                 android:id="@+id/rl_no_monitor"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center">
+                android:layout_weight="1">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
                     android:padding="10dp"
-                    android:text="未监测"/>
+                    android:text="@string/no_monitor"/>
 
                 <ImageView
                     android:id="@+id/iv_no_monitor"
                     android:layout_width="70dp"
                     android:layout_height="3dp"
                     android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
                     android:src="@drawable/bottom_line"/>
+
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_already_monitor"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center">
+                android:layout_weight="1">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
                     android:padding="10dp"
-                    android:text="已监测"/>
+                    android:text="@string/monitor_during"/>
 
                 <ImageView
                     android:id="@+id/iv_alreay_monitor"
                     android:layout_width="70dp"
                     android:layout_height="3dp"
                     android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
                     android:src="@drawable/bottom_line"/>
             </RelativeLayout>
         </LinearLayout>
