@@ -252,6 +252,7 @@ public class SPUtil {
         HClientUser user = new HClientUser();
         user.setHospitalName(sp.getString("hospitalName", ""));
         user.setId(sp.getLong("id", 0L));
+        user.setDepartmentId(sp.getLong("departmentId", 0));
         user.setIndexNumber(sp.getLong("indexNumber", 0L));
         user.setHospitalId(sp.getLong("hospitalId", 0L));
         user.setSerialnum(sp.getString("serialnum", ""));

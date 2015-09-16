@@ -173,18 +173,22 @@ public class MonitorFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_already_monitor:
-                status = 1;
-                mAdapter.clearData();
-                initData(1);
-                mIvNoMonitor.setVisibility(View.INVISIBLE);
-                mIvAlreayMonitor.setVisibility(View.VISIBLE);
+                if(status!=1){
+                    status = 1;
+                    mAdapter.clearData();
+                    initData(1);
+                    mIvNoMonitor.setVisibility(View.INVISIBLE);
+                    mIvAlreayMonitor.setVisibility(View.VISIBLE);
+                }
                 break;
             case R.id.rl_no_monitor:
-                status = 0;
-                mIvNoMonitor.setVisibility(View.VISIBLE);
-                mIvAlreayMonitor.setVisibility(View.INVISIBLE);
-                mAdapter.clearData();
-                initData(1);
+                if(status!=0){
+                    status = 0;
+                    mIvNoMonitor.setVisibility(View.VISIBLE);
+                    mIvAlreayMonitor.setVisibility(View.INVISIBLE);
+                    mAdapter.clearData();
+                    initData(1);
+                }
                 break;
         }
     }
