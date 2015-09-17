@@ -93,10 +93,48 @@ public class PayAllOrderAdapter extends BaseAdapter {
         viewHolder.tvGoodsTime.setText(DateTimeTool.date2St2(order.getCreateTime(), "yyyy-MM-dd hh: mm"));
         viewHolder.tvPayPriceText.setText("￥" + order.getTotalFee() + "");
 
+        //0 待付款-未支付,  1 待发货,  2待收货,  3订单结束,   4 订单取消
         if (order.getOrderStatus()==PayConstant.notPay) {
+            viewHolder.tvPayDelect.setVisibility(View.VISIBLE);
+            viewHolder.tvPayDelect.setText("取消订单");
             viewHolder.tvPayAffirmGoodsOrGoPay.setVisibility(View.VISIBLE);
             viewHolder.tvPayAffirmGoodsOrGoPay.setText("去支付");
             viewHolder.tvPayAffirmGoodsOrGoPay.setBackgroundColor(context.getResources().getColor(R.color.red0));
+
+            viewHolder.tvPayDelect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PayDialog payDialog=new PayDialog(context,new String[]{"取消订单","不取消","确定取消"});
+                    payDialog.show();
+                    payDialog.operationAction=new PayDialog.OperationAction() {
+                        @Override
+                        public void payYes(Object... obj) {
+                            final CustomDialog customDialog=new CustomDialog();
+                            Dialog dialog = customDialog.createDialog1(context, "取消中...");
+                            dialog.show();
+                            ApiManager.getInstance().orderApi.cancel(order.getId(), new HttpClientAdapter.Callback<Void>() {
+                                @Override
+                                public void call(Result<Void> t) {
+                                    if (t.isSuccess()) {
+                                        ToastUtil.show(context.getApplicationContext(), "取消成功");
+                                        order.setOrderStatus(PayConstant.orderCancel);
+                                        notifyDataSetChanged();
+                                    } else {
+                                        ToastUtil.show(context.getApplicationContext(), t.getMsgMap() + "");
+                                    }
+                                    customDialog.dismiss();
+                                }
+                            }, context);
+                        }
+
+                        @Override
+                        public void payNo(Object... obj) {
+
+                        }
+                    };
+                }
+            });
+
             viewHolder.tvPayAffirmGoodsOrGoPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -107,7 +145,8 @@ public class PayAllOrderAdapter extends BaseAdapter {
                     context.startActivity(intent);
                 }
             });
-        }else if (order.getOrderStatus()==PayConstant.gettingGoods) {
+        } else if (order.getOrderStatus()==PayConstant.gettingGoods) {
+            viewHolder.tvPayDelect.setVisibility(View.GONE);
             viewHolder.tvPayAffirmGoodsOrGoPay.setVisibility(View.VISIBLE);
             viewHolder.tvPayAffirmGoodsOrGoPay.setText("确认收货");
             viewHolder.tvPayAffirmGoodsOrGoPay.setBackgroundColor(context.getResources().getColor(R.color.green0));
@@ -120,13 +159,14 @@ public class PayAllOrderAdapter extends BaseAdapter {
                         @Override
                         public void payYes(Object... obj) {
                             final CustomDialog customDialog=new CustomDialog();
-                            Dialog dialog = customDialog.createDialog1(context, "确认收货中...");
+                            Dialog dialog = customDialog.createDialog1(context, "收货中...");
                             dialog.show();
                             ApiManager.getInstance().orderApi.confirmReceive(order.getId(), new HttpClientAdapter.Callback<Void>() {
                                 @Override
                                 public void call(Result<Void> t) {
                                     if (t.isSuccess()) {
-                                        ToastUtil.show(context.getApplicationContext(), "确认收货成功");
+                                        ToastUtil.show(context.getApplicationContext(), "收货成功");
+                                        order.setOrderStatus(PayConstant.orderFinish);
                                         notifyDataSetChanged();
                                     } else {
                                         ToastUtil.show(context.getApplicationContext(), t.getMsgMap() + "");
@@ -146,25 +186,57 @@ public class PayAllOrderAdapter extends BaseAdapter {
         }
 
 
-        if (order.getOrderStatus()==PayConstant.orderFinish) {
+        if(order.getOrderStatus()==PayConstant.sendingGoods) {
+            viewHolder.tvPayDelect.setVisibility(View.GONE);
             viewHolder.tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
+        }
+
+
+        if (order.getOrderStatus()==PayConstant.orderFinish) {
+            viewHolder.tvPayDelect.setVisibility(View.VISIBLE);
+            viewHolder.tvPayDelect.setText("删除");
+            viewHolder.tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
+            setListener(viewHolder.tvPayDelect, order, position);
         }
 
 
         if (order.getOrderStatus()==PayConstant.orderCancel) {
+            viewHolder.tvPayDelect.setVisibility(View.VISIBLE);
+            viewHolder.tvPayDelect.setText("删除");
             viewHolder.tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
+            setListener(viewHolder.tvPayDelect,order, position);
         }
 
 
-        viewHolder.tvPayDelect.setOnClickListener(new View.OnClickListener() {
+
+
+        return convertView;
+    }
+
+
+    static class ViewHolder {
+        @Bind(R.id.tvPayType) TextView tvPayType;
+        @Bind(R.id.tvGoodsName) TextView tvGoodsName;
+        @Bind(R.id.tvGoodsTime) TextView tvGoodsTime;
+        @Bind(R.id.tvPayPriceText) TextView tvPayPriceText;
+        @Bind(R.id.tvPayDelect) TextView tvPayDelect;
+        @Bind(R.id.tvPayAffirmGoodsOrGoPay) TextView tvPayAffirmGoodsOrGoPay;
+
+        public ViewHolder(View itemView) {
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public void setListener(View view, final Order order, final int position){
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PayDialog payDialog=new PayDialog(context,new String[]{"确定删除订单","不删除","确定删除"});
+                PayDialog payDialog = new PayDialog(context, new String[]{"确定删除订单", "不删除", "确定删除"});
                 payDialog.show();
-                payDialog.operationAction=new PayDialog.OperationAction() {
+                payDialog.operationAction = new PayDialog.OperationAction() {
                     @Override
                     public void payYes(Object... obj) {
-                        final CustomDialog customDialog=new CustomDialog();
+                        final CustomDialog customDialog = new CustomDialog();
                         Dialog dialog = customDialog.createDialog1(context, "删除中...");
                         dialog.show();
                         ApiManager.getInstance().orderApi.delete(order.getId(), new HttpClientAdapter.Callback<Void>() {
@@ -189,24 +261,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
                 };
             }
         });
-
-        return convertView;
     }
-
-
-    static class ViewHolder {
-        @Bind(R.id.tvPayType) TextView tvPayType;
-        @Bind(R.id.tvGoodsName) TextView tvGoodsName;
-        @Bind(R.id.tvGoodsTime) TextView tvGoodsTime;
-        @Bind(R.id.tvPayPriceText) TextView tvPayPriceText;
-        @Bind(R.id.tvPayDelect) TextView tvPayDelect;
-        @Bind(R.id.tvPayAffirmGoodsOrGoPay) TextView tvPayAffirmGoodsOrGoPay;
-
-        public ViewHolder(View itemView) {
-            ButterKnife.bind(this, itemView);
-        }
-    }
-
 
     public DisplayImageOptions setDisplayImageOptions() {
         DisplayImageOptions options = null;

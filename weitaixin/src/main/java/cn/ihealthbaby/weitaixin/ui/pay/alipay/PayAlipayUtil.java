@@ -15,7 +15,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
 import cn.ihealthbaby.weitaixin.ui.pay.PayMimeOrderActivity;
 import de.greenrobot.event.EventBus;
@@ -76,8 +78,10 @@ public class PayAlipayUtil  {
 					if (TextUtils.equals(resultStatus, "9000")) {
 						ToastUtil.show(context, "支付成功");
 						//
+						LocalProductData.getLocal().localProductDataMap.clear();
+
 						EventBus.getDefault().post(new PayEvent());
-						Intent intent=new Intent(context,PayMimeOrderActivity.class);
+						Intent intent = new Intent(context, PayAccountActivity.class);
 						context.startActivity(intent);
 					} else {
 						// 判断resultStatus 为非“9000”则代表可能支付失败

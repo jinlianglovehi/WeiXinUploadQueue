@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -26,6 +27,7 @@ import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 
 public class LoginActivity extends BaseActivity {
 
@@ -53,6 +55,15 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("登录");
+        back.setVisibility(View.INVISIBLE);
+
+        if (SPUtil.isLogin(this)) {
+            Intent intent=new Intent(this, MeMainFragmentActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         ivShowPassword.setTag("0");
     }
 
@@ -135,6 +146,8 @@ public class LoginActivity extends BaseActivity {
                                 Intent intent=new Intent(getApplicationContext(), AdviceSettingService.class);
                                 startService(intent);
 
+                                Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
+                                startActivity(intentMain);
                                 LoginActivity.this.finish();
                             }else{
                                 ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account").toString()+"");

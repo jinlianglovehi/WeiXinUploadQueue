@@ -71,7 +71,7 @@ public class UploadFileEngine {
                     }
                 }else{
                     LogUtil.e("errdata","errdata头像上次七牛失败 "+info.error);
-                    ToastUtil.show(context.getApplicationContext(), info.error);
+                    ToastUtil.show(context.getApplicationContext(), info.error+"");
                 }
                 customDialog.dismiss();
             }
@@ -88,7 +88,7 @@ public class UploadFileEngine {
                 return false;
             }
         };
-        options = new UploadOptions(null, Constants.MIME_TYPE_WAV, true, upProgressHandler, UpCancellationSignal);
+        options = new UploadOptions(null, Constants.MIME_TYPE_JPEG, true, upProgressHandler, UpCancellationSignal);
     }
 
 
@@ -106,21 +106,33 @@ public class UploadFileEngine {
         /**
          * 请求上传key 和 上传token
          */
-        callable4 = new DefaultCallback<UploadModel>(context, new Business<UploadModel>() {
+//        callable4 = new DefaultCallback<UploadModel>(context, new Business<UploadModel>() {
+//            @Override
+//            public void handleData(UploadModel data) throws Exception {
+//                uploadFile(file, data.getKey(), data.getToken());
+//            }
+//        });
+        ApiManager.getInstance().uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
             @Override
-            public void handleData(UploadModel data) throws Exception {
-                uploadFile(file, data.getKey(), data.getToken());
+            public void call(Result<UploadModel> t) {
+                if (t.isSuccess()) {
+                    UploadModel data = t.getData();
+                    uploadFile(file, data.getKey(), data.getToken());
+                } else {
+                    ToastUtil.show(context, t.getMsgMap()+"");
+                }
+                customDialog.dismiss();
             }
-        });
-
-        instance.uploadApi.getUploadToken(1, callable4, getRequestTag());
+        }, getRequestTag());
     }
+
+
 
     public void init(final byte[] dataBty){
         /**
          * 请求上传key 和 上传token
          */
-        instance.uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
+        ApiManager.getInstance().uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
             @Override
             public void call(Result<UploadModel> t) {
                 if (t.isSuccess()) {
@@ -133,6 +145,8 @@ public class UploadFileEngine {
             }
         }, getRequestTag());
     }
+
+
 
     private Object getRequestTag() {
         return this;

@@ -410,10 +410,15 @@ public class RecordFragment extends BaseFragment {
                         //从缓存数据库中展示数据列表
 //                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView(SPUtil.getUserID(getActivity().getApplicationContext()));
                         ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloud(SPUtil.getUserID(getActivity().getApplicationContext()));
-                        adapter.setDatas(switchList(dataList));
-                        adapter.notifyDataSetChanged();
-                        mAdviceItems = adapter.datas;
-                        countNumber = adviceItems.size();
+                        if (adviceItems != null && adviceItems.size() > 0) {
+                            adapter.setDatas(switchList(dataList));
+                            adapter.notifyDataSetChanged();
+                            mAdviceItems = adapter.datas;
+                            countNumber = adviceItems.size();
+                        } else {
+                            ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
+                            countNumber = 0;
+                        }
                         if (tvUsedCount != null) {
                             tvUsedCount.setText(countNumber + "");
                         }

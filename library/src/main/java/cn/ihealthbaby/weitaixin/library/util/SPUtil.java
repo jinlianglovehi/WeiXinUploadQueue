@@ -234,6 +234,11 @@ public class SPUtil {
     }
 
 
+    public static boolean isIsInit(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
+        return sp.getBoolean("IsInit", false);
+    }
+
     public static void saveHClientUser(Context context, HClientUser user) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();

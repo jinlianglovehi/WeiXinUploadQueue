@@ -1,9 +1,11 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,6 +71,16 @@ public class PayAddAddressActivity extends BaseActivity {
             tvAddAddressName.setText(user.getName());
             tvAddAddressPhone.setText(user.getMobile());
         }
+//        final InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+//        imm.showSoftInputFromInputMethod(tvAddAddressName.getWindowToken(), 0);
+
+//        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        inputMethodManager.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+
+
+//        if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
+//            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_SHOWN);
+//        }
     }
 
 

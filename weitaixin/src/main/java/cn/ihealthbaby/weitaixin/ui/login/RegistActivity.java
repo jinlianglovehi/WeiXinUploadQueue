@@ -31,6 +31,7 @@ import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 
 public class RegistActivity extends BaseActivity {
 
@@ -255,11 +256,11 @@ public class RegistActivity extends BaseActivity {
                             ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
                             loginActionOfReg();
                         } else {
-                            ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg() + "注册失败");
+                            ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap() + "注册失败");
                         }
                     } else {
-                        LogUtil.e("Regist", "Regist " + t.getMsgMap());
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsg() + "失败");
+//                        LogUtil.e("Regist", "Regist " + t.getMsgMap());
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap() + "注册失败");
                     }
                 }
                 dialog.dismiss();
@@ -279,7 +280,7 @@ public class RegistActivity extends BaseActivity {
             public void call(Result<User> t) {
                 if (t.isSuccess()) {
                     User data = t.getData();
-                    System.err.println("登录AccountToken： " + data.getAccountToken());
+//                    System.err.println("登录AccountToken： " + data.getAccountToken());
                     if (data.getAccountToken() != null) {
 //                        WeiTaiXinApplication.getInstance().isLogin = true;
 //                        WeiTaiXinApplication.accountToken = data.getAccountToken();
@@ -289,20 +290,24 @@ public class RegistActivity extends BaseActivity {
                         SPUtil.saveUser(RegistActivity.this,data);
 
 //                        String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
+
+                        Intent intentService = new Intent(getApplicationContext(), AdviceSettingService.class);
+                        startService(intentService);
+
                         if(data.getIsInit()){
-                            Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
-                            startActivity(intent);
+                            Intent intentAct=new Intent(getApplicationContext(),InfoEditActivity.class);
+                            startActivity(intentAct);
                         }
 
-                        Intent intent = new Intent(getApplicationContext(), AdviceSettingService.class);
-                        startService(intent);
 
+                        Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
+                        startActivity(intentMain);
                         RegistActivity.this.finish();
                     } else {
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+ "");
                     }
                 } else {
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap() + "");
                 }
             }
         }, getRequestTag());
@@ -319,4 +324,7 @@ public class RegistActivity extends BaseActivity {
         }
     }
 
+
+
 }
+

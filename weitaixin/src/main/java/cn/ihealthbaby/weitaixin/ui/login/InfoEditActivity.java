@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixin.ui.login;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +20,10 @@ import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePopupWindow;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -293,10 +298,28 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         if (photo != null) {
             dialog.show();
             engine.init(ImageTool.Bitmap2Bytes(photo));
+//            engine.init(bitmapSaveFile(getApplicationContext(), photo, "headImageFile.png"));
         } else {
             ToastUtil.show(getApplicationContext(), "头像没有");
         }
     }
+
+
+//    public File bitmapSaveFile(Context context, Bitmap bitmap, String fileName){
+//        File filesDir = context.getFilesDir();
+//        File headImageFile = new File(filesDir,fileName);
+//        try {
+//            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(headImageFile));
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+//            bos.flush();
+//            bos.close();
+//            return headImageFile;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
 
 
     @Override

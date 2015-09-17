@@ -17,6 +17,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
+import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInfoFragment;
 import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
@@ -73,53 +74,69 @@ public class MeMainFragmentActivity extends BaseActivity {
         showFragment(R.id.container, homePageFragment);
     }
 
+
+
     @OnClick(R.id.ll_tab_home)
     public void iv_tab_01() {
-        showTab(iv_tab_01);
-        if (SPUtil.isLogin(this)) {
-            homePageFragment = HomePageFragment.getInstance();
-            showFragment(R.id.container, homePageFragment);
-        }
-    }
-
-    @OnClick(R.id.ll_tab_monitor)
-    public void iv_tab_02() {
-        showTab(iv_tab_02);
-        if (SPUtil.isLogin(this)) {
-            if (SPUtil.getUser(this).getServiceInfo() != null) {
-	            if (monitorFragment == null) {
-                    monitorFragment = new MonitorFragment();
-	            }
-                showFragment(R.id.container, monitorFragment);
+        if (showTab(iv_tab_01)) {
+            if (SPUtil.isLogin(this)) {
+                homePageFragment = HomePageFragment.getInstance();
+                showFragment(R.id.container, homePageFragment);
             }
         }
     }
 
+
+
+    @OnClick(R.id.ll_tab_monitor)
+    public void iv_tab_02() {
+        if (showTab(iv_tab_02)) {
+            if (SPUtil.isLogin(this)) {
+                if (SPUtil.getUser(this).getServiceInfo() != null) {
+                    if (monitorFragment == null) {
+                        monitorFragment = new MonitorFragment();
+                    }
+                    showFragment(R.id.container, monitorFragment);
+                }
+            }
+        }
+    }
+
+
+
     @OnClick(R.id.ll_tab_record)
     public void iv_tab_03() {
-        showTab(iv_tab_03);
-        if (SPUtil.isLogin(this)) {
-            recordFragment = RecordFragment.getInstance();
-            showFragment(R.id.container, recordFragment);
+        if (showTab(iv_tab_03)) {
+            if (SPUtil.isLogin(this)) {
+                recordFragment = RecordFragment.getInstance();
+                showFragment(R.id.container, recordFragment);
+            }
         }
     }
 
 
     @OnClick(R.id.ll_tab_profile)
     public void iv_tab_04() {
-        showTab(iv_tab_04);
-        if (SPUtil.isLogin(this)) {
-            woInfoFragment = WoInfoFragment.getInstance();
-            showFragment(R.id.container, woInfoFragment);
+        if (showTab(iv_tab_04)) {
+            if (SPUtil.isLogin(this)) {
+                woInfoFragment = WoInfoFragment.getInstance();
+                showFragment(R.id.container, woInfoFragment);
+            }
         }
     }
 
 
-    public void showTab(ImageView imageView) {
+    public boolean showTab(ImageView imageView) {
         if (!SPUtil.isLogin(this)) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
-            return;
+            return false;
+        }
+
+        if (SPUtil.isIsInit(this)) {
+            Intent intentAct = new Intent(getApplicationContext(), InfoEditActivity.class);
+            startActivity(intentAct);
+            return false;
         }
 
         iv_tab_01.setSelected(false);
@@ -127,6 +144,7 @@ public class MeMainFragmentActivity extends BaseActivity {
         iv_tab_03.setSelected(false);
         iv_tab_04.setSelected(false);
         imageView.setSelected(true);
+        return true;
     }
 
 

@@ -26,6 +26,7 @@ import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 
 public class LoginSmsAuthCodeActivity extends BaseActivity {
 
@@ -248,6 +249,8 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                             Intent intent = new Intent(getApplicationContext(), AdviceSettingService.class);
                             startService(intent);
 
+                            Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
+                            startActivity(intentMain);
                             LoginSmsAuthCodeActivity.this.finish();
                         } else {
                             ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + "");

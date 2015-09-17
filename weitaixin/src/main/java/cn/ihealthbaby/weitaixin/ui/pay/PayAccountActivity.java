@@ -10,6 +10,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 
@@ -47,6 +48,16 @@ public class PayAccountActivity extends BaseActivity {
     public void RentEquipment() {
         Intent intent = new Intent(this, PayRentInformationActivity.class);
         startActivity(intent);
+
+//        Intent intentOrderDetails = new Intent(this, PayOrderDetailsActivity.class);
+//        startActivity(intentOrderDetails);
+
+//        User user=null;
+//        if (user.getHasService()) {
+//
+//        } else {
+//
+//        }
     }
 
 

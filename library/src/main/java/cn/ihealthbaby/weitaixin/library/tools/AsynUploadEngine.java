@@ -99,8 +99,8 @@ public class AsynUploadEngine {
     /**
      * 请求上传key 和 上传token
      */
-    public void init(final byte[] dataBty) {
-        instance.uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
+    public void init5(final byte[] dataBty) {
+        instance.uploadApi.getUploadToken(1, new HttpClientAdapter.Callback<UploadModel>() {
             @Override
             public void call(Result<UploadModel> t) {
                 if (t.isSuccess()) {
