@@ -11,7 +11,7 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
  */
 public class DataStorage {
 	public static final List<Integer> fhrs = Collections.synchronizedList(new ArrayList<Integer>());
-	public static FHRPackage fhrPackagePool = new FHRPackage();
-	public static FHRPackage fhrPackage = new FHRPackage();
-	public static List<Integer> hearts = Collections.synchronizedList(new ArrayList<Integer>());
+	public static final FHRPackage fhrPackagePool = new FHRPackage();
+	public static final FHRPackage fhrPackage = new FHRPackage();
+	public static final List<Integer> fms = Collections.synchronizedList(new ArrayList<Integer>());
 }
