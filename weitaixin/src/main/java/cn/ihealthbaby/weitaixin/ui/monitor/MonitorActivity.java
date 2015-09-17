@@ -10,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -24,6 +28,7 @@ import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorSimpleView;
@@ -35,6 +40,7 @@ public class MonitorActivity extends BaseActivity {
 	public int alertInterval;
 	public boolean alert;
 	public int duration = 20 * 60 * 1000;
+	public Date recordStartTime;
 	@Bind(R.id.back)
 	RelativeLayout back;
 	@Bind(R.id.title_text)
@@ -122,6 +128,7 @@ public class MonitorActivity extends BaseActivity {
 		//
 		//
 		getAdviceSetting();
+		getData();
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
@@ -135,8 +142,8 @@ public class MonitorActivity extends BaseActivity {
 
 			@Override
 			public void onStart(long startTime) {
-				tvStartTime.setText(DateTimeTool.second2hhmmss(startTime) + "开始记录");
 				hint.setText("已记录" + DateTimeTool.second2mmss(getConsumedTime()));
+				tvStartTime.setText(DateTimeTool.second2hhmmss(recordStartTime.getTime()) + "开始记录");
 			}
 
 			@Override
@@ -165,6 +172,12 @@ public class MonitorActivity extends BaseActivity {
 				roundProgressMask.postInvalidate();
 				long time = DataStorage.fhrPackage.getTime();
 				hint.setText("已记录" + DateTimeTool.second2mmss(getConsumedTime()));
+				int size = curveSimple.getHearts().size();
+				if (size > 0) {
+					fmCount.setText("第" + size + "次胎动");
+				} else {
+					fmCount.setText("未记录胎动");
+				}
 				if (lasttime < time) {
 					fhr = DataStorage.fhrPackage.getFHR1();
 					if (tvBluetooth != null) {
@@ -190,19 +203,25 @@ public class MonitorActivity extends BaseActivity {
 		countDownTimer.start();
 	}
 
+	private void getData() {
+		String uuid = SPUtil.getUUID(getApplicationContext());
+		try {
+			Record record = RecordBusinessDao.getInstance(getApplicationContext()).queryByLocalRecordId(uuid);
+			recordStartTime = record.getRecordStartTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void configCurveSimple() {
 		ViewGroup.LayoutParams hsLayoutParams = hs.getLayoutParams();
 		hsLayoutParams.width = width;
 		hs.setLayoutParams(hsLayoutParams);
 		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 4));
-//		curveSimple.setCellWidth(Util.dip2px(getApplicationContext(), 8));
 		curveSimple.setyMax(210);
 		curveSimple.setSafeMax(safemax);
 		curveSimple.setSafeMin(safemin);
-		curveSimple.setHearts(DataStorage.hearts);
-		//TODO 根据配置设置
-//		WeiTaiXinApplication.user.getServiceInfo();
-//		curveSimple.setSafeMax();
+		curveSimple.setHearts(DataStorage.fms);
 		curveSimple.setFhrs(DataStorage.fhrs);
 		int minWidth = curveSimple.getMinWidth();
 		int minHeight = curveSimple.getMinHeight();
@@ -225,7 +244,7 @@ public class MonitorActivity extends BaseActivity {
 	private void reset() {
 		lastFetalMoveTime = 0;
 		DataStorage.fhrs.clear();
-		DataStorage.hearts.clear();
+		DataStorage.fms.clear();
 	}
 
 	public void onEventMainThread(MonitorTerminateEvent event) {
@@ -248,7 +267,8 @@ public class MonitorActivity extends BaseActivity {
 	}
 
 	/**
-	 * 获取监测的配置
+	 * 获取监测的配置  AdviceSetting [autoBeginAdvice=20,autoAdviceTimeLong=20,fetalMoveTime=5,autoBeginAdviceMax=3,askMinTime=20,alarmHeartrateLimit=100-160,hospitalId=3,
+	 * ]
 	 */
 	private void getAdviceSetting() {
 		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
@@ -262,6 +282,7 @@ public class MonitorActivity extends BaseActivity {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			ToastUtil.show(getApplicationContext(), "解析错误");
 		}
 		int autoAdviceTimeLong = adviceSetting.getAutoAdviceTimeLong();
 		if (autoAdviceTimeLong > 0) {
