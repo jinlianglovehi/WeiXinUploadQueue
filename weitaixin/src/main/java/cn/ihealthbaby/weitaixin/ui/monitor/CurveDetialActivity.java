@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.monitor;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -11,12 +12,16 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.util.DataStorage;
+import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
@@ -52,6 +57,8 @@ public class CurveDetialActivity extends BaseActivity {
 	private ExpendableCountDownTimer countDownTimer;
 	private long lastFMTime;
 	private boolean terminate;
+	private int safemin;
+	private int safemax;
 
 	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
@@ -67,7 +74,6 @@ public class CurveDetialActivity extends BaseActivity {
 	public void terminate() {
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
 		terminate = true;
-//		finish();
 	}
 
 	private void savePosition(int position) {
@@ -88,6 +94,7 @@ public class CurveDetialActivity extends BaseActivity {
 		consumedtime = getIntent().getLongExtra(Constants.INTENT_CONSUMED_TIME, 0);
 		duration = getIntent().getLongExtra(Constants.INTENT_DURATION, 0);
 		interval = getIntent().getLongExtra(Constants.INTENT_INTERVAL, 0);
+		getAdviceSetting();
 		configCurve();
 		countDownTimer = new ExpendableCountDownTimer(duration, interval) {
 			@Override
@@ -105,8 +112,14 @@ public class CurveDetialActivity extends BaseActivity {
 					curve.resetPoints();
 					curve.postInvalidate();
 					int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
-					// TODO: 15/9/9   颜色根据数值变化
-					bpm.setText(fhr1 + "");
+					if (bpm != null) {
+						if (fhr1 >= safemin && fhr1 <= safemax) {
+							bpm.setTextColor(Color.parseColor("#49DCB8"));
+						} else {
+							bpm.setTextColor(Color.parseColor("#FE0058"));
+						}
+						bpm.setText(fhr1 + "");
+					}
 				}
 				if (!chs.isTouching()) {
 					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
@@ -130,8 +143,10 @@ public class CurveDetialActivity extends BaseActivity {
 		chs.setLayoutParams(hsLayoutParams);
 		curve.setFhrs(DataStorage.fhrs);
 		curve.setCellWidth(Util.dip2px(getApplicationContext(), 10));
-		curve.setHearts(DataStorage.hearts);
+		curve.setHearts(DataStorage.fms);
 		curve.setCurveStrokeWidth(Util.dip2px(getApplicationContext(), 2));
+		curve.setSafeMax(safemax);
+		curve.setSafeMin(safemin);
 		ViewGroup.LayoutParams layoutParams = curve.getLayoutParams();
 		layoutParams.width = curve.getMinWidth();
 		layoutParams.height = curve.getMinHeight() + Util.dip2px(getApplicationContext(), 16);
@@ -145,5 +160,24 @@ public class CurveDetialActivity extends BaseActivity {
 			countDownTimer.cancel();
 			countDownTimer = null;
 		}
+	}
+
+	/**
+	 * 获取监测的配置
+	 */
+	private void getAdviceSetting() {
+		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+		AdviceSetting adviceSetting = SPUtil.getAdviceSetting(getApplicationContext());
+		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
+		String[] split = alarmHeartrateLimit.split("-");
+		try {
+			if (split != null && split.length == 2) {
+				safemin = Integer.parseInt(split[0]);
+				safemax = Integer.parseInt(split[1]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		LogUtil.d(TAG, "safemin:%s,safemax:%s", safemin, safemax);
 	}
 }
