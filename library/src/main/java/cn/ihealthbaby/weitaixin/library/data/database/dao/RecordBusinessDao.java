@@ -175,6 +175,9 @@ public class RecordBusinessDao {
 		if (record.getUserId() == 0) {
 			throw new IllegalArgumentException("UserId cannot be 0");
 		}
+		if (record.getUploadState() == 0) {
+			record.setUploadState(Record.UPLOAD_STATE_LOCAL);
+		}
 		return recordDao.insert(record);
 	}
 
@@ -186,12 +189,16 @@ public class RecordBusinessDao {
 	 */
 	public void update(Record record) throws Exception {
 		Record query = query(record);
+		Integer uploadState = record.getUploadState();
 		Date recordStartTime = record.getRecordStartTime();
 		Long duration = record.getDuration();
 		String recordData = record.getRecordData();
 		String soundPath = record.getSoundPath();
 		Integer feeling = record.getFeeling();
 		Integer purpose = record.getPurpose();
+		if (uploadState != 0) {
+			record.setUploadState(uploadState);
+		}
 		if (recordStartTime != null) {
 			record.setRecordStartTime(recordStartTime);
 		}
