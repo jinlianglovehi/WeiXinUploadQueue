@@ -23,6 +23,7 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -208,7 +209,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
         }
 
 
-
+        LogUtil.d("OrdeorderrStatus","OrdeorderrStatus==> "+order.getOrderStatus());
 
         return convertView;
     }

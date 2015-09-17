@@ -65,22 +65,21 @@ public class PayAddAddressActivity extends BaseActivity {
     }
 
     private void initView() {
+
+
+
 //      User user=WeiTaiXinApplication.getInstance().user;
         User user = SPUtil.getUser(this);
         if (user!=null){
             tvAddAddressName.setText(user.getName());
             tvAddAddressPhone.setText(user.getMobile());
         }
-//        final InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-//        imm.showSoftInputFromInputMethod(tvAddAddressName.getWindowToken(), 0);
 
-//        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//        inputMethodManager.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+        String addressName = tvAddAddressName.getText().toString().trim();
+        if (!TextUtils.isEmpty(addressName)) {
+            tvAddAddressName.setSelection(addressName.length());
+        }
 
-
-//        if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
-//            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_SHOWN);
-//        }
     }
 
 

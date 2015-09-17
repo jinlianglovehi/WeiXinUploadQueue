@@ -59,7 +59,7 @@ public class PayAllOrderFragment extends BaseFragment {
 
         context = (PayMimeOrderActivity) getActivity();
         initView();
-        pullDatas();
+//        pullDatas();
 
         return view;
     }
@@ -76,11 +76,10 @@ public class PayAllOrderFragment extends BaseFragment {
                     PageData<Order> data = t.getData();
                     ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
                     if (orders != null && orders.size() <= 0) {
-                        ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据~~~");
-                    } else {
-                        adapter.setDatas(orders);
-                        adapter.notifyDataSetChanged();
+                        ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据");
                     }
+                    adapter.setDatas(orders);
+                    adapter.notifyDataSetChanged();
                 } else {
                     ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
                 }

@@ -447,6 +447,7 @@
             android:background="@drawable/corner_gray10"
             android:gravity="center"
             android:text="取消订单"
+            android:visibility="invisible"
             android:textColor="@drawable/text_color_gray3_selector"
             android:textSize="@dimen/font14" />
 
@@ -456,6 +457,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
+            android:visibility="invisible"
             android:background="@color/red0"
             android:gravity="center"
             android:text="去支付"

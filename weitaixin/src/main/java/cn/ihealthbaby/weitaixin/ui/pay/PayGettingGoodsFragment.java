@@ -60,7 +60,7 @@ public class PayGettingGoodsFragment extends BaseFragment {
 
         context = (BaseActivity) getActivity();
         initView();
-        pullDatas();
+//        pullDatas();
 
         return view;
     }
@@ -78,10 +78,9 @@ public class PayGettingGoodsFragment extends BaseFragment {
                     ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
                     if (orders != null && orders.size() <= 0) {
                         ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据~~~");
-                    } else {
-                        adapter.setDatas(orders);
-                        adapter.notifyDataSetChanged();
                     }
+                    adapter.setDatas(orders);
+                    adapter.notifyDataSetChanged();
                 } else {
                     ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
                 }

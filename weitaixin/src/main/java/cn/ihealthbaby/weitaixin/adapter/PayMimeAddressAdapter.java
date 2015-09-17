@@ -83,7 +83,7 @@ public class PayMimeAddressAdapter extends BaseAdapter {
         Address address = this.datas.get(position);
         viewHolder.tvAddressName.setText(address.getLinkMan());
         viewHolder.tvAddressPhoneNumber.setText(address.getMobile());
-        viewHolder.tvAddressText.setText(address.getAddress());
+        viewHolder.tvAddressText.setText(address.getArea()+address.getAddress()+"");
 
         LogUtil.d("getIsDef", address.getIsDef() + "  sssssss " + position);
 

@@ -216,7 +216,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
                     public void call(Result<Void> t) {
                         if (t.isSuccess()) {
                             ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), "取消成功");
-                            orderDetail.setOrderStatus(PayConstant.orderCancel);
+//                            orderDetail.setOrderStatus(PayConstant.orderCancel);
                             PayOrderDetailsActivity.this.finish();
                         } else {
                             ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), t.getMsgMap() + "");
