@@ -29,12 +29,12 @@
 
     <TextView
         android:id="@+id/tvTexted"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/tvAddNewAddress"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="6dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="14dp"
         android:gravity="center"
         android:text="勾选为默认地址"
         android:textColor="@color/gray4"
