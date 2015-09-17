@@ -51,7 +51,7 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/shape_green_button"
         android:gravity="center"
-        android:text="登录"
+        android:text="确定"
         android:textColor="@drawable/text_default_selector"
         android:textSize="@dimen/font_normal"/>
 
