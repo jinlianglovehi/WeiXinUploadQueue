@@ -60,7 +60,7 @@ public class RecordFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.record_fragment, null);
         ButterKnife.bind(this, view);
-        mTitleText.setText("检测记录");
+        mTitleText.setText(getString(R.string.monitor_record));
         mBack.setVisibility(View.INVISIBLE);
         initView();
         return view;
