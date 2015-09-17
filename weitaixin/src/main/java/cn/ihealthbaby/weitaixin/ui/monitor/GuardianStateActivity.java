@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,9 +24,10 @@ import cn.ihealthbaby.client.model.FeelingType;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.db.DataDao;
-import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
-import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 public class GuardianStateActivity extends BaseActivity {
@@ -143,17 +145,40 @@ public class GuardianStateActivity extends BaseActivity {
 		}
 		Intent intent = getIntent();
 		intent.setClass(getApplicationContext(), CurvePlayActivity.class);
-		String purpose = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
-		String feeling = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
-		DataDao dao = DataDao.getInstance(getApplicationContext());
-		MyAdviceItem myAdviceItem = new MyAdviceItem();
-		String uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
-		myAdviceItem.setFeeling(feeling);
-		myAdviceItem.setPurpose(purpose);
-		myAdviceItem.setJianceid(uuid);
-		dao.update(myAdviceItem);
+		int purposeId = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getId();
+		int feelingId = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getId();
+//		DataDao dao = DataDao.getInstance(getApplicationContext());
+//		MyAdviceItem myAdviceItem = new MyAdviceItem();
+//		String uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
+//		myAdviceItem.setFeeling(feeling);
+//		myAdviceItem.setPurpose(purpose);
+//		myAdviceItem.setJianceid(uuid);
+//		dao.update(myAdviceItem);
+		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
+		try {
+			Record query = recordBusinessDao.queryByLocalRecordId(getLocalRecordId());
+			LogUtil.d(TAG, query.toString());
+			query.setFeeling(feelingId);
+			query.setPurpose(purposeId);
+			recordBusinessDao.update(query);
+			Record query1 = recordBusinessDao.query(query);
+			LogUtil.d(TAG, query1.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		startActivity(intent);
 		finish();
+	}
+
+	private String getLocalRecordId() {
+		String uuid = SPUtil.getUUID(getApplicationContext());
+		if (!TextUtils.isEmpty(uuid)) {
+			return uuid;
+		} else {
+			String newUuid = UUID.randomUUID().toString().replace("-", "");
+			SPUtil.setUUID(getApplicationContext(), newUuid);
+			return newUuid;
+		}
 	}
 }
 
