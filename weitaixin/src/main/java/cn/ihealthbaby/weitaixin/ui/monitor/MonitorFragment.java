@@ -13,6 +13,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,6 @@ import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
-import cn.ihealthbaby.weitaixin.db.DataDao;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
@@ -49,19 +49,20 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceive
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.DefaultBluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.PseudoBluetoothService;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
-import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.library.util.Util;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -111,11 +112,7 @@ public class MonitorFragment extends BaseFragment {
 	private boolean needRecord;
 	private CountDownTimer countDownTimer;
 	private boolean started;
-	private Date testTime;
-	private String uuidString;
 	private FileOutputStream fileOutputStream;
-	private User user;
-	private ServiceInfo serviceInfo;
 	private AudioTrack audioTrack = AudioPlayer.getInstance().getmAudioTrack();
 	private int autoStartTime = 2 * 60 * 1000;
 	private ExpendableCountDownTimer autoStartTimer;
@@ -203,8 +200,16 @@ public class MonitorFragment extends BaseFragment {
 		}
 	};
 
-	private String getFileName() {
+	private String getTempFileName() {
 		return Constants.TEMP_FILE_NAME;
+	}
+
+	private File getTempFile() {
+		return new File(FileUtil.getVoiceDir(getActivity()), getTempFileName());
+	}
+
+	private File getRecordFile() {
+		return new File(FileUtil.getVoiceDir(getActivity()), getLocalRecordId());
 	}
 
 	@OnClick(R.id.helper)
@@ -214,18 +219,17 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	@OnClick(R.id.function)
-	public void ternimate() {
+	public void ternimateMonitor() {
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_NOT_START));
 	}
 
 	@OnClick(R.id.btn_start)
-	public void startRecord(View view) {
+	public void startMonitor(View view) {
 		autoStartTimer.cancel();
-
 		started = true;
-		uuidString = UUID.randomUUID().toString().replace("-", "");
-		LogUtil.d(TAG, "uuid:", uuidString);
-		File file = new File(FileUtil.getVoiceDir(getActivity()), getFileName());
+		String localRecordId = getLocalRecordId();
+		LogUtil.d(TAG, "localRecordId:%s", localRecordId);
+		File file = getTempFile();
 		try {
 			if (file.createNewFile()) {
 				fileOutputStream = new FileOutputStream(file);
@@ -235,16 +239,31 @@ public class MonitorFragment extends BaseFragment {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		testTime = new Date();
+		Date recordStartTime = new Date();
 		needRecord = true;
 		needPlay = true;
-		DataDao dao = DataDao.getInstance(getActivity().getApplicationContext());
-		MyAdviceItem myAdviceItem = new MyAdviceItem();
-		myAdviceItem.setJianceid(uuidString);
-		myAdviceItem.setTestTime(new Date());
-		dao.addItem(myAdviceItem, true);
+		User user = getUser();
+		Record record = new Record();
+		//必填内容:userId,userName,serialNumber,localRecordId
+		record.setUserId(user.getId());
+		record.setSerialNumber(getDeviceName());
+		record.setUploadState(Record.UPLOAD_STATE_LOCAL);
+		record.setUserName(user.getName());
+		record.setLocalRecordId(localRecordId);
+		record.setRecordStartTime(recordStartTime);
+		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
+		try {
+			recordBusinessDao.insert(record);
+			Record query = recordBusinessDao.query(record);
+			LogUtil.d(TAG, query.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			LogUtil.d(TAG, "数据插入失败");
+			SPUtil.clearUUID(getActivity().getApplicationContext());
+			return;
+		}
 		Intent intent = new Intent(getActivity(), MonitorActivity.class);
-		intent.putExtra(Constants.INTENT_UUID, uuidString);
+		intent.putExtra(Constants.INTENT_UUID, localRecordId);
 		startActivity(intent);
 	}
 
@@ -395,8 +414,8 @@ public class MonitorFragment extends BaseFragment {
 	 * 获取开始前的配置
 	 */
 	private void getAdviceSetting() {
-		user = SPUtil.getUser(getActivity().getApplicationContext());
-		serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
+		User user = SPUtil.getUser(getActivity().getApplicationContext());
+		ServiceInfo serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
 		LocalSetting localSetting = SPUtil.getLocalSetting(getActivity().getApplicationContext());
 		AdviceSetting adviceSetting = SPUtil.getAdviceSetting(getActivity().getApplicationContext());
 		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
@@ -409,6 +428,8 @@ public class MonitorFragment extends BaseFragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		// TODO: 15/9/17 autoBeginAdviceMax = 3,autoBeginAdvice=20??? @小顾
+		//{"data":{"autoBeginAdvice":20,"autoAdviceTimeLong":20,"fetalMoveTime":5,"autoBeginAdviceMax":3,"askMinTime":20,"alarmHeartrateLimit":"100-160","hospitalId":3}}
 		if (localSetting.isAutoStart()) {
 			autoStartTime = adviceSetting.getAutoBeginAdvice() * 1000;
 		} else {
@@ -491,39 +512,36 @@ public class MonitorFragment extends BaseFragment {
 		EventBus.getDefault().unregister(this);
 	}
 
-	public String getDeviceName() {
+	private String getLocalRecordId() {
+		String uuid = SPUtil.getUUID(getActivity().getApplicationContext());
+		if (TextUtils.isEmpty(uuid)) {
+			uuid = UUID.randomUUID().toString().replace("-", "");
+			SPUtil.setUUID(getActivity().getApplicationContext(), uuid);
+		}
+		return uuid;
+	}
+
+	private String getDeviceName() {
 		String serialnum = null;
+		ServiceInfo serviceInfo = getServiceInfo();
 		if (serviceInfo != null) {
 			serialnum = serviceInfo.getSerialnum();
 		}
 		LogUtil.d(TAG, "serialNumber:" + serialnum);
 		return serialnum == null ? "" : serialnum;
-//        return "IHB2LD1X7CUC";
 	}
-//	public void onEventAsync(MonitorTerminateEvent event) {
-//		int reason = event.getEvent();
-//		//断开连接 保存音频数据 保存胎心数据
-//
-//		switch (reason) {
-//			case MonitorTerminateEvent.EVENT_AUTO:
-//				LogUtil.d(TAG, "EVENT_AUTO");
-//				runRecord();
-//				break;
-//			case MonitorTerminateEvent.EVENT_UNKNOWN:
-//				LogUtil.d(TAG, "EVENT_UNKNOWN");
-//				runRecord();
-//				break;
-//			case MonitorTerminateEvent.EVENT_MANUAL:
-//				LogUtil.d(TAG, "EVENT_MANUAL");
-//				runRecord();
-//				break;
-//			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
-//				LogUtil.d(TAG, "EVENT_MANUAL_NOT_START");
-//				break;
-//			default:
-//				break;
-//		}
-//	}
+
+	private ServiceInfo getServiceInfo() {
+		return SPUtil.getServiceInfo(getActivity().getApplicationContext());
+	}
+
+	private User getUser() {
+		return SPUtil.getUser(getActivity().getApplicationContext());
+	}
+
+	private File getPath() {
+		return new File(getTempFileName());
+	}
 
 	public void onEventMainThread(MonitorTerminateEvent event) {
 		int reason = event.getEvent();
@@ -542,7 +560,7 @@ public class MonitorFragment extends BaseFragment {
 		}
 		reset();
 		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
-		intent.putExtra(Constants.INTENT_UUID, uuidString);
+		intent.putExtra(Constants.INTENT_UUID, getLocalRecordId());
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
@@ -584,48 +602,56 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	private void record() throws Exception {
-		File tempFile = new File(FileUtil.getVoiceDir(getActivity()), "TEMP");
-		File file = new File(FileUtil.getVoiceDir(getActivity()), uuidString);
+		File tempFile = getTempFile();
+		File file = getRecordFile();
 		if (tempFile.renameTo(file)) {
 			tempFile.delete();
+		} else {
+			ToastUtil.show(getActivity().getApplicationContext(), "胎音文件错误");
+			return;
 		}
 		FileUtil.addFileHead(file);
+		//
+		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
+		Record record = null;
+		try {
+			record = recordBusinessDao.queryByLocalRecordId(getLocalRecordId());
+		} catch (Exception e) {
+			e.printStackTrace();
+			ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
+			return;
+		}
+		Date recordStartTime = record.getRecordStartTime();
+		//
 		Gson gson = new Gson();
-		String fhrString = gson.toJson(DataStorage.fhrs);
 		RecordData recordData = new RecordData();
 		Data data = new Data();
 		data.setInterval(500);
-		data.setHeartRate(fhrString);
-		ArrayList<Long> longs = new ArrayList<>();
-		for (int i = 0; i < DataStorage.hearts.size(); i++) {
-			longs.add((long) (DataStorage.hearts.get(i) * 500));
-		}
-		String fmString = gson.toJson(longs);
-		data.setFm(fmString);
-		data.setTime(testTime.getTime());
+		data.setHeartRate(DataStorage.fhrs);
+		data.setFm(Util.position2Time(DataStorage.fms));
+		data.setTime(recordStartTime.getTime());
 		recordData.setData(data);
 		String dataString = gson.toJson(recordData);
-		DataDao dao = DataDao.getInstance(getActivity());
-		MyAdviceItem adviceItem = new MyAdviceItem();
-//		AdviceForm adviceForm = WeiTaiXinApplication.getInstance().adviceForm;
-		//
-		adviceItem.setUserid(user.getId());
-		adviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
-		adviceItem.setLocalPath(file.getPath());
-		adviceItem.setTestTime(testTime);
-		// TODO: 15/9/11 实际时间
-		adviceItem.setTestTimeLong(DataStorage.fhrs.size() * 500);
-		adviceItem.setGestationalWeeks(DateTimeTool.getGestationalWeeks(testTime));
-		adviceItem.setJianceid(uuidString);
-		adviceItem.setRdata(dataString);
-		adviceItem.setSerialnum(user.getServiceInfo().getSerialnum());
-		adviceItem.setUploadstate(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
-		//
-		dao.add(adviceItem, true);
-		MyAdviceItem aNative = dao.findNative(uuidString);
-		LogUtil.d(TAG, aNative.toString());
+		record.setRecordData(dataString);
+		record.setDuration((long) (DataStorage.fhrs.size() * 500));
+		record.setSoundPath(getRecordFile().getPath());
+		try {
+			recordBusinessDao.update(record);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ToastUtil.show(getActivity().getApplicationContext(), "数据保存异常");
+			return;
+		}
+		try {
+			Record query = recordBusinessDao.query(record);
+			LogUtil.d(TAG, query.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
+			return;
+		}
 		DataStorage.fhrs.clear();
-		DataStorage.hearts.clear();
+		DataStorage.fms.clear();
 		DataStorage.fhrPackage.recycle();
 	}
 }
