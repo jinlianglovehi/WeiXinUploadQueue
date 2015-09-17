@@ -11,7 +11,9 @@ import android.util.TypedValue;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 public class Util {
 	public static float getDensity(Context context) {
@@ -167,5 +169,21 @@ public class Util {
 	}
 
 	public static void verifyMobile(String mobileNumber) {
+	}
+
+	public static List<Long> position2Time(List<Integer> positions) {
+		ArrayList<Long> times = new ArrayList<>();
+		for (int position : positions) {
+			times.add((long) (position * 500));
+		}
+		return times;
+	}
+
+	public static List<Integer> time2Position(List<Long> times) {
+		ArrayList<Integer> positions = new ArrayList<>();
+		for (long time : times) {
+			positions.add((int) (time / 500));
+		}
+		return positions;
 	}
 }
