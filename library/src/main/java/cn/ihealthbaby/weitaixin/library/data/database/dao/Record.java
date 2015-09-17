@@ -86,6 +86,18 @@ public class Record {
 	public static final int UPLOAD_STATE_LOCAL =  1;
 	public static final int UPLOAD_STATE_UPLOADING = 2;
     public static final int UPLOAD_STATE_CLOUD = 4;
+    //
+    public static final int PURPOSE_FM_NORMAL =1;
+    public static final int PURPOSE_FM = 2;
+    public static final int PURPOSE_FM_HIGH_FRENQUENCY = 3;
+    public static final int PURPOSE_FM_DECREASE = 4;
+    public static final int PURPOSE_FM_OTHER = 5;
+	//
+    public static final int FEELING_NORMAL = 3;
+    public static final int FEELING_DEPRESSED = 2;
+    public static final int FEELING_HAPPY = 1;
+
+
 //	public static final int SERVICE_STATUS_ = 5;
 //	//0"问医生", 1"等待回复", 2"已回复", 3"需上传"
 //	public static final int SERVICE_STATUS_ASK_DOCTOR = 0;
@@ -228,7 +240,7 @@ public class Record {
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }    
+        }
         myDao.delete(this);
     }
 
@@ -236,7 +248,7 @@ public class Record {
     public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }    
+        }
         myDao.update(this);
     }
 
@@ -244,17 +256,33 @@ public class Record {
     public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }    
+        }
         myDao.refresh(this);
     }
 
     // KEEP METHODS - put your custom methods here
-	public boolean hasData() {
-//		return uploadState & UPLOAD_STATE_HAS_DATA;
-		return false;
-	}
+
 	public boolean hasSound(Context context) {
         return new File(soundPath).exists();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Record{");
+        sb.append("id=").append(id);
+        sb.append(", localRecordId='").append(localRecordId).append('\'');
+        sb.append(", userId=").append(userId);
+        sb.append(", userName='").append(userName).append('\'');
+        sb.append(", serialNumber='").append(serialNumber).append('\'');
+        sb.append(", uploadState=").append(uploadState);
+        sb.append(", recordStartTime=").append(recordStartTime);
+        sb.append(", duration=").append(duration);
+        sb.append(", recordData='").append(recordData).append('\'');
+        sb.append(", soundPath='").append(soundPath).append('\'');
+        sb.append(", feeling=").append(feeling);
+        sb.append(", purpose=").append(purpose);
+        sb.append('}');
+        return sb.toString();
     }
     // KEEP METHODS END
 
