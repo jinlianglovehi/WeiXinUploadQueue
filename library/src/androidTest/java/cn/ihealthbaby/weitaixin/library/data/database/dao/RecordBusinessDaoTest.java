@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin.library.data.database.dao;
 import android.content.Context;
 import android.test.InstrumentationTestCase;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -12,7 +13,7 @@ public class RecordBusinessDaoTest extends InstrumentationTestCase {
 	private static final String SERIAL_NUMBER = "HELLOWORLD";
 	public RecordBusinessDao instance;
 	public RecordDao recordDao;
-	public String LOCAL_RECORD_ID = "4738c67b-b986-458b-819e-00640bb26b5d";
+	public String LOCAL_RECORD_ID = "9a052b62-bcdb-41a7-95cc-76e031d0751f";
 	//	public String LOCAL_RECORD_ID = UUID.randomUUID().toString();
 	public Record record0;
 	public String localRecordId;
@@ -39,6 +40,8 @@ public class RecordBusinessDaoTest extends InstrumentationTestCase {
 		localRecordId = UUID.randomUUID().toString();
 		record0 = new Record();
 		record0.setSerialNumber(SERIAL_NUMBER);
+		record0.setUserName("userName");
+		record0.setUserId(new Random().nextInt());
 		record0.setLocalRecordId(localRecordId);
 		instance.insert(record0);
 		Record record = instance.queryByLocalRecordId(localRecordId);
@@ -50,17 +53,18 @@ public class RecordBusinessDaoTest extends InstrumentationTestCase {
 		localRecordId = UUID.randomUUID().toString();
 		record0 = new Record();
 		record0.setLocalRecordId(localRecordId);
-		instance.insert(record0);
-		Record record = instance.queryByLocalRecordId(localRecordId);
-		assertNotNull(record);
-		assertEquals(record0.getLocalRecordId(), record.getLocalRecordId());
+		try {
+			instance.insert(record0);
+		} catch (Exception e) {
+			assertNotNull(e instanceof IllegalArgumentException);
+		}
 	}
 
 	public void testUpdate() throws Exception {
-		Record record = instance.queryByLocalRecordId(localRecordId);
+		Record record = instance.queryByLocalRecordId(LOCAL_RECORD_ID);
 		record.setDuration(10000l);
 		recordDao.update(record);
-		Record record1 = instance.queryByLocalRecordId(localRecordId);
+		Record record1 = instance.queryByLocalRecordId(LOCAL_RECORD_ID);
 		assertNotNull(record1);
 		assertEquals(record.getDuration(), record1.getDuration());
 	}

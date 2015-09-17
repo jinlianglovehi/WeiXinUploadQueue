@@ -27,15 +27,15 @@ public class DatabaseGenerator {
 		record.addIdProperty().codeBeforeField("/**\n" + "\t * 自增id\n" + "\t */");
 		record.addStringProperty("localRecordId").unique().notNull().codeBeforeField("/**\n" + "\t * 本地记录id,对应AdviceItem的jianceId\n" + "\t */");
 		record.addLongProperty("userId").notNull().codeBeforeField("/**\n" + "\t * 用户id\n" + "\t */");
-		record.addStringProperty("userName").codeBeforeField("/**\n" + "\t * 用户名\n" + "\t */");
+		record.addStringProperty("userName").notNull().codeBeforeField("/**\n" + "\t * 用户名\n" + "\t */");
+		record.addStringProperty("serialNumber").notNull().codeBeforeField("/**\n" + "\t * 对应AdviceItem的serialNum\n" + "\t */");
+		record.addIntProperty("uploadState").notNull().codeBeforeField("/**\n" + "\t * 上传状态\n" + "\t */");
 		record.addDateProperty("recordStartTime").codeBeforeField("/**\n" + "\t * 监测开始时间,对应AdviceItem的testTime\n" + "\t */");
 		record.addLongProperty("duration").codeBeforeField("/**\n" + "\t * 监测时长,对应AdviceItem的testTimeLong\n" + "\t */");
 		record.addStringProperty("recordData").codeBeforeField("/**\n" + "\t * 监测记录的数据结构,JSON格式\n" + "\t */");
 		record.addStringProperty("soundPath").codeBeforeField("/**\n" + "\t * 本地音频文件路径\n" + "\t */");
 		record.addIntProperty("feeling").codeBeforeField("/**\n" + "\t * 监护心情,对应AdviceItem的feeling\n" + "\t */");
 		record.addIntProperty("purpose").codeBeforeField("/**\n" + "\t * 监护目的,对应AdviceItem的pupose\n" + "\t */");
-		record.addIntProperty("uploadState").notNull().codeBeforeField("/**\n" + "\t * 上传状态\n" + "\t */");
-		record.addStringProperty("serialNumber").notNull().codeBeforeField("/**\n" + "\t * 对应AdviceItem的serialNum\n" + "\t */");
 //		record.addLongProperty("cloudRecordId").codeBeforeField("/**\n" + "\t * 云端id,对应AdviceItem的id\n" + "\t */");
 //		record.addStringProperty("soundUrl").codeBeforeField("/**\n" + "\t * 服务端音频文件路径对应AdviceItem的path\n" + "\t */");
 //		record.addIntProperty("serviceStatus").codeBeforeField("/**\n" + "\t * 对应AdviceItem的status\n" + "\t */");

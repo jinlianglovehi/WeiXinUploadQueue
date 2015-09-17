@@ -3,8 +3,10 @@ package cn.ihealthbaby.weitaixin.library.data.database.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.Date;
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
 import de.greenrobot.dao.query.WhereCondition;
 
 /**
@@ -34,32 +36,94 @@ public class RecordBusinessDao {
 	}
 
 	/**
-	 * 查询所有未上传的数据
+	 * 查询所有数据
 	 *
 	 * @return
 	 */
-	public List<Record> queryUnuploadedRecord() throws Exception {
-		List<Record> records = recordDao.queryBuilder().where(RecordDao.Properties.UploadState.eq(Record.UPLOAD_STATE_LOCAL)).orderDesc(RecordDao.Properties.RecordStartTime).build().list();
+	public List<Record> queryRecord(final int... uploadStates) throws Exception {
+		QueryBuilder<Record> recordQueryBuilder = recordDao.queryBuilder();
+		List<Record> records = recordQueryBuilder
+				                       .where(new WhereCondition() {
+					                       @Override
+					                       public void appendTo(StringBuilder builder, String tableAlias) {
+						                       for (int i = 0; i < uploadStates.length; i++) {
+							                       builder.append("UPLOAD_STATE = " + uploadStates[i]);
+							                       if (i != uploadStates.length - 1) {
+								                       builder.append("AND");
+							                       }
+						                       }
+					                       }
+
+					                       @Override
+					                       public void appendValuesTo(List<Object> values) {
+					                       }
+				                       })
+				                       .orderDesc(RecordDao.Properties.RecordStartTime)
+				                       .build()
+				                       .list();
 		return records;
 	}
 
 	/**
-	 * 查询本地未上传的数据,带分页功能
+	 * 查询某一用户所有状态的数据,例如: queryUserRecord(1000l, Record.UPLOAD_STATE_LOCAL,
+	 * Record.UPLOAD_STATE_UPLOADING);
 	 *
-	 * @param page     页码
+	 * @return
+	 */
+	public List<Record> queryUserRecord(long userId, final int... uploadStates) throws Exception {
+		QueryBuilder<Record> recordQueryBuilder = recordDao.queryBuilder();
+		List<Record> records = recordQueryBuilder
+				                       .where(new WhereCondition() {
+					                       @Override
+					                       public void appendTo(StringBuilder builder, String tableAlias) {
+						                       for (int i = 0; i < uploadStates.length; i++) {
+							                       builder.append("UPLOAD_STATE = " + uploadStates[i]);
+							                       if (i != uploadStates.length - 1) {
+								                       builder.append("AND");
+							                       }
+						                       }
+					                       }
+
+					                       @Override
+					                       public void appendValuesTo(List<Object> values) {
+					                       }
+				                       })
+				                       .where(RecordDao.Properties.UserId.eq(userId))
+				                       .orderDesc(RecordDao.Properties.RecordStartTime)
+				                       .build()
+				                       .list();
+		return records;
+	}
+
+	/**
+	 * 查询本地所有用户数据,带分页功能,依据开始时间降序排序
+	 *
+	 * @param page     页码,从1开始
 	 * @param pageSize 每页数据数量
 	 * @return
 	 */
-	public List<Record> queryPagedUnuploadedRecord(int page, int pageSize) throws Exception {
-		List<Record> list = recordDao.queryBuilder().limit(pageSize).where(new WhereCondition() {
-			@Override
-			public void appendTo(StringBuilder builder, String tableAlias) {
-			}
+	public List<Record> queryPagedRecord(int page, int pageSize, final int... uploadStates) throws Exception {
+		List<Record> list = recordDao.queryBuilder()
+				                    .limit(pageSize)
+				                    .offset((page - 1) * pageSize)
+				                    .where(new WhereCondition() {
+					                    @Override
+					                    public void appendTo(StringBuilder builder, String tableAlias) {
+						                    for (int i = 0; i < uploadStates.length; i++) {
+							                    builder.append("UPLOAD_STATE = " + uploadStates[i]);
+							                    if (i != uploadStates.length - 1) {
+								                    builder.append("AND");
+							                    }
+						                    }
+					                    }
 
-			@Override
-			public void appendValuesTo(List<Object> values) {
-			}
-		}).orderDesc(RecordDao.Properties.RecordStartTime).build().list();
+					                    @Override
+					                    public void appendValuesTo(List<Object> values) {
+					                    }
+				                    })
+				                    .orderDesc(RecordDao.Properties.RecordStartTime)
+				                    .build()
+				                    .list();
 		return list;
 	}
 
@@ -73,20 +137,26 @@ public class RecordBusinessDao {
 	}
 
 	/**
-	 * 查询本地未上传的数据
+	 * 根据上传状态查询本地数据
 	 *
 	 * @return
 	 */
-	public long unuploadedCount() throws Exception {
-		long count = recordDao.queryBuilder().where(new WhereCondition() {
-			@Override
-			public void appendTo(StringBuilder builder, String tableAlias) {
-			}
+	public long count(final int... uploadStates) throws Exception {
+		long count = recordDao.queryBuilder()
+				             .where(new WhereCondition() {
+					                    @Override
+					                    public void appendTo(StringBuilder builder, String tableAlias) {
+						                    for (int i = 0; i < uploadStates.length; i++) {
+							                    builder.append("UPLOAD_STATE = " + uploadStates[i]);
+						                    }
+					                    }
 
-			@Override
-			public void appendValuesTo(List<Object> values) {
-			}
-		}).count();
+					                    @Override
+					                    public void appendValuesTo(List<Object> values) {
+					                    }
+				                    }
+				             )
+				             .count();
 		return count;
 	}
 
@@ -102,17 +172,45 @@ public class RecordBusinessDao {
 	 * @throws Exception 插入失败,非空字段留空,或者唯一字段重复插入
 	 */
 	public long insert(Record record) throws Exception {
+		if (record.getUserId() == 0) {
+			throw new IllegalArgumentException("UserId cannot be 0");
+		}
 		return recordDao.insert(record);
 	}
 
 	/**
-	 * 更新,会使用默认值
+	 * 更新,只更新非默认值
 	 *
 	 * @param record
 	 * @throws Exception
 	 */
 	public void update(Record record) throws Exception {
-		recordDao.update(record);
+		Record query = query(record);
+		Date recordStartTime = record.getRecordStartTime();
+		Long duration = record.getDuration();
+		String recordData = record.getRecordData();
+		String soundPath = record.getSoundPath();
+		Integer feeling = record.getFeeling();
+		Integer purpose = record.getPurpose();
+		if (recordStartTime != null) {
+			record.setRecordStartTime(recordStartTime);
+		}
+		if (duration != null) {
+			record.setDuration(duration);
+		}
+		if (recordData != null) {
+			record.setRecordData(recordData);
+		}
+		if (soundPath != null) {
+			record.setSoundPath(soundPath);
+		}
+		if (feeling != null) {
+			record.setFeeling(feeling);
+		}
+		if (purpose != null) {
+			record.setPurpose(purpose);
+		}
+		recordDao.update(query);
 	}
 
 	/**
@@ -196,27 +294,6 @@ public class RecordBusinessDao {
 	 */
 	public void deleteAll() throws Exception {
 		recordDao.deleteAll();
-	}
-
-	/**
-	 * 根据用户id查询
-	 *
-	 * @param userId
-	 * @return
-	 * @throws Exception
-	 */
-	public Record queryByUserId(Long userId) throws Exception {
-		Record record = recordDao.queryBuilder().where(RecordDao.Properties.UserId.eq(userId)).where(new WhereCondition() {
-			@Override
-			public void appendTo(StringBuilder builder, String tableAlias) {
-				builder.append("UPLOAD_STATE=");
-			}
-
-			@Override
-			public void appendValuesTo(List<Object> values) {
-			}
-		}).uniqueOrThrow();
-		return record;
 	}
 }
 
