@@ -34,8 +34,10 @@ public class DatabaseGenerator {
 		record.addLongProperty("duration").codeBeforeField("/**\n" + "\t * 监测时长,对应AdviceItem的testTimeLong\n" + "\t */");
 		record.addStringProperty("recordData").codeBeforeField("/**\n" + "\t * 监测记录的数据结构,JSON格式\n" + "\t */");
 		record.addStringProperty("soundPath").codeBeforeField("/**\n" + "\t * 本地音频文件路径\n" + "\t */");
-		record.addIntProperty("feeling").codeBeforeField("/**\n" + "\t * 监护心情,对应AdviceItem的feeling\n" + "\t */");
-		record.addIntProperty("purpose").codeBeforeField("/**\n" + "\t * 监护目的,对应AdviceItem的pupose\n" + "\t */");
+		record.addIntProperty("feelingId").codeBeforeField("/**\n" + "\t * 监护心情,对应AdviceItem的feelingId\n" + "\t */");
+		record.addStringProperty("feelingString").codeBeforeField("/**\n" + "\t * 监护心情,对应AdviceItem的feeling\n" + "\t */");
+		record.addIntProperty("purposeId").codeBeforeField("/**\n" + "\t * 监护目的,对应AdviceItem的puposeId\n" + "\t */");
+		record.addStringProperty("purposeString").codeBeforeField("/**\n" + "\t * 监护目的,对应AdviceItem的pupose\n" + "\t */");
 //		record.addLongProperty("cloudRecordId").codeBeforeField("/**\n" + "\t * 云端id,对应AdviceItem的id\n" + "\t */");
 //		record.addStringProperty("soundUrl").codeBeforeField("/**\n" + "\t * 服务端音频文件路径对应AdviceItem的path\n" + "\t */");
 //		record.addIntProperty("serviceStatus").codeBeforeField("/**\n" + "\t * 对应AdviceItem的status\n" + "\t */");

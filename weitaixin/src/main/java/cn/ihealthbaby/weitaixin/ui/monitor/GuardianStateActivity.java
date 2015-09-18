@@ -146,7 +146,9 @@ public class GuardianStateActivity extends BaseActivity {
 		Intent intent = getIntent();
 		intent.setClass(getApplicationContext(), CurvePlayActivity.class);
 		int purposeId = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getId();
+		String purposeString = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
 		int feelingId = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getId();
+		String feelingString = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
 //		DataDao dao = DataDao.getInstance(getApplicationContext());
 //		MyAdviceItem myAdviceItem = new MyAdviceItem();
 //		String uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
@@ -158,8 +160,9 @@ public class GuardianStateActivity extends BaseActivity {
 		try {
 			Record query = recordBusinessDao.queryByLocalRecordId(getLocalRecordId());
 			LogUtil.d(TAG, query.toString());
-			query.setFeeling(feelingId);
-			query.setPurpose(purposeId);
+			query.setFeelingId(feelingId);
+			query.setFeelingString(feelingString);
+			query.setPurposeString(purposeString);
 			recordBusinessDao.update(query);
 			Record query1 = recordBusinessDao.query(query);
 			LogUtil.d(TAG, query1.toString());

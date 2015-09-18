@@ -59,13 +59,21 @@ public class Record {
 	 */
     private String soundPath;
      /**
+	 * 监护心情,对应AdviceItem的feelingId
+	 */
+    private Integer feelingId;
+     /**
 	 * 监护心情,对应AdviceItem的feeling
 	 */
-    private Integer feeling;
+    private String feelingString;
+     /**
+	 * 监护目的,对应AdviceItem的puposeId
+	 */
+    private Integer purposeId;
      /**
 	 * 监护目的,对应AdviceItem的pupose
 	 */
-    private Integer purpose;
+    private String purposeString;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -113,7 +121,7 @@ public class Record {
         this.id = id;
     }
 
-    public Record(Long id, String localRecordId, long userId, String userName, String serialNumber, int uploadState, java.util.Date recordStartTime, Long duration, String recordData, String soundPath, Integer feeling, Integer purpose) {
+    public Record(Long id, String localRecordId, long userId, String userName, String serialNumber, int uploadState, java.util.Date recordStartTime, Long duration, String recordData, String soundPath, Integer feelingId, String feelingString, Integer purposeId, String purposeString) {
         this.id = id;
         this.localRecordId = localRecordId;
         this.userId = userId;
@@ -124,8 +132,10 @@ public class Record {
         this.duration = duration;
         this.recordData = recordData;
         this.soundPath = soundPath;
-        this.feeling = feeling;
-        this.purpose = purpose;
+        this.feelingId = feelingId;
+        this.feelingString = feelingString;
+        this.purposeId = purposeId;
+        this.purposeString = purposeString;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -220,27 +230,43 @@ public class Record {
         this.soundPath = soundPath;
     }
 
-    public Integer getFeeling() {
-        return feeling;
+    public Integer getFeelingId() {
+        return feelingId;
     }
 
-    public void setFeeling(Integer feeling) {
-        this.feeling = feeling;
+    public void setFeelingId(Integer feelingId) {
+        this.feelingId = feelingId;
     }
 
-    public Integer getPurpose() {
-        return purpose;
+    public String getFeelingString() {
+        return feelingString;
     }
 
-    public void setPurpose(Integer purpose) {
-        this.purpose = purpose;
+    public void setFeelingString(String feelingString) {
+        this.feelingString = feelingString;
+    }
+
+    public Integer getPurposeId() {
+        return purposeId;
+    }
+
+    public void setPurposeId(Integer purposeId) {
+        this.purposeId = purposeId;
+    }
+
+    public String getPurposeString() {
+        return purposeString;
+    }
+
+    public void setPurposeString(String purposeString) {
+        this.purposeString = purposeString;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.delete(this);
     }
 
@@ -248,7 +274,7 @@ public class Record {
     public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.update(this);
     }
 
@@ -256,7 +282,7 @@ public class Record {
     public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.refresh(this);
     }
 
@@ -279,8 +305,10 @@ public class Record {
         sb.append(", duration=").append(duration);
         sb.append(", recordData='").append(recordData).append('\'');
         sb.append(", soundPath='").append(soundPath).append('\'');
-        sb.append(", feeling=").append(feeling);
-        sb.append(", purpose=").append(purpose);
+        sb.append(", feelingId=").append(feelingId);
+        sb.append(", feelingString='").append(feelingString).append('\'');
+        sb.append(", purposeId=").append(purposeId);
+        sb.append(", purposeString='").append(purposeString).append('\'');
         sb.append('}');
         return sb.toString();
     }

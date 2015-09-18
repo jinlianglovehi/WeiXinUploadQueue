@@ -33,8 +33,10 @@ public class RecordDao extends AbstractDao<Record, Long> {
         public final static Property Duration = new Property(7, Long.class, "duration", false, "DURATION");
         public final static Property RecordData = new Property(8, String.class, "recordData", false, "RECORD_DATA");
         public final static Property SoundPath = new Property(9, String.class, "soundPath", false, "SOUND_PATH");
-        public final static Property Feeling = new Property(10, Integer.class, "feeling", false, "FEELING");
-        public final static Property Purpose = new Property(11, Integer.class, "purpose", false, "PURPOSE");
+        public final static Property FeelingId = new Property(10, Integer.class, "feelingId", false, "FEELING_ID");
+        public final static Property FeelingString = new Property(11, String.class, "feelingString", false, "FEELING_STRING");
+        public final static Property PurposeId = new Property(12, Integer.class, "purposeId", false, "PURPOSE_ID");
+        public final static Property PurposeString = new Property(13, String.class, "purposeString", false, "PURPOSE_STRING");
     };
 
     private DaoSession daoSession;
@@ -63,8 +65,10 @@ public class RecordDao extends AbstractDao<Record, Long> {
                 "\"DURATION\" INTEGER," + // 7: duration
                 "\"RECORD_DATA\" TEXT," + // 8: recordData
                 "\"SOUND_PATH\" TEXT," + // 9: soundPath
-                "\"FEELING\" INTEGER," + // 10: feeling
-                "\"PURPOSE\" INTEGER);"); // 11: purpose
+                "\"FEELING_ID\" INTEGER," + // 10: feelingId
+                "\"FEELING_STRING\" TEXT," + // 11: feelingString
+                "\"PURPOSE_ID\" INTEGER," + // 12: purposeId
+                "\"PURPOSE_STRING\" TEXT);"); // 13: purposeString
     }
 
     /** Drops the underlying database table. */
@@ -108,14 +112,24 @@ public class RecordDao extends AbstractDao<Record, Long> {
             stmt.bindString(10, soundPath);
         }
  
-        Integer feeling = entity.getFeeling();
-        if (feeling != null) {
-            stmt.bindLong(11, feeling);
+        Integer feelingId = entity.getFeelingId();
+        if (feelingId != null) {
+            stmt.bindLong(11, feelingId);
         }
  
-        Integer purpose = entity.getPurpose();
-        if (purpose != null) {
-            stmt.bindLong(12, purpose);
+        String feelingString = entity.getFeelingString();
+        if (feelingString != null) {
+            stmt.bindString(12, feelingString);
+        }
+ 
+        Integer purposeId = entity.getPurposeId();
+        if (purposeId != null) {
+            stmt.bindLong(13, purposeId);
+        }
+ 
+        String purposeString = entity.getPurposeString();
+        if (purposeString != null) {
+            stmt.bindString(14, purposeString);
         }
     }
 
@@ -145,8 +159,10 @@ public class RecordDao extends AbstractDao<Record, Long> {
             cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7), // duration
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // recordData
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // soundPath
-            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10), // feeling
-            cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11) // purpose
+            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10), // feelingId
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // feelingString
+            cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12), // purposeId
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13) // purposeString
         );
         return entity;
     }
@@ -164,8 +180,10 @@ public class RecordDao extends AbstractDao<Record, Long> {
         entity.setDuration(cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7));
         entity.setRecordData(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setSoundPath(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setFeeling(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
-        entity.setPurpose(cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11));
+        entity.setFeelingId(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
+        entity.setFeelingString(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setPurposeId(cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12));
+        entity.setPurposeString(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
      }
     
     /** @inheritdoc */

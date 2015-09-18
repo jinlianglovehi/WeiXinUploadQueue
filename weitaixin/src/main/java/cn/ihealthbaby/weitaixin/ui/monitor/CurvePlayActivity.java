@@ -135,8 +135,8 @@ public class CurvePlayActivity extends BaseActivity {
 		adviceForm.setClientId(record.getLocalRecordId());
 		adviceForm.setDataType(1);
 		adviceForm.setDeviceType(1);
-		adviceForm.setFeeling(record.getFeeling() + "");
-		adviceForm.setAskPurpose(record.getPurpose() + "");
+		adviceForm.setFeeling(record.getFeelingString());
+		adviceForm.setAskPurpose(record.getPurposeString());
 		adviceForm.setData(record.getRecordData());
 		adviceForm.setTestTime(record.getRecordStartTime());
 		adviceForm.setTestTimeLong((int) (record.getDuration() / 1000));

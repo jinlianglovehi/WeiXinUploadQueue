@@ -194,8 +194,10 @@ public class RecordBusinessDao {
 		Long duration = record.getDuration();
 		String recordData = record.getRecordData();
 		String soundPath = record.getSoundPath();
-		Integer feeling = record.getFeeling();
-		Integer purpose = record.getPurpose();
+		Integer feelingId = record.getFeelingId();
+		String feelingString = record.getFeelingString();
+		Integer purposeId = record.getPurposeId();
+		String purposeString = record.getPurposeString();
 		if (uploadState != 0) {
 			record.setUploadState(uploadState);
 		}
@@ -211,11 +213,17 @@ public class RecordBusinessDao {
 		if (soundPath != null) {
 			record.setSoundPath(soundPath);
 		}
-		if (feeling != null) {
-			record.setFeeling(feeling);
+		if (feelingId != null) {
+			record.setFeelingId(feelingId);
 		}
-		if (purpose != null) {
-			record.setPurpose(purpose);
+		if (purposeId != null) {
+			record.setPurposeId(purposeId);
+		}
+		if (feelingString != null) {
+			record.setFeelingId(feelingId);
+		}
+		if (purposeString != null) {
+			record.setPurposeId(purposeId);
 		}
 		recordDao.update(query);
 	}
