@@ -121,80 +121,82 @@ public class MonitorFragment extends BaseFragment {
 	private int alertInterval;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case Constants.MESSAGE_STATE_CHANGE:
-					switch (msg.arg1) {
-						case PseudoBluetoothService.STATE_CONNECTED:
-							LogUtil.d(TAG, "STATE_CONNECTED");
-							connected = true;
-							bluetoothScanner.cancleDiscovery();
-							onConnectedUI();
-							break;
-						case PseudoBluetoothService.STATE_CONNECTING:
-							LogUtil.d(TAG, "STATE_CONNECTING");
-							break;
-						case PseudoBluetoothService.STATE_LISTEN:
-							LogUtil.d(TAG, "STATE_LISTEN");
-							break;
-						case PseudoBluetoothService.STATE_NONE:
-							LogUtil.d(TAG, "STATE_NONE");
-							reset();
-							break;
-					}
-					break;
-				case Constants.MESSAGE_WRITE:
-					byte[] writeBuf = (byte[]) msg.obj;
-					break;
-				case Constants.MESSAGE_READ_FETAL_DATA:
-					FHRPackage fhrPackage = (FHRPackage) msg.obj;
-					int fhr1 = fhrPackage.getFHR1();
-					DataStorage.fhrPackage.setFHRPackage(fhrPackage);
-					if (tvBluetooth != null) {
-						if (fhr1 >= safemin && fhr1 <= safemax) {
-							tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
-						} else {
-							tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
-							if (alert && connected && started) {
-								long currentTimeMillis = System.currentTimeMillis();
-								if (currentTimeMillis - lastAlert >= alertInterval * 1000)
-									alertSound.play(1, 1, 1, 0, 0, 1);
-								lastAlert = currentTimeMillis;
+			try {
+				switch (msg.what) {
+					case Constants.MESSAGE_STATE_CHANGE:
+						switch (msg.arg1) {
+							case PseudoBluetoothService.STATE_CONNECTED:
+								LogUtil.d(TAG, "STATE_CONNECTED");
+								connected = true;
+								bluetoothScanner.cancleDiscovery();
+								onConnectedUI();
+								break;
+							case PseudoBluetoothService.STATE_CONNECTING:
+								LogUtil.d(TAG, "STATE_CONNECTING");
+								break;
+							case PseudoBluetoothService.STATE_LISTEN:
+								LogUtil.d(TAG, "STATE_LISTEN");
+								break;
+							case PseudoBluetoothService.STATE_NONE:
+								LogUtil.d(TAG, "STATE_NONE");
+								reset();
+								break;
+						}
+						break;
+					case Constants.MESSAGE_WRITE:
+						byte[] writeBuf = (byte[]) msg.obj;
+						break;
+					case Constants.MESSAGE_READ_FETAL_DATA:
+						FHRPackage fhrPackage = (FHRPackage) msg.obj;
+						int fhr1 = fhrPackage.getFHR1();
+						DataStorage.fhrPackage.setFHRPackage(fhrPackage);
+						if (tvBluetooth != null) {
+							if (fhr1 >= safemin && fhr1 <= safemax) {
+								tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
+							} else {
+								tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
+								if (alert && connected && started) {
+									long currentTimeMillis = System.currentTimeMillis();
+									if (currentTimeMillis - lastAlert >= alertInterval * 1000)
+										alertSound.play(1, 1, 1, 0, 0, 1);
+									lastAlert = currentTimeMillis;
+								}
+							}
+							tvBluetooth.setText(fhr1 + "");
+						}
+						break;
+					case Constants.MESSAGE_DEVICE_NAME:
+						// save the connected device's name
+						String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
+						LogUtil.d(TAG, "connecting " + deviceName);
+						break;
+					case Constants.MESSAGE_CANNOT_CONNECT:
+						LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
+						ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
+						started = false;
+						reset();
+						break;
+					case Constants.MESSAGE_CONNECTION_LOST:
+						LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
+						ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
+						reset();
+						break;
+					case Constants.MESSAGE_VOICE:
+						byte[] sound = (byte[]) msg.obj;
+						audioTrack.write(sound, 0, sound.length);
+						if (needRecord) {
+							if (fileOutputStream != null) {
+								try {
+									fileOutputStream.write(sound);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
 							}
 						}
-						tvBluetooth.setText(fhr1 + "");
-					}
-					break;
-				case Constants.MESSAGE_DEVICE_NAME:
-					// save the connected device's name
-					String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
-					LogUtil.d(TAG, "connecting " + deviceName);
-					break;
-				case Constants.MESSAGE_CANNOT_CONNECT:
-					LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
-					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-					started = false;
-					reset();
-					break;
-				case Constants.MESSAGE_CONNECTION_LOST:
-					LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
-					ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
-					reset();
-					break;
-				case Constants.MESSAGE_VOICE:
-					byte[] sound = (byte[]) msg.obj;
-//					if (needPlay) {
-//						audioTrack.write(sound, 0, sound.length);
-//					}
-					if (needRecord) {
-						if (fileOutputStream != null) {
-							try {
-								fileOutputStream.write(sound);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-					break;
+						break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	};
