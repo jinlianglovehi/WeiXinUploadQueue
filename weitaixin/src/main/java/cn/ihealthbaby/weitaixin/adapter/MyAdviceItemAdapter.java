@@ -202,7 +202,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle_un);
 			viewHolder.iv_circle.setVisibility(View.GONE);
 		} else {
-			viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.bg_ask_doctor);
+//			viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.bg_ask_doctor);
+			viewHolder.tvAdviceStatus.setBackgroundColor(context.getResources().getColor(R.color.green0));
 			viewHolder.iv_circle.setVisibility(View.VISIBLE);
 		}
 		viewHolder.tvAdviceStatus.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +220,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		});
 		cancel();
 		if (tvUsedCount != null) {
-			tvUsedCount.setText(getCount() + "");
+			tvUsedCount.setText(this.datas.size() + "");
 		}
 		return convertView;
 	}
