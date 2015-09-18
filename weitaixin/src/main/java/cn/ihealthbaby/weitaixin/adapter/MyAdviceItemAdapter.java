@@ -28,6 +28,7 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
@@ -42,13 +43,13 @@ import cn.ihealthbaby.weitaixin.ui.record.ReplyedActivity;
 
 public class MyAdviceItemAdapter extends BaseAdapter {
 	private final int requestCode = 100;
-	public ArrayList<MyAdviceItem> datas;
+	public ArrayList<AdviceItem> datas;
 	///////
 	public View selectedView;
 	public View selectedViewOld;
 	public TextView recordDelete;
-	public Comparator<MyAdviceItem> comparator = new Comparator<MyAdviceItem>() {
-		public int compare(MyAdviceItem s1, MyAdviceItem s2) {
+	public Comparator<AdviceItem> comparator = new Comparator<AdviceItem>() {
+		public int compare(AdviceItem s1, AdviceItem s2) {
 			Date date1 = s1.getTestTime();
 			Date date2 = s2.getTestTime();
 			if (date1 == null || date2 == null) {
@@ -72,7 +73,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 	//////
 	private TextView tvUsedCount;
 
-	public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<MyAdviceItem> datas, TextView tvUsedCount) {
+	public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas, TextView tvUsedCount) {
 		mInflater = LayoutInflater.from(context);
 		this.context = context;
 		this.tvUsedCount = tvUsedCount;
@@ -103,17 +104,17 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		selectedViewOld = null;
 	}
 
-	public void setDatas(ArrayList<MyAdviceItem> datas) {
+	public void setDatas(ArrayList<AdviceItem> datas) {
 		if (datas == null) {
-			this.datas = new ArrayList<MyAdviceItem>();
+			this.datas = new ArrayList<AdviceItem>();
 		} else {
-			this.datas.clear();
+//			this.datas.clear();
 			this.datas = datas;
 			mySortByTime();
 		}
 	}
 
-	public void addDatas(ArrayList<MyAdviceItem> datas) {
+	public void addDatas(ArrayList<AdviceItem> datas) {
 		if (datas != null) {
 			this.datas.addAll(datas);
 			mySortByTime();
@@ -169,7 +170,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		});
 		LogUtil.d("adapter", "size: %s, position: %s", datas.size(), position);
 		LogUtil.d("adapter", "size: %s, position: %s", datas.size(), position);
-		final MyAdviceItem adviceItem = this.datas.get(position);
+		final AdviceItem adviceItem = this.datas.get(position);
 
 
 
@@ -223,14 +224,14 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	private void setItemTextView(final MyAdviceItem adviceItem, int position) {
+	private void setItemTextView(final AdviceItem adviceItem, int position) {
 		//1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
 		int status = adviceItem.getStatus();
 		if (status == 0) {
 			Intent intent = new Intent(context, AskDoctorActivity.class);
 			LogUtil.d("AskDocgetId", "AskDocgetId = " + adviceItem.getId());
 			intent.putExtra("adviceItemId", adviceItem.getId());
-			intent.putExtra("adviceItemPurpose", adviceItem.getPurpose());
+			intent.putExtra("adviceItemPurpose", adviceItem.getAskPurpose());
 			intent.putExtra("adviceItemFeeling", adviceItem.getFeeling());
 			intent.putExtra("position", position);
 			context.startActivityForResult(intent, requestCode);
@@ -248,11 +249,11 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			dialog.show();
 			
 			AdviceForm adviceForm = new AdviceForm();
-			adviceForm.setClientId(adviceItem.getJianceid() + "");
+			adviceForm.setClientId(adviceItem.getClientId() + "");
 			adviceForm.setTestTime(adviceItem.getTestTime());
 			adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
 //			adviceForm.setData(adviceForm.getData());
-			adviceForm.setAskPurpose(adviceItem.getPurpose());
+			adviceForm.setAskPurpose(adviceItem.getAskPurpose());
 //            adviceForm.setDataType();
 //            adviceForm.setDeviceType();
 			adviceForm.setFeeling(adviceItem.getFeeling());
@@ -278,7 +279,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
 	private void deleteRecordItem(final int position) {
 		if (datas.size() > 0) {
-			MyAdviceItem adviceItem = datas.get(position);
+			AdviceItem adviceItem = datas.get(position);
 			if (adviceItem.getStatus() != 3) {
 				final CustomDialog customDialog = new CustomDialog();
 				Dialog dialog = customDialog.createDialog1(context, "正在删除...");

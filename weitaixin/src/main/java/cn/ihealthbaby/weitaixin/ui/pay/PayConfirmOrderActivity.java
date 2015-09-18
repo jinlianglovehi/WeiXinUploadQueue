@@ -202,11 +202,11 @@ public class PayConfirmOrderActivity extends BaseActivity {
         if (requestCode==888) {
             if (resultCode==999) {
                 if (data!=null) {
-                    Address addressItem= (Address) data.getSerializableExtra("addressItem");
+                    Address addressItem = (Address) data.getSerializableExtra("addressItem");
                     tvAddressName.setText(addressItem.getLinkMan());
                     tvAddressPhoneNumber.setText(addressItem.getMobile());
-                    tvAddressText.setText(addressItem.getAddress());
-                    addressId=addressItem.getId();
+                    tvAddressText.setText(addressItem.getArea() + addressItem.getAddress() + "");
+                    addressId = addressItem.getId();
                 }
             }
         }
@@ -273,8 +273,8 @@ public class PayConfirmOrderActivity extends BaseActivity {
                         rlExpressageGet.setVisibility(View.VISIBLE);
                         tvAddressName.setText(data.getLinkMan());
                         tvAddressPhoneNumber.setText(data.getMobile());
-                        tvAddressText.setText(data.getAddress());
-                        addressId=data.getId();
+                        tvAddressText.setText(data.getArea() + data.getAddress() + "");
+                        addressId = data.getId();
                     }
                 }else {
                     ToastUtil.show(getApplicationContext(),t.getMsgMap()+"");
