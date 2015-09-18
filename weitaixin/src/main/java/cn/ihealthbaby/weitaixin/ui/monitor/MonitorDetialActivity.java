@@ -49,6 +49,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	ImageView btnStart;
 	@Bind(R.id.rl_function)
 	RelativeLayout rlMovement;
+	@Bind(R.id.tv_consum_time)
+	TextView tvConsumTime;
 	private long consumedtime;
 	private long duration;
 	private long interval;

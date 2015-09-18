@@ -6,8 +6,6 @@ import android.os.Message;
 import java.io.IOException;
 import java.io.InputStream;
 
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
-import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.FHRParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
@@ -16,6 +14,7 @@ import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ByteUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 
 /**
  * Created by liuhongjian on 15/7/17 12:52.
@@ -50,6 +49,7 @@ public class Parser {
 	//版本初始信息
 	private static final int VERSION_NONE = -1;
 	private static final String TAG = "Parser";
+	public byte[] oneByte;
 	private Handler handler;
 	//
 	private byte[] fetalDataBufferV1 = new byte[4];
@@ -140,59 +140,54 @@ public class Parser {
 	}
 
 	public void parsePackageData(InputStream mmInStream) throws IOException, ParseException, Exception {
-		byte[] oneByte = new byte[1];
-		while (true) {
-			if (mmInStream.available() < 324) {
-				continue;
-			}
+		oneByte = new byte[1];
+		mmInStream.read(oneByte);
+		if (translate(oneByte[0]) == 0x55) {
 			mmInStream.read(oneByte);
-			if (translate(oneByte[0]) == 0x55) {
+			if (translate(oneByte[0]) == 0xaa) {
 				mmInStream.read(oneByte);
-				if (translate(oneByte[0]) == 0xaa) {
-					mmInStream.read(oneByte);
-					switch (translate(oneByte[0])) {
-						//v1,胎心
-						case CONTROLLER_HEART_BEAT_RATE_V1:
-							mmInStream.read(fetalDataBufferV1);
-							validateData(fetalDataBufferV1);
-							FHRPackage fhrPackage1 = parseFHR(fetalDataBufferV1, "1");
-							Message message1 = Message.obtain(handler);
-							message1.what = Constants.MESSAGE_READ_FETAL_DATA;
-							message1.obj = fhrPackage1;
-							message1.sendToTarget();
-							break;
-						//v2,胎心
-						case CONTROLLER_HEART_BEAT_RATE_V2:
-							mmInStream.read(fetalDataBufferV2);
-							FHRPackage fhrPackage2 = parseFHR(fetalDataBufferV2, "2");
-							Message message2 = Message.obtain(handler);
-							message2.what = Constants.MESSAGE_READ_FETAL_DATA;
-							message2.obj = fhrPackage2;
-							message2.sendToTarget();
-							break;
-						//v1,声音
-						case CONTROLLER_SOUND_V1:
-							int[] voice = getVoice(mmInStream);
-							byte[] v = intForByte(ByteUtil.analysePackage(voice));
-							AudioPlayer.getInstance().getmAudioTrack().write(v, 0, v.length);
-							Message message3 = Message.obtain(handler);
-							message3.what = Constants.MESSAGE_VOICE;
-							message3.obj = v;
-							message3.sendToTarget();
-							break;
-						//v2,声音
-						case CONTROLLER_SOUND_V2:
-							int[] voiceAd = getVoiceAd(mmInStream);
-							byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
-							AudioPlayer.getInstance().getmAudioTrack().write(adv, 0, adv.length);
-							Message message4 = Message.obtain(handler);
-							message4.what = Constants.MESSAGE_VOICE;
-							message4.obj = adv;
-							message4.sendToTarget();
-							break;
-						default:
-							throw new ParseException("no such controller");
-					}
+				switch (translate(oneByte[0])) {
+					//v1,胎心
+					case CONTROLLER_HEART_BEAT_RATE_V1:
+						mmInStream.read(fetalDataBufferV1);
+						validateData(fetalDataBufferV1);
+						FHRPackage fhrPackage1 = parseFHR(fetalDataBufferV1, "1");
+						Message message1 = Message.obtain(handler);
+						message1.what = Constants.MESSAGE_READ_FETAL_DATA;
+						message1.obj = fhrPackage1;
+						message1.sendToTarget();
+						break;
+					//v2,胎心
+					case CONTROLLER_HEART_BEAT_RATE_V2:
+						mmInStream.read(fetalDataBufferV2);
+						FHRPackage fhrPackage2 = parseFHR(fetalDataBufferV2, "2");
+						Message message2 = Message.obtain(handler);
+						message2.what = Constants.MESSAGE_READ_FETAL_DATA;
+						message2.obj = fhrPackage2;
+						message2.sendToTarget();
+						break;
+					//v1,声音
+					case CONTROLLER_SOUND_V1:
+						int[] voice = getVoice(mmInStream);
+						byte[] v = intForByte(ByteUtil.analysePackage(voice));
+//						AudioPlayer.getInstance().getmAudioTrack().write(v, 0, v.length);
+						Message message3 = Message.obtain(handler);
+						message3.what = Constants.MESSAGE_VOICE;
+						message3.obj = v;
+						message3.sendToTarget();
+						break;
+					//v2,声音
+					case CONTROLLER_SOUND_V2:
+						int[] voiceAd = getVoiceAd(mmInStream);
+						byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
+//						AudioPlayer.getInstance().getmAudioTrack().write(adv, 0, adv.length);
+						Message message4 = Message.obtain(handler);
+						message4.what = Constants.MESSAGE_VOICE;
+						message4.obj = adv;
+						message4.sendToTarget();
+						break;
+					default:
+						throw new ParseException("no such controller");
 				}
 			}
 		}
@@ -232,6 +227,7 @@ public class Parser {
 				soundDataBufferV1[i] = inputStream.read();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return null;
 			}
 		}
 		return soundDataBufferV1;

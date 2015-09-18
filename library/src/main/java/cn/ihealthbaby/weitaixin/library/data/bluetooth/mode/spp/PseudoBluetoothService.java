@@ -112,10 +112,12 @@ public class PseudoBluetoothService {
 		// Start the thread to listen on a BluetoothServerSocket
 		if (mSecureAcceptThread == null) {
 			mSecureAcceptThread = new AcceptThread(true);
+			mSecureAcceptThread.setName("SecureAcceptThread");
 			mSecureAcceptThread.start();
 		}
 		if (mInsecureAcceptThread == null) {
 			mInsecureAcceptThread = new AcceptThread(false);
+			mInsecureAcceptThread.setName("InsecureAcceptThread");
 			mInsecureAcceptThread.start();
 		}
 	}
@@ -142,6 +144,7 @@ public class PseudoBluetoothService {
 		}
 		// Start the thread to connect with the given device
 		mConnectThread = new ConnectThread(device, secure);
+		mConnectThread.setName("ConnectThread");
 		mConnectThread.start();
 		setState(STATE_CONNECTING);
 	}
@@ -175,6 +178,7 @@ public class PseudoBluetoothService {
 		}
 		// Start the thread to manage the connection and perform transmissions
 		mConnectedThread = new ConnectedThread(socket, socketType);
+		mConnectedThread.setName("ConnectedThread");
 		mConnectedThread.start();
 		// Send the name of the connected device back to the UI Activity
 		Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
@@ -381,7 +385,6 @@ public class PseudoBluetoothService {
 							           " socket during connection failure", e2);
 				} catch (Exception e3) {
 					e3.printStackTrace();
-
 				}
 				connectionFailed();
 				return;
@@ -434,29 +437,22 @@ public class PseudoBluetoothService {
 
 		public void run() {
 			Log.i(TAG, "BEGIN mConnectedThread");
-//			byte[] buffer = new byte[1024];
-//			int bytes;
-			// Keep listening to the InputStream while connected
 			while (true) {
 				try {
+					if (mmInStream != null && mmInStream.available() < 324) {
+						continue;
+					}
 					parser.parsePackageData(mmInStream);
-					// Read from the InputStream
-//					bytes = mmInStream.read(buffer);
-					// Send the obtained bytes to the UI Activity
-//					mHandler.obtainMessage(Temp.MESSAGE_READ_FETAL_DATA, bytes, -1, buffer)
-//							.sendToTarget();
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
 					connectionLost();
-					// Start the service over to restart listening mode
-//					PseudoBluetoothService.this.start();
 					break;
 				} catch (ParseException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
-					System.out.println("finally finish");
+					LogUtil.d(TAG, "stop read from stream");
 				}
 			}
 		}
