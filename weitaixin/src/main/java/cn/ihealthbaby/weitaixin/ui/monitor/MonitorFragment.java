@@ -75,8 +75,6 @@ public class MonitorFragment extends BaseFragment {
 	ImageView roundFrontground;
 	@Bind(R.id.round_background)
 	ImageView roundBackground;
-	//	@Bind(R.id.round_progress_mask)
-	//	RoundMaskView roundProgressMask;
 	@Bind(R.id.hint)
 	TextView hint;
 	@Bind(R.id.helper)
@@ -156,9 +154,9 @@ public class MonitorFragment extends BaseFragment {
 							tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
 						} else {
 							tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
-							if (alert && connected) {
+							if (alert && connected && started) {
 								long currentTimeMillis = System.currentTimeMillis();
-								if (currentTimeMillis - lastAlert >= alertInterval)
+								if (currentTimeMillis - lastAlert >= alertInterval * 1000)
 									alertSound.play(1, 1, 1, 0, 0, 1);
 								lastAlert = currentTimeMillis;
 							}
@@ -174,6 +172,7 @@ public class MonitorFragment extends BaseFragment {
 				case Constants.MESSAGE_CANNOT_CONNECT:
 					LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
+					started = false;
 					reset();
 					break;
 				case Constants.MESSAGE_CONNECTION_LOST:
