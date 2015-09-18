@@ -79,7 +79,7 @@ public class RecordBusinessDao {
 						                       for (int i = 0; i < uploadStates.length; i++) {
 							                       builder.append("UPLOAD_STATE = " + uploadStates[i]);
 							                       if (i != uploadStates.length - 1) {
-								                       builder.append("AND");
+								                       builder.append("OR");
 							                       }
 						                       }
 					                       }

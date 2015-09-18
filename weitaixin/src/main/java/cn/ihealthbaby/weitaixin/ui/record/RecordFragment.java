@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -120,9 +121,10 @@ public class RecordFragment extends BaseFragment {
         function.setText("编辑");
 
 //      dataDao = DataDao.getInstance(getActivity().getApplicationContext());
-//      saveLocal();
+
 
         recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
+//        savelocal();
 
 
         context = (MeMainFragmentActivity) getActivity();
@@ -199,6 +201,33 @@ public class RecordFragment extends BaseFragment {
         });
 
         return view;
+    }
+
+    private void savelocal() {
+
+        for (int i = 0; i <5 ; i++) {
+            Record record=new Record();
+    //      record.setGestationalWeeks(Long.parseLong(1003333+""));
+            record.setRecordStartTime(new Date());
+            record.setDuration(Long.parseLong(i+1003333 + ""));
+            record.setUploadState(Record.UPLOAD_STATE_LOCAL);
+            record.setLocalRecordId("112313231"+i);
+            record.setPurposeString("目的好啊");
+            record.setFeelingString("心情好");
+
+            record.setUserId(SPUtil.getUserID(getActivity().getApplicationContext()));
+            record.setSerialNumber("DSDDSFSFSF");
+            record.setUserName("13798988787"+i);
+
+            try {
+                long index = recordBusinessDao.insert(record);
+                LogUtil.d("recordBusinessDao", "recordBusinessDao==> " + index);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.d("recordBusinessDao", "recordBusinessDao==> " + e.toString());
+            }
+        }
+
     }
 
 
@@ -345,7 +374,8 @@ public class RecordFragment extends BaseFragment {
                 ArrayList<Record> records = null;
                 try {
                     //获取本地记录
-                    records = (ArrayList<Record>) recordBusinessDao.queryUserRecord(SPUtil.getUserID(getActivity().getApplicationContext()), Record.UPLOAD_STATE_LOCAL, Record.UPLOAD_STATE_UPLOADING);
+                    records = (ArrayList<Record>) recordBusinessDao.queryUserRecord(SPUtil.getUserID(getActivity().getApplicationContext()), Record.UPLOAD_STATE_LOCAL,Record.UPLOAD_STATE_UPLOADING);
+                    LogUtil.d("recordBusinessDao", records.size() + " =recordBusinessDao= " + records);
                     //把本地记录 转换成云端 记录集合类型
                     dataList.addAll(switchList(records));
                 } catch (Exception e) {
@@ -401,8 +431,10 @@ public class RecordFragment extends BaseFragment {
             // TODO: 2015/9/18 孕周
             adviceItem.setGestationalWeeks("");
             adviceItem.setTestTime(record.getRecordStartTime());
-            adviceItem.setTestTimeLong((int)(record.getDuration()/1000));
-            adviceItem.setStatus(MyAdviceItem.UPLOADSTATE_NATIVE_RECORD);
+            adviceItem.setTestTimeLong((int) (record.getDuration() / 1000));
+            if (record.getUploadState()== Record.UPLOAD_STATE_LOCAL||record.getUploadState()== Record.UPLOAD_STATE_UPLOADING) {
+                adviceItem.setStatus(Record.UPLOAD_STATE_CLOUD);
+            }
             adviceItem.setClientId(record.getLocalRecordId());
             adviceItem.setFeeling(record.getFeelingString());
             adviceItem.setAskPurpose(record.getPurposeString());

@@ -66,7 +66,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 	//    public View getAdviceStatused() {
 //        return tvAdviceStatused;
 //    }
-	private String[] strFlag = new String[]{"问医生", "等待回复", "已回复", "需上传"};
+	private String[] strFlag = new String[]{"问医生", "等待回复", "已回复", "咨询已删除", "需上传"};
 	//    public View tvAdviceStatused;
 //    public View tvAdviceStatusedOld;
 	private int selectedItem;

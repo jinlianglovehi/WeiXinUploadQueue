@@ -16,10 +16,15 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
+import java.util.Date;
+import java.util.UUID;
+
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
@@ -60,12 +65,35 @@ public class WeiTaiXinApplication extends Application {
 
         initApiManager();
 
-//		RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
-//		adapter = new VolleyAdapter(getApplicationContext(), Temp.SERVER_URL, requestQueue);
-//		HttpClientAdapter adapter = new XiaoCaoVolleyAdapter(getApplicationContext(), Temp.SERVER_URL);
-//		HttpClientAdapter adapter = new LoopjAdapter(getApplicationContext(), Temp.SERVER_URL);
-//		ApiManager.init(adapter);
+        RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(this);
+
+        for (int i = 0; i <30 ; i++) {
+            Record record=new Record();
+    //      record.setId(Long.parseLong(33233 + ""));
+    //      record.setGestationalWeeks(Long.parseLong(1003333+""));
+            record.setRecordStartTime(new Date());
+            record.setDuration(Long.parseLong(1003333 + ""));
+            record.setUploadState(Record.UPLOAD_STATE_LOCAL);
+            record.setLocalRecordId(UUID.randomUUID().toString());
+            record.setPurposeString("目的好啊");
+            record.setFeelingString("心情好");
+
+            record.setUserId(SPUtil.getUserID(this));
+            record.setSerialNumber("DSDDSFSFSF");
+            record.setUserName("13798988787");
+
+            try {
+                long index = recordBusinessDao.insert(record);
+                LogUtil.d("recordBusinessDao", "recordBusinessDao==> " + index);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.d("recordBusinessDao", "recordBusinessDao==> " + e.toString());
+            }
+        }
+
     }
+
+
 
     public AbstractHttpClientAdapter getAdapter() {
         return adapter;
