@@ -374,12 +374,13 @@ public class RecordFragment extends BaseFragment {
                 ArrayList<Record> records = null;
                 try {
                     //获取本地记录
-                    records = (ArrayList<Record>) recordBusinessDao.queryUserRecord(SPUtil.getUserID(getActivity().getApplicationContext()), Record.UPLOAD_STATE_LOCAL,Record.UPLOAD_STATE_UPLOADING);
+                    records = (ArrayList<Record>) recordBusinessDao.queryUserRecord(SPUtil.getUserID(getActivity().getApplicationContext()), Record.UPLOAD_STATE_LOCAL, Record.UPLOAD_STATE_UPLOADING);
                     LogUtil.d("recordBusinessDao", records.size() + " =recordBusinessDao= " + records);
                     //把本地记录 转换成云端 记录集合类型
                     dataList.addAll(switchList(records));
                 } catch (Exception e) {
                     e.printStackTrace();
+                    LogUtil.d("recordBusinessDao", "recordBusinessDao= " + e.toString());
                 }
 
 
