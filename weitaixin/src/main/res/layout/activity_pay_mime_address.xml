@@ -13,7 +13,7 @@
         android:id="@+id/lvAddressAllOrder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/tvTexted"
+        android:layout_above="@+id/tvTextTip"
         android:layout_below="@id/head_title_id"
         android:layout_marginTop="10dp"
         android:cacheColorHint="#00000000"
@@ -28,7 +28,7 @@
 
 
     <TextView
-        android:id="@+id/tvTexted"
+        android:id="@+id/tvTextTip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/tvAddNewAddress"

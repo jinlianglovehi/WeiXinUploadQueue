@@ -70,7 +70,7 @@ public class PayAccountActivity extends BaseActivity {
 
     @OnClick(R.id.rlPayAddress)
     public void PayAddress() {
-        Intent intent = new Intent(this, PayMimeAddressActivity.class);
+        Intent intent = new Intent(this, PayMimeAddressWithEditActivity.class);
         startActivity(intent);
     }
 

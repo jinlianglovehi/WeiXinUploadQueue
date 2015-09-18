@@ -39,10 +39,12 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.db.DataDao;
+import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -365,66 +367,61 @@ public class RecordFragment extends BaseFragment {
 
 
     public void pullFirstData(final CustomDialog customDialogTwo) {
-        ApiManager.getInstance().adviceApi.getAdviceItems(1, 20, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
+        ApiManager.getInstance().adviceApi.getAdviceItems(1,1,new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
             @Override
-            public void call(Result<PageData<AdviceItem>> t) {
-                if (t.isSuccess()) {
-                    PageData<AdviceItem> data = t.getData();
-                    final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+            public void handleData(PageData<AdviceItem> data) throws Exception {
+                final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
-                    LogUtil.d("dataListsize", "dataListsize ==> " + dataList.size());
-                    ArrayList<AdviceItem> dataListPageTen = new ArrayList<AdviceItem>();
+                LogUtil.d("dataListsize", "dataListsize ==> " + dataList.size());
+                ArrayList<AdviceItem> dataListPageTen = new ArrayList<AdviceItem>();
 
-                    if (dataList != null && dataList.size() > 0) {
-                        if (dataList.size() >= pageSize) {
-                            for (int i = 0; i < pageSize; i++) {
-                                dataListPageTen.add(dataList.get(i));
-                            }
-                        } else {
-                            for (int i = 0; i < dataList.size(); i++) {
-                                dataListPageTen.add(dataList.get(i));
-                            }
+                if (dataList != null && dataList.size() > 0) {
+                    if (dataList.size() >= pageSize) {
+                        for (int i = 0; i < pageSize; i++) {
+                            dataListPageTen.add(dataList.get(i));
                         }
-
-                        //云端和本地记录-合并
-                        ArrayList<MyAdviceItem> showMyAdviceItems = switchList(dataListPageTen);
-                        mergeAdviceItem(showMyAdviceItems);
-
-
-                        //缓存网络前20条,保存到数据库中
-                        final ArrayList<MyAdviceItem> myAdviceItems = switchList(dataList);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                LogUtil.d("dataListsize", "myAdviceItems ==> " + myAdviceItems.size());
-                                dataDao.addItemList(myAdviceItems, false);
-                            }
-                        }).start();
-
-                        //
-                        adapter.datas.clear();
-                        adapter.setDatas(showMyAdviceItems);
-                        adapter.notifyDataSetChanged();
-                        mAdviceItems = adapter.datas;
                     } else {
-                        //从缓存数据库中展示数据列表
-//                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView(SPUtil.getUserID(getActivity().getApplicationContext()));
-                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloud(SPUtil.getUserID(getActivity().getApplicationContext()));
-                        if (adviceItems != null && adviceItems.size() > 0) {
-                            adapter.setDatas(switchList(dataList));
-                            adapter.notifyDataSetChanged();
-                            mAdviceItems = adapter.datas;
-                            countNumber = adviceItems.size();
-                        } else {
-                            ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
-                            countNumber = 0;
-                        }
-                        if (tvUsedCount != null) {
-                            tvUsedCount.setText(countNumber + "");
+                        for (int i = 0; i < dataList.size(); i++) {
+                            dataListPageTen.add(dataList.get(i));
                         }
                     }
+
+                    //云端和本地记录-合并
+                    ArrayList<MyAdviceItem> showMyAdviceItems = switchList(dataListPageTen);
+                    mergeAdviceItem(showMyAdviceItems);
+
+
+                    //缓存网络前20条,保存到数据库中
+                    final ArrayList<MyAdviceItem> myAdviceItems = switchList(dataList);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.d("dataListsize", "myAdviceItems ==> " + myAdviceItems.size());
+                            dataDao.addItemList(myAdviceItems, false);
+                        }
+                    }).start();
+
+                    //
+                    adapter.datas.clear();
+                    adapter.setDatas(showMyAdviceItems);
+                    adapter.notifyDataSetChanged();
+                    mAdviceItems = adapter.datas;
                 } else {
-                    ToastUtil.show(context, t.getMsgMap() + "");
+                    //从缓存数据库中展示数据列表
+//                        ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloudOnView(SPUtil.getUserID(getActivity().getApplicationContext()));
+                    ArrayList<MyAdviceItem> adviceItems = dataDao.getAllRecordNativeAndCloud(SPUtil.getUserID(getActivity().getApplicationContext()));
+                    if (adviceItems != null && adviceItems.size() > 0) {
+                        adapter.setDatas(switchList(dataList));
+                        adapter.notifyDataSetChanged();
+                        mAdviceItems = adapter.datas;
+                        countNumber = adviceItems.size();
+                    } else {
+                        ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
+                        countNumber = 0;
+                    }
+                    if (tvUsedCount != null) {
+                        tvUsedCount.setText(countNumber + "");
+                    }
                 }
                 if (pullToRefresh != null) {
                     pullToRefresh.onRefreshComplete();
@@ -433,7 +430,8 @@ public class RecordFragment extends BaseFragment {
                     customDialogTwo.dismiss();
                 }
             }
-        }, getRequestTag());
+        }), getRequestTag());
+
     }
 
 

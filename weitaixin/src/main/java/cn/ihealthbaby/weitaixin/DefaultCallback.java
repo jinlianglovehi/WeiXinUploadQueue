@@ -50,7 +50,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleData(data);
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap()+"");
+					ToastUtil.show(context, result.getMsgMap()+"1111");
 				}
 				break;
 			/**
@@ -59,7 +59,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.VALIDATOR:
 				Map<String, Object> msgMap = result.getMsgMap();
 				// TODO: 15/7/23 提示消息
-				ToastUtil.show(context, msgMap.toString());
+				ToastUtil.show(context, msgMap.toString()+"2222");
 				LogUtil.e(TAG, "call", result.getMsg());
 
 				//
@@ -67,18 +67,23 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleValidator(context, result.getData());
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "");
+					ToastUtil.show(context, result.getMsgMap() + "22-33");
 				}
 				break;
 			/**
 			 * 账号授权错误
 			 */
 			case Result.ACCOUNT_ERROR:
-				if (TextUtils.isEmpty(result.getMsgMap() + "")) {
-					ToastUtil.show(context, "请求失效，请重新登录");
-				}else {
-					ToastUtil.show(context, result.getMsgMap() + "");
+				Map<String, Object> msgMapERROR = result.getMsgMap();
+				if (msgMapERROR != null) {
+					String errorStr = msgMapERROR.toString().trim();
+					if (TextUtils.isEmpty(errorStr)) {
+						ToastUtil.show(context, "请求失效，请重新登录3333");
+					} else {
+						ToastUtil.show(context, errorStr + "请求失效，请重新登录3333");
+					}
 				}
+
 
 				try {
 					SPUtil.clearUser(context);
@@ -92,24 +97,24 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleAccountError(context, result.getData());
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "");
+					ToastUtil.show(context, result.getMsgMap() + "4444");
 				}
 				break;
 			/**
 			 * 服务器错误
 			 */
 			case Result.ERROR:
-				ToastUtil.show(context, result.getMsgMap() + "");
+				ToastUtil.show(context, result.getMsgMap() + "5555");
 				try {
 					business.handleError(context, result.getData());
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "");
+					ToastUtil.show(context, result.getMsgMap() + "6666");
 				}
 				break;
 
 			default:
-				ToastUtil.show(context, result.getMsgMap()+"");
+				ToastUtil.show(context, result.getMsgMap()+"7777");
 				break;
 		}
 	}

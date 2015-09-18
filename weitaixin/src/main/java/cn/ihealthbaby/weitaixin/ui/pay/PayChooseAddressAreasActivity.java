@@ -77,7 +77,7 @@ public class PayChooseAddressAreasActivity extends BaseActivity {
                 Areas+=item.getArea();
 
                 LogUtil.d("AreagEx11", "AreagEx11==> " + Areas);
-                PayAddAddressActivity.AreasString=Areas;
+                PayConstant.AreasString=Areas;
 //                Intent intent=new Intent();
 //                intent.putExtra("Areas",Areas);
 //                setResult(RESULT_OK, intent);

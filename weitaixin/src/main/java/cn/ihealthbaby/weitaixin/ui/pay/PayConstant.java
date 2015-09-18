@@ -20,6 +20,8 @@ public class PayConstant {
     public static final int resultCodeCityChoose =601;
 
 
+    public static  String AreasString ="";
+
     public static final String LeftCityList ="leftCityList";
     public static final String RightCityList ="rightCityList";
     public static final String ORDERID ="orderId";

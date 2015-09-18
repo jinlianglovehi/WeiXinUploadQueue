@@ -6,14 +6,15 @@
 
     <ImageView
         android:id="@+id/ivAddressImaged"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
         android:src="@drawable/pay_choose_un" />
 
     <LinearLayout
+
         android:id="@+id/llOne1Function"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,5 +93,14 @@
             android:textSize="@dimen/font14" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/ivArrowAddress"
+        android:layout_width="20dp"
+        android:visibility="invisible"
+        android:layout_marginRight="20dp"
+        android:layout_height="12dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/wo_head_arrow_right" />
 
 </RelativeLayout>

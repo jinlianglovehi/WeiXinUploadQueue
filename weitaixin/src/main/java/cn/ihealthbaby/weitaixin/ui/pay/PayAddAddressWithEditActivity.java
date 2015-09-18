@@ -1,11 +1,9 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,15 +15,17 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AddressForm;
+import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.CustomDialog;
 
-public class PayAddAddressActivity extends BaseActivity {
+public class PayAddAddressWithEditActivity extends BaseActivity {
 
     @Bind(R.id.back) RelativeLayout back;
     @Bind(R.id.title_text) TextView title_text;
@@ -41,6 +41,9 @@ public class PayAddAddressActivity extends BaseActivity {
     public final static int INTENT_REQUEST_CODE = 500;
     public final static int INTENT_RESULT_CODE = 501;
 
+    public Address address;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +51,16 @@ public class PayAddAddressActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        title_text.setText("添加地址");
+        title_text.setText("修改地址");
 
         PayConstant.AreasString="";
 
+        address= (Address) getIntent().getSerializableExtra("AddressItem");
+
+
         initView();
 
-        pullData();
+//        pullData();
     }
 
     @Override
@@ -66,14 +72,11 @@ public class PayAddAddressActivity extends BaseActivity {
     }
 
     private void initView() {
-
-
-
-//      User user=WeiTaiXinApplication.getInstance().user;
-        User user = SPUtil.getUser(this);
-        if (user!=null){
-            tvAddAddressName.setText(user.getName());
-            tvAddAddressPhone.setText(user.getMobile());
+        if (address!=null){
+            tvAddAddressName.setText(address.getLinkMan());
+            tvAddAddressPhone.setText(address.getMobile());
+            tvAddAddressArea.setText(address.getArea());
+            tvAddAddressDetailAddress.setText(address.getArea()+address.getAddress());
         }
 
         String addressName = tvAddAddressName.getText().toString().trim();
@@ -97,9 +100,11 @@ public class PayAddAddressActivity extends BaseActivity {
 
     @OnClick(R.id.rl3Functioned)
     public void FunctionedAddAddressArea() {
-        Intent intent=new Intent(this,PayChooseAddressProvinceActivity.class);
+        Intent intent=new Intent(this, PayChooseAddressProvinceActivity.class);
         startActivity(intent);
     }
+
+
 
 //
 //    @Override
@@ -160,18 +165,15 @@ public class PayAddAddressActivity extends BaseActivity {
         addressForm.setMobile(addressPhone);
         addressForm.setArea(addAddressArea);
         addressForm.setAddress(addressDetailAddress);
-        ApiManager.getInstance().addressApi.create(addressForm, new HttpClientAdapter.Callback<Void>() {
+
+        ApiManager.getInstance().addressApi.update(address.getId(),addressForm,new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
             @Override
-            public void call(Result<Void> t) {
-                if (t.isSuccess()) {
-                    Void data = t.getData();
-                    finish();
-                }else{
-                    ToastUtil.show(getApplicationContext(),t.getMsgMap()+"");
-                }
+            public void handleData(Void data) throws Exception {
                 customDialog.dismiss();
+                finish();
             }
-        },getRequestTag());
+        }), getRequestTag());
+
     }
 
 
