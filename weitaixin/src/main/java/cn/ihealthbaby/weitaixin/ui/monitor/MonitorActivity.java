@@ -91,7 +91,7 @@ public class MonitorActivity extends BaseActivity {
 
 	@OnClick(R.id.curve_simple)
 	public void curveDetial() {
-		Intent intent = new Intent(getApplicationContext(), CurveDetialActivity.class);
+		Intent intent = new Intent(getApplicationContext(), MonitorDetialActivity.class);
 		long consumedTime = countDownTimer.getConsumedTime();
 		long duration = countDownTimer.getDuration();
 		long interval = countDownTimer.getInterval();

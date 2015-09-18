@@ -47,8 +47,8 @@ import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 
-public class CurvePlayActivity extends BaseActivity {
-	private final static String TAG = "CurvePlayActivity";
+public class MonitorPlayActivity extends BaseActivity {
+	private final static String TAG = "MonitorPlayActivity";
 	public String path;
 	public Record record;
 	@Bind(R.id.curve_play)
@@ -157,7 +157,7 @@ public class CurvePlayActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_curve_play);
+		setContentView(R.layout.activity_monitor_play);
 		ButterKnife.bind(this);
 		titleText.setText("胎心监测");
 		final DisplayMetrics metric = new DisplayMetrics();
@@ -275,8 +275,7 @@ public class CurvePlayActivity extends BaseActivity {
 	}
 
 	/**
-	 * 获取监测的配置  AdviceSetting [autoBeginAdvice=20,autoAdviceTimeLong=20,fetalMoveTime=5,autoBeginAdviceMax=3,askMinTime=20,alarmHeartrateLimit=100-160,hospitalId=3,
-	 * ]
+	 * 获取监测的配置 AdviceSetting [autoBeginAdvice=20,autoAdviceTimeLong=20,fetalMoveTime=5,autoBeginAdviceMax=3,askMinTime=20,alarmHeartrateLimit=100-160,hospitalId=3,]
 	 */
 	private void getAdviceSetting() {
 		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());

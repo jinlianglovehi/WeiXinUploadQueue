@@ -27,8 +27,8 @@ import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 import de.greenrobot.event.EventBus;
 
-public class CurveDetialActivity extends BaseActivity {
-	private final static String TAG = "CurveDetialActivity";
+public class MonitorDetialActivity extends BaseActivity {
+	private final static String TAG = "MonitorDetialActivity";
 	@Bind(R.id.chs)
 	CurveHorizontalScrollView chs;
 	@Bind(R.id.bpm)

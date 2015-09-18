@@ -52,7 +52,7 @@
             android:name=".ui.monitor.MonitorActivity"
             android:label="@string/title_activity_monitor" />
         <activity
-            android:name=".ui.monitor.CurveDetialActivity"
+            android:name=".ui.monitor.MonitorDetialActivity"
             android:label="@string/title_activity_curve_detial" />
         <activity android:name=".ui.mine.AboutActivity" />
         <activity android:name=".ui.mine.WelcomeActiviy" />
@@ -79,7 +79,7 @@
         <activity android:name=".ui.pay.PayOrderInformationActivity" />
         <activity android:name=".ui.pay.PayConfirmOrderActivity" />
         <activity android:name=".ui.pay.PayAffirmPaymentActivity" />
-        <activity android:name=".ui.monitor.CurvePlayActivity" />
+        <activity android:name=".ui.monitor.MonitorPlayActivity" />
         <activity android:name=".ui.pay.PayOrderDetailsActivity" />
         <activity android:name=".ui.pay.PayChooseAddressProvinceActivity" />
         <activity android:name=".ui.pay.PayChooseAddressCityActivity" />
