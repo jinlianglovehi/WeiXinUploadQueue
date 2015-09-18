@@ -1,10 +1,13 @@
 package cn.ihealthbaby.weitaixin.ui.mine;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -12,8 +15,12 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.weitaixin.DefaultBusinessImplement;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
+import cn.ihealthbaby.weitaixin.library.data.net.Business;
+import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -42,7 +49,6 @@ public class SetSystemActivity extends BaseActivity {
     RelativeLayout ll_set_system_05;
     @Bind(R.id.ll_set_system_06)
     RelativeLayout ll_set_system_06;
-    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,35 +106,66 @@ public class SetSystemActivity extends BaseActivity {
         logout();
     }
 
-    ApiManager apiManager;
 
     public void logout() {
-        apiManager = ApiManager.getInstance();
-
-        dialog = new CustomDialog().createDialog1(this, "退出中...");
+        final CustomDialog customDialog = new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(this, "退出中...");
         dialog.show();
 
-        apiManager.accountApi.logout(new HttpClientAdapter.Callback<Void>() {
+//        ApiManager.getInstance().accountApi.logout(new HttpClientAdapter.Callback<Void>() {
+//            @Override
+//            public void call(Result<Void> t) {
+//                if (t.isSuccess()) {
+//                    SPUtil.clearUser(SetSystemActivity.this);
+//                    WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
+//                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                    startActivity(intent);
+//                    finish();
+//                } else {
+//                    ToastUtil.show(getApplicationContext(), t.getMsg());
+//                }
+//                dialog.dismiss();
+//            }
+//        }, getRequestTag());
+
+
+        ApiManager.getInstance().accountApi.logout(new DefaultCallback<Void>(this, new DefaultBusinessImplement(){
             @Override
-            public void call(Result<Void> t) {
-                if (t.isSuccess()) {
-                    SPUtil.clearUser(SetSystemActivity.this);
-//                    WeiTaiXinApplication.getInstance().isLogin = false;
-//                  ToastUtil.show(getApplicationContext(),"退出登录");
-//                    WeiTaiXinApplication.accountToken = null;
-                    WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsg());
-                }
-                dialog.dismiss();
+            public void handleData(Object data) throws Exception {
+                super.handleData(data);
+                SPUtil.clearUser(SetSystemActivity.this);
+                WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+                customDialog.dismiss();
             }
-        }, getRequestTag());
+
+            @Override
+            public void handleValidator(Context context, Object data) throws Exception {
+                super.handleValidator(context, data);
+                customDialog.dismiss();
+                finish();
+                LogUtil.d("handleValidator super", "handleValidator super");
+            }
+
+            @Override
+            public void handleAccountError(Context context, Object data) throws Exception {
+                super.handleAccountError(context, data);
+                customDialog.dismiss();
+            }
+
+            @Override
+            public void handleError(Context context, Object data) throws Exception {
+                super.handleError(context, data);
+                customDialog.dismiss();
+            }
+        }), getRequestTag());
+
+
     }
 
-}
 
+}
 
 

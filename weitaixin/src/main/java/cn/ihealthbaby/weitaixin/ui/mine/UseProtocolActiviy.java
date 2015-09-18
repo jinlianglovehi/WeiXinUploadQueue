@@ -16,6 +16,7 @@ import cn.ihealthbaby.client.model.Urls;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.net.Business;
+import cn.ihealthbaby.weitaixin.library.data.net.DefaultBusiness;
 import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 
@@ -56,7 +57,7 @@ public class UseProtocolActiviy extends BaseActivity {
         Dialog dialog = customDialog.createDialog1(this, "加载中...");
         dialog.show();
 
-        ApiManager.getInstance().urlApi.getUrls(new DefaultCallback<Urls>(getApplicationContext(), new Business<Urls>() {
+        ApiManager.getInstance().urlApi.getUrls(new DefaultCallback<Urls>(getApplicationContext(), new DefaultBusiness<Urls>() {
             @Override
             public void handleData(Urls data) throws Exception {
                 mWvWelcome.loadUrl(data.getAgreement());
