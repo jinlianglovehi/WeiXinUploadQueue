@@ -7,24 +7,18 @@ import android.os.Bundle;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Map;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.weitaixin.DefaultBusinessImplement;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
-import cn.ihealthbaby.weitaixin.library.data.net.Business;
-import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
+import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 
 
@@ -128,11 +122,9 @@ public class SetSystemActivity extends BaseActivity {
 //            }
 //        }, getRequestTag());
 
-
-        ApiManager.getInstance().accountApi.logout(new DefaultCallback<Void>(this, new DefaultBusinessImplement(){
+        ApiManager.getInstance().accountApi.logout(new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
             @Override
-            public void handleData(Object data) throws Exception {
-                super.handleData(data);
+            public void handleData(Void data) throws Exception {
                 SPUtil.clearUser(SetSystemActivity.this);
                 WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -142,21 +134,22 @@ public class SetSystemActivity extends BaseActivity {
             }
 
             @Override
-            public void handleValidator(Context context, Object data) throws Exception {
+            public void handleValidator(Context context, Void data) throws Exception {
                 super.handleValidator(context, data);
                 customDialog.dismiss();
-                finish();
                 LogUtil.d("handleValidator super", "handleValidator super");
             }
 
             @Override
-            public void handleAccountError(Context context, Object data) throws Exception {
+            public void handleAccountError(Context context, Void data) throws Exception {
                 super.handleAccountError(context, data);
                 customDialog.dismiss();
+                finish();
+                LogUtil.d("handleAccountError super", "handleAccountError super");
             }
 
             @Override
-            public void handleError(Context context, Object data) throws Exception {
+            public void handleError(Context context, Void data) throws Exception {
                 super.handleError(context, data);
                 customDialog.dismiss();
             }

@@ -20,8 +20,6 @@ import cn.ihealthbaby.client.form.UpdateHeadPicForm;
 import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.client.model.UploadModel;
 import cn.ihealthbaby.client.model.User;
-import cn.ihealthbaby.weitaixin.library.data.net.Business;
-import cn.ihealthbaby.weitaixin.library.data.net.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;

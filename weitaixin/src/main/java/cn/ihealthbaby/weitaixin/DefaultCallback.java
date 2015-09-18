@@ -1,5 +1,6 @@
-package cn.ihealthbaby.weitaixin.library.data.net;
+package cn.ihealthbaby.weitaixin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -8,9 +9,11 @@ import java.util.Map;
 
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 
 /**
  * Created by liuhongjian on 15/7/22 22:56.
@@ -78,6 +81,14 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 				}
 
 				try {
+					SPUtil.clearUser(context);
+					WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
+					if (context instanceof Activity) {
+						Intent intent = new Intent(context, LoginActivity.class);
+						//context是Activity类型   appContext有问题
+						context.startActivity(intent);
+//						context.finish();
+					}
 					business.handleAccountError(context, result.getData());
 				} catch (Exception e) {
 					e.printStackTrace();
