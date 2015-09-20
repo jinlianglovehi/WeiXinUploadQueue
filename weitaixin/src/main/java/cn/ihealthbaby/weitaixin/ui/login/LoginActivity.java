@@ -57,6 +57,11 @@ public class LoginActivity extends BaseActivity {
         title_text.setText("登录");
         back.setVisibility(View.INVISIBLE);
 
+        String rememberMobile = SPUtil.getRememberMobile(getApplicationContext());
+        if (!TextUtils.isEmpty(rememberMobile)) {
+            et_phone_number_login.setText(rememberMobile);
+        }
+
         if (SPUtil.isLogin(this)) {
             Intent intent=new Intent(this, MeMainFragmentActivity.class);
             startActivity(intent);

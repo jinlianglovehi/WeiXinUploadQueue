@@ -54,7 +54,7 @@ public class PayActivity extends Activity {
         msgApi.registerApp(Constants.APP_ID);
 
         //生成prepay_id，APP支付生成预支付订单
-        Button payBtn = (Button) findViewById(R.id.rl_id);
+        Button payBtn = (Button) findViewById(R.id.btn_cancel);
         payBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +65,7 @@ public class PayActivity extends Activity {
 
 
         //生成签名参数，生成APP微信支付参数
-        Button appay_pre_btn = (Button) findViewById(R.id.rl_id);
+        Button appay_pre_btn = (Button) findViewById(R.id.btn_cancel);
         appay_pre_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +76,7 @@ public class PayActivity extends Activity {
 
 
         //调起微信支付
-        Button appayBtn = (Button) findViewById(R.id.rl_id);
+        Button appayBtn = (Button) findViewById(R.id.btn_cancel);
         appayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

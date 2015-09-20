@@ -78,6 +78,10 @@ public class SPUtil {
         return eliveryTime;
     }
 
+    public static String getRememberMobile(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
+        return sp.getString("RememberMobile", "");
+    }
 
     public static void saveUser(Context context, User user) {
         SPUtil.clearUser(context);
@@ -93,6 +97,7 @@ public class SPUtil {
         editor.putLong("Id", user.getId());
         if (user.getMobile() != null) {
             editor.putString("Mobile", user.getMobile());
+            editor.putString("RememberMobile", user.getMobile());
         }
         if (user.getName() != null) {
             editor.putString("Name", user.getName());

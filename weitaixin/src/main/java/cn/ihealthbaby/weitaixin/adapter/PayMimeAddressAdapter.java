@@ -27,7 +27,7 @@ import cn.ihealthbaby.weitaixin.ui.pay.PayMimeOrderActivity;
 public class PayMimeAddressAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<Address> datas;
+    public ArrayList<Address> datas;
     private LayoutInflater mInflater;
     public int currentPosition = -1;
 

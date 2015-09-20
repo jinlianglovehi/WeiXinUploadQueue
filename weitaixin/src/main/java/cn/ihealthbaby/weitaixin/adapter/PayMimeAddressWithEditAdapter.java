@@ -140,9 +140,14 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
                                 for (int i = 0; i < datas.size(); i++) {
                                     Address addRess = datas.get(i);
                                     addRess.setIsDef(false);
+                                    if (i == position) {
+                                        address.setIsDef(true);
+                                    }
                                 }
-                                address.setIsDef(true);
+                                datas.add(0, datas.remove(position));
+
                                 notifyDataSetChanged();
+
 //                            Intent intent = new Intent();
 //                            intent.putExtra("addressItem", address);
 //                            context.setResult(999, intent);

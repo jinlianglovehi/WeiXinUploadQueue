@@ -198,7 +198,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
 
 
-		String dateStr =DateTimeTool.getGestationalWeeks(SPUtil.getDeliveryTime(context), adviceItem.getTestTime());
+//		String dateStr =DateTimeTool.getGestationalWeeks(SPUtil.getDeliveryTime(context), adviceItem.getTestTime());
+		String dateStr = adviceItem.getGestationalWeeks();
+
 //		LogUtil.d("adapter", "dateStr: %s", dateStr);
 	    String[] split = dateStr.split("\\+");
 		if (split.length ==1 ) {
