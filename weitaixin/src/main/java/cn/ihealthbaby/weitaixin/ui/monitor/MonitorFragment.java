@@ -56,6 +56,7 @@ import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
@@ -226,6 +227,8 @@ public class MonitorFragment extends BaseFragment {
 
 	@OnClick(R.id.btn_start)
 	public void startMonitor(View view) {
+		view.setClickable(false);
+		getAdviceSetting();
 		autoStartTimer.cancel();
 		started = true;
 		String localRecordId = getLocalRecordId();
@@ -244,6 +247,7 @@ public class MonitorFragment extends BaseFragment {
 		needRecord = true;
 		needPlay = true;
 		User user = getUser();
+		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
 		Record record = new Record();
 		//必填内容:userId,userName,serialNumber,localRecordId
 		record.setUserId(user.getId());
@@ -252,7 +256,14 @@ public class MonitorFragment extends BaseFragment {
 		record.setUserName(user.getName());
 		record.setLocalRecordId(localRecordId);
 		record.setRecordStartTime(recordStartTime);
-		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
+		record.setGestationalWeeks(DateTimeTool.getGestationalWeeks(user.getDeliveryTime(), recordStartTime));
+		try {
+			Record queryExist = recordBusinessDao.queryByLocalRecordId(record.getLocalRecordId());
+			if (queryExist != null) {
+				record.setLocalRecordId(getLocalRecordId());
+			}
+		} catch (Exception e) {
+		}
 		try {
 			recordBusinessDao.insert(record);
 			Record query = recordBusinessDao.query(record);
@@ -260,6 +271,7 @@ public class MonitorFragment extends BaseFragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LogUtil.d(TAG, "数据插入失败");
+			view.setClickable(true);
 			started = false;
 			needRecord = false;
 			needPlay = false;
@@ -325,9 +337,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				if (millisUntilFinished <= 5000) {
-					hint.setText(millisUntilFinished / 1000 + "秒后倾听宝宝心跳");
-				}
+				hint.setText(millisUntilFinished / 1000 + "秒后倾听宝宝心跳");
 			}
 
 			@Override
@@ -435,12 +445,12 @@ public class MonitorFragment extends BaseFragment {
 		}
 		// TODO: 15/9/17 autoBeginAdviceMax = 3,autoBeginAdvice=20??? @小顾
 		//{"data":{"autoBeginAdvice":20,"autoAdviceTimeLong":20,"fetalMoveTime":5,"autoBeginAdviceMax":3,"askMinTime":20,"alarmHeartrateLimit":"100-160","hospitalId":3}}
-		if (localSetting.isAutoStart()) {
+		alert = localSetting.isAlert();
+		if (alert) {
 			autoStartTime = adviceSetting.getAutoBeginAdvice() * 1000;
 		} else {
 			autoStartTime = adviceSetting.getAutoBeginAdviceMax() * 1000;
 		}
-		alert = localSetting.isAlert();
 		alertInterval = localSetting.getAlertInterval();
 		LogUtil.d(TAG, "safemin:%s,safemax:%s,autoStartTime:%s", safemin, safemax, autoStartTime);
 	}
@@ -449,6 +459,7 @@ public class MonitorFragment extends BaseFragment {
 		tvBluetooth.setTextColor(getResources().getColor(R.color.green0));
 		tvBluetooth.setText("start");
 		tvBluetooth.setClickable(true);
+		btnStart.setClickable(true);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
 		hint.setText("");
 		hint.setVisibility(View.GONE);
@@ -575,17 +586,17 @@ public class MonitorFragment extends BaseFragment {
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
-				runRecord();
+				runSave();
 				startActivity(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_UNKNOWN:
 				LogUtil.d(TAG, "EVENT_UNKNOWN");
-				runRecord();
+				runSave();
 				startActivity(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL:
 				LogUtil.d(TAG, "EVENT_MANUAL");
-				runRecord();
+				runSave();
 				startActivity(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
@@ -598,13 +609,13 @@ public class MonitorFragment extends BaseFragment {
 		}
 	}
 
-	private void runRecord() {
+	private void runSave() {
 		new Thread() {
 			@Override
 			public void run() {
 				super.run();
 				try {
-					record();
+					save();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -612,7 +623,7 @@ public class MonitorFragment extends BaseFragment {
 		}.start();
 	}
 
-	private void record() throws Exception {
+	private void save() throws Exception {
 		File tempFile = getTempFile();
 		File file = getRecordFile();
 		if (tempFile.renameTo(file)) {
@@ -644,7 +655,7 @@ public class MonitorFragment extends BaseFragment {
 		recordData.setData(data);
 		String dataString = gson.toJson(recordData);
 		record.setRecordData(dataString);
-		record.setDuration((long) (DataStorage.fhrs.size() * 500));
+		record.setDuration((DataStorage.fhrs.size() / 2));
 		record.setSoundPath(getRecordFile().getPath());
 		try {
 			recordBusinessDao.update(record);

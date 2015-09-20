@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,7 +26,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 public class GuardianStateActivity extends BaseActivity {
@@ -149,20 +148,16 @@ public class GuardianStateActivity extends BaseActivity {
 		String purposeString = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
 		int feelingId = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getId();
 		String feelingString = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
-//		DataDao dao = DataDao.getInstance(getApplicationContext());
-//		MyAdviceItem myAdviceItem = new MyAdviceItem();
-//		String uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
-//		myAdviceItem.setFeeling(feeling);
-//		myAdviceItem.setPurpose(purpose);
-//		myAdviceItem.setJianceid(uuid);
-//		dao.update(myAdviceItem);
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
 		try {
-			Record query = recordBusinessDao.queryByLocalRecordId(getLocalRecordId());
+			String localRecordId = getIntent().getStringExtra(Constants.INTENT_UUID);
+			LogUtil.d(TAG, "localRecordId:%s", localRecordId);
+			Record query = recordBusinessDao.queryByLocalRecordId(localRecordId);
 			LogUtil.d(TAG, query.toString());
 			query.setFeelingId(feelingId);
 			query.setFeelingString(feelingString);
 			query.setPurposeString(purposeString);
+			query.setPurposeId(purposeId);
 			recordBusinessDao.update(query);
 			Record query1 = recordBusinessDao.query(query);
 			LogUtil.d(TAG, query1.toString());
@@ -171,17 +166,6 @@ public class GuardianStateActivity extends BaseActivity {
 		}
 		startActivity(intent);
 		finish();
-	}
-
-	private String getLocalRecordId() {
-		String uuid = SPUtil.getUUID(getApplicationContext());
-		if (!TextUtils.isEmpty(uuid)) {
-			return uuid;
-		} else {
-			String newUuid = UUID.randomUUID().toString().replace("-", "");
-			SPUtil.setUUID(getApplicationContext(), newUuid);
-			return newUuid;
-		}
 	}
 }
 

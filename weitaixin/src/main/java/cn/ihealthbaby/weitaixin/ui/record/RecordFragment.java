@@ -27,8 +27,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -205,31 +203,7 @@ public class RecordFragment extends BaseFragment {
     }
 
 
-    private void savelocal() {
-        for (int i = 0; i <30 ; i++) {
-            Record record=new Record();
-            //      record.setId(Long.parseLong(33233 + ""));
-            //      record.setGestationalWeeks(Long.parseLong(1003333+""));
-            record.setRecordStartTime(new Date());
-            record.setDuration(Long.parseLong(1003333 + ""));
-            record.setUploadState(Record.UPLOAD_STATE_LOCAL);
-            record.setLocalRecordId(UUID.randomUUID().toString());
-            record.setPurposeString("目的好啊");
-            record.setFeelingString("心情好");
 
-            record.setUserId(SPUtil.getUserID(getActivity().getBaseContext()));
-            record.setSerialNumber("DSDDSFSFSF");
-            record.setUserName("13798988787");
-
-            try {
-                long index = recordBusinessDao.insert(record);
-                LogUtil.d("recordBusinessDao", "recordBusinessDao==> " + index);
-            } catch (Exception e) {
-                e.printStackTrace();
-                LogUtil.d("recordBusinessDao", "recordBusinessDao==> " + e.toString());
-            }
-        }
-    }
 
 
     @Override
