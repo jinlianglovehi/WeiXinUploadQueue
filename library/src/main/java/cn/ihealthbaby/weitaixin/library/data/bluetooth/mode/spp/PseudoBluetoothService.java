@@ -452,8 +452,6 @@ public class PseudoBluetoothService {
 					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					LogUtil.d(TAG, "stop read from stream");
 				}
 			}
 		}
