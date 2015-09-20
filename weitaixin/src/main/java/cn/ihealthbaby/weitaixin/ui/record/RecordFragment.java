@@ -36,6 +36,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
@@ -365,24 +366,31 @@ public class RecordFragment extends BaseFragment {
     }
 
 
+    //获取本地记录
+    public ArrayList<Record> getLocalDB() {
+        ArrayList<Record> records = new ArrayList<Record>();
+        try {
+            records = (ArrayList<Record>) recordBusinessDao.queryUserRecord(SPUtil.getUserID(getActivity().getApplicationContext()), Record.UPLOAD_STATE_LOCAL, Record.UPLOAD_STATE_UPLOADING);
+            adapter.setRecordsDatas(records);
+            LogUtil.d("recordBusinessDao", records.size() + " =recordBusinessDao= " + records);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.d("recordBusinessDao", "recordBusinessDao= " + e.toString());
+        }
+        return records;
+    }
+
     public void pullFirstData(final CustomDialog customDialogTwo) {
-        ApiManager.getInstance().adviceApi.getAdviceItems(1,pageSize,new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
+        ApiManager.getInstance().adviceApi.getAdviceItems(1, pageSize,
+                new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
             @Override
             public void handleData(PageData<AdviceItem> data) throws Exception {
                 final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
-                ArrayList<Record> records = null;
-                try {
-                    //获取本地记录
-                    records = (ArrayList<Record>) recordBusinessDao.queryUserRecord(SPUtil.getUserID(getActivity().getApplicationContext()), Record.UPLOAD_STATE_LOCAL, Record.UPLOAD_STATE_UPLOADING);
-                    LogUtil.d("recordBusinessDao", records.size() + " =recordBusinessDao= " + records);
-                    //把本地记录 转换成云端 记录集合类型
-                    dataList.addAll(switchList(records));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    LogUtil.d("recordBusinessDao", "recordBusinessDao= " + e.toString());
-                }
+                ArrayList<Record> records = getLocalDB();
 
+                //把本地记录 转换成云端 记录集合类型
+                dataList.addAll(switchList(records));
 
                 if (dataList != null && dataList.size() > 0) {
                     //
@@ -431,14 +439,17 @@ public class RecordFragment extends BaseFragment {
             adviceItem.setId(record.getId());
             // TODO: 2015/9/18 孕周
             adviceItem.setGestationalWeeks("");
+
+            adviceItem.setClientId(record.getLocalRecordId());
             adviceItem.setTestTime(record.getRecordStartTime());
-            adviceItem.setTestTimeLong((int) (record.getDuration() / 1000));
+            //秒
+            adviceItem.setTestTimeLong((int) (record.getDuration() / 1));
             if (record.getUploadState()== Record.UPLOAD_STATE_LOCAL||record.getUploadState()== Record.UPLOAD_STATE_UPLOADING) {
                 adviceItem.setStatus(Record.UPLOAD_STATE_CLOUD);
             }
-            adviceItem.setClientId(record.getLocalRecordId());
             adviceItem.setFeeling(record.getFeelingString());
             adviceItem.setAskPurpose(record.getPurposeString());
+
 
             adviceItems.add(adviceItem);
         }

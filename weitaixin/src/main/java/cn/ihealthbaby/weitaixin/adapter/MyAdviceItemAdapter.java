@@ -31,6 +31,8 @@ import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
@@ -44,6 +46,20 @@ import cn.ihealthbaby.weitaixin.ui.record.ReplyedActivity;
 public class MyAdviceItemAdapter extends BaseAdapter {
 	private final int requestCode = 100;
 	public ArrayList<AdviceItem> datas;
+
+
+	public ArrayList<Record> records = new ArrayList<Record>(); //本地记录
+
+	public Record getOneRecord(String clientId) {
+		for (int i = 0; i < records.size(); i++) {
+			Record record = records.get(i);
+			if (clientId.equals(record.getLocalRecordId())) {
+				return record;
+			}
+		}
+		return null;
+	}
+
 	///////
 	public View selectedView;
 	public View selectedViewOld;
@@ -72,8 +88,10 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 	private int selectedItem;
 	//////
 	private TextView tvUsedCount;
+	RecordBusinessDao recordBusinessDao;
 
 	public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas, TextView tvUsedCount) {
+		recordBusinessDao = RecordBusinessDao.getInstance(context);
 		mInflater = LayoutInflater.from(context);
 		this.context = context;
 		this.tvUsedCount = tvUsedCount;
@@ -108,11 +126,19 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		if (datas == null) {
 			this.datas = new ArrayList<AdviceItem>();
 		} else {
-//			this.datas.clear();
 			this.datas = datas;
 			mySortByTime();
 		}
 	}
+
+	public void setRecordsDatas(ArrayList<Record> records) {
+		if (records == null) {
+			this.records = new ArrayList<Record>();
+		} else {
+			this.records = records;
+		}
+	}
+
 
 	public void addDatas(ArrayList<AdviceItem> datas) {
 		if (datas != null) {
@@ -168,14 +194,12 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 				return false;
 			}
 		});
-		LogUtil.d("adapter", "size: %s, position: %s", datas.size(), position);
-		LogUtil.d("adapter", "size: %s, position: %s", datas.size(), position);
 		final AdviceItem adviceItem = this.datas.get(position);
 
 
 
 		String dateStr =DateTimeTool.getGestationalWeeks(SPUtil.getDeliveryTime(context), adviceItem.getTestTime());
-		LogUtil.d("adapter", "dateStr: %s", dateStr);
+//		LogUtil.d("adapter", "dateStr: %s", dateStr);
 	    String[] split = dateStr.split("\\+");
 		if (split.length ==1 ) {
 			viewHolder.tvCircleTime2.setText(split[0]+"");
@@ -188,7 +212,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			}
 		}
 
-
+		//毫秒
 		viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()*1000));//
 		viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 yy:mm"));
 		//1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
@@ -244,28 +268,37 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			Intent intent = new Intent(context, ReplyedActivity.class);
 			intent.putExtra("relatedId", adviceItem.getId());
 			context.startActivity(intent);
-		} else if (status == 3) {
+		} else if (status == Record.UPLOAD_STATE_CLOUD) {
 			final CustomDialog customDialog = new CustomDialog();
 			Dialog dialog = customDialog.createDialog1(context, "上传中...");
 			dialog.show();
-			
+
 			AdviceForm adviceForm = new AdviceForm();
-			adviceForm.setClientId(adviceItem.getClientId() + "");
+			adviceForm.setClientId(adviceItem.getClientId());
 			adviceForm.setTestTime(adviceItem.getTestTime());
 			adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
-//			adviceForm.setData(adviceForm.getData());
 			adviceForm.setAskPurpose(adviceItem.getAskPurpose());
-//            adviceForm.setDataType();
-//            adviceForm.setDeviceType();
 			adviceForm.setFeeling(adviceItem.getFeeling());
-			adviceForm.setFetalTonePath("dsaddsa");
-//            adviceForm.setLatitude(adviceItem.get);
-//            adviceForm.setLongitude();
+			adviceForm.setFetalTonePath(adviceItem.getFetalTonePath());
+
+			final Record oneRecord = getOneRecord(adviceItem.getClientId());
+			adviceForm.setData(oneRecord.getRecordData());
+			adviceForm.setDataType(1);
+			adviceForm.setDeviceType(1);
+//          adviceForm.setLatitude(adviceItem.get);
+//          adviceForm.setLongitude();
 			ApiManager.getInstance().adviceApi.uploadData(adviceForm, new HttpClientAdapter.Callback<Long>() {
 				@Override
 				public void call(Result<Long> t) {
 					if (t.isSuccess()) {
 						Long data = t.getData();
+
+						oneRecord.setUploadState(Record.UPLOAD_STATE_CLOUD);
+						try {
+							recordBusinessDao.update(oneRecord);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 						ToastUtil.show(context, "上传成功");
 						adviceItem.setStatus(0);
 						notifyDataSetChanged();
@@ -281,7 +314,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 	private void deleteRecordItem(final int position) {
 		if (datas.size() > 0) {
 			AdviceItem adviceItem = datas.get(position);
-			if (adviceItem.getStatus() != 3) {
+			if (adviceItem.getStatus() != Record.UPLOAD_STATE_CLOUD) {
 				final CustomDialog customDialog = new CustomDialog();
 				Dialog dialog = customDialog.createDialog1(context, "正在删除...");
 				dialog.show();
@@ -299,7 +332,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 					}
 				}, context);
 			} else {
-				ToastUtil.show(context, "请先上传，才能删除~~~");
+				ToastUtil.show(context, "请先上传，才能删除");
 				cancel();
 			}
 		}
