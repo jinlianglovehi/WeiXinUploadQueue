@@ -37,23 +37,21 @@ import cn.ihealthbaby.weitaixin.library.util.SPUtil;
  */
 public class WeiTaiXinApplication extends Application {
 
-
-    public static WeiTaiXinApplication app;
-//    public static String accountToken;
-//    public static String phone_number;
-//    public static User user;
     public static AdviceSetting adviceSetting;
     public static AdviceForm adviceForm = new AdviceForm();
 
-//        public boolean isLogin = false;
-//public boolean isLogin = true;
     public LocalProductData localProductData=new LocalProductData(); //保存商品
     public VolleyAdapter mAdapter;
     private AbstractHttpClientAdapter adapter;
 
+    private boolean monitoring = false;
+
+
+    public static WeiTaiXinApplication app;
     public static WeiTaiXinApplication getInstance() {
         return app;
     }
+
 
     @Override
     public void onCreate() {
@@ -66,7 +64,13 @@ public class WeiTaiXinApplication extends Application {
         initApiManager();
     }
 
+    public boolean isMonitoring() {
+        return monitoring;
+    }
 
+    public void setMonitoring(boolean monitoring) {
+        this.monitoring = monitoring;
+    }
 
     public AbstractHttpClientAdapter getAdapter() {
         return adapter;

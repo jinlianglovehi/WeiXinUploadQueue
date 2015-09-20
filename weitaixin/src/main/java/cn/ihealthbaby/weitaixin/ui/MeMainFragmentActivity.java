@@ -13,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
@@ -92,7 +93,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     public void iv_tab_02() {
         if (showTab(iv_tab_02)) {
             if (SPUtil.isLogin(this)) {
-                if (SPUtil.getUser(this).getServiceInfo() != null) {
+                if (SPUtil.getUser(this).getServiceInfo() != null && !WeiTaiXinApplication.getInstance().isMonitoring()) {
                     if (monitorFragment == null) {
                         monitorFragment = new MonitorFragment();
                     }

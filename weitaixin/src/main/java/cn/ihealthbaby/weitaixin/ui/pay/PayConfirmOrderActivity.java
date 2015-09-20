@@ -234,7 +234,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
                     if (data !=null) {
                         long orderId=data.getId();
                         Intent intent = new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
-                        intent.putExtra("OrderId",orderId);
+                        intent.putExtra(PayConstant.ORDERID, orderId);
                         startActivity(intent);
                     } else {
                         ToastUtil.show(getApplicationContext(), "尚有未结束的服务");
