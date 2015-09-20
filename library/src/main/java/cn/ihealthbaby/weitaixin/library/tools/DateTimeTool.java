@@ -116,12 +116,8 @@ public class DateTimeTool {
 		return weeks + "周+" + days + "天";
 	}
 
-	public static String getGestationalWeeks(long deliveryTime, Date testTime) {
-		if (deliveryTime == -1) {
-			return "";
-		}
-		int getGestationalDay = (int) ((testTime.getTime() / 1000
-				                                - deliveryTime / 1000 + 280 * 24 * 3600) / 3600 / 24);
+	public static String getGestationalWeeks(Date deliveryTime, Date testTime) {
+		int getGestationalDay = (int) ((testTime.getTime() / 1000 - deliveryTime.getTime() / 1000 + 280 * 24 * 3600) / 3600 / 24);
 		int weeks = getGestationalDay / 7;
 		int days = getGestationalDay % 7;
 		return weeks + "周+" + days;
