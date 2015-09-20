@@ -29,6 +29,7 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -90,7 +91,8 @@ public class RecordFragment extends BaseFragment {
     private View view;
     private RecordBusinessDao recordBusinessDao;
     private ArrayList<AdviceItem> mAdviceItems = new ArrayList<AdviceItem>();
-    private String[] strStateFlag = new String[]{"问医生", "等待回复", "已回复", "需上传"};
+    //0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除
+    private String[] strStateFlag = new String[]{"问医生", "等待回复", "已回复", "咨询已删除", "需上传"};
     private boolean isMove = false;
 
 
@@ -203,21 +205,22 @@ public class RecordFragment extends BaseFragment {
         return view;
     }
 
-    private void savelocal() {
 
-        for (int i = 0; i <5 ; i++) {
+    private void savelocal() {
+        for (int i = 0; i <30 ; i++) {
             Record record=new Record();
-    //      record.setGestationalWeeks(Long.parseLong(1003333+""));
+            //      record.setId(Long.parseLong(33233 + ""));
+            //      record.setGestationalWeeks(Long.parseLong(1003333+""));
             record.setRecordStartTime(new Date());
-            record.setDuration(Long.parseLong(i+1003333 + ""));
+            record.setDuration(Long.parseLong(1003333 + ""));
             record.setUploadState(Record.UPLOAD_STATE_LOCAL);
-            record.setLocalRecordId("112313231"+i);
+            record.setLocalRecordId(UUID.randomUUID().toString());
             record.setPurposeString("目的好啊");
             record.setFeelingString("心情好");
 
-            record.setUserId(SPUtil.getUserID(getActivity().getApplicationContext()));
+            record.setUserId(SPUtil.getUserID(getActivity().getBaseContext()));
             record.setSerialNumber("DSDDSFSFSF");
-            record.setUserName("13798988787"+i);
+            record.setUserName("13798988787");
 
             try {
                 long index = recordBusinessDao.insert(record);
@@ -227,7 +230,6 @@ public class RecordFragment extends BaseFragment {
                 LogUtil.d("recordBusinessDao", "recordBusinessDao==> " + e.toString());
             }
         }
-
     }
 
 
