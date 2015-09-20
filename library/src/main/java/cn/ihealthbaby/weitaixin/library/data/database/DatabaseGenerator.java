@@ -25,13 +25,14 @@ public class DatabaseGenerator {
 		schema.enableActiveEntitiesByDefault();
 		Entity record = schema.addEntity("Record");
 		record.addIdProperty().codeBeforeField("/**\n" + "\t * 自增id\n" + "\t */");
-		record.addStringProperty("localRecordId").unique().notNull().codeBeforeField("/**\n" + "\t * 本地记录id,对应AdviceItem的jianceId\n" + "\t */");
+		record.addStringProperty("localRecordId").unique().notNull().codeBeforeField("/**\n" + "\t * 本地记录id,由UUID生成,不带- 对应AdviceItem的jianceId\n" + "\t */");
 		record.addLongProperty("userId").notNull().codeBeforeField("/**\n" + "\t * 用户id\n" + "\t */");
 		record.addStringProperty("userName").notNull().codeBeforeField("/**\n" + "\t * 用户名\n" + "\t */");
 		record.addStringProperty("serialNumber").notNull().codeBeforeField("/**\n" + "\t * 对应AdviceItem的serialNum\n" + "\t */");
 		record.addIntProperty("uploadState").notNull().codeBeforeField("/**\n" + "\t * 上传状态\n" + "\t */");
 		record.addDateProperty("recordStartTime").codeBeforeField("/**\n" + "\t * 监测开始时间,对应AdviceItem的testTime\n" + "\t */");
-		record.addLongProperty("duration").codeBeforeField("/**\n" + "\t * 监测时长,对应AdviceItem的testTimeLong\n" + "\t */");
+		record.addStringProperty("gestationalWeeks").codeBeforeField("/**\n" + "\t * 孕周文本,对应AdviceItem的gestationalWeeks\n 格式30周+4" + "\t */");
+		record.addIntProperty("duration").codeBeforeField("/**\n" + "\t * 监测时长,单位秒,对应AdviceItem的testTimeLong\n" + "\t */");
 		record.addStringProperty("recordData").codeBeforeField("/**\n" + "\t * 监测记录的数据结构,JSON格式\n" + "\t */");
 		record.addStringProperty("soundPath").codeBeforeField("/**\n" + "\t * 本地音频文件路径\n" + "\t */");
 		record.addIntProperty("feelingId").codeBeforeField("/**\n" + "\t * 监护心情,对应AdviceItem的feelingId\n" + "\t */");

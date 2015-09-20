@@ -191,7 +191,7 @@ public class RecordBusinessDao {
 		Record query = query(record);
 		Integer uploadState = record.getUploadState();
 		Date recordStartTime = record.getRecordStartTime();
-		Long duration = record.getDuration();
+		Integer duration = record.getDuration();
 		String recordData = record.getRecordData();
 		String soundPath = record.getSoundPath();
 		Integer feelingId = record.getFeelingId();

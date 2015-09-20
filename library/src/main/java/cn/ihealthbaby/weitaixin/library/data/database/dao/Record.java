@@ -21,7 +21,7 @@ public class Record {
     private Long id;
     /** Not-null value. */
      /**
-	 * 本地记录id,对应AdviceItem的jianceId
+	 * 本地记录id,由UUID生成,不带- 对应AdviceItem的jianceId
 	 */
     private String localRecordId;
      /**
@@ -47,9 +47,13 @@ public class Record {
 	 */
     private java.util.Date recordStartTime;
      /**
-	 * 监测时长,对应AdviceItem的testTimeLong
+	 * 孕周文本,对应AdviceItem的gestationalWeeks
+ 格式30周+4	 */
+    private String gestationalWeeks;
+     /**
+	 * 监测时长,单位秒,对应AdviceItem的testTimeLong
 	 */
-    private Long duration;
+    private Integer duration;
      /**
 	 * 监测记录的数据结构,JSON格式
 	 */
@@ -121,7 +125,7 @@ public class Record {
         this.id = id;
     }
 
-    public Record(Long id, String localRecordId, long userId, String userName, String serialNumber, int uploadState, java.util.Date recordStartTime, Long duration, String recordData, String soundPath, Integer feelingId, String feelingString, Integer purposeId, String purposeString) {
+    public Record(Long id, String localRecordId, long userId, String userName, String serialNumber, int uploadState, java.util.Date recordStartTime, String gestationalWeeks, Integer duration, String recordData, String soundPath, Integer feelingId, String feelingString, Integer purposeId, String purposeString) {
         this.id = id;
         this.localRecordId = localRecordId;
         this.userId = userId;
@@ -129,6 +133,7 @@ public class Record {
         this.serialNumber = serialNumber;
         this.uploadState = uploadState;
         this.recordStartTime = recordStartTime;
+        this.gestationalWeeks = gestationalWeeks;
         this.duration = duration;
         this.recordData = recordData;
         this.soundPath = soundPath;
@@ -206,11 +211,19 @@ public class Record {
         this.recordStartTime = recordStartTime;
     }
 
-    public Long getDuration() {
+    public String getGestationalWeeks() {
+        return gestationalWeeks;
+    }
+
+    public void setGestationalWeeks(String gestationalWeeks) {
+        this.gestationalWeeks = gestationalWeeks;
+    }
+
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(Long duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
@@ -266,7 +279,7 @@ public class Record {
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }    
+        }
         myDao.delete(this);
     }
 
@@ -274,7 +287,7 @@ public class Record {
     public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }    
+        }
         myDao.update(this);
     }
 
@@ -282,7 +295,7 @@ public class Record {
     public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }    
+        }
         myDao.refresh(this);
     }
 
@@ -300,11 +313,12 @@ public class Record {
         sb.append(", userId=").append(userId);
         sb.append(", userName='").append(userName).append('\'');
         sb.append(", serialNumber='").append(serialNumber).append('\'');
-        sb.append(", uploadState=").append(uploadState);
         sb.append(", recordStartTime=").append(recordStartTime);
+        sb.append(", gestationalWeeks='").append(gestationalWeeks).append('\'');
         sb.append(", duration=").append(duration);
         sb.append(", recordData='").append(recordData).append('\'');
         sb.append(", soundPath='").append(soundPath).append('\'');
+        sb.append(", uploadState=").append(uploadState);
         sb.append(", feelingId=").append(feelingId);
         sb.append(", feelingString='").append(feelingString).append('\'');
         sb.append(", purposeId=").append(purposeId);
