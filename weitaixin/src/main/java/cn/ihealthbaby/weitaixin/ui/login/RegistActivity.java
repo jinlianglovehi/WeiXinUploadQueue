@@ -129,7 +129,7 @@ public class RegistActivity extends BaseActivity {
                 dialog.show();
                 getAuthCode();
 
-                countDownTimer = new CountDownTimer(10000, 1000) {
+                countDownTimer = new CountDownTimer(60000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         tv_mark_num_text.setText(millisUntilFinished / 1000 + "秒之后重发");
