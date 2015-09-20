@@ -16,7 +16,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 
-public class RecordPlayActivity extends BaseActivity {
+public class CloudRecordPlayActivity extends BaseActivity {
 
     @Bind(R.id.back)
     RelativeLayout back;

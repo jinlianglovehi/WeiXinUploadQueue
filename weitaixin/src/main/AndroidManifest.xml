@@ -62,7 +62,7 @@
 
         <receiver android:name=".library.data.bluetooth.mode.spp.BluetoothReceiver" />
 
-        <activity android:name=".ui.record.RecordPlayActivity" />
+        <activity android:name=".ui.record.CloudRecordPlayActivity" />
         <activity android:name=".ui.pay.PayAccountActivity" />
         <activity android:name=".ui.pay.PayMimeOrderActivity" />
         <activity android:name=".ui.pay.PayMimeAddressActivity" />
@@ -79,7 +79,7 @@
         <activity android:name=".ui.pay.PayOrderInformationActivity" />
         <activity android:name=".ui.pay.PayConfirmOrderActivity" />
         <activity android:name=".ui.pay.PayAffirmPaymentActivity" />
-        <activity android:name=".ui.monitor.MonitorPlayActivity" />
+        <activity android:name=".ui.monitor.LocalRecordPlayActivity" />
         <activity android:name=".ui.pay.PayOrderDetailsActivity" />
         <activity android:name=".ui.pay.PayChooseAddressProvinceActivity" />
         <activity android:name=".ui.pay.PayChooseAddressCityActivity" />

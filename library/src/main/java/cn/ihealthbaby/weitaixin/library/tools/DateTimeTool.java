@@ -128,19 +128,18 @@ public class DateTimeTool {
 	}
 
 	public static void main(String[] args) {
-		String s = getGestationalWeeks(new Date(new Date().getTime() + 1000
-				                                                               * 3600 * 24 * 6));
+		String s = getGestationalWeeks(new Date(new Date().getTime() + 1000 * 3600 * 24 * 6));
 		System.out.println(s);
 	}
 
-	public static String second2hhmmss(long time) {
+	public static String million2hhmmss(long time) {
 		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 		java.util.Date dt = new Date(time);
 		String hhmmss = sdf.format(dt);
 		return hhmmss;
 	}
 
-	public static String second2mmss(long time) {
+	public static String million2mmss(long time) {
 		SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
 		java.util.Date dt = new Date(time);
 		String mmss = sdf.format(dt);

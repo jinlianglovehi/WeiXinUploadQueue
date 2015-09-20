@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
@@ -51,6 +53,14 @@ public class MonitorDetialActivity extends BaseActivity {
 	RelativeLayout rlMovement;
 	@Bind(R.id.tv_consum_time)
 	TextView tvConsumTime;
+	@Bind(R.id.ivDelectAction)
+	ImageView ivDelectAction;
+	@Bind(R.id.tvDelectAction)
+	TextView tvDelectAction;
+	@Bind(R.id.flDelAction)
+	FrameLayout flDelAction;
+	@Bind(R.id.tv_start_time)
+	TextView tvStartTime;
 	private long consumedtime;
 	private long duration;
 	private long interval;
@@ -76,6 +86,7 @@ public class MonitorDetialActivity extends BaseActivity {
 	public void terminate() {
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
 		terminate = true;
+		finish();
 	}
 
 	private void savePosition(int position) {
@@ -102,6 +113,7 @@ public class MonitorDetialActivity extends BaseActivity {
 			@Override
 			public void onStart(long startTime) {
 				terminate = false;
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
 			}
 
 			@Override
@@ -113,6 +125,7 @@ public class MonitorDetialActivity extends BaseActivity {
 				if (DataStorage.fhrs.size() > 0 || !terminate) {
 					curve.resetPoints();
 					curve.postInvalidate();
+					tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
 					int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
 					if (bpm != null) {
 						if (fhr1 >= safemin && fhr1 <= safemax) {

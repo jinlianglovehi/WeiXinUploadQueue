@@ -142,8 +142,8 @@ public class MonitorActivity extends BaseActivity {
 
 			@Override
 			public void onStart(long startTime) {
-				hint.setText("已记录" + DateTimeTool.second2mmss(getConsumedTime()));
-				tvStartTime.setText(DateTimeTool.second2hhmmss(recordStartTime.getTime()) + "开始记录");
+				hint.setText("已记录" + DateTimeTool.million2mmss(getConsumedTime()));
+				tvStartTime.setText(DateTimeTool.million2hhmmss(recordStartTime.getTime()) + "开始记录");
 			}
 
 			@Override
@@ -171,7 +171,7 @@ public class MonitorActivity extends BaseActivity {
 				roundProgressMask.setAngel((float) (360 * getConsumedTime() / getDuration()));
 				roundProgressMask.postInvalidate();
 				long time = DataStorage.fhrPackage.getTime();
-				hint.setText("已记录" + DateTimeTool.second2mmss(getConsumedTime()));
+				hint.setText("已记录" + DateTimeTool.million2mmss(getConsumedTime()));
 				int size = curveSimple.getHearts().size();
 				if (size > 0) {
 					fmCount.setText("第" + size + "次胎动");

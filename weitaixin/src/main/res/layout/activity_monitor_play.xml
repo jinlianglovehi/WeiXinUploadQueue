@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="cn.ihealthbaby.weitaixin.ui.monitor.MonitorPlayActivity">
+                tools:context="cn.ihealthbaby.weitaixin.ui.monitor.LocalRecordPlayActivity">
 
     <include
         android:id="@+id/title"
@@ -39,6 +39,7 @@
                 android:id="@+id/tv_start_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:text="开始时间:00:00:00"
                 android:textColor="@color/text_subtitle_color"
                 />

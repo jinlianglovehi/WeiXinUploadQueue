@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,7 +46,6 @@ import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
-import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
 import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
@@ -348,7 +346,7 @@ public class RecordFragment extends BaseFragment {
                     AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
                     int status = adviceItem.getStatus();
 
-                    Intent intent = new Intent(getActivity().getApplicationContext(), RecordPlayActivity.class);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), CloudRecordPlayActivity.class);
                     intent.putExtra("strStateFlag", strStateFlag[status]);
                     startActivity(intent);
                 }

@@ -144,7 +144,7 @@ public class GuardianStateActivity extends BaseActivity {
 			return;
 		}
 		Intent intent = getIntent();
-		intent.setClass(getApplicationContext(), MonitorPlayActivity.class);
+		intent.setClass(getApplicationContext(), LocalRecordPlayActivity.class);
 		int purposeId = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getId();
 		String purposeString = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
 		int feelingId = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getId();

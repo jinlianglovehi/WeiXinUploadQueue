@@ -7,50 +7,43 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.qiniu.android.http.ResponseInfo;
-
-import org.json.JSONObject;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
-import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
-import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.tools.AsynUploadEngine;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
-import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 
-public class MonitorPlayActivity extends BaseActivity {
-	private final static String TAG = "MonitorPlayActivity";
+public abstract class RecordPlayActivity extends BaseActivity {
+	private final static String TAG = "LocalRecordPlayActivity";
 	public String path;
 	public Record record;
+	public String uuid;
+	protected Data data;
+	protected List<Integer> fhrs;
+	protected List<Integer> fetalMove;
+	protected Dialog dialog;
 	@Bind(R.id.curve_play)
 	CurveMonitorDetialView curvePlay;
 	@Bind(R.id.chs)
@@ -75,12 +68,18 @@ public class MonitorPlayActivity extends BaseActivity {
 	TextView bpm;
 	@Bind(R.id.red_heart)
 	ImageView redHeart;
+	@Bind(R.id.ivDelectAction)
+	ImageView ivDelectAction;
+	@Bind(R.id.tvDelectAction)
+	TextView tvDelectAction;
+	@Bind(R.id.flDelAction)
+	FrameLayout flDelAction;
+	@Bind(R.id.tv_start_time)
+	TextView tvStartTime;
+	@Bind(R.id.tv_consum_time)
+	TextView tvConsumTime;
 	private int width;
 	private ExpendableCountDownTimer countDownTimer;
-	private Data data;
-	private List<Integer> fhrs;
-	private Dialog dialog;
-	private List<Integer> fetalMove;
 	private MediaPlayer mediaPlayer;
 	private int safemin;
 	private int safemax;
@@ -101,58 +100,11 @@ public class MonitorPlayActivity extends BaseActivity {
 	}
 
 	@OnClick(R.id.btn_start)
-	public void upload(View view) {
-		AsynUploadEngine asynUploadEngine = new AsynUploadEngine(getApplicationContext());
-		String uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
-		if (uuid == null) {
-			ToastUtil.show(getApplicationContext(), "未获取到本地记录");
-			return;
-		}
-		dialog.show();
-		asynUploadEngine.init(new File(FileUtil.getVoiceDir(getApplicationContext()), uuid));
-		asynUploadEngine.setOnFinishActivity(new AsynUploadEngine.FinishedToDoWork() {
-			@Override
-			public void onFinishedWork(String key, ResponseInfo info, JSONObject response) {
-				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record), new HttpClientAdapter.Callback<Long>() {
-					@Override
-					public void call(Result<Long> t) {
-						dialog.dismiss();
-						if (t.isSuccess()) {
-							ToastUtil.show(getApplicationContext(), "上传成功");
-							Long data = t.getData();
-							saveDataToDatabase(data);
-						} else {
-							ToastUtil.show(getApplicationContext(), t.getMsg());
-						}
-					}
-				}, getRequestTag());
-			}
-		});
+	public void function(View view) {
+		function();
 	}
 
-	private AdviceForm getUploadData(Record record) {
-		AdviceForm adviceForm = new AdviceForm();
-		adviceForm.setClientId(record.getLocalRecordId());
-		adviceForm.setDataType(1);
-		adviceForm.setDeviceType(1);
-		adviceForm.setFeeling(record.getFeelingString());
-		adviceForm.setAskPurpose(record.getPurposeString());
-		adviceForm.setData(record.getRecordData());
-		adviceForm.setTestTime(record.getRecordStartTime());
-		adviceForm.setTestTimeLong((int) (record.getDuration() / 1000));
-		return adviceForm;
-	}
-
-	//记录保存到数据库
-	private void saveDataToDatabase(Long data) {
-		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
-		try {
-			record.setUploadState(Record.UPLOAD_STATE_CLOUD);
-			recordBusinessDao.update(record);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	protected abstract void function();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +115,11 @@ public class MonitorPlayActivity extends BaseActivity {
 		final DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
+		uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
+		if (uuid == null) {
+			ToastUtil.show(getApplicationContext(), "未获取到记录");
+			return;
+		}
 		getData();
 		getAdviceSetting();
 		configCurve();
@@ -183,6 +140,7 @@ public class MonitorPlayActivity extends BaseActivity {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
 			}
 
 			@Override
@@ -195,6 +153,7 @@ public class MonitorPlayActivity extends BaseActivity {
 				if (position < size) {
 					int fhr = fhrs.get(position);
 					curvePlay.addPoint(fhr);
+					tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
 					if (fmposition < fetalMove.size() && fetalMove.get(fmposition) == position) {
 						curvePlay.addRedHeart(position);
 						fmposition++;
@@ -233,24 +192,10 @@ public class MonitorPlayActivity extends BaseActivity {
 	}
 
 	/**
-	 * 从网络或者本地数据库获取数据
+	 * 从网络或者本地数据库获取数据 protected Data data; protected List<Integer> fhrs; protected List<Integer>
+	 * fetalMove;
 	 */
-	private void getData() {
-		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
-		try {
-			record = recordBusinessDao.queryByLocalRecordId(getIntent().getStringExtra(Constants.INTENT_UUID));
-			path = record.getSoundPath();
-			String rData = record.getRecordData();
-			Gson gson = new Gson();
-			RecordData recordData = gson.fromJson(rData, RecordData.class);
-			data = recordData.getData();
-			fhrs = data.getHeartRate();
-			fetalMove = Util.time2Position(data.getFm());
-		} catch (Exception e) {
-			e.printStackTrace();
-			ToastUtil.show(getApplicationContext(), "获取数据失败");
-		}
-	}
+	protected abstract void getData();
 
 	private void configCurve() {
 		// TODO: 15/9/9  设置数据源
@@ -289,7 +234,9 @@ public class MonitorPlayActivity extends BaseActivity {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			ToastUtil.show(getApplicationContext(), "解析错误");
+			safemax = 160;
+			safemin = 110;
+			ToastUtil.show(getApplicationContext(), "解析错误,设置为默认值");
 		}
 		LogUtil.d(TAG, "safemin:%s,safemax:%s", safemin, safemax);
 	}

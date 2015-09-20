@@ -260,6 +260,10 @@ public class MonitorFragment extends BaseFragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LogUtil.d(TAG, "数据插入失败");
+			started = false;
+			needRecord = false;
+			needPlay = false;
+			autoStartTimer.cancel();
 			SPUtil.clearUUID(getActivity().getApplicationContext());
 			return;
 		}
@@ -546,7 +550,13 @@ public class MonitorFragment extends BaseFragment {
 
 	public void onEventMainThread(MonitorTerminateEvent event) {
 		int reason = event.getEvent();
-		pseudoBluetoothService.stop();
+		new Thread() {
+			@Override
+			public void run() {
+				super.run();
+				pseudoBluetoothService.stop();
+			}
+		}.start();
 		needPlay = false;
 		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
 			audioTrack.pause();
@@ -651,6 +661,7 @@ public class MonitorFragment extends BaseFragment {
 			ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
 			return;
 		}
+		SPUtil.clearUUID(getActivity().getApplicationContext());
 		DataStorage.fhrs.clear();
 		DataStorage.fms.clear();
 		DataStorage.fhrPackage.recycle();

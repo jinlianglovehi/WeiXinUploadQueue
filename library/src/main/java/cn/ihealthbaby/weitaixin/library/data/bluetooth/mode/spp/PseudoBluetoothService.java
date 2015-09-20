@@ -416,6 +416,7 @@ public class PseudoBluetoothService {
 		private final BluetoothSocket mmSocket;
 		private final InputStream mmInStream;
 		private final OutputStream mmOutStream;
+		private volatile boolean start = true;
 
 		public ConnectedThread(BluetoothSocket socket, String socketType) {
 			Log.d(TAG, "create ConnectedThread: " + socketType);
@@ -437,7 +438,7 @@ public class PseudoBluetoothService {
 
 		public void run() {
 			Log.i(TAG, "BEGIN mConnectedThread");
-			while (true) {
+			while (start) {
 				try {
 					if (mmInStream != null && mmInStream.available() < 324) {
 						continue;
@@ -475,6 +476,9 @@ public class PseudoBluetoothService {
 
 		public void cancel() {
 			try {
+				start = false;
+				this.interrupt();
+				this.join();
 				mmSocket.close();
 			} catch (IOException e) {
 				Log.e(TAG, "close() of connect socket failed", e);
