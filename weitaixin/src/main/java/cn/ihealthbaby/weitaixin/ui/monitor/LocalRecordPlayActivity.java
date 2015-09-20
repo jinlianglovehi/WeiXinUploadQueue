@@ -58,7 +58,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		adviceForm.setAskPurpose(record.getPurposeString());
 		adviceForm.setData(record.getRecordData());
 		adviceForm.setTestTime(record.getRecordStartTime());
-		adviceForm.setTestTimeLong((int) (record.getDuration() / 1000));
+		adviceForm.setTestTimeLong(record.getDuration());
 		return adviceForm;
 	}
 
