@@ -409,21 +409,16 @@ public class RecordFragment extends BaseFragment {
         for (int i = 0; i < records.size(); i++) {
             Record record = records.get(i);
             AdviceItem adviceItem = new AdviceItem();
-
             adviceItem.setId(record.getId());
-            // TODO: 2015/9/18 孕周
-//            adviceItem.setGestationalWeeks(record.getw);
-
+            adviceItem.setGestationalWeeks(record.getGestationalWeeks());
             adviceItem.setClientId(record.getLocalRecordId());
             adviceItem.setTestTime(record.getRecordStartTime());
-            //秒
-            adviceItem.setTestTimeLong((int) (record.getDuration() / 1));
-            if (record.getUploadState()== Record.UPLOAD_STATE_LOCAL||record.getUploadState()== Record.UPLOAD_STATE_UPLOADING) {
+            adviceItem.setTestTimeLong(record.getDuration());//秒
+            if (record.getUploadState() == Record.UPLOAD_STATE_LOCAL || record.getUploadState() == Record.UPLOAD_STATE_UPLOADING) {
                 adviceItem.setStatus(Record.UPLOAD_STATE_CLOUD);
             }
             adviceItem.setFeeling(record.getFeelingString());
             adviceItem.setAskPurpose(record.getPurposeString());
-
 
             adviceItems.add(adviceItem);
         }
