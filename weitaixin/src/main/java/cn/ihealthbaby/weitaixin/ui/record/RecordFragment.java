@@ -412,7 +412,7 @@ public class RecordFragment extends BaseFragment {
 
             adviceItem.setId(record.getId());
             // TODO: 2015/9/18 孕周
-//            adviceItem.setGestationalWeeks(record.get);
+//            adviceItem.setGestationalWeeks(record.getw);
 
             adviceItem.setClientId(record.getLocalRecordId());
             adviceItem.setTestTime(record.getRecordStartTime());
