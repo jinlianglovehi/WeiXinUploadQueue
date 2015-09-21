@@ -57,7 +57,10 @@ public class GradedActivity extends BaseActivity {
 
         hospitalId = SPUtil.getHospitalId(this);
         if (hospitalId == -1) {
-            ToastUtil.show(getApplicationContext(), "暂时没有问题哦");
+            ToastUtil.show(getApplicationContext(), "暂未开通服务");
+            Intent intent = new Intent(this, MeMainFragmentActivity.class);
+            startActivity(intent);
+            finish();
             return;
         }else{
             ApiManager.getInstance().riskScoreApi.getQuestions(hospitalId, new HttpClientAdapter.Callback<ApiList<Question>>() {
