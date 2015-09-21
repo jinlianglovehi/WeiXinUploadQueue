@@ -42,6 +42,7 @@ public class GradedActivity extends BaseActivity {
     private int questionIndex;
     private AnswerForms mAnswerForms = new AnswerForms();
     private RiskScore mRiskScore;
+    private long hospitalId = -1;
 
 
     @Override
@@ -54,30 +55,24 @@ public class GradedActivity extends BaseActivity {
         back.setVisibility(View.INVISIBLE);
 
 
-        long hospitalId = 0;
-
-        User user= SPUtil.getUser(this);
-        if (user != null && user.getServiceInfo() != null) {
-            hospitalId = user.getServiceInfo().getHospitalId();
-            LogUtil.e("hospitalId", "hospitalId: " + hospitalId);
-        } else {
+        hospitalId = SPUtil.getHospitalId(this);
+        if (hospitalId == -1) {
             ToastUtil.show(getApplicationContext(), "暂时没有问题哦");
             return;
-        }
-
-        ApiManager.getInstance().riskScoreApi.getQuestions(hospitalId, new HttpClientAdapter.Callback<ApiList<Question>>() {
-            @Override
-            public void call(Result<ApiList<Question>> t) {
-                if (t.getStatus()==Result.SUCCESS) {
-                    questionList = t.getData();
-                    questionIndex = 0;
-                    start();
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
+        }else{
+            ApiManager.getInstance().riskScoreApi.getQuestions(hospitalId, new HttpClientAdapter.Callback<ApiList<Question>>() {
+                @Override
+                public void call(Result<ApiList<Question>> t) {
+                    if (t.getStatus()==Result.SUCCESS) {
+                        questionList = t.getData();
+                        questionIndex = 0;
+                        start();
+                    } else {
+                        ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
+                    }
                 }
-            }
-        }, getRequestTag());
-
+            }, getRequestTag());
+        }
     }
 
     @Override

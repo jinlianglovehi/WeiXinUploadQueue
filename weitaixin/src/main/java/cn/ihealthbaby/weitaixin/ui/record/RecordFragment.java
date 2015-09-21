@@ -397,6 +397,7 @@ public class RecordFragment extends BaseFragment {
                             adapter.setDatas(dataList);
                             adapter.notifyDataSetChanged();
                             mAdviceItems = adapter.datas;
+                            countNumber = adapter.datas.size();
                         } else {
                             if (records != null && records.size() > 0) {
                                 adapter.setDatas(switchList(records));
@@ -407,9 +408,9 @@ public class RecordFragment extends BaseFragment {
                                 ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
                                 countNumber = 0;
                             }
-                            if (tvUsedCount != null) {
-                                tvUsedCount.setText(countNumber + "");
-                            }
+                        }
+                        if (tvUsedCount != null) {
+                            tvUsedCount.setText(countNumber + "");
                         }
                         if (pullToRefresh != null) {
                             pullToRefresh.onRefreshComplete();
@@ -422,6 +423,19 @@ public class RecordFragment extends BaseFragment {
                     @Override
                     public void handleException() {
                         super.handleException();
+                        ArrayList<Record> records = getLocalDB();
+                        if (records != null && records.size() > 0) {
+                            adapter.setDatas(switchList(records));
+                            adapter.notifyDataSetChanged();
+                            mAdviceItems = adapter.datas;
+                            countNumber = adapter.datas.size();
+                        } else {
+                            ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
+                            countNumber = 0;
+                        }
+                        if (tvUsedCount != null) {
+                            tvUsedCount.setText(countNumber + "");
+                        }
                         if (pullToRefresh != null) {
                             pullToRefresh.onRefreshComplete();
                         }
