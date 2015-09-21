@@ -331,7 +331,7 @@ public class RecordFragment extends BaseFragment {
                     AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
                     int status = adviceItem.getStatus();
                     Intent intent = new Intent();
-                    intent.putExtra("strStateFlag", strStateFlag[status]);
+                    intent.putExtra(Constants.INTENT_STATUS, status);
                     intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, adviceItem.getClientId());
                     switch (status) {
                         case 0:

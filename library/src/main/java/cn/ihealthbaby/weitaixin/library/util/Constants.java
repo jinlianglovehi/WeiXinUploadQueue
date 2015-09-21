@@ -21,6 +21,7 @@ public class Constants {
 //	public static final String SERVER_URL = "http://192.168.1.253:8080/port/v1/";
 	//外网
 	public static final String SERVER_URL = "http://dev.ihealthbaby.cn:8280/v1/";
+	//@顾文昌pc
 	//	public static final String SERVER_URL = "http://192.168.1.3:8080/ihealthbaby-port/v1/";
 	public static final String MOCK_SERVER_URL = "http://localhost:9800/";
 	public static final String MIME_TYPE_WAV = "audio/x-wav";
@@ -46,4 +47,5 @@ public class Constants {
 	public static final String INTENT_INTERVAL = "INTERVAL";
 	public static final String INTENT_ID = "ID";
 	public static final int CODE_200_OK = 200;
+	public static final String INTENT_STATUS = "STATUS";
 }

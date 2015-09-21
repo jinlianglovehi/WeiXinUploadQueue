@@ -129,6 +129,29 @@ public class CloudRecordPlayActivity extends BaseActivity {
 		width = metric.widthPixels;
 		mediaPlayer = new MediaPlayer();
 		getData();
+		changeButton();
+	}
+
+	private void changeButton() {
+		int status = getIntent().getIntExtra(Constants.INTENT_STATUS, -1);
+		switch (status) {
+			//0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除 4 本地数据 -1未获取到数据
+			case 0:
+
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case -1:
+				break;
+			default:
+				break;
+		}
 	}
 
 	private void config() {
