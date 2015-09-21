@@ -11,6 +11,7 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
@@ -79,7 +80,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 	protected void getData() {
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
 		try {
-			record = recordBusinessDao.queryByLocalRecordId(getIntent().getStringExtra(Constants.INTENT_UUID));
+			record = recordBusinessDao.queryByLocalRecordId(getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID));
 			path = record.getSoundPath();
 			String rData = record.getRecordData();
 			Gson gson = new Gson();
@@ -91,5 +92,8 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			e.printStackTrace();
 			ToastUtil.show(getApplicationContext(), "获取数据失败");
 		}
+		// TODO: 15/9/20  临时放置
+		CustomDialog customDialog = new CustomDialog();
+		dialog = customDialog.createDialog1(this, "正在上传胎音文件...");
 	}
 }

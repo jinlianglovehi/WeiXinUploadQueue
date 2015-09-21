@@ -21,7 +21,7 @@ public class Constants {
 //	public static final String SERVER_URL = "http://192.168.1.253:8080/port/v1/";
 	//外网
 	public static final String SERVER_URL = "http://dev.ihealthbaby.cn:8280/v1/";
-//	public static final String SERVER_URL = "http://192.168.1.3:8080/ihealthbaby-port/v1/";
+	//	public static final String SERVER_URL = "http://192.168.1.3:8080/ihealthbaby-port/v1/";
 	public static final String MOCK_SERVER_URL = "http://localhost:9800/";
 	public static final String MIME_TYPE_WAV = "audio/x-wav";
 	public static final String MIME_TYPE_JPEG = "image/jpeg";
@@ -39,8 +39,10 @@ public class Constants {
 	public static final String RECORD_PATH = "";
 	public static final String TEMP_FILE_NAME = "TEMP";
 	public static final String EXTENTION_NAME = ".WAV";
-	public static final String INTENT_UUID = "UUID";
-	public static final String INTENT_CONSUMED_TIME = "CONSUMEDTIME";
+	public static final String INTENT_LOCAL_RECORD_ID = "LOCAL_RECORD_ID";
+	public static final String INTENT_URL = "URL";
+	public static final String INTENT_CONSUMED_TIME = "CONSUMED_TIME";
 	public static final String INTENT_DURATION = "DURATION";
 	public static final String INTENT_INTERVAL = "INTERVAL";
+	public static final String INTENT_ID = "ID";
 }

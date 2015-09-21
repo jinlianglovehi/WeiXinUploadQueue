@@ -150,7 +150,7 @@ public class GuardianStateActivity extends BaseActivity {
 		String feelingString = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
 		try {
-			String localRecordId = getIntent().getStringExtra(Constants.INTENT_UUID);
+			String localRecordId = getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID);
 			LogUtil.d(TAG, "localRecordId:%s", localRecordId);
 			Record query = recordBusinessDao.queryByLocalRecordId(localRecordId);
 			LogUtil.d(TAG, query.toString());

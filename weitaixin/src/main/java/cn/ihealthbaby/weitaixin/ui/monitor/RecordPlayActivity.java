@@ -19,7 +19,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.model.AdviceSetting;
-import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
@@ -115,7 +114,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		final DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
-		uuid = getIntent().getStringExtra(Constants.INTENT_UUID);
+		uuid = getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID);
 		if (uuid == null) {
 			ToastUtil.show(getApplicationContext(), "未获取到记录");
 			return;
@@ -124,8 +123,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		mediaPlayer = new MediaPlayer();
-		CustomDialog customDialog = new CustomDialog();
-		dialog = customDialog.createDialog1(this, "正在上传胎音文件...");
+
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
 			public int fmposition;
 			public int position;

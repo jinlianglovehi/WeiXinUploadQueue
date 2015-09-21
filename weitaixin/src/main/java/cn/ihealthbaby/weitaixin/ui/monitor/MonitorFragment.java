@@ -280,7 +280,7 @@ public class MonitorFragment extends BaseFragment {
 			return;
 		}
 		Intent intent = new Intent(getActivity(), MonitorActivity.class);
-		intent.putExtra(Constants.INTENT_UUID, localRecordId);
+		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
 		startActivity(intent);
 	}
 
@@ -582,7 +582,7 @@ public class MonitorFragment extends BaseFragment {
 		}
 		reset();
 		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
-		intent.putExtra(Constants.INTENT_UUID, getLocalRecordId());
+		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, getLocalRecordId());
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
