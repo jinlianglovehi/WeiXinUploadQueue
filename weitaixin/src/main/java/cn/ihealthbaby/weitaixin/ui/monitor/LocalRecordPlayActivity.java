@@ -78,6 +78,11 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 
 	@Override
 	protected void getData() {
+		uuid = getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID);
+		if (uuid == null) {
+			ToastUtil.show(getApplicationContext(), "未获取到记录");
+			return;
+		}
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
 		try {
 			record = recordBusinessDao.queryByLocalRecordId(getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID));

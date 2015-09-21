@@ -26,7 +26,6 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
-import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -114,16 +113,10 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		final DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
-		uuid = getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID);
-		if (uuid == null) {
-			ToastUtil.show(getApplicationContext(), "未获取到记录");
-			return;
-		}
 		getData();
 		getAdviceSetting();
 		configCurve();
 		mediaPlayer = new MediaPlayer();
-
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
 			public int fmposition;
 			public int position;

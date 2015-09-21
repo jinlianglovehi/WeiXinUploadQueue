@@ -34,7 +34,6 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
@@ -48,10 +47,13 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.monitor.CloudRecordPlayActivity;
 import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
+import cn.ihealthbaby.weitaixin.ui.monitor.LocalRecordPlayActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
@@ -317,13 +319,28 @@ public class RecordFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 if (!isMove) {
-                    //1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
+	                //0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除
                     AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
-                    int status = adviceItem.getStatus();
-
-                    Intent intent = new Intent(getActivity().getApplicationContext(), CloudRecordPlayActivity.class);
-                    intent.putExtra("strStateFlag", strStateFlag[status]);
-                    startActivity(intent);
+	                int status = adviceItem.getStatus();
+	                Intent intent = new Intent();
+	                intent.putExtra("strStateFlag", strStateFlag[status]);
+	                intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, adviceItem.getClientId());
+	                switch (status) {
+		                case 0:
+		                case 1:
+		                case 2:
+		                case 3:
+			                intent.setClass(getActivity().getApplicationContext(), CloudRecordPlayActivity.class);
+			                intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
+			                intent.putExtra(Constants.INTENT_URL, adviceItem.getFetalTonePath());
+			                break;
+		                case 4:
+			                intent.setClass(getActivity().getApplicationContext(), LocalRecordPlayActivity.class);
+			                break;
+		                default:
+			                break;
+	                }
+	                startActivity(intent);
                 }
             }
         });
@@ -356,44 +373,41 @@ public class RecordFragment extends BaseFragment {
 
     public void pullFirstData(final CustomDialog customDialogTwo) {
         ApiManager.getInstance().adviceApi.getAdviceItems(1, pageSize,
-                new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
-            @Override
-            public void handleData(PageData<AdviceItem> data) throws Exception {
-                final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
-
-                ArrayList<Record> records = getLocalDB();
-
-                //把本地记录 转换成云端 记录集合类型
-                dataList.addAll(switchList(records));
-
-                if (dataList != null && dataList.size() > 0) {
-                    //
-                    adapter.datas.clear();
-                    adapter.setDatas(dataList);
-                    adapter.notifyDataSetChanged();
-                    mAdviceItems = adapter.datas;
-                } else {
-                    if (records != null && records.size() > 0) {
-                        adapter.setDatas(switchList(records));
-                        adapter.notifyDataSetChanged();
-                        mAdviceItems = adapter.datas;
-                        countNumber = adapter.datas.size();
-                    } else {
-                        ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
-                        countNumber = 0;
-                    }
-                    if (tvUsedCount != null) {
-                        tvUsedCount.setText(countNumber + "");
-                    }
-                }
-                if (pullToRefresh != null) {
-                    pullToRefresh.onRefreshComplete();
-                }
-                if (customDialogTwo != null) {
-                    customDialogTwo.dismiss();
-                }
-            }
-        }), getRequestTag());
+		                                                         new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
+			                                                         @Override
+			                                                         public void handleData(PageData<AdviceItem> data) throws Exception {
+				                                                         final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+				                                                         ArrayList<Record> records = getLocalDB();
+				                                                         //把本地记录 转换成云端 记录集合类型
+				                                                         dataList.addAll(switchList(records));
+				                                                         if (dataList != null && dataList.size() > 0) {
+					                                                         //
+					                                                         adapter.datas.clear();
+					                                                         adapter.setDatas(dataList);
+					                                                         adapter.notifyDataSetChanged();
+					                                                         mAdviceItems = adapter.datas;
+				                                                         } else {
+					                                                         if (records != null && records.size() > 0) {
+						                                                         adapter.setDatas(switchList(records));
+						                                                         adapter.notifyDataSetChanged();
+						                                                         mAdviceItems = adapter.datas;
+						                                                         countNumber = adapter.datas.size();
+					                                                         } else {
+						                                                         ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
+						                                                         countNumber = 0;
+					                                                         }
+					                                                         if (tvUsedCount != null) {
+						                                                         tvUsedCount.setText(countNumber + "");
+					                                                         }
+				                                                         }
+				                                                         if (pullToRefresh != null) {
+					                                                         pullToRefresh.onRefreshComplete();
+				                                                         }
+				                                                         if (customDialogTwo != null) {
+					                                                         customDialogTwo.dismiss();
+				                                                         }
+			                                                         }
+		                                                         }), getRequestTag());
 
     }
 
@@ -415,7 +429,7 @@ public class RecordFragment extends BaseFragment {
             adviceItem.setTestTime(record.getRecordStartTime());
             adviceItem.setTestTimeLong(record.getDuration());//秒
             if (record.getUploadState() == Record.UPLOAD_STATE_LOCAL || record.getUploadState() == Record.UPLOAD_STATE_UPLOADING) {
-                adviceItem.setStatus(Record.UPLOAD_STATE_CLOUD);
+                adviceItem.setStatus(4);
             }
             adviceItem.setFeeling(record.getFeelingString());
             adviceItem.setAskPurpose(record.getPurposeString());

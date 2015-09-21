@@ -45,4 +45,5 @@ public class Constants {
 	public static final String INTENT_DURATION = "DURATION";
 	public static final String INTENT_INTERVAL = "INTERVAL";
 	public static final String INTENT_ID = "ID";
+	public static final int CODE_200_OK = 200;
 }
