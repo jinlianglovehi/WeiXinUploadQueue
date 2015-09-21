@@ -266,8 +266,8 @@ public class RecordFragment extends BaseFragment {
                 tvHospitalName.setText("建档: " + user.getServiceInfo().getHospitalName());
             }
         }
-
     }
+
 
     @Override
     public void onResume() {
@@ -294,7 +294,7 @@ public class RecordFragment extends BaseFragment {
                 ApiManager.getInstance().adviceApi.getAdviceItems((++pageIndex), pageSize, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
                     @Override
                     public void call(Result<PageData<AdviceItem>> t) {
-                        if (t.isSuccess()) {
+                        if (t.getStatus() == Result.SUCCESS) {
                             PageData<AdviceItem> data = t.getData();
                             ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
                             LogUtil.d("PageData", "ArrayList: " + dataList.size());
@@ -317,36 +317,38 @@ public class RecordFragment extends BaseFragment {
                             pullToRefresh.onRefreshComplete();
                         }
                     }
+
                 }, getRequestTag());
             }
         });
+
 
         pullToRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 if (!isMove) {
-	                //0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除
+                    //0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除
                     AdviceItem adviceItem = (AdviceItem) adapter.getItem(position - 1);
-	                int status = adviceItem.getStatus();
-	                Intent intent = new Intent();
-	                intent.putExtra("strStateFlag", strStateFlag[status]);
-	                intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, adviceItem.getClientId());
-	                switch (status) {
-		                case 0:
-		                case 1:
-		                case 2:
-		                case 3:
-			                intent.setClass(getActivity().getApplicationContext(), CloudRecordPlayActivity.class);
-			                intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
-			                intent.putExtra(Constants.INTENT_URL, adviceItem.getFetalTonePath());
-			                break;
-		                case 4:
-			                intent.setClass(getActivity().getApplicationContext(), LocalRecordPlayActivity.class);
-			                break;
-		                default:
-			                break;
-	                }
-	                startActivity(intent);
+                    int status = adviceItem.getStatus();
+                    Intent intent = new Intent();
+                    intent.putExtra("strStateFlag", strStateFlag[status]);
+                    intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, adviceItem.getClientId());
+                    switch (status) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            intent.setClass(getActivity().getApplicationContext(), CloudRecordPlayActivity.class);
+                            intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
+                            intent.putExtra(Constants.INTENT_URL, adviceItem.getFetalTonePath());
+                            break;
+                        case 4:
+                            intent.setClass(getActivity().getApplicationContext(), LocalRecordPlayActivity.class);
+                            break;
+                        default:
+                            break;
+                    }
+                    startActivity(intent);
                 }
             }
         });

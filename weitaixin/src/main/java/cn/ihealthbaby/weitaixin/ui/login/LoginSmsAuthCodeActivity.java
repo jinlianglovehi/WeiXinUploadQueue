@@ -250,7 +250,7 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                                 return;
                             }
 
-                            if(data.getHasRiskscore()){
+                            if(!data.getHasRiskscore()){
                                 customDialog.dismiss();
                                 Intent intentHasRiskscore=new Intent(LoginSmsAuthCodeActivity.this, GradedActivity.class);
                                 startActivity(intentHasRiskscore);

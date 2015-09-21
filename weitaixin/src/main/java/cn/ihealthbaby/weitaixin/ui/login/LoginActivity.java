@@ -142,7 +142,7 @@ public class LoginActivity extends BaseActivity {
                                 return;
                             }
 
-                            if(data.getHasRiskscore()){
+                            if(!data.getHasRiskscore()){
                                 customDialog.dismiss();
                                 Intent intentHasRiskscore=new Intent(LoginActivity.this, GradedActivity.class);
                                 startActivity(intentHasRiskscore);

@@ -132,21 +132,27 @@ public class SPUtil {
 
     public static User getUser(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
-        User user = new User();
-        user.setAccountToken(sp.getString("AccountToken", ""));
-        user.setTelephone(sp.getString("Telephone", ""));
-        user.setId(sp.getLong("Id", -1));
-        user.setMobile(sp.getString("Mobile", ""));
-        user.setName(sp.getString("Name", ""));
-        user.setHeadPic(sp.getString("HeadPic", ""));
-        user.setBirthday(new Date(sp.getLong("Birthday", -1)));
-        user.setHasService(sp.getBoolean("HasService", false));
-        user.setHasRiskscore(sp.getBoolean("HasRiskscore", false));
-        user.setDeliveryTime(new Date(sp.getLong("DeliveryTime", -1)));
-        user.setCreateTime(new Date(sp.getLong("CreateTime", -1)));
-        user.setIsInit(sp.getBoolean("IsInit", false));
-        ServiceInfo serviceInfo = SPUtil.getServiceInfo(context);
-        user.setServiceInfo(serviceInfo);
+        User user = null;
+        String accountToken = sp.getString("AccountToken", "");
+        if (!TextUtils.isEmpty(accountToken)) {
+            user = new User();
+        }
+        if (user != null) {
+            user.setAccountToken(sp.getString("AccountToken", ""));
+            user.setTelephone(sp.getString("Telephone", ""));
+            user.setId(sp.getLong("Id", -1));
+            user.setMobile(sp.getString("Mobile", ""));
+            user.setName(sp.getString("Name", ""));
+            user.setHeadPic(sp.getString("HeadPic", ""));
+            user.setBirthday(new Date(sp.getLong("Birthday", -1)));
+            user.setHasService(sp.getBoolean("HasService", false));
+            user.setHasRiskscore(sp.getBoolean("HasRiskscore", false));
+            user.setDeliveryTime(new Date(sp.getLong("DeliveryTime", -1)));
+            user.setCreateTime(new Date(sp.getLong("CreateTime", -1)));
+            user.setIsInit(sp.getBoolean("IsInit", false));
+            ServiceInfo serviceInfo = SPUtil.getServiceInfo(context);
+            user.setServiceInfo(serviceInfo);
+        }
         return user;
     }
 

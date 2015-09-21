@@ -35,10 +35,12 @@ import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.library.tools.ImageTool;
 import cn.ihealthbaby.weitaixin.UploadFileEngine;
+import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.SetSystemGuardianActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.MyPoPoWin;
@@ -231,8 +233,13 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
                 public void onFinishActivity(boolean isFinish) {
                     if (isFinish) {
                         WeiTaiXinApplication.getInstance().putValue("InfoEdit", "true");
-                        Intent intent=new Intent(getApplicationContext(), GradedActivity.class);
-                        startActivity(intent);
+                        if (!SPUtil.getUser(InfoEditActivity.this).getHasRiskscore()) {
+                            Intent intentHasRiskscore = new Intent(InfoEditActivity.this, GradedActivity.class);
+                            startActivity(intentHasRiskscore);
+                        } else {
+                            Intent intent = new Intent(InfoEditActivity.this, MeMainFragmentActivity.class);
+                            startActivity(intent);
+                        }
                         InfoEditActivity.this.finish();
                     }
                 }

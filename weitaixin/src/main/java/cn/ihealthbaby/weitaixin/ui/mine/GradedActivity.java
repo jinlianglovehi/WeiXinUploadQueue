@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.mine;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.QuestionDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.ResultDialog;
 
@@ -138,6 +140,8 @@ public class GradedActivity extends BaseActivity {
         resultDialog.setOnFinishQuit(new ResultDialog.OnFinishQuit() {
             @Override
             public void quit() {
+                Intent intent = new Intent(GradedActivity.this, MeMainFragmentActivity.class);
+                startActivity(intent);
                 GradedActivity.this.finish();
             }
         });
