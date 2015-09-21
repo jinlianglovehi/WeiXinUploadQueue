@@ -216,8 +216,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		}
 
 		//毫秒
-		viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()*1000));//
-		viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 yy:mm"));
+		viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong() * 1000));//
+		viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 HH:mm"));
+//		viewHolder.tvDateTime.setText(DateTimeTool.date2Str(new Date(), "MM月dd日 HH:mm"));
 
 
 

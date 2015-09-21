@@ -27,8 +27,7 @@ import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
  */
 public class WelcomeActivity extends BaseActivity {
 
-    @Bind(R.id.tv_enter)
-    TextView tv_enter;
+    @Bind(R.id.tv_enter) TextView tv_enter;
 
 
     @Override
@@ -56,7 +55,7 @@ public class WelcomeActivity extends BaseActivity {
                         finish();
                     }
                 }), getRequestTag());
-            } else {
+
                 if (SPUtil.isLogin(this)) {
                     if (SPUtil.getUser(this).getIsInit()) {
                         Intent intentIsInit = new Intent(this, InfoEditActivity.class);
@@ -68,20 +67,22 @@ public class WelcomeActivity extends BaseActivity {
                         if (SPUtil.getHospitalId(this) != -1) {
                             Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
                             startActivity(intentHasRiskscore);
+                            return;
                         }
-                        return;
                     }
 
                     Intent intent = new Intent(this, MeMainFragmentActivity.class);
                     startActivity(intent);
                     finish();
-                } else {
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    return;
                 }
+            } else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                return;
             }
-
+            return;
         }
 
 
@@ -97,28 +98,52 @@ public class WelcomeActivity extends BaseActivity {
 
     @OnClick(R.id.tv_enter)
     public void tv_enter() {
-        if (SPUtil.isLogin(this)) {
-            if (SPUtil.getUser(this).getIsInit()) {
-                Intent intentIsInit = new Intent(this, InfoEditActivity.class);
-                startActivity(intentIsInit);
+        if (SPUtil.getUser(this) != null) {
+            final CustomDialog customDialog = new CustomDialog();
+            Dialog dialog = customDialog.createDialog1(this, "刷新用户数据...");
+            dialog.show();
+
+            ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
+                @Override
+                public void handleData(User data) throws Exception {
+                    SPUtil.saveUser(WelcomeActivity.this, data);
+                    customDialog.dismiss();
+                }
+
+                @Override
+                public void handleException() {
+                    customDialog.dismiss();
+                    Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
+                    startActivity(intentHasRiskscore);
+                    finish();
+                }
+            }), getRequestTag());
+
+            if (SPUtil.isLogin(this)) {
+                if (SPUtil.getUser(this).getIsInit()) {
+                    Intent intentIsInit = new Intent(this, InfoEditActivity.class);
+                    startActivity(intentIsInit);
+                    return;
+                }
+
+                if (!SPUtil.getUser(this).getHasRiskscore()) {
+                    if (SPUtil.getHospitalId(this) != -1) {
+                        Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
+                        startActivity(intentHasRiskscore);
+                        return;
+                    }
+                }
+
+                Intent intent = new Intent(this, MeMainFragmentActivity.class);
+                startActivity(intent);
                 finish();
                 return;
             }
-
-            if (!SPUtil.getUser(this).getHasRiskscore() && SPUtil.getHospitalId(this) != -1) {
-                Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
-                startActivity(intentHasRiskscore);
-                finish();
-                return;
-            }
-
-            Intent intent = new Intent(this, MeMainFragmentActivity.class);
-            startActivity(intent);
-            finish();
         } else {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
+            return;
         }
     }
 

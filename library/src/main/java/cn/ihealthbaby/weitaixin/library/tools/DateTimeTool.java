@@ -18,7 +18,7 @@ public class DateTimeTool {
 		}
 		String dateFormatStr = dateFormat;
 		if (TextUtils.isEmpty(dateFormat)) {
-			dateFormatStr = "yyyy年MM月dd日 hh:mm:ss";
+			dateFormatStr = "yyyy年MM月dd日 HH:mm:ss";
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormatStr);
 		return sdf.format(date);
@@ -28,7 +28,7 @@ public class DateTimeTool {
 		if (date == null) {
 			return "";
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 hh:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH:mm");
 		return sdf.format(date);
 	}
 
@@ -36,7 +36,7 @@ public class DateTimeTool {
 		if (date == null) {
 			return "";
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
 		return sdf.format(date);
 	}
 
@@ -50,7 +50,7 @@ public class DateTimeTool {
 		long second = (mss % (1000 * 60)) / 1000;
 		StringBuffer sb = new StringBuffer();
 		if (hour > 0) {
-			//SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
+			//SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
 			SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
 			return sdf.format(date);
 		} else if (minute > 0) {
@@ -70,7 +70,7 @@ public class DateTimeTool {
 			LogUtil.d("testTime", "str2Date=1=> " + dateStr);
 			return new Date();
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
 		try {
 			LogUtil.d("testTime", "str2Date=2=> " + dateStr);
 			return sdf.parse(dateStr);
@@ -98,7 +98,7 @@ public class DateTimeTool {
 	}
 
 	public static Date longDate2Str(long lSysTime1) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
 		java.util.Date dt = new Date(lSysTime1);
 		String sDateTime = sdf.format(dt);
 		LogUtil.d("longDate2Str", "longDate2Str" + sDateTime);
@@ -129,7 +129,7 @@ public class DateTimeTool {
 	}
 
 	public static String million2hhmmss(long time) {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		java.util.Date dt = new Date(time);
 		String hhmmss = sdf.format(dt);
 		return hhmmss;
