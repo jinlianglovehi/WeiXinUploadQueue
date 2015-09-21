@@ -23,6 +23,7 @@ public class SPUtil {
     private static final String FILE_NAME_TEMP = "temp_share_data";
 
     private static final String FILE_NAME_FETALHEART = "fetalheart_share_data";
+    private static final String FILE_NAME_FIRST_START_APP= "firststartapp_share_data";
 
 
     private static final String FILE_NAME_ADVICE_SETTING = "advice_setting_share_data";
@@ -281,4 +282,22 @@ public class SPUtil {
     }
 
 
+    public static boolean isNoFirstStartApp(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FIRST_START_APP, Context.MODE_PRIVATE);
+        return sp.getBoolean("FirstStartApp", false);
+    }
+
+
+    public static void setNoFirstStartApp(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FIRST_START_APP, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("FirstStartApp", true);
+        editor.commit();
+    }
+
+
 }
+
+
+
+

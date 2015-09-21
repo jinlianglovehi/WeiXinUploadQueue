@@ -50,7 +50,8 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleData(data);
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap()+"1111");
+					LogUtil.d(TAG, "Result.SUCCESS==> " + result.getMsgMap() + "Result.SUCCESS" + e.toString());
+					business.handleException();
 				}
 				break;
 			/**
@@ -59,7 +60,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.VALIDATOR:
 				Map<String, Object> msgMap = result.getMsgMap();
 				// TODO: 15/7/23 提示消息
-				ToastUtil.show(context, msgMap.toString()+"2222");
+				ToastUtil.show(context, msgMap.toString()+"Result.VALIDATOR");
 				LogUtil.e(TAG, "call", result.getMsg());
 
 				//
@@ -67,7 +68,8 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleValidator(context, result.getData());
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "22-33");
+					LogUtil.d(TAG, "Result.VALIDATORException==> " + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
+					business.handleException();
 				}
 				break;
 			/**
@@ -75,14 +77,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			 */
 			case Result.ACCOUNT_ERROR:
 				Map<String, Object> msgMapERROR = result.getMsgMap();
-				if (msgMapERROR != null) {
-					String errorStr = msgMapERROR.toString().trim();
-					if (TextUtils.isEmpty(errorStr)) {
-						ToastUtil.show(context, "请求失效，请重新登录3333");
-					} else {
-						ToastUtil.show(context, errorStr + "请求失效，请重新登录3333");
-					}
-				}
+				ToastUtil.show(context, msgMapERROR + "请求失效，请重新登录ACCOUNT_ERROR");
 
 
 				try {
@@ -97,24 +92,27 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleAccountError(context, result.getData());
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "4444");
+					LogUtil.d(TAG, "Result.ACCOUNT_ERROR==> " + result.getMsgMap() + "Result.ACCOUNT_ERROR" + e.toString());
+					business.handleException();
 				}
 				break;
 			/**
 			 * 服务器错误
 			 */
 			case Result.ERROR:
-				ToastUtil.show(context, result.getMsgMap() + "5555");
+				ToastUtil.show(context, result.getMsgMap() + "Result.ERROR");
 				try {
 					business.handleError(context, result.getData());
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "6666");
+					LogUtil.d(TAG, "Result.ERROR==> " + result.getMsgMap() + "Result.ERROR" + e.toString());
+					business.handleException();
 				}
 				break;
 
 			default:
-				ToastUtil.show(context, result.getMsgMap()+"7777");
+				LogUtil.d(TAG, "Result.default==> " + result.getMsgMap() + "Result.default");
+				business.handleException();
 				break;
 		}
 	}

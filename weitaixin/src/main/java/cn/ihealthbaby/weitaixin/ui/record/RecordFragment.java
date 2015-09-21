@@ -51,7 +51,6 @@ import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
-import cn.ihealthbaby.weitaixin.ui.monitor.CloudRecordPlayActivity;
 import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
 import cn.ihealthbaby.weitaixin.ui.monitor.LocalRecordPlayActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
@@ -62,25 +61,35 @@ public class RecordFragment extends BaseFragment {
     private final static String TAG = "RecordFragment";
 
     @Nullable
-    @Bind(R.id.back) RelativeLayout back;
+    @Bind(R.id.back)
+    RelativeLayout back;
     @Nullable
-    @Bind(R.id.title_text) TextView title_text;
+    @Bind(R.id.title_text)
+    TextView title_text;
     @Nullable
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.function)
+    TextView function;
 
     @Nullable
-    @Bind(R.id.pullToRefresh) PullToRefreshListView pullToRefresh;
+    @Bind(R.id.pullToRefresh)
+    PullToRefreshListView pullToRefresh;
     @Nullable
-    @Bind(R.id.ivWoHeadIcon) RoundImageView ivWoHeadIcon;
+    @Bind(R.id.ivWoHeadIcon)
+    RoundImageView ivWoHeadIcon;
     @Nullable
-    @Bind(R.id.tvWoHeadName) TextView tvWoHeadName;
+    @Bind(R.id.tvWoHeadName)
+    TextView tvWoHeadName;
     @Nullable
-    @Bind(R.id.tvWoHeadDeliveryTime) TextView tvWoHeadDeliveryTime;
+    @Bind(R.id.tvWoHeadDeliveryTime)
+    TextView tvWoHeadDeliveryTime;
     @Nullable
-    @Bind(R.id.tvUsedCount) TextView tvUsedCount;
+    @Bind(R.id.tvUsedCount)
+    TextView tvUsedCount;
     @Nullable
-    @Bind(R.id.tvHospitalName) TextView tvHospitalName;
-    @Bind(R.id.tv_min) TextView mTvMin;
+    @Bind(R.id.tvHospitalName)
+    TextView tvHospitalName;
+    @Bind(R.id.tv_min)
+    TextView mTvMin;
 
 
     private MyAdviceItemAdapter adapter;
@@ -203,9 +212,6 @@ public class RecordFragment extends BaseFragment {
 
         return view;
     }
-
-
-
 
 
     @Override
@@ -349,7 +355,7 @@ public class RecordFragment extends BaseFragment {
 
     private void pullDatas() {
         CustomDialog customDialog = new CustomDialog();
-        Dialog dialog = customDialog.createDialog1(context, "从数据库中加载...");
+        Dialog dialog = customDialog.createDialog1(context, "数据加载中...");
         dialog.show();
 
         //从缓存数据库中展示数据列表
@@ -373,41 +379,55 @@ public class RecordFragment extends BaseFragment {
 
     public void pullFirstData(final CustomDialog customDialogTwo) {
         ApiManager.getInstance().adviceApi.getAdviceItems(1, pageSize,
-		                                                         new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
-			                                                         @Override
-			                                                         public void handleData(PageData<AdviceItem> data) throws Exception {
-				                                                         final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
-				                                                         ArrayList<Record> records = getLocalDB();
-				                                                         //把本地记录 转换成云端 记录集合类型
-				                                                         dataList.addAll(switchList(records));
-				                                                         if (dataList != null && dataList.size() > 0) {
-					                                                         //
-					                                                         adapter.datas.clear();
-					                                                         adapter.setDatas(dataList);
-					                                                         adapter.notifyDataSetChanged();
-					                                                         mAdviceItems = adapter.datas;
-				                                                         } else {
-					                                                         if (records != null && records.size() > 0) {
-						                                                         adapter.setDatas(switchList(records));
-						                                                         adapter.notifyDataSetChanged();
-						                                                         mAdviceItems = adapter.datas;
-						                                                         countNumber = adapter.datas.size();
-					                                                         } else {
-						                                                         ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
-						                                                         countNumber = 0;
-					                                                         }
-					                                                         if (tvUsedCount != null) {
-						                                                         tvUsedCount.setText(countNumber + "");
-					                                                         }
-				                                                         }
-				                                                         if (pullToRefresh != null) {
-					                                                         pullToRefresh.onRefreshComplete();
-				                                                         }
-				                                                         if (customDialogTwo != null) {
-					                                                         customDialogTwo.dismiss();
-				                                                         }
-			                                                         }
-		                                                         }), getRequestTag());
+                new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
+                    @Override
+                    public void handleData(PageData<AdviceItem> data) throws Exception {
+                        final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+
+                        ArrayList<Record> records = getLocalDB();
+
+                        //把本地记录 转换成云端 记录集合类型
+                        dataList.addAll(switchList(records));
+
+                        if (dataList != null && dataList.size() > 0) {
+                            //
+                            adapter.datas.clear();
+                            adapter.setDatas(dataList);
+                            adapter.notifyDataSetChanged();
+                            mAdviceItems = adapter.datas;
+                        } else {
+                            if (records != null && records.size() > 0) {
+                                adapter.setDatas(switchList(records));
+                                adapter.notifyDataSetChanged();
+                                mAdviceItems = adapter.datas;
+                                countNumber = adapter.datas.size();
+                            } else {
+                                ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
+                                countNumber = 0;
+                            }
+                            if (tvUsedCount != null) {
+                                tvUsedCount.setText(countNumber + "");
+                            }
+                        }
+                        if (pullToRefresh != null) {
+                            pullToRefresh.onRefreshComplete();
+                        }
+                        if (customDialogTwo != null) {
+                            customDialogTwo.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void handleException() {
+                        super.handleException();
+                        if (pullToRefresh != null) {
+                            pullToRefresh.onRefreshComplete();
+                        }
+                        if (customDialogTwo != null) {
+                            customDialogTwo.dismiss();
+                        }
+                    }
+                }), getRequestTag());
 
     }
 
@@ -427,7 +447,11 @@ public class RecordFragment extends BaseFragment {
             adviceItem.setGestationalWeeks(record.getGestationalWeeks());
             adviceItem.setClientId(record.getLocalRecordId());
             adviceItem.setTestTime(record.getRecordStartTime());
-            adviceItem.setTestTimeLong(record.getDuration());//秒
+            Integer duration = record.getDuration();
+            if (duration == null) {
+                duration = 0;
+            }
+            adviceItem.setTestTimeLong(duration);//秒
             if (record.getUploadState() == Record.UPLOAD_STATE_LOCAL || record.getUploadState() == Record.UPLOAD_STATE_UPLOADING) {
                 adviceItem.setStatus(4);
             }
@@ -438,8 +462,6 @@ public class RecordFragment extends BaseFragment {
         }
         return adviceItems;
     }
-
-
 
 
     private void init() {

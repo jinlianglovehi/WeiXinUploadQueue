@@ -63,13 +63,6 @@ public class LoginActivity extends BaseActivity {
             et_phone_number_login.setText(rememberMobile);
         }
 
-        if (SPUtil.isLogin(this)) {
-            Intent intent=new Intent(this, MeMainFragmentActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
-
         ivShowPassword.setTag("0");
     }
 

@@ -57,6 +57,9 @@ public class WeiTaiXinApplication extends Application {
         initUniversalImageLoader();
 
         initApiManager();
+
+
+
     }
 
     public boolean isMonitoring() {

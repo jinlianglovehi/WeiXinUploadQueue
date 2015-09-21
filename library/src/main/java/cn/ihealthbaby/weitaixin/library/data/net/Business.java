@@ -10,4 +10,6 @@ public interface Business<T> {
 	void handleValidator(Context context, T data) throws Exception;
 	void handleAccountError(Context context, T data) throws Exception;
 	void handleError(Context context, T data) throws Exception;
+	void handleException();
+	void handleDefault() ;
 }

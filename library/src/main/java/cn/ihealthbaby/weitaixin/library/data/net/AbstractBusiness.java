@@ -23,4 +23,15 @@ public abstract class AbstractBusiness<T> implements Business<T> {
 
 	}
 
+	@Override
+	public void handleException() {
+
+	}
+
+	@Override
+	public void handleDefault() {
+
+	}
+
+
 }
