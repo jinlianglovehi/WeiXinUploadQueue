@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import cn.ihealthbaby.client.model.RiskScore;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 
 /**
  * @author by kang on 2015/9/1.
@@ -39,7 +40,26 @@ public class ResultDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 dismiss();
+                if (onFinishQuit != null) {
+                    onFinishQuit.quit();
+                }
             }
         });
     }
+
+
+    public OnFinishQuit onFinishQuit;
+
+    public interface OnFinishQuit {
+        void quit();
+    }
+
+    public void setOnFinishQuit(OnFinishQuit onFinishQuit) {
+        this.onFinishQuit = onFinishQuit;
+    }
+
+
 }
+
+
+

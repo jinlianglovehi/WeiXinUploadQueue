@@ -40,13 +40,11 @@ public class UploadFileEngine {
     private DefaultCallback<UploadModel> callable4;
     private UserInfoForm form;
     private String key;
-    ApiManager instance;
 
     public UploadFileEngine(Context context, UserInfoForm form,CustomDialog customDialog){
         this.context=context;
         this.customDialog=customDialog;
         this.form=form;
-        instance = ApiManager.getInstance();
         initHandler();
     }
 
@@ -113,7 +111,7 @@ public class UploadFileEngine {
         ApiManager.getInstance().uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
             @Override
             public void call(Result<UploadModel> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus()== Result.SUCCESS) {
                     UploadModel data = t.getData();
                     uploadFile(file, data.getKey(), data.getToken());
                 } else {
@@ -133,7 +131,7 @@ public class UploadFileEngine {
         ApiManager.getInstance().uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
             @Override
             public void call(Result<UploadModel> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus()==Result.SUCCESS) {
                     UploadModel data = t.getData();
                     uploadFile(dataBty, data.getKey(), data.getToken());
                 } else {
@@ -153,13 +151,12 @@ public class UploadFileEngine {
 
     public void completeInfoAction(){
         form.setHeadPic(key);
-        instance.userApi.completeInfo(form, new HttpClientAdapter.Callback<User>() {
+        ApiManager.getInstance().userApi.completeInfo(form, new HttpClientAdapter.Callback<User>() {
             @Override
             public void call(Result<User> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus()==Result.SUCCESS) {
                     User data = t.getData();
                     if (data != null) {
-//                        WeiTaiXinApplication.user = data;
                         SPUtil.saveUser(context,data);
                         if (finishActivity != null) {
                             WeiTaiXinApplication.getInstance().putValue("InfoEdit","true");
@@ -174,7 +171,7 @@ public class UploadFileEngine {
                         finishActivity.onFinishActivity(false);
                     }
                     WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
-                    ToastUtil.show(context, "完善个人资料失败");
+                    ToastUtil.show(context, "完善个人资料失败" + t.getMsgMap());
                 }
                 customDialog.dismiss();
             }
@@ -185,19 +182,17 @@ public class UploadFileEngine {
     public void updateHeadPicAction(){
         UpdateHeadPicForm updateHeadPicForm=new UpdateHeadPicForm();
         updateHeadPicForm.setHeadPicPath(key);
-        instance.userApi.updateHeadPic(updateHeadPicForm, new HttpClientAdapter.Callback<String>() {
+        ApiManager.getInstance().userApi.updateHeadPic(updateHeadPicForm, new HttpClientAdapter.Callback<String>() {
             @Override
             public void call(Result<String> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus()==Result.SUCCESS) {
                     String headPicStr = t.getData();
                     SPUtil.saveHeadPic(context,headPicStr);
-//                    WeiTaiXinApplication.user.setHeadPic(headPicStr);
                     LogUtil.e("errdata", "errdata服务器头像上传: " + headPicStr);
                     ToastUtil.show(context.getApplicationContext(), "服务器头像上传成功");
                 } else {
-                    ToastUtil.show(context.getApplicationContext(), "服务器头像上传失败");
+                    ToastUtil.show(context.getApplicationContext(), "服务器头像上传失败"+t.getMsgMap());
                 }
-                LogUtil.e("errdata", "errdata服务器头像上传: "+t.isSuccess());
                 customDialog.dismiss();
             }
         },getRequestTag());

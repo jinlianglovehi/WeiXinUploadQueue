@@ -20,6 +20,7 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 
 public class ProtocolActivity extends BaseActivity {
@@ -87,8 +88,10 @@ public class ProtocolActivity extends BaseActivity {
         ApiManager.getInstance().urlApi.getPrivacyAgreementUrl(new HttpClientAdapter.Callback<String>() {
             @Override
             public void call(Result<String> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus() == Result.SUCCESS) {
                     mWebView.loadUrl(t.getData());
+                } else {
+                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
                 }
                 customDialog.dismiss();
             }

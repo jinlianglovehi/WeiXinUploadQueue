@@ -25,7 +25,7 @@ public class AdviceSettingSP {
                 ApiManager.getInstance().adviceApi.getAdviceSetting(hid, new HttpClientAdapter.Callback<AdviceSetting>() {
                     @Override
                     public void call(Result<AdviceSetting> t) {
-                        if (t.isSuccess()) {
+                        if (t.getStatus()== Result.SUCCESS) {
                             AdviceSetting data = t.getData();
                             if (data != null) {
                                 SPUtil.saveAdviceSetting(context, data);

@@ -49,6 +49,8 @@ public class GradedActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("高危评分");
+        back.setVisibility(View.INVISIBLE);
+
 
         long hospitalId = 0;
 
@@ -57,19 +59,19 @@ public class GradedActivity extends BaseActivity {
             hospitalId = user.getServiceInfo().getHospitalId();
             LogUtil.e("hospitalId", "hospitalId: " + hospitalId);
         } else {
-            ToastUtil.show(getApplicationContext(), "暂时没有问题~~~");
+            ToastUtil.show(getApplicationContext(), "暂时没有问题哦");
             return;
         }
 
         ApiManager.getInstance().riskScoreApi.getQuestions(hospitalId, new HttpClientAdapter.Callback<ApiList<Question>>() {
             @Override
             public void call(Result<ApiList<Question>> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus()==Result.SUCCESS) {
                     questionList = t.getData();
                     questionIndex = 0;
                     start();
                 } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsg());
+                    ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
                 }
             }
         }, getRequestTag());
@@ -116,11 +118,11 @@ public class GradedActivity extends BaseActivity {
             ApiManager.getInstance().riskScoreApi.submitQuestionnaire(mAnswerForms, new HttpClientAdapter.Callback<RiskScore>() {
                 @Override
                 public void call(Result<RiskScore> t) {
-                    if (t.isSuccess()) {
+                    if (t.getStatus()==Result.SUCCESS) {
                         mRiskScore = t.getData();
                         result();
                     } else {
-                        ToastUtil.show(getApplicationContext(), t.getMsg());
+                        ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
                     }
                 }
             }, getRequestTag());
@@ -133,13 +135,21 @@ public class GradedActivity extends BaseActivity {
         resultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         resultDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         resultDialog.show();
-
+        resultDialog.setOnFinishQuit(new ResultDialog.OnFinishQuit() {
+            @Override
+            public void quit() {
+                GradedActivity.this.finish();
+            }
+        });
     }
+
 
     @OnClick(R.id.back)
     public void back() {
         finish();
     }
+
+
 }
 
 

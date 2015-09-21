@@ -39,6 +39,8 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.library.tools.ImageTool;
 import cn.ihealthbaby.weitaixin.UploadFileEngine;
+import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
+import cn.ihealthbaby.weitaixin.ui.mine.SetSystemGuardianActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.MyPoPoWin;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
@@ -87,6 +89,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         ButterKnife.bind(this);
 
         title_text.setText("完善个人信息");
+        back.setVisibility(View.INVISIBLE);
 
         form = new UserInfoForm();
 
@@ -122,10 +125,11 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         super.onResume();
     }
 
-    @OnClick(R.id.back)
-    public void onBack(RelativeLayout view) {
-        this.finish();
-    }
+
+//    @OnClick(R.id.back)
+//    public void onBack(RelativeLayout view) {
+//        this.finish();
+//    }
 
 
     @OnClick(R.id.iv_head_icon_info)
@@ -227,6 +231,8 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
                 public void onFinishActivity(boolean isFinish) {
                     if (isFinish) {
                         WeiTaiXinApplication.getInstance().putValue("InfoEdit", "true");
+                        Intent intent=new Intent(getApplicationContext(), GradedActivity.class);
+                        startActivity(intent);
                         InfoEditActivity.this.finish();
                     }
                 }

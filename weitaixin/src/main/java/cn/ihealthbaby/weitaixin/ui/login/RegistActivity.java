@@ -71,7 +71,6 @@ public class RegistActivity extends BaseActivity {
 
         title_text.setText("手机号注册");
 
-        instance = ApiManager.getInstance();
 
 //      tv_regist_action.setEnabled(false);
         ivShowPassword.setTag("0");
@@ -156,13 +155,12 @@ public class RegistActivity extends BaseActivity {
 
     public boolean isHasAuthCode = false;
 
-    //    public boolean isLogining=false;
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode() {
-        instance.accountApi.getAuthCode(phone_number, 0, new HttpClientAdapter.Callback<Boolean>() {
+        ApiManager.getInstance().accountApi.getAuthCode(phone_number, 0, new HttpClientAdapter.Callback<Boolean>() {
             @Override
             public void call(Result<Boolean> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus()==Result.SUCCESS) {
                     Boolean data = t.getData();
                     if (data) {
                         isHasAuthCode = true;
@@ -174,8 +172,7 @@ public class RegistActivity extends BaseActivity {
                         ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + ",请重新获取验证码");
                     }
                 } else {
-                    LogUtil.e("Regist", "Regist " + t.getMsgMap());
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + "");
+                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+ "");
                     isHasAuthCode = false;
                     cancel();
                 }
@@ -192,7 +189,6 @@ public class RegistActivity extends BaseActivity {
     }
 
     private RegForm regForm;
-    private ApiManager instance;
 
     @OnClick(R.id.tv_regist_action)
     public void tvRegistAction() {
@@ -200,10 +196,10 @@ public class RegistActivity extends BaseActivity {
             if (mChecked) {
                 tvRegistAction2();
             } else {
-                ToastUtil.show(getApplicationContext(), "不接受，不能注册哦~~");
+                ToastUtil.show(getApplicationContext(), "不接受协议，不能注册哦");
             }
         } else {
-            ToastUtil.show(getApplicationContext(), "先获取验证码~~");
+            ToastUtil.show(getApplicationContext(), "请先获取验证码");
         }
     }
 
@@ -245,25 +241,21 @@ public class RegistActivity extends BaseActivity {
         final CustomDialog customDialog = new CustomDialog();
         final Dialog dialog = customDialog.createDialog1(this, "注册中...");
         dialog.show();
-//      isLogining=true;
-        instance.accountApi.register(regForm, new HttpClientAdapter.Callback<User>() {
+        ApiManager.getInstance().accountApi.register(regForm, new HttpClientAdapter.Callback<User>() {
             @Override
             public void call(Result<User> t) {
-                if (customDialog.isNoCancel) {
-                    if (t.isSuccess()) {
+                    if (t.getStatus()==Result.SUCCESS) {
                         User data = t.getData();
                         if (data != null && data.getAccountToken() != null) {
                             ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
                             loginActionOfReg();
                         } else {
-                            ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap() + "注册失败");
+                            ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+"");
                         }
                     } else {
-//                        LogUtil.e("Regist", "Regist " + t.getMsgMap());
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap() + "注册失败");
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+"");
                     }
-                }
-                dialog.dismiss();
+                customDialog.dismiss();
             }
         }, getRequestTag());
     }
@@ -273,32 +265,25 @@ public class RegistActivity extends BaseActivity {
 
     public void loginActionOfReg() {
         loginForm = new LoginByPasswordForm(phone_number, password, "123456789", 1.0d, 1.0d);
-        instance = ApiManager.getInstance();
 
-        instance.accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
+        ApiManager.getInstance().accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
             @Override
             public void call(Result<User> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus() == Result.SUCCESS) {
                     User data = t.getData();
-//                    System.err.println("登录AccountToken： " + data.getAccountToken());
                     if (data.getAccountToken() != null) {
-//                        WeiTaiXinApplication.getInstance().isLogin = true;
-//                        WeiTaiXinApplication.accountToken = data.getAccountToken();
                         WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-//                        WeiTaiXinApplication.getInstance().phone_number = phone_number;
-//                        WeiTaiXinApplication.getInstance().saveUser(data);
                         SPUtil.saveUser(RegistActivity.this,data);
-
-//                        String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
 
                         Intent intentService = new Intent(getApplicationContext(), AdviceSettingService.class);
                         startService(intentService);
 
                         if(data.getIsInit()){
-                            Intent intentAct=new Intent(getApplicationContext(),InfoEditActivity.class);
-                            startActivity(intentAct);
+                            Intent intentIsInit=new Intent(getApplicationContext(), InfoEditActivity.class);
+                            startActivity(intentIsInit);
+                            RegistActivity.this.finish();
+                            return;
                         }
-
 
                         Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
                         startActivity(intentMain);
@@ -323,7 +308,6 @@ public class RegistActivity extends BaseActivity {
             ivAgreeRegister.setImageResource(R.drawable.pitch_un);
         }
     }
-
 
 
 }

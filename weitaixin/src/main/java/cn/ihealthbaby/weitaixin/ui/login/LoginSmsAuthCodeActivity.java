@@ -230,36 +230,37 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
         ApiManager.getInstance().accountApi.loginByAuthCode(loginByAuthForm, new HttpClientAdapter.Callback<User>() {
             @Override
             public void call(Result<User> t) {
-                if (customDialog.isNoCancel) {
-                    if (t.isSuccess()) {
+                    if (t.getStatus() == Result.SUCCESS) {
                         User data = t.getData();
                         if (data != null && data.getAccountToken() != null) {
-//                            WeiTaiXinApplication.accountToken = data.getAccountToken();
                             WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-//                            WeiTaiXinApplication.getInstance().phone_number = phone_number;
-                            SPUtil.saveUser(LoginSmsAuthCodeActivity.this,data);
-//                            WeiTaiXinApplication.getInstance().saveUser(data);
+                            SPUtil.saveUser(LoginSmsAuthCodeActivity.this, data);
                             ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), "登录成功");
-//                            WeiTaiXinApplication.getInstance().isLogin = true;
-                            if(data.getIsInit()){
-                                Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
-                                startActivity(intent);
-                            }
+
 
                             Intent intent = new Intent(getApplicationContext(), AdviceSettingService.class);
                             startService(intent);
+
+                            if(data.getIsInit()){
+                                LoginSmsAuthCodeActivity.this.finish();
+                                Intent intentIsInit=new Intent(getApplicationContext(), InfoEditActivity.class);
+                                startActivity(intentIsInit);
+                                customDialog.dismiss();
+                                return;
+                            }
+
+
 
                             Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
                             startActivity(intentMain);
                             LoginSmsAuthCodeActivity.this.finish();
                         } else {
-                            ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + "");
+                            ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap()+ "");
                         }
                     } else {
-                        ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + "");
+                        ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap()+ "");
                     }
-                }
-                dialog.dismiss();
+                customDialog.dismiss();
             }
         }, getRequestTag());
     }

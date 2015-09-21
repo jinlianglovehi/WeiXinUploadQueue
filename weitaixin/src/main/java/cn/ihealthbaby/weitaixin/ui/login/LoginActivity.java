@@ -126,46 +126,42 @@ public class LoginActivity extends BaseActivity {
 
 
             loginForm = new LoginByPasswordForm(phone_number_login, password_login, "123456789", 1.0d, 1.0d);
-            instance = ApiManager.getInstance();
 
-            instance.accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
+            ApiManager.getInstance().accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
                 @Override
                 public void call(Result<User> t) {
-                    if (customDialog.isNoCancel) {
-                        if (t.isSuccess()) {
-                            User data=t.getData();
-                            if (data!=null&&data.getAccountToken()!=null) {
-//                                WeiTaiXinApplication.accountToken=data.getAccountToken();
-                                WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-//                                WeiTaiXinApplication.getInstance().phone_number=phone_number_login;
-                                SPUtil.saveUser(LoginActivity.this, data);
-//                                WeiTaiXinApplication.getInstance().saveUser(data);
-                                ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
-//                                WeiTaiXinApplication.getInstance().isLogin=true;
+                    if (t.getStatus() == Result.SUCCESS) {
+                        User data=t.getData();
+                        if (data!=null&&data.getAccountToken()!=null) {
+                            WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
+                            SPUtil.saveUser(LoginActivity.this, data);
+                            ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
 
-//                                String value = WeiTaiXinApplication.getInstance().getValue("InfoEdit", "");
-                                if(data.getIsInit()){
-                                    Intent intent=new Intent(getApplicationContext(),InfoEditActivity.class);
-                                    startActivity(intent);
-                                }
-                                Intent intent=new Intent(getApplicationContext(), AdviceSettingService.class);
-                                startService(intent);
+                            Intent intent=new Intent(getApplicationContext(), AdviceSettingService.class);
+                            startService(intent);
 
-                                Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
-                                startActivity(intentMain);
+                            if(data.getIsInit()){
+                                customDialog.dismiss();
+                                Intent intentIsInit=new Intent(getApplicationContext(), InfoEditActivity.class);
+                                startActivity(intentIsInit);
                                 LoginActivity.this.finish();
-                            }else{
-                                ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account").toString()+"");
+                                return;
                             }
+
+
+                            Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
+                            startActivity(intentMain);
+                            LoginActivity.this.finish();
                         }else{
-                            ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account")+"");
+                            ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap() + "");
                         }
+                    } else {
+                        ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap() + "");
                     }
-                    dialog.dismiss();
+                    customDialog.dismiss();
                 }
             }, getRequestTag());
     }
-
 
 
     @OnClick(R.id.tv_regist_action_login)
@@ -190,11 +186,8 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+
 }
-
-
-
-
 
 
 
