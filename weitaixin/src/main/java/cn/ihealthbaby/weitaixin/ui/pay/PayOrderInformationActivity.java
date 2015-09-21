@@ -113,7 +113,7 @@ public class PayOrderInformationActivity extends BaseActivity {
 
                 priceCount -= oldProduct.getPrice();
                 priceCount += product.getPrice();
-                tvPriceGoingOrder.setText("总计￥" + priceCount + "");
+                tvPriceGoingOrder.setText("总计￥" + (priceCount/100) + "");
             }
         });
 
@@ -175,7 +175,7 @@ public class PayOrderInformationActivity extends BaseActivity {
                     LocalProductData.getLocal().put(LocalProductData.Name04, consultProduct);
 
 
-                    tvPriceGoingOrder.setText("总计￥"+priceCount);
+                    tvPriceGoingOrder.setText("总计￥"+(priceCount/100));
                 } else {
                     ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
                 }
@@ -264,7 +264,7 @@ public class PayOrderInformationActivity extends BaseActivity {
 
             Product product = this.datas.get(position);
             viewHolder.tvName.setText(product.getName()+"");
-            viewHolder.tvPrice.setText("￥"+product.getPrice()+"");
+            viewHolder.tvPrice.setText("￥"+(product.getPrice()/100)+"");
 
             return convertView;
         }
@@ -337,7 +337,7 @@ public class PayOrderInformationActivity extends BaseActivity {
 
             Product product = this.datas.get(position);
             viewHolder.tvName.setText(product.getName() + "");
-            viewHolder.tvPrice.setText("￥"+product.getPrice()+"");
+            viewHolder.tvPrice.setText("￥"+(product.getPrice()/100)+"");
             viewHolder.tvDescription.setText(product.getDescription()+"");
 
             if (currentPosition == position) {
@@ -433,7 +433,7 @@ public class PayOrderInformationActivity extends BaseActivity {
             final Product product = this.datas.get(position);
             final int goodsTPrice=goodsTotalPrice.get(position);
             viewHolder.tvName.setText(product.getName()+"");
-            viewHolder.tvPrice.setText("￥" + goodsTPrice + "");
+            viewHolder.tvPrice.setText("￥" + (goodsTPrice/100) + "");
 
             int tCount = countGoods.get(position);
             viewHolder.tvCountText.setText(tCount + "");
@@ -475,7 +475,7 @@ public class PayOrderInformationActivity extends BaseActivity {
                         viewHolder.tvCountText.setText(countGoods.get(position) + "");
                         priceCount -= product.getPrice();
                     }
-                    tvPriceGoingOrder.setText("总计￥"+priceCount);
+                    tvPriceGoingOrder.setText("总计￥"+(priceCount/100));
                     notifyDataSetChanged();
                 }
             });
@@ -500,7 +500,7 @@ public class PayOrderInformationActivity extends BaseActivity {
                         viewHolder.tvCountText.setText(countGoods.get(position) + "");
                         priceCount += product.getPrice();
                     }
-                    tvPriceGoingOrder.setText("总计￥"+priceCount);
+                    tvPriceGoingOrder.setText("总计￥"+(priceCount/100));
                     notifyDataSetChanged();
                 }
             });
@@ -579,7 +579,7 @@ public class PayOrderInformationActivity extends BaseActivity {
 
             Product product = this.datas.get(position);
             viewHolder.tvName.setText(product.getName()+"");
-            viewHolder.tvPrice.setText("￥"+product.getPrice()+"");
+            viewHolder.tvPrice.setText("￥"+(product.getPrice()/100)+"");
             viewHolder.tvDescription.setText(product.getDescription()+"");
 
             return convertView;

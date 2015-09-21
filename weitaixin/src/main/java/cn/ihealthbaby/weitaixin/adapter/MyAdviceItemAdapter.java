@@ -218,10 +218,13 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		//毫秒
 		viewHolder.tvTestTimeLong.setText(DateTimeTool.getTime2(adviceItem.getTestTimeLong()*1000));//
 		viewHolder.tvDateTime.setText(DateTimeTool.date2Str(adviceItem.getTestTime(), "MM月dd日 yy:mm"));
-		//1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
-		if(adviceItem.getStatus()<0||adviceItem.getStatus()>4){
+
+
+
+
+		if (adviceItem.getStatus() < 0 || adviceItem.getStatus() > 4) {
 			viewHolder.tvAdviceStatus.setText("");
-		}else{
+		} else {
 			viewHolder.tvAdviceStatus.setText(strFlag[adviceItem.getStatus()]);
 		}
 

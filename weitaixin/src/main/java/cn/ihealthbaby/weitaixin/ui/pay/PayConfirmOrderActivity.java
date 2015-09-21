@@ -117,7 +117,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
 
     private HashMap<Integer,Integer>  countGoods=new HashMap<Integer,Integer>();
     private void pullData() {
-        tvPrice.setText("总计￥"+priceCount+"");
+        tvPrice.setText("总计￥"+(priceCount/100)+"");
         myGoodsListAdapter=new MyGoodsListAdapter(this,null);
         lvGoodsList.setAdapter(myGoodsListAdapter);
 
@@ -142,7 +142,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
         myGoodsListAdapter.setDatas(datas);
         myGoodsListAdapter.notifyDataSetChanged();
 
-        tvPrice.setText("总计￥" + priceCount + "");
+        tvPrice.setText("总计￥" + (priceCount/100) + "");
         LocalProductData.getLocal().put(LocalProductData.PriceCount, priceCount);
     }
 
@@ -365,7 +365,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 viewHolder.tvName.setText(entry.getKey()+"");
-                viewHolder.tvPrice.setText("￥" + entry.getValue() + "");
+                viewHolder.tvPrice.setText("￥" + (Integer.parseInt(entry.getValue()+"")/100) + "");
             }
             return convertView;
         }

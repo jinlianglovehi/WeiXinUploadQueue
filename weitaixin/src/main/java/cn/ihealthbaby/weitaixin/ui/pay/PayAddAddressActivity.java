@@ -163,11 +163,11 @@ public class PayAddAddressActivity extends BaseActivity {
         ApiManager.getInstance().addressApi.create(addressForm, new HttpClientAdapter.Callback<Void>() {
             @Override
             public void call(Result<Void> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus() == Result.SUCCESS) {
                     Void data = t.getData();
                     finish();
-                }else{
-                    ToastUtil.show(getApplicationContext(),t.getMsgMap()+"");
+                } else {
+                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
                 }
                 customDialog.dismiss();
             }

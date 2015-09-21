@@ -24,9 +24,10 @@ import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 /**
  * Created by chenweihua on 2015/9/21.
  */
-public class WelcomeActivity extends BaseActivity  {
+public class WelcomeActivity extends BaseActivity {
 
-    @Bind(R.id.tv_enter) TextView tv_enter;
+    @Bind(R.id.tv_enter)
+    TextView tv_enter;
 
 
     @Override
@@ -35,14 +36,14 @@ public class WelcomeActivity extends BaseActivity  {
 
         if (SPUtil.isNoFirstStartApp(this)) {
             if (SPUtil.isLogin(this)) {
-                if(SPUtil.getUser(this).getIsInit()){
-                    Intent intentIsInit=new Intent(this, InfoEditActivity.class);
+                if (SPUtil.getUser(this).getIsInit()) {
+                    Intent intentIsInit = new Intent(this, InfoEditActivity.class);
                     startActivity(intentIsInit);
                     return;
                 }
 
-                if(!SPUtil.getUser(this).getHasRiskscore()){
-                    Intent intentHasRiskscore=new Intent(this, GradedActivity.class);
+                if (!SPUtil.getUser(this).getHasRiskscore()) {
+                    Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
                     startActivity(intentHasRiskscore);
                     return;
                 }
@@ -57,7 +58,7 @@ public class WelcomeActivity extends BaseActivity  {
             }
         } else {
             if (SPUtil.getUser(this) != null) {
-                final CustomDialog customDialog=new CustomDialog();
+                final CustomDialog customDialog = new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(this, "刷新用户数据...");
                 dialog.show();
 
@@ -71,11 +72,11 @@ public class WelcomeActivity extends BaseActivity  {
                     @Override
                     public void handleException() {
                         customDialog.dismiss();
-                        Intent intentHasRiskscore=new Intent(WelcomeActivity.this, LoginActivity.class);
+                        Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
                         startActivity(intentHasRiskscore);
                         finish();
                     }
-                }),getRequestTag());
+                }), getRequestTag());
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
@@ -97,15 +98,15 @@ public class WelcomeActivity extends BaseActivity  {
     @OnClick(R.id.tv_enter)
     public void tv_enter() {
         if (SPUtil.isLogin(this)) {
-            if(SPUtil.getUser(this).getIsInit()){
-                Intent intentIsInit=new Intent(this, InfoEditActivity.class);
+            if (SPUtil.getUser(this).getIsInit()) {
+                Intent intentIsInit = new Intent(this, InfoEditActivity.class);
                 startActivity(intentIsInit);
                 finish();
                 return;
             }
 
-            if(!SPUtil.getUser(this).getHasRiskscore()){
-                Intent intentHasRiskscore=new Intent(this, GradedActivity.class);
+            if (!SPUtil.getUser(this).getHasRiskscore()) {
+                Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
                 startActivity(intentHasRiskscore);
                 finish();
                 return;
@@ -121,7 +122,7 @@ public class WelcomeActivity extends BaseActivity  {
         }
     }
 
-    public void nextAction(){
+    public void nextAction() {
 
     }
 
