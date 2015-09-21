@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.ui.monitor;
+package cn.ihealthbaby.weitaixin.ui.record;
 
 import android.app.Dialog;
 import android.graphics.Color;
