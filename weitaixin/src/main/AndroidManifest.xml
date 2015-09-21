@@ -29,7 +29,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.login.RegistActivity" />
-        <activity android:name=".ui.MeMainFragmentActivity" />
+        <activity android:name=".ui.MeMainFragmentActivity"
+            android:launchMode="singleTask"
+            />
         <activity android:name=".ui.mine.SetSystemActivity" />
         <activity android:name=".ui.mine.WoInformationActivity" />
         <activity android:name=".ui.login.InfoEditActivity" />
