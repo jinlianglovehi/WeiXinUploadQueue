@@ -143,11 +143,13 @@ public class LoginActivity extends BaseActivity {
                             }
 
                             if(!data.getHasRiskscore()){
-                                customDialog.dismiss();
-                                Intent intentHasRiskscore=new Intent(LoginActivity.this, GradedActivity.class);
-                                startActivity(intentHasRiskscore);
-                                LoginActivity.this.finish();
-                                return;
+                                if (SPUtil.getHospitalId(LoginActivity.this) != -1) {
+                                    customDialog.dismiss();
+                                    Intent intentHasRiskscore=new Intent(LoginActivity.this, GradedActivity.class);
+                                    startActivity(intentHasRiskscore);
+                                    LoginActivity.this.finish();
+                                    return;
+                                }
                             }
 
                             customDialog.dismiss();

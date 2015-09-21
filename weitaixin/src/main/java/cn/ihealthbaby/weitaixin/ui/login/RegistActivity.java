@@ -287,7 +287,7 @@ public class RegistActivity extends BaseActivity {
                         }
 
 
-                        if(!data.getHasRiskscore()){
+                        if(!data.getHasRiskscore()&& SPUtil.getHospitalId(RegistActivity.this) != -1){
                             Intent intentHasRiskscore=new Intent(RegistActivity.this, GradedActivity.class);
                             startActivity(intentHasRiskscore);
                             RegistActivity.this.finish();

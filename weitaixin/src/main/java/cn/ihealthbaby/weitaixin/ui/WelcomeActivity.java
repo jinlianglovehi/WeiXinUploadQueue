@@ -17,6 +17,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
@@ -35,28 +36,6 @@ public class WelcomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         if (SPUtil.isNoFirstStartApp(this)) {
-            if (SPUtil.isLogin(this)) {
-                if (SPUtil.getUser(this).getIsInit()) {
-                    Intent intentIsInit = new Intent(this, InfoEditActivity.class);
-                    startActivity(intentIsInit);
-                    return;
-                }
-
-                if (!SPUtil.getUser(this).getHasRiskscore()) {
-                    Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
-                    startActivity(intentHasRiskscore);
-                    return;
-                }
-
-                Intent intent = new Intent(this, MeMainFragmentActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        } else {
             if (SPUtil.getUser(this) != null) {
                 final CustomDialog customDialog = new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(this, "刷新用户数据...");
@@ -78,10 +57,31 @@ public class WelcomeActivity extends BaseActivity {
                     }
                 }), getRequestTag());
             } else {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                if (SPUtil.isLogin(this)) {
+                    if (SPUtil.getUser(this).getIsInit()) {
+                        Intent intentIsInit = new Intent(this, InfoEditActivity.class);
+                        startActivity(intentIsInit);
+                        return;
+                    }
+
+                    if (!SPUtil.getUser(this).getHasRiskscore()) {
+                        if (SPUtil.getHospitalId(this) != -1) {
+                            Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
+                            startActivity(intentHasRiskscore);
+                        }
+                        return;
+                    }
+
+                    Intent intent = new Intent(this, MeMainFragmentActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
+
         }
 
 
@@ -105,7 +105,7 @@ public class WelcomeActivity extends BaseActivity {
                 return;
             }
 
-            if (!SPUtil.getUser(this).getHasRiskscore()) {
+            if (!SPUtil.getUser(this).getHasRiskscore() && SPUtil.getHospitalId(this) != -1) {
                 Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
                 startActivity(intentHasRiskscore);
                 finish();

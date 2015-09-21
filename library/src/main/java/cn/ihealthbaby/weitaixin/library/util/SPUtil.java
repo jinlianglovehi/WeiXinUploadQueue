@@ -234,6 +234,12 @@ public class SPUtil {
     }
 
 
+    public static long getHospitalId(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_SERVICEINFO, Context.MODE_PRIVATE);
+        long HospitalId = sp.getLong("HospitalId", -1);
+        return HospitalId;
+    }
+
     public static boolean isLogin(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
         String accountToken = sp.getString("AccountToken", "");

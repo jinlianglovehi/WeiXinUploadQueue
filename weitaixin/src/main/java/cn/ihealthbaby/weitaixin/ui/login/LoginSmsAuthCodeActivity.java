@@ -250,9 +250,9 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                                 return;
                             }
 
-                            if(!data.getHasRiskscore()){
+                            if (!data.getHasRiskscore() && SPUtil.getHospitalId(LoginSmsAuthCodeActivity.this) != -1) {
                                 customDialog.dismiss();
-                                Intent intentHasRiskscore=new Intent(LoginSmsAuthCodeActivity.this, GradedActivity.class);
+                                Intent intentHasRiskscore = new Intent(LoginSmsAuthCodeActivity.this, GradedActivity.class);
                                 startActivity(intentHasRiskscore);
                                 LoginSmsAuthCodeActivity.this.finish();
                                 return;

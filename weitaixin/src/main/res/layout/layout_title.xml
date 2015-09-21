@@ -60,7 +60,7 @@
             android:layout_width="46dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:padding="10dp"
+            android:padding="16dp"
             android:scaleType="fitXY"
             android:src="@drawable/address_delect" />
 
