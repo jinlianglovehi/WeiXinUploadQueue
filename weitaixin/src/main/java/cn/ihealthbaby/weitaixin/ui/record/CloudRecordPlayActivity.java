@@ -1,13 +1,13 @@
 package cn.ihealthbaby.weitaixin.ui.record;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,6 +46,7 @@ import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
+import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 
@@ -65,10 +66,6 @@ public class CloudRecordPlayActivity extends BaseActivity {
 	ImageView play;
 	@Bind(R.id.replay)
 	ImageView replay;
-	@Bind(R.id.tv_record)
-	TextView tvRecord;
-	@Bind(R.id.btn_start)
-	ImageView btnStart;
 	@Bind(R.id.rl_function)
 	RelativeLayout rlFunction;
 	@Bind(R.id.back)
@@ -81,16 +78,14 @@ public class CloudRecordPlayActivity extends BaseActivity {
 	TextView bpm;
 	@Bind(R.id.red_heart)
 	ImageView redHeart;
-	@Bind(R.id.ivDelectAction)
-	ImageView ivDelectAction;
-	@Bind(R.id.tvDelectAction)
-	TextView tvDelectAction;
-	@Bind(R.id.flDelAction)
-	FrameLayout flDelAction;
 	@Bind(R.id.tv_start_time)
 	TextView tvStartTime;
 	@Bind(R.id.tv_consum_time)
 	TextView tvConsumTime;
+	@Bind(R.id.tv_business)
+	TextView tvBusiness;
+	@Bind(R.id.btn_business)
+	ImageView btnBusiness;
 	private int width;
 	private ExpendableCountDownTimer countDownTimer;
 	private MediaPlayer mediaPlayer;
@@ -134,24 +129,31 @@ public class CloudRecordPlayActivity extends BaseActivity {
 
 	private void changeButton() {
 		int status = getIntent().getIntExtra(Constants.INTENT_STATUS, -1);
+		Intent intent = new Intent();
 		switch (status) {
-			//0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除 4 本地数据 -1未获取到数据
+			//0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除(弃用) 4 本地数据 -1未获取到数据
 			case 0:
-
+				btnBusiness.setImageResource(R.drawable.button_ask_doctor);
+				intent.setClass(getApplicationContext(), AskDoctorActivity.class);
 				break;
 			case 1:
+				btnBusiness.setImageResource(R.drawable.button_wait_reply);
+				intent.setClass(getApplicationContext(), WaitReplyingActivity.class);
 				break;
 			case 2:
-				break;
-			case 3:
+				btnBusiness.setImageResource(R.drawable.button_check);
+				intent.setClass(getApplicationContext(), ReplyedActivity.class);
 				break;
 			case 4:
+				btnBusiness.setImageResource(R.drawable.button_upload);
 				break;
 			case -1:
+				ToastUtil.show(getApplicationContext(), "数据格式错误,status");
 				break;
 			default:
 				break;
 		}
+		startActivity(intent);
 	}
 
 	private void config() {
@@ -163,13 +165,15 @@ public class CloudRecordPlayActivity extends BaseActivity {
 
 			@Override
 			public void onStart(long startTime) {
-				try {
-					mediaPlayer.reset();
-					mediaPlayer.setDataSource(path);
-					mediaPlayer.prepare();
-					mediaPlayer.start();
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (path != null) {
+					try {
+						mediaPlayer.reset();
+						mediaPlayer.setDataSource(path);
+						mediaPlayer.prepare();
+						mediaPlayer.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
 			}
@@ -208,8 +212,10 @@ public class CloudRecordPlayActivity extends BaseActivity {
 			@Override
 			public void onFinish() {
 				ToastUtil.show(getApplicationContext(), "播放结束");
-				mediaPlayer.stop();
-				mediaPlayer.reset();
+				if (path != null) {
+					mediaPlayer.stop();
+					mediaPlayer.reset();
+				}
 			}
 
 			@Override
@@ -256,7 +262,9 @@ public class CloudRecordPlayActivity extends BaseActivity {
 		if (file.exists()) {
 			try {
 				path = file.getPath();
-				mediaPlayer.setDataSource(path);
+				if (path != null) {
+					mediaPlayer.setDataSource(path);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -276,7 +284,9 @@ public class CloudRecordPlayActivity extends BaseActivity {
 				if (statusCode == Constants.CODE_200_OK) {
 					try {
 						path = file.getPath();
-						mediaPlayer.setDataSource(path);
+						if (path != null) {
+							mediaPlayer.setDataSource(path);
+						}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
