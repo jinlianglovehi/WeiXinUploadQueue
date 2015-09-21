@@ -32,6 +32,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 
 public class RegistActivity extends BaseActivity {
 
@@ -279,11 +280,20 @@ public class RegistActivity extends BaseActivity {
                         startService(intentService);
 
                         if(data.getIsInit()){
-                            Intent intentIsInit=new Intent(getApplicationContext(), InfoEditActivity.class);
+                            Intent intentIsInit=new Intent(RegistActivity.this, InfoEditActivity.class);
                             startActivity(intentIsInit);
                             RegistActivity.this.finish();
                             return;
                         }
+
+
+                        if(data.getHasRiskscore()){
+                            Intent intentHasRiskscore=new Intent(RegistActivity.this, GradedActivity.class);
+                            startActivity(intentHasRiskscore);
+                            RegistActivity.this.finish();
+                            return;
+                        }
+
 
                         Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
                         startActivity(intentMain);

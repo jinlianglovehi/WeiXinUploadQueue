@@ -54,10 +54,10 @@ public class PayRentChooseProvincesLeftActivity extends BaseActivity {
         title_text.setText("选择城市");
         EventBus.getDefault().register(this);
 
-        LocalProductData.getLocal().put(LocalProductData.CityId, "");
-        LocalProductData.getLocal().put(LocalProductData.CityName, "");
-        LocalProductData.getLocal().put(LocalProductData.HospitalId, "");
-        LocalProductData.getLocal().put(LocalProductData.HospitalName,"");
+//        LocalProductData.getLocal().put(LocalProductData.CityId, "");
+//        LocalProductData.getLocal().put(LocalProductData.CityName, "");
+//        LocalProductData.getLocal().put(LocalProductData.HospitalId, "");
+//        LocalProductData.getLocal().put(LocalProductData.HospitalName,"");
 
         initView();
         pullData();
@@ -103,7 +103,7 @@ public class PayRentChooseProvincesLeftActivity extends BaseActivity {
         ApiManager.getInstance().addressApi.getProvinces(1, new HttpClientAdapter.Callback<ApiList<Province>>() {
             @Override
             public void call(Result<ApiList<Province>> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus()==Result.SUCCESS) {
                     ApiList<Province> data = t.getData();
 
                     ArrayList<Province> leftCityList = (ArrayList<Province>) data.getList();
@@ -112,7 +112,7 @@ public class PayRentChooseProvincesLeftActivity extends BaseActivity {
                         adapterLeft.setDatas(leftCityList);
                         adapterLeft.notifyDataSetChanged();
                     } else {
-                        ToastUtil.show(getApplicationContext(), "没有数据~~~");
+                        ToastUtil.show(getApplicationContext(), "没有数据");
                     }
                 } else {
                     ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");

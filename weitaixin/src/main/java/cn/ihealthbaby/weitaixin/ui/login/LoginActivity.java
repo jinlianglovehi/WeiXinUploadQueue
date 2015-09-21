@@ -28,6 +28,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 
 public class LoginActivity extends BaseActivity {
 
@@ -142,23 +143,32 @@ public class LoginActivity extends BaseActivity {
 
                             if(data.getIsInit()){
                                 customDialog.dismiss();
-                                Intent intentIsInit=new Intent(getApplicationContext(), InfoEditActivity.class);
+                                Intent intentIsInit=new Intent(LoginActivity.this, InfoEditActivity.class);
                                 startActivity(intentIsInit);
                                 LoginActivity.this.finish();
                                 return;
                             }
 
+                            if(data.getHasRiskscore()){
+                                customDialog.dismiss();
+                                Intent intentHasRiskscore=new Intent(LoginActivity.this, GradedActivity.class);
+                                startActivity(intentHasRiskscore);
+                                LoginActivity.this.finish();
+                                return;
+                            }
 
-                            Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
+                            customDialog.dismiss();
+                            Intent intentMain=new Intent(LoginActivity.this, MeMainFragmentActivity.class);
                             startActivity(intentMain);
                             LoginActivity.this.finish();
                         }else{
                             ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap() + "");
+                            customDialog.dismiss();
                         }
                     } else {
                         ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap() + "");
+                        customDialog.dismiss();
                     }
-                    customDialog.dismiss();
                 }
             }, getRequestTag());
     }

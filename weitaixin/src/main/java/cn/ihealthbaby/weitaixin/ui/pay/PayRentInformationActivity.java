@@ -71,8 +71,6 @@ public class PayRentInformationActivity extends BaseActivity {
 
         cityNameText="";
 
-//        LocalProductData.getLocal().localProductDataMap.remove(LocalProductData.CityId);
-//        LocalProductData.getLocal().localProductDataMap.remove(LocalProductData.CityName);
         LocalProductData.getLocal().localProductDataMap.clear();
 
         EventBus.getDefault().register(this);
@@ -129,6 +127,7 @@ public class PayRentInformationActivity extends BaseActivity {
     public void rl1None() {
         adapter.getDatas().clear();
         adapter.notifyDataSetChanged();
+        tvCityName.setText("请选择城市");
         tvHospitalName.setText("请选择医院");
 
         Intent intent = new Intent(this, PayRentChooseProvincesLeftActivity.class);

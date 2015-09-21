@@ -169,7 +169,7 @@ public class MeMainFragmentActivity extends BaseActivity {
             fragmentTransaction.show(fragment);
         }
         oldFragment = fragment;
-        LogUtil.d("ChildCount==", "ChildCount= %s", this.container.getChildCount());
+//        LogUtil.d("ChildCount==", "ChildCount= %s", this.container.getChildCount());
     }
 
 

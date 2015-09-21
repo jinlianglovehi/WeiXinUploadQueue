@@ -27,6 +27,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 
 public class LoginSmsAuthCodeActivity extends BaseActivity {
 
@@ -242,13 +243,20 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                             startService(intent);
 
                             if(data.getIsInit()){
-                                LoginSmsAuthCodeActivity.this.finish();
-                                Intent intentIsInit=new Intent(getApplicationContext(), InfoEditActivity.class);
-                                startActivity(intentIsInit);
                                 customDialog.dismiss();
+                                LoginSmsAuthCodeActivity.this.finish();
+                                Intent intentIsInit=new Intent(LoginSmsAuthCodeActivity.this, InfoEditActivity.class);
+                                startActivity(intentIsInit);
                                 return;
                             }
 
+                            if(data.getHasRiskscore()){
+                                customDialog.dismiss();
+                                Intent intentHasRiskscore=new Intent(LoginSmsAuthCodeActivity.this, GradedActivity.class);
+                                startActivity(intentHasRiskscore);
+                                LoginSmsAuthCodeActivity.this.finish();
+                                return;
+                            }
 
 
                             Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);

@@ -111,8 +111,9 @@ public class SPUtil {
             editor.putLong("Birthday", user.getBirthday().getTime());
         }
 
-        editor.putInt("TypeId", user.getTypeId());
+
         editor.putBoolean("HasService", user.getHasService());
+        editor.putBoolean("HasRiskscore", user.getHasRiskscore());
 
         if (user.getDeliveryTime() != null) {
             editor.putLong("DeliveryTime", user.getDeliveryTime().getTime());
@@ -138,8 +139,8 @@ public class SPUtil {
         user.setName(sp.getString("Name", ""));
         user.setHeadPic(sp.getString("HeadPic", ""));
         user.setBirthday(new Date(sp.getLong("Birthday", -1)));
-        user.setTypeId(sp.getInt("TypeId", -1));
         user.setHasService(sp.getBoolean("HasService", false));
+        user.setHasRiskscore(sp.getBoolean("HasRiskscore", false));
         user.setDeliveryTime(new Date(sp.getLong("DeliveryTime", -1)));
         user.setCreateTime(new Date(sp.getLong("CreateTime", -1)));
         user.setIsInit(sp.getBoolean("IsInit", false));
