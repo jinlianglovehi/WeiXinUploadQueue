@@ -173,16 +173,20 @@ public class Util {
 
 	public static List<Long> position2Time(List<Integer> positions) {
 		ArrayList<Long> times = new ArrayList<>();
-		for (int position : positions) {
-			times.add((long) (position * 500));
+		if (positions != null && positions.size() != 0) {
+			for (int position : positions) {
+				times.add((long) (position * 500));
+			}
 		}
 		return times;
 	}
 
 	public static List<Integer> time2Position(List<Long> times) {
 		ArrayList<Integer> positions = new ArrayList<>();
-		for (long time : times) {
-			positions.add((int) (time / 500));
+		if (times != null && times.size() != 0) {
+			for (long time : times) {
+				positions.add((int) (time / 500));
+			}
 		}
 		return positions;
 	}

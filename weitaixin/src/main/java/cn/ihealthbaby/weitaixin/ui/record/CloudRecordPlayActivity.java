@@ -12,13 +12,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -36,6 +36,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
+import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
@@ -52,7 +53,6 @@ public class CloudRecordPlayActivity extends BaseActivity {
 	private final static String TAG = "LocalRecordPlayActivity";
 	public String path;
 	public Record record;
-	public String uuid;
 	protected Data data;
 	protected List<Integer> fhrs;
 	protected List<Integer> fetalMove;
@@ -127,10 +127,13 @@ public class CloudRecordPlayActivity extends BaseActivity {
 		final DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
+		mediaPlayer = new MediaPlayer();
 		getData();
+	}
+
+	private void config() {
 		getAdviceSetting();
 		configCurve();
-		mediaPlayer = new MediaPlayer();
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
 			public int fmposition;
 			public int position;
@@ -203,24 +206,43 @@ public class CloudRecordPlayActivity extends BaseActivity {
 		long id = getIntent().getLongExtra(Constants.INTENT_ID, 0);
 		String url = getIntent().getStringExtra(Constants.INTENT_URL);
 		String localRecordId = getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID);
-		final File file = new File(FileUtil.getVoiceDir(getApplicationContext()), localRecordId);
-		if (file.exists()) {
-			return;
-		}
 		if (id == 0) {
 			ToastUtil.show(getApplicationContext(), "获取数据失败");
 			return;
 		}
 		CustomDialog customDialog = new CustomDialog();
-		dialog = customDialog.createDialog1(this, "正在下载胎音数据...");
+		dialog = customDialog.createDialog1(this, "正在下载监测数据...");
 		dialog.show();
-		AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-		try {
-			fileOutputStream = new FileOutputStream(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		ApiManager.getInstance().adviceApi.getAdviceDetail(id, new DefaultCallback<Advice>(getApplicationContext(), new AbstractBusiness<Advice>() {
+			@Override
+			public void handleData(Advice advice) throws Exception {
+				CloudRecordPlayActivity.this.advice = advice;
+				Gson gson = new Gson();
+				RecordData recordData = gson.fromJson(advice.getData(), RecordData.class);
+				data = recordData.getData();
+				fhrs = data.getHeartRate();
+				List<Long> afm = data.getAfm();
+				fetalMove = Util.time2Position(afm);
+				config();
+				if (dialog != null && dialog.isShowing()) {
+					dialog.dismiss();
+				}
+			}
+		}), getRequestTag());
+		final File file = new File(FileUtil.getVoiceDir(getApplicationContext()), localRecordId);
+		if (file.exists()) {
+			try {
+				path = file.getPath();
+				mediaPlayer.setDataSource(path);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
 		}
+		AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 		asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(file) {
+			public String path;
+
 			@Override
 			public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
 				ToastUtil.show(getApplicationContext(), "未获取到音频数据");
@@ -230,22 +252,14 @@ public class CloudRecordPlayActivity extends BaseActivity {
 			public void onSuccess(int statusCode, Header[] headers, File file) {
 				if (statusCode == Constants.CODE_200_OK) {
 					try {
-						mediaPlayer.setDataSource(file.getPath());
+						path = file.getPath();
+						mediaPlayer.setDataSource(path);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		});
-		ApiManager.getInstance().adviceApi.getAdviceDetail(id, new DefaultCallback<Advice>(getApplicationContext(), new AbstractBusiness<Advice>() {
-			@Override
-			public void handleData(Advice data) throws Exception {
-				advice = data;
-				if (dialog != null && dialog.isShowing()) {
-					dialog.dismiss();
-				}
-			}
-		}), getRequestTag());
 	}
 
 	private void configCurve() {

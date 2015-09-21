@@ -25,6 +25,8 @@ import cn.ihealthbaby.weitaixin.library.util.Util;
  * Created by liuhongjian on 15/9/20 13:13.
  */
 public class LocalRecordPlayActivity extends RecordPlayActivity {
+	private String key;
+
 	@Override
 	protected void function() {
 		AsynUploadEngine asynUploadEngine = new AsynUploadEngine(getApplicationContext());
@@ -32,8 +34,8 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		asynUploadEngine.init(new File(FileUtil.getVoiceDir(getApplicationContext()), uuid));
 		asynUploadEngine.setOnFinishActivity(new AsynUploadEngine.FinishedToDoWork() {
 			@Override
-			public void onFinishedWork(String key, ResponseInfo info, JSONObject response) {
-				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record), new HttpClientAdapter.Callback<Long>() {
+			public void onFinishedWork(final String key, ResponseInfo info, JSONObject response) {
+				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record, key), new HttpClientAdapter.Callback<Long>() {
 					@Override
 					public void call(Result<Long> t) {
 						dialog.dismiss();
@@ -50,7 +52,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		});
 	}
 
-	private AdviceForm getUploadData(Record record) {
+	private AdviceForm getUploadData(Record record, String key) {
 		AdviceForm adviceForm = new AdviceForm();
 		adviceForm.setClientId(record.getLocalRecordId());
 		adviceForm.setDataType(1);
@@ -60,6 +62,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		adviceForm.setData(record.getRecordData());
 		adviceForm.setTestTime(record.getRecordStartTime());
 		adviceForm.setTestTimeLong(record.getDuration());
+		adviceForm.setFetalTonePath(key);
 		return adviceForm;
 	}
 
