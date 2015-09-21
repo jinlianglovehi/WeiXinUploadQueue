@@ -48,7 +48,7 @@ import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 
-public abstract class CloudRecordPlayActivity extends BaseActivity {
+public class CloudRecordPlayActivity extends BaseActivity {
 	private final static String TAG = "LocalRecordPlayActivity";
 	public String path;
 	public Record record;
@@ -116,10 +116,7 @@ public abstract class CloudRecordPlayActivity extends BaseActivity {
 
 	@OnClick(R.id.btn_start)
 	public void function(View view) {
-		function();
 	}
-
-	protected abstract void function();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
