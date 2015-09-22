@@ -106,7 +106,7 @@ public class RegistActivity extends BaseActivity {
 
 
     public boolean isSend = true;
-    public Dialog dialog;
+
     public CountDownTimer countDownTimer;
 
     @OnClick(R.id.tv_mark_num_text)
@@ -121,35 +121,7 @@ public class RegistActivity extends BaseActivity {
                 ToastUtil.show(getApplicationContext(), "手机号必须是11位");
                 return;
             }
-
-            tv_mark_num_text.setBackgroundResource(R.color.gray1);
-            tv_mark_num_text.setTextColor(getResources().getColor(R.color.gray2));
-            try {
-                dialog = new CustomDialog().createDialog1(this, "验证码发送中...");
-                dialog.show();
-                getAuthCode();
-
-                countDownTimer = new CountDownTimer(60000, 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        tv_mark_num_text.setText(millisUntilFinished / 1000 + "秒之后重发");
-                        isSend = false;
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        tv_mark_num_text.setText("发送验证码");
-                        isSend = true;
-                        dialog.dismiss();
-                        tv_mark_num_text.setBackgroundResource(R.drawable.shape_send_verifycode);
-                        tv_mark_num_text.setTextColor(getResources().getColor(R.color.black0));
-                    }
-                };
-                countDownTimer.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-                cancel();
-            }
+            getAuthCode();
         }
     }
 
@@ -158,35 +130,66 @@ public class RegistActivity extends BaseActivity {
 
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode() {
+        final CustomDialog customDialog = new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(this, "验证码发送中...");
+        dialog.show();
+
+
+        isSend = false;
+
         ApiManager.getInstance().accountApi.getAuthCode(phone_number, 0, new HttpClientAdapter.Callback<Boolean>() {
             @Override
             public void call(Result<Boolean> t) {
-                if (t.getStatus()==Result.SUCCESS) {
+                if (t.getStatus() == Result.SUCCESS) {
                     Boolean data = t.getData();
                     if (data) {
+                        tv_mark_num_text.setBackgroundResource(R.color.gray1);
+                        tv_mark_num_text.setTextColor(getResources().getColor(R.color.gray2));
                         isHasAuthCode = true;
-//                        tv_regist_action.setEnabled(true);
+//                      tv_regist_action.setEnabled(true);
+                        try {
+                            countDownTimer = new CountDownTimer(60000, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                    tv_mark_num_text.setText(millisUntilFinished / 1000 + "秒之后重发");
+                                    isSend = false;
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    tv_mark_num_text.setText("发送验证码");
+                                    isSend = true;
+                                    customDialog.dismiss();
+                                    tv_mark_num_text.setBackgroundResource(R.drawable.shape_send_verifycode);
+                                    tv_mark_num_text.setTextColor(getResources().getColor(R.color.black0));
+                                }
+                            };
+                            countDownTimer.start();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            cancel(customDialog);
+                        }
                     } else {
                         isHasAuthCode = false;
-                        cancel();
-//                        tv_regist_action.setEnabled(false);
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + ",请重新获取验证码");
+                        cancel(customDialog);
+//                      tv_regist_action.setEnabled(false);
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+ ",请重新获取验证码");
                     }
                 } else {
                     ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+ "");
                     isHasAuthCode = false;
-                    cancel();
+                    cancel(customDialog);
                 }
-                dialog.dismiss();
+                customDialog.dismiss();
             }
         }, getRequestTag());
     }
 
-    public void cancel() {
+    public void cancel(CustomDialog customDialog) {
         tv_mark_num_text.setText("发送验证码");
         isSend = true;
         countDownTimer.cancel();
-        dialog.dismiss();
+        customDialog.dismiss();
     }
 
     private RegForm regForm;
