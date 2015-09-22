@@ -22,7 +22,6 @@ import java.util.Map;
 
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
-import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.DefaultErrorListener;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.error.UnsupportRequestMethod;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.request.AbstractReqeust;
 import cn.ihealthbaby.weitaixin.library.data.net.paser.Parser;
@@ -30,14 +29,14 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * TRACE 请求现在使用兼容模式
+ *
  * @author liuhongjian on 15/7/23 10:39.
  * @author zuoge85 修改支持patch 请求，使用兼容模式
  */
 public class VolleyAdapter extends AbstractHttpClientAdapter {
+	public static final String PATCH = "PATCH";
 	private final static String TAG = "VolleyAdapter";
 	private static final String CHAR_SET = "UTF-8";
-	public static final String PATCH = "PATCH";
-
 	private final Context context;
 	private RequestQueue requestQueue;
 
@@ -50,29 +49,28 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 	@Override
 	public <T> void requestAsync(final RequestParam<T> requestParam) {
 		Object tag = requestParam.getTag();
-		LogUtil.d(TAG, "requestAsync::%s,", new Object(){
+		LogUtil.d(TAG, "requestAsync::%s,", new Object() {
 			@Override
 			public String toString() {
 				return requestParam.getUri() + ", method:" + requestParam.getMethod();
 			}
 		});
-
-		Callback<T> callable = requestParam.getCallable();
+		final Callback<T> callable = requestParam.getCallable();
 		final List<Map.Entry<String, Object>> form = requestParam.getForm();
 		int method = translate(requestParam.getMethod());
-
-
 		final boolean isPostBody = (method == Request.Method.POST) || (method == Request.Method.PUT) || (method == Request.Method.PATCH);
 		String url = getUrl(method, requestParam.getUri(), form);
-		DefaultErrorListener defaultErrorListener = new DefaultErrorListener(context, TAG);
-
-
-		AbstractReqeust<T> request
-				= new AbstractReqeust<T>(
-						                        method,
-						                        url,
-						                        defaultErrorListener,
-						                        callable) {
+		AbstractReqeust<T> request = new AbstractReqeust<T>(
+				                                                   method,
+				                                                   url,
+				                                                   new Response.ErrorListener() {
+					                                                   @Override
+					                                                   public void onErrorResponse(VolleyError error) {
+						                                                   Result<T> result = Result.createError(error);
+						                                                   callable.call(result);
+					                                                   }
+				                                                   },
+				                                                   callable) {
 			@Override
 			protected Response<Result<T>> parseNetworkResponse(NetworkResponse networkResponse) {
 				LogUtil.v(TAG, "parseNetworkResponse::%s", networkResponse);
@@ -103,19 +101,19 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 
 			@Override
 			public byte[] getBody() throws AuthFailureError {
-				if(requestParam.getMethod().equalsIgnoreCase(PATCH)){
+				if (requestParam.getMethod().equalsIgnoreCase(PATCH)) {
 //					_method
 					List<Map.Entry<String, Object>> varForm = form;
 					if (varForm == null) {
 						varForm = new ArrayList<>();
 					}
-					varForm.add(new AbstractMap.SimpleImmutableEntry<String, Object>("_method",PATCH));
+					varForm.add(new AbstractMap.SimpleImmutableEntry<String, Object>("_method", PATCH));
 					try {
 						return encodeParameters(varForm, getParamsEncoding(), new StringBuilder()).toString().getBytes(getParamsEncoding());
 					} catch (UnsupportedEncodingException e) {
 						throw new RuntimeException("Encoding not supported: " + getParamsEncoding(), e);
 					}
-				} else{
+				} else {
 					if (isPostBody && form != null && form.size() > 0) {
 						try {
 							return encodeParameters(form, getParamsEncoding(), new StringBuilder()).toString().getBytes(getParamsEncoding());
@@ -136,31 +134,8 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 		requestQueue.add(request);
 	}
 
-	public String getUrl(int method, String uri, List<Map.Entry<String, Object>> form) {
-		final boolean isPostBody = (method == Request.Method.POST) || (method == Request.Method.PUT) || (method == Request.Method.PATCH);
-		String url;
-		if ((!isPostBody) && form != null && form.size() > 0) {
-			StringBuilder sb = new StringBuilder(serverUrl).append(uri).append("?");
-			encodeParameters(form, CHAR_SET, sb);
-			url = sb.toString();
-		} else {
-			url = serverUrl + uri;
-		}
-		return url;
-	}
-
-	private StringBuilder encodeParameters(List<Map.Entry<String, Object>> form, String paramsEncoding, StringBuilder encodedParams) {
-		try {
-			for (Map.Entry<String, Object> entry : form) {
-				encodedParams.append(URLEncoder.encode(entry.getKey(), paramsEncoding));
-				encodedParams.append('=');
-				encodedParams.append(URLEncoder.encode(toString(entry.getValue()), paramsEncoding));
-				encodedParams.append('&');
-			}
-			return encodedParams;
-		} catch (UnsupportedEncodingException uee) {
-			throw new RuntimeException("Encoding not supported: " + paramsEncoding, uee);
-		}
+	public void cancleAllRequest(Object tag) {
+		requestQueue.cancelAll(tag);
 	}
 
 	protected int translate(String methodString) {
@@ -195,16 +170,40 @@ public class VolleyAdapter extends AbstractHttpClientAdapter {
 				break;
 			default:
 				try {
-					throw new VolleyError(new UnsupportRequestMethod("不支持该类型"));
+					throw new VolleyError(new UnsupportRequestMethod("不支持该类型:" + methodString));
 				} catch (VolleyError volleyError) {
-					LogUtil.e(TAG, "translate", volleyError.getMessage());
 					volleyError.printStackTrace();
 				}
+				break;
 		}
 		return method;
 	}
 
-	public void cancleAllRequest(Object tag) {
-		requestQueue.cancelAll(tag);
+	public String getUrl(int method, String uri, List<Map.Entry<String, Object>> form) {
+		final boolean isPostBody = (method == Request.Method.POST) || (method == Request.Method.PUT) || (method == Request.Method.PATCH);
+		String url;
+		if ((!isPostBody) && form != null && form.size() > 0) {
+			StringBuilder sb = new StringBuilder(serverUrl).append(uri).append("?");
+			encodeParameters(form, CHAR_SET, sb);
+			url = sb.toString();
+		} else {
+			url = serverUrl + uri;
+		}
+		return url;
+	}
+
+	private StringBuilder encodeParameters(List<Map.Entry<String, Object>> form, String paramsEncoding, StringBuilder encodedParams) {
+		try {
+			for (Map.Entry<String, Object> entry : form) {
+				encodedParams.append(URLEncoder.encode(entry.getKey(), paramsEncoding));
+				encodedParams.append('=');
+				encodedParams.append(URLEncoder.encode(toString(entry.getValue()), paramsEncoding));
+				encodedParams.append('&');
+			}
+			return encodedParams;
+		} catch (UnsupportedEncodingException uee) {
+			new RuntimeException("Encoding not supported: " + paramsEncoding, uee);
+		}
+		return null;
 	}
 }

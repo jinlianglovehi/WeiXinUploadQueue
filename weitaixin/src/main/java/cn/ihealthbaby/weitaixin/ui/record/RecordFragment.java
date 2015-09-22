@@ -44,7 +44,7 @@ import cn.ihealthbaby.weitaixin.adapter.MyAdviceItemAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
@@ -52,7 +52,6 @@ import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInformationActivity;
-import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
 import cn.ihealthbaby.weitaixin.ui.monitor.LocalRecordPlayActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
@@ -388,7 +387,7 @@ public class RecordFragment extends BaseFragment {
         ApiManager.getInstance().adviceApi.getAdviceItems(1, pageSize,
                 new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
                     @Override
-                    public void handleData(PageData<AdviceItem> data) throws Exception {
+                    public void handleData(PageData<AdviceItem> data)   {
                         final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
                         ArrayList<Record> records = getLocalDB();
@@ -426,8 +425,8 @@ public class RecordFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void handleException() {
-                        super.handleException();
+                    public void handleException(Exception e) {
+                        super.handleException(e);
                         ArrayList<Record> records = getLocalDB();
                         if (records != null && records.size() > 0) {
                             adapter.setDatas(switchList(records));

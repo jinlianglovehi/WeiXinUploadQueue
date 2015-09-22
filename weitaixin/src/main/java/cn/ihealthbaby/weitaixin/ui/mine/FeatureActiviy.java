@@ -15,7 +15,7 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.Urls;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 
@@ -56,7 +56,7 @@ public class FeatureActiviy extends BaseActivity {
 
         ApiManager.getInstance().urlApi.getUrls(new DefaultCallback<Urls>(getApplicationContext(), new AbstractBusiness<Urls>() {
             @Override
-            public void handleData(Urls data) throws Exception {
+            public void handleData(Urls data)   {
                 mWvWelcome.loadUrl(data.getFeatures());
                 customDialog.dismiss();
             }

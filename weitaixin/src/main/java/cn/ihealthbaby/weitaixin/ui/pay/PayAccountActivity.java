@@ -2,8 +2,6 @@ package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +14,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 public class PayAccountActivity extends BaseActivity {
@@ -73,7 +71,7 @@ public class PayAccountActivity extends BaseActivity {
 
         ApiManager.getInstance().serviceApi.getByUser(new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
             @Override
-            public void handleData(Service data) throws Exception {
+            public void handleData(Service data)  {
                 if (data != null) {
                     tvPayAccountRentDay.setText("已开通" + data.getRentedDays() + "天");
                     orderId = data.getOrderId();

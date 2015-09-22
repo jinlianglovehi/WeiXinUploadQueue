@@ -3,7 +3,6 @@ package cn.ihealthbaby.weitaixin.ui;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -15,9 +14,8 @@ import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
@@ -42,13 +40,13 @@ public class WelcomeActivity extends BaseActivity {
 
                 ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                     @Override
-                    public void handleData(User data) throws Exception {
+                    public void handleData(User data)   {
                         SPUtil.saveUser(WelcomeActivity.this, data);
                         customDialog.dismiss();
                     }
 
                     @Override
-                    public void handleException() {
+                    public void handleException(Exception e) {
                         customDialog.dismiss();
                         Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
                         startActivity(intentHasRiskscore);
@@ -105,13 +103,13 @@ public class WelcomeActivity extends BaseActivity {
 
             ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                 @Override
-                public void handleData(User data) throws Exception {
+                public void handleData(User data)   {
                     SPUtil.saveUser(WelcomeActivity.this, data);
                     customDialog.dismiss();
                 }
 
                 @Override
-                public void handleException() {
+                public void handleException(Exception e) {
                     customDialog.dismiss();
                     Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
                     startActivity(intentHasRiskscore);

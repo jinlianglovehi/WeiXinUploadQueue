@@ -25,10 +25,8 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
@@ -150,7 +148,7 @@ public class GradedActivity extends BaseActivity {
 
                 ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(GradedActivity.this, new AbstractBusiness<User>() {
                     @Override
-                    public void handleData(User data) throws Exception {
+                    public void handleData(User data)   {
                         if (data != null) {
                             SPUtil.saveUser(GradedActivity.this, data);
                         }
@@ -162,7 +160,7 @@ public class GradedActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleException() {
+                    public void handleException(Exception e) {
                         customDialog.dismiss();
                         Intent intentHasRiskscore = new Intent(GradedActivity.this, LoginActivity.class);
                         startActivity(intentHasRiskscore);

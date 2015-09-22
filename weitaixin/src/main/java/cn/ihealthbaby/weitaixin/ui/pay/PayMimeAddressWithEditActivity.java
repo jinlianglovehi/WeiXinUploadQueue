@@ -25,10 +25,9 @@ import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressWithEditAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
@@ -125,7 +124,7 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
 //                    final int finalI = i;
                     ApiManager.getInstance().addressApi.delete(addressId, new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
                         @Override
-                        public void handleData(Void data) throws Exception {
+                        public void handleData(Void data)   {
 //                            adapter.datas.remove(finalI);
 //                            addset.remove(finalI);
 //                            addressDel.add(addressId);

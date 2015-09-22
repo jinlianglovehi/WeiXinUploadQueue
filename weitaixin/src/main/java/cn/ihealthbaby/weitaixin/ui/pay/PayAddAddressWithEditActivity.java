@@ -12,17 +12,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AddressForm;
 import cn.ihealthbaby.client.model.Address;
-import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
-import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 public class PayAddAddressWithEditActivity extends BaseActivity {
@@ -168,7 +164,7 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
 
         ApiManager.getInstance().addressApi.update(address.getId(),addressForm,new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
             @Override
-            public void handleData(Void data) throws Exception {
+            public void handleData(Void data) {
                 customDialog.dismiss();
                 finish();
             }

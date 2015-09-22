@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 
 /**
- * @author  by liuhongjian on 15/8/5 21:14.
+ * @author by liuhongjian on 15/8/5 21:14.
  */
 public abstract class AbstractBluetoothListener implements BluetoothListener {
 	@Override

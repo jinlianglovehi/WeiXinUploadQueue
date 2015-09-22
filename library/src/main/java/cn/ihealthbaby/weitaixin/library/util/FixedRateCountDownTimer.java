@@ -13,7 +13,7 @@ import java.util.TimerTask;
 public abstract class FixedRateCountDownTimer {
 	private static final int END = 1;
 	public final Timer timer;
-	public final TimerTask timerTask;
+	public TimerTask timerTask;
 	private final long interval;
 	public long start;
 	public long resume;
@@ -44,12 +44,6 @@ public abstract class FixedRateCountDownTimer {
 		this.duration = duration;
 		this.interval = interval;
 		timer = new Timer();
-		timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				handler.sendEmptyMessage(0);
-			}
-		};
 	}
 
 	// TODO: 15/9/22 需实现
@@ -96,9 +90,16 @@ public abstract class FixedRateCountDownTimer {
 	public void startAt(long offset) {
 		start = SystemClock.elapsedRealtime();
 		stop = start + duration - offset;
+		timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				long l = stop - SystemClock.elapsedRealtime();
+				handler.sendEmptyMessage(0);
+			}
+		};
 		onStart(start);
-//		timer.scheduleAtFixedRate(timerTask, 0, interval);
-		timer.schedule(timerTask, 0, interval);
+		timer.scheduleAtFixedRate(timerTask, 0, interval / 100);
+//		timer.schedule(timerTask, 0, interval);
 	}
 
 	public abstract void onStart(long startTime);

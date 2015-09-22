@@ -1,8 +1,6 @@
 package cn.ihealthbaby.weitaixin;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
 import java.util.Map;
 
@@ -10,9 +8,7 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 
 /**
  * Created by liuhongjian on 15/7/22 22:56.
@@ -39,9 +35,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			 */
 			case Result.SUCCESS:
 				T data = result.getData();
-				if (data != null) {
-					LogUtil.v(TAG, data.toString());
-				}
+				LogUtil.d(TAG, "Result.SUCCESS" + data == null ? "null" : data.toString());
 				/**
 				 * 处理业务
 				 */
@@ -49,73 +43,84 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleData(data);
 				} catch (Exception e) {
 					e.printStackTrace();
-					LogUtil.d(TAG, "Result.SUCCESS==> " + result.getMsgMap() + "Result.SUCCESS" + e.toString());
-					business.handleException();
+					LogUtil.d(TAG, "Result.SUCCESS.Exception" + e.toString());
+					business.handleException(e);
 				}
 				break;
 			/**
 			 * 参数验证失败
 			 */
 			case Result.VALIDATOR:
-				Map<String, Object> msgMap = result.getMsgMap();
-				// TODO: 15/9/22   依次输出msg的值
-				if (msgMap != null || msgMap.size() > 0) {
-					StringBuilder stringBuilder = new StringBuilder();
-					for (Object o : msgMap.values()) {
-						stringBuilder.append(o.toString());
-						stringBuilder.append("/r/n");
-					}
-					ToastUtil.show(context, stringBuilder.toString());
+				String msgMapString = map2String(result.getMsgMap());
+				if (msgMapString != null) {
+					ToastUtil.show(context, msgMapString);
+					LogUtil.e(TAG, "Result.VALIDATOR", msgMapString);
 				}
-				LogUtil.e(TAG, "Result.VALIDATOR", msgMap);
 				//
 				try {
 					business.handleValidator(context);
 				} catch (Exception e) {
 					e.printStackTrace();
-					LogUtil.d(TAG, "Result.VALIDATORException==> " + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
-					business.handleException();
+					LogUtil.d(TAG, "Result.VALIDATOR.Exception==> " + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
+					business.handleException(e);
 				}
 				break;
 			/**
 			 * 账号授权错误
 			 */
 			case Result.ACCOUNT_ERROR:
-				Map<String, Object> msgMapERROR = result.getMsgMap();
-				ToastUtil.show(context, msgMapERROR + "请求失效，请重新登录ACCOUNT_ERROR");
+				String map2String = map2String(result.getMsgMap());
+				if (map2String != null) {
+					ToastUtil.show(context, map2String);
+					LogUtil.e(TAG, "Result.ACCOUNT_ERROR" + map2String);
+				}
 				try {
-					SPUtil.clearUser(context);
-					WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
-					if (context instanceof Activity) {
-						Intent intent = new Intent(context, LoginActivity.class);
-						//context是Activity类型   appContext有问题
-						context.startActivity(intent);
-//						context.finish();
-					}
-					business.handleAccountError(context, result.getData());
+					business.handleAccountError(context, result.getMsgMap());
 				} catch (Exception e) {
 					e.printStackTrace();
-					LogUtil.d(TAG, "Result.ACCOUNT_ERROR==> " + result.getMsgMap() + "Result.ACCOUNT_ERROR" + e.toString());
-					business.handleException();
+					business.handleException(e);
 				}
+				break;
+			/**
+			 *
+			 */
+			case Result.CLIENT_ERROR:
+				Exception exception = result.getException();
+				LogUtil.e(TAG, "CLIENT_ERROR" + exception);
+				business.handleClientError(exception);
 				break;
 			/**
 			 * 服务器错误
 			 */
 			case Result.ERROR:
-				ToastUtil.show(context, result.getMsgMap() + "Result.ERROR");
+				String map2String1 = map2String(result.getMsgMap());
+				if (map2String1 != null) {
+					ToastUtil.show(context, "Result.ERROR" + map2String1);
+					LogUtil.e(TAG, "Result.ERROR" + map2String1);
+				}
 				try {
-					business.handleError(context, result.getData());
+					business.handleError(result.getMsgMap());
 				} catch (Exception e) {
 					e.printStackTrace();
-					LogUtil.d(TAG, "Result.ERROR==> " + result.getMsgMap() + "Result.ERROR" + e.toString());
-					business.handleException();
+					LogUtil.e(TAG, "Result.ERROR" + map2String1 + e.toString());
+					business.handleException(e);
 				}
 				break;
 			default:
-				LogUtil.d(TAG, "Result.default==> " + result.getMsgMap() + "Result.default");
-				business.handleException();
 				break;
+		}
+	}
+
+	public String map2String(Map map) {
+		if (map != null || map.size() > 0) {
+			StringBuilder stringBuilder = new StringBuilder();
+			for (Object o : map.values()) {
+				stringBuilder.append(o.toString());
+				stringBuilder.append("/r/n");
+			}
+			return stringBuilder.toString();
+		} else {
+			return null;
 		}
 	}
 }

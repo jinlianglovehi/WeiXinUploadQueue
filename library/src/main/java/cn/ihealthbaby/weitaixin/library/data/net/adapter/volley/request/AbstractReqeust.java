@@ -18,13 +18,15 @@ import cn.ihealthbaby.client.Result;
  */
 public abstract class AbstractReqeust<T> extends Request<Result<T>> {
 	private final static String TAG = "AbstractReqeust";
+	//默认超时20s
+	private static final int DEFAULT_TIMEOUT_MS = 20 * 1000;
 	private HttpClientAdapter.Callback callback;
 
 	public AbstractReqeust(int method, String url, Response.ErrorListener listener, HttpClientAdapter.Callback callback) {
 		super(method, url, listener);
 		this.callback = callback;
-		//默认超时60s
-		setRetryPolicy(new DefaultRetryPolicy(60*1000, 0, 1f));
+		//设置默认超时
+		setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, 0, 1f));
 	}
 
 	@Override

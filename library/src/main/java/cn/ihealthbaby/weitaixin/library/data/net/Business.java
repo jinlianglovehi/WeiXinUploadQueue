@@ -2,19 +2,52 @@ package cn.ihealthbaby.weitaixin.library.data.net;
 
 import android.content.Context;
 
+import java.util.Map;
+
 /**
  * Created by liuhongjian on 15/7/22 22:48.
  */
 public interface Business<T> {
-	void handleData(T data) throws Exception;
+	/**
+	 * 处理业务数据
+	 *
+	 * @param data
+	 */
+	void handleData(T data);
 
-	void handleValidator(Context context) throws Exception;
+	/**
+	 * 参数验证失败
+	 *
+	 * @param context
+	 */
+	void handleValidator(Context context);
 
-	void handleAccountError(Context context, T data) throws Exception;
+	/**
+	 * 账号错误
+	 *
+	 * @param context
+	 * @param msgMap
+	 */
+	void handleAccountError(Context context, Map<String, Object> msgMap);
 
-	void handleError(Context context, T data) throws Exception;
+	/**
+	 * 服务器错误
+	 *
+	 * @param msgMap
+	 */
+	void handleError(Map<String, Object> msgMap);
 
-	void handleException();
+	/**
+	 * 业务异常处理
+	 *
+	 * @param e
+	 */
+	void handleException(Exception e);
 
-	void handleDefault();
+	/**
+	 * 客户端错误
+	 *
+	 * @param e
+	 */
+	void handleClientError(Exception e);
 }

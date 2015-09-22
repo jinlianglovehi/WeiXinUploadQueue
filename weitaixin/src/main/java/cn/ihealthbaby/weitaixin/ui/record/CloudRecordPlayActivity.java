@@ -37,7 +37,7 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
@@ -263,7 +263,7 @@ public class CloudRecordPlayActivity extends BaseActivity {
 		dialog.show();
 		ApiManager.getInstance().adviceApi.getAdviceDetail(id, new DefaultCallback<Advice>(getApplicationContext(), new AbstractBusiness<Advice>() {
 			@Override
-			public void handleData(Advice advice) throws Exception {
+			public void handleData(Advice advice)   {
 				CloudRecordPlayActivity.this.advice = advice;
 				Gson gson = new Gson();
 				RecordData recordData = gson.fromJson(advice.getData(), RecordData.class);
