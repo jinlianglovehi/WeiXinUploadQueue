@@ -53,7 +53,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
         orderId=getIntent().getLongExtra(PayConstant.ORDERID, -1);
 
 //        tvTotalPrice.setText("￥"+((Integer.parseInt(LocalProductData.getLocal().get(LocalProductData.PriceCount)+""))/100)+"");
-
+// TODO: 15/9/22 @陈未华 有bug 类型转换异常
         tvTotalPrice.setText(PayUtils.showPrice(Integer.parseInt((String) LocalProductData.getLocal().get(LocalProductData.PriceCount))));
     }
 

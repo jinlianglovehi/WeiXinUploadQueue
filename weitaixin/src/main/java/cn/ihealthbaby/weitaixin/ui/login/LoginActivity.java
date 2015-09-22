@@ -120,52 +120,49 @@ public class LoginActivity extends BaseActivity {
 
 
             loginForm = new LoginByPasswordForm(phone_number_login, password_login, "123456789", 1.0d, 1.0d);
-
-            ApiManager.getInstance().accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
-                @Override
-                public void call(Result<User> t) {
-                    if (t.getStatus() == Result.SUCCESS) {
-                        User data=t.getData();
-                        if (data!=null&&data.getAccountToken()!=null) {
-                            WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                            SPUtil.saveUser(LoginActivity.this, data);
+        HttpClientAdapter.Callback<User> callable = new HttpClientAdapter.Callback<User>() {
+            @Override
+            public void call(Result<User> t) {
+                if (t.getStatus() == Result.SUCCESS) {
+                    User data = t.getData();
+                    if (data != null && data.getAccountToken() != null) {
+                        WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
+                        SPUtil.saveUser(LoginActivity.this, data);
 //                            ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
-
-                            Intent intent=new Intent(getApplicationContext(), AdviceSettingService.class);
-                            startService(intent);
-
-                            if(data.getIsInit()){
+                        Intent intent = new Intent(getApplicationContext(), AdviceSettingService.class);
+                        startService(intent);
+                        if (data.getIsInit()) {
+                            customDialog.dismiss();
+                            Intent intentIsInit = new Intent(LoginActivity.this, InfoEditActivity.class);
+                            startActivity(intentIsInit);
+                            LoginActivity.this.finish();
+                            return;
+                        }
+                        if (!data.getHasRiskscore()) {
+                            if (SPUtil.getHospitalId(LoginActivity.this) != -1) {
                                 customDialog.dismiss();
-                                Intent intentIsInit=new Intent(LoginActivity.this, InfoEditActivity.class);
-                                startActivity(intentIsInit);
+                                Intent intentHasRiskscore = new Intent(LoginActivity.this, GradedActivity.class);
+                                startActivity(intentHasRiskscore);
                                 LoginActivity.this.finish();
                                 return;
                             }
-
-                            if(!data.getHasRiskscore()){
-                                if (SPUtil.getHospitalId(LoginActivity.this) != -1) {
-                                    customDialog.dismiss();
-                                    Intent intentHasRiskscore=new Intent(LoginActivity.this, GradedActivity.class);
-                                    startActivity(intentHasRiskscore);
-                                    LoginActivity.this.finish();
-                                    return;
-                                }
-                            }
-
-                            customDialog.dismiss();
-                            Intent intentMain=new Intent(LoginActivity.this, MeMainFragmentActivity.class);
-                            startActivity(intentMain);
-                            LoginActivity.this.finish();
-                        }else{
-                            ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
-                            customDialog.dismiss();
                         }
+                        customDialog.dismiss();
+                        Intent intentMain = new Intent(LoginActivity.this, MeMainFragmentActivity.class);
+                        startActivity(intentMain);
+                        LoginActivity.this.finish();
                     } else {
                         ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
                         customDialog.dismiss();
                     }
+                } else {
+                    ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
+                    customDialog.dismiss();
                 }
-            }, getRequestTag());
+            }
+        };
+
+        ApiManager.getInstance().accountApi.loginByPassword(loginForm, callable, getRequestTag());
     }
 
 

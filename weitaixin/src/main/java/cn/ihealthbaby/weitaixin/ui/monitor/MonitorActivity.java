@@ -146,7 +146,6 @@ public class MonitorActivity extends BaseActivity {
 			public void onStart(long startTime) {
 				hint.setText("已记录" + DateTimeTool.million2mmss(getConsumedTime()));
 				tvStartTime.setText(DateTimeTool.million2hhmmss(recordStartTime.getTime()) + "开始记录");
-				tick();
 			}
 
 			@Override

@@ -35,7 +35,9 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			 */
 			case Result.SUCCESS:
 				T data = result.getData();
-				LogUtil.d(TAG, "Result.SUCCESS" + data == null ? "null" : data.toString());
+				if (data != null) {
+					LogUtil.d(TAG, "Result.SUCCESS" + data.toString());
+				}
 				/**
 				 * 处理业务
 				 */
@@ -112,7 +114,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 	}
 
 	public String map2String(Map map) {
-		if (map != null || map.size() > 0) {
+		if (map != null && map.size() > 0) {
 			StringBuilder stringBuilder = new StringBuilder();
 			for (Object o : map.values()) {
 				stringBuilder.append(o.toString());

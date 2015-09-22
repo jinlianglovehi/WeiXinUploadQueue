@@ -7,16 +7,19 @@ import android.os.SystemClock;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+
 /**
  * Created by liuhongjian on 15/9/22 15:23.
  */
 public abstract class FixedRateCountDownTimer {
 	private static final int END = 1;
 	public final Timer timer;
-	public TimerTask timerTask;
 	private final long interval;
+	public TimerTask timerTask;
 	public long start;
 	public long resume;
+	public long period;
 	private long duration;
 	private long stop;
 	private boolean paused;
@@ -39,10 +42,20 @@ public abstract class FixedRateCountDownTimer {
 	};
 	private long pause;
 	private long pausedTime;
+	/**
+	 * 计数器
+	 */
+	private int counter;
+	/**
+	 * 需要计数的次数
+	 */
+	private int count;
 
 	public FixedRateCountDownTimer(long duration, long interval) {
 		this.duration = duration;
 		this.interval = interval;
+		count = (int) (duration / interval);
+		period = interval / 100;
 		timer = new Timer();
 	}
 
@@ -61,7 +74,7 @@ public abstract class FixedRateCountDownTimer {
 	}
 
 	public long getConsumedTime() {
-		return SystemClock.elapsedRealtime() - start - getPausedTime();
+		return SystemClock.elapsedRealtime() - stop + duration - getPausedTime();
 	}
 
 	public long getPausedTime() {
@@ -93,13 +106,16 @@ public abstract class FixedRateCountDownTimer {
 		timerTask = new TimerTask() {
 			@Override
 			public void run() {
-				long l = stop - SystemClock.elapsedRealtime();
-				handler.sendEmptyMessage(0);
+				long left = stop - SystemClock.elapsedRealtime();
+				if (left < interval * (count - counter)) {
+					handler.sendEmptyMessage(0);
+					counter++;
+					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
+				}
 			}
 		};
 		onStart(start);
-		timer.scheduleAtFixedRate(timerTask, 0, interval / 100);
-//		timer.schedule(timerTask, 0, interval);
+		timer.scheduleAtFixedRate(timerTask, 0, period);
 	}
 
 	public abstract void onStart(long startTime);
@@ -113,6 +129,7 @@ public abstract class FixedRateCountDownTimer {
 	public void cancel() {
 		cancled = true;
 		timer.cancel();
+		handler.removeMessages(0);
 	}
 
 	public void restart() {

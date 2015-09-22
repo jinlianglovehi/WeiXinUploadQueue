@@ -194,8 +194,14 @@ public class MonitorDetialActivity extends BaseActivity {
 		String[] split = alarmHeartrateLimit.split("-");
 		try {
 			if (split != null && split.length == 2) {
-				safemin = Integer.parseInt(split[0]);
-				safemax = Integer.parseInt(split[1]);
+				int safemin = Integer.parseInt(split[0]);
+				if (safemin > 0) {
+					this.safemin = safemin;
+				}
+				int safemax = Integer.parseInt(split[1]);
+				if (safemax > 0) {
+					this.safemax = safemax;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
