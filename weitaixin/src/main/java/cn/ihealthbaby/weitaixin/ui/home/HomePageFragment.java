@@ -27,11 +27,10 @@ import cn.ihealthbaby.weitaixin.ui.pay.PayMimeOrderActivity;
 public class HomePageFragment extends BaseFragment {
     private final static String TAG = "HomePageFragment";
 
-
 //    @Bind(R.id.rlNavHead) RelativeLayout rlNavHead;
-//    @Bind(R.id.back) RelativeLayout back;
-//    @Bind(R.id.title_text) TextView title_text;
-//    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back) RelativeLayout back;
+    @Bind(R.id.title_text) TextView title_text;
+    @Bind(R.id.function) TextView function;
 
 //
 
@@ -58,9 +57,9 @@ public class HomePageFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_home_page, null);
         ButterKnife.bind(this, view);
 
-//        title_text.setText("首页");
+        title_text.setText("首页");
 
-//        back.setVisibility(View.INVISIBLE);
+        back.setVisibility(View.INVISIBLE);
 //        rlNavHead.setBackgroundResource(R.color.green6);
 
         meMainFragmentActivity = (MeMainFragmentActivity) getActivity();
@@ -68,12 +67,6 @@ public class HomePageFragment extends BaseFragment {
         return view;
     }
 
-
-//    @OnClick(R.id.title_text)
-//    public void title_text() {
-//        Intent intent=new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
-//        startActivity(intent);
-//    }
 
 
 
