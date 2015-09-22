@@ -133,7 +133,7 @@
                     android:layout_marginRight="22dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/wo_head_arrow_right"
-                    android:visibility="visible"/>
+                    android:visibility="invisible"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -175,7 +175,7 @@
                     android:layout_marginRight="22dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/wo_head_arrow_right"
-                    android:visibility="visible"/>
+                    android:visibility="invisible"/>
             </RelativeLayout>
 
             <TextView

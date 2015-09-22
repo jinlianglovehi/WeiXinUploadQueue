@@ -29,7 +29,7 @@ public class DefaultErrorListener implements Response.ErrorListener {
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
-		DialogUtil.dismissDialog(context);
+		DialogUtil.dismissDialog();
 		if (error instanceof NoConnectionError) {
 			ToastUtil.warn(context, "网络连接失败，请检查网络状态");
 			LogUtil.e(tag, "no connection" + error.getMessage());

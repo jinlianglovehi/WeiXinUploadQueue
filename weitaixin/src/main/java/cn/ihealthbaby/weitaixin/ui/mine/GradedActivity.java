@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.mine;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -21,13 +22,17 @@ import cn.ihealthbaby.client.form.AnswerForms;
 import cn.ihealthbaby.client.model.Question;
 import cn.ihealthbaby.client.model.RiskScore;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.QuestionDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.ResultDialog;
 
@@ -138,9 +143,33 @@ public class GradedActivity extends BaseActivity {
         resultDialog.setOnFinishQuit(new ResultDialog.OnFinishQuit() {
             @Override
             public void quit() {
-                Intent intent = new Intent(GradedActivity.this, MeMainFragmentActivity.class);
-                startActivity(intent);
-                GradedActivity.this.finish();
+
+                final CustomDialog customDialog = new CustomDialog();
+                Dialog dialog = customDialog.createDialog1(GradedActivity.this, "刷新用户数据...");
+                dialog.show();
+
+                ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(GradedActivity.this, new AbstractBusiness<User>() {
+                    @Override
+                    public void handleData(User data) throws Exception {
+                        if (data != null) {
+                            SPUtil.saveUser(GradedActivity.this, data);
+                        }
+
+                        customDialog.dismiss();
+                        Intent intent = new Intent(GradedActivity.this, MeMainFragmentActivity.class);
+                        startActivity(intent);
+                        GradedActivity.this.finish();
+                    }
+
+                    @Override
+                    public void handleException() {
+                        customDialog.dismiss();
+                        Intent intentHasRiskscore = new Intent(GradedActivity.this, LoginActivity.class);
+                        startActivity(intentHasRiskscore);
+                        GradedActivity.this.finish();
+                    }
+                }), getRequestTag());
+
             }
         });
     }

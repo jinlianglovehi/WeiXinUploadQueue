@@ -117,7 +117,7 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
             Dialog dialog1 = customDialog.createDialog1(this, "删除地址...");
             dialog1.show();
 //
-//            final ArrayList<Long> addressDel = new ArrayList<Long>();
+//          final ArrayList<Long> addressDel = new ArrayList<Long>();
             final HashMap<Integer, Boolean> addset = adapter.addressMap;
             for (int i = 0; i < addset.size(); i++) {
                 if (addset.get(i)) {
@@ -167,7 +167,7 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
 
             customDialog.dismiss();
 
-            pullData();
+            pullDataAddress();
         }
 
     }
@@ -190,6 +190,27 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
                         adapter.setDatas(addressList);
                         adapter.notifyDataSetChanged();
                     }
+                } else {
+                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
+                }
+                customDialog.dismiss();
+            }
+        }, getRequestTag());
+    }
+
+
+    private void pullDataAddress() {
+        final CustomDialog customDialog = new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
+        dialog.show();
+        ApiManager.getInstance().addressApi.getAddresss(new HttpClientAdapter.Callback<ApiList<Address>>() {
+            @Override
+            public void call(Result<ApiList<Address>> t) {
+                if (t.getStatus() == Result.SUCCESS) {
+                    ApiList<Address> data = t.getData();
+                    ArrayList<Address> addressList = (ArrayList<Address>) data.getList();
+                    adapter.setDatas(addressList);
+                    adapter.notifyDataSetChanged();
                 } else {
                     ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
                 }

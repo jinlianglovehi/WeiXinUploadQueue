@@ -10,9 +10,14 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 public class PayAccountActivity extends BaseActivity {
 
@@ -25,7 +30,12 @@ public class PayAccountActivity extends BaseActivity {
 
     //
     @Bind(R.id.rlPayMimeOrder) RelativeLayout rlPayMimeOrder;
-//    @Bind(R.id.llRentEquipment) LinearLayout llRentEquipment;
+    @Bind(R.id.tvPayAccountRentDay) TextView tvPayAccountRentDay;
+
+
+    private User user;
+    private long orderId = -1;
+
 
 
     @Override
@@ -36,6 +46,40 @@ public class PayAccountActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("我的账户");
+        tvPayAccountRentDay.setText("租用设备");
+
+        orderId = -1;
+        user = SPUtil.getUser(this);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pullData();
+    }
+
+
+    private void pullData() {
+        if(user!=null){
+            boolean hasService = user.getHasService();
+            if (hasService) {
+
+            }else {
+                tvPayAccountRentDay.setText("租用设备");
+                orderId = -1;
+            }
+        }
+
+        ApiManager.getInstance().serviceApi.getByUser(new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
+            @Override
+            public void handleData(Service data) throws Exception {
+                if (data != null) {
+                    tvPayAccountRentDay.setText("已开通" + data.getRentedDays() + "天");
+                    orderId = data.getOrderId();
+                }
+            }
+        }),getRequestTag());
     }
 
 
@@ -46,18 +90,19 @@ public class PayAccountActivity extends BaseActivity {
 
     @OnClick(R.id.llRentEquipment)
     public void RentEquipment() {
-        Intent intent = new Intent(this, PayRentInformationActivity.class);
-        startActivity(intent);
-
-//        Intent intentOrderDetails = new Intent(this, PayOrderDetailsActivity.class);
-//        startActivity(intentOrderDetails);
-
-//        User user=null;
-//        if (user.getHasService()) {
-//
-//        } else {
-//
-//        }
+        if (user != null) {
+            boolean hasService = user.getHasService();
+            if (hasService) {
+                if (orderId != -1) {
+                    Intent intentOrderDetails = new Intent(this, PayOrderDetailsActivity.class);
+                    intentOrderDetails.putExtra(PayConstant.ORDERID, orderId);
+                    startActivity(intentOrderDetails);
+                }
+            } else {
+                Intent intent = new Intent(this, PayRentInformationActivity.class);
+                startActivity(intent);
+            }
+        }
     }
 
 

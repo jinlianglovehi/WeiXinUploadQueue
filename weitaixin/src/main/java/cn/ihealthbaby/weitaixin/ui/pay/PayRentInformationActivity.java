@@ -58,7 +58,8 @@ public class PayRentInformationActivity extends BaseActivity {
     public static String cityNameText;
     private long hospitalId = -1;
     private String hospitalName = "";
-//    private String cityName = "";
+//  private String cityName = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class PayRentInformationActivity extends BaseActivity {
 
         title_text.setText("租凭信息");
 
-        cityNameText="";
+        cityNameText = "";
 
         LocalProductData.getLocal().localProductDataMap.clear();
 
@@ -89,6 +90,7 @@ public class PayRentInformationActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -99,6 +101,7 @@ public class PayRentInformationActivity extends BaseActivity {
             tvCityName.setText("请选择城市");
         }
     }
+
 
     MyDoctorChooseAdapter adapter;
     private void pullData() {

@@ -4,22 +4,22 @@
     android:layout_height="match_parent"
     android:background="@color/gray5">
 
-    <include
-        android:id="@+id/head_title_id"
-        layout="@layout/layout_title" />
+    <!--  <include
+          android:id="@+id/head_title_id"
+          layout="@layout/layout_title" />-->
 
 
     <RelativeLayout
         android:id="@+id/rlHomeHeadArea"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="220dp"
         android:layout_below="@id/head_title_id"
         android:background="@color/green6">
 
         <RelativeLayout
             android:id="@+id/rlPregnancyDate"
             android:layout_width="150dp"
-            android:layout_height="24dp"
+            android:layout_height="20dp"
             android:layout_above="@+id/rlProduceDate"
             android:layout_centerVertical="true"
             android:layout_marginBottom="10dp"
@@ -51,7 +51,7 @@
         <RelativeLayout
             android:id="@+id/rlProduceDate"
             android:layout_width="150dp"
-            android:layout_height="24dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="-50dp"
             android:layout_toRightOf="@+id/ivHomeHeadImg"
@@ -82,7 +82,7 @@
         <RelativeLayout
             android:id="@+id/rltvMonitorDate"
             android:layout_width="150dp"
-            android:layout_height="24dp"
+            android:layout_height="20dp"
             android:layout_below="@+id/rlProduceDate"
             android:layout_centerVertical="true"
             android:layout_marginLeft="-50dp"
@@ -113,8 +113,8 @@
 
 
         <TextView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="4dp"
             android:layout_toLeftOf="@+id/ivHomeHeadImg"
@@ -124,15 +124,17 @@
             android:textColor="@color/white0"
             android:textSize="@dimen/font14" />
 
-        <ImageView
+        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
             android:id="@+id/ivHomeHeadImg"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/home_head_img" />
+            android:scaleType="fitXY"
+            android:src="@drawable/button_monitor_helper" />
 
 
         <TextView
+            android:id="@+id/tvHomeHeadName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ivHomeHeadImg"
@@ -188,10 +190,39 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/home_function_img_two" />
+                <FrameLayout
+                    android:layout_width="70dp"
+                    android:layout_height="70dp">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/home_function_img_two" />
+
+                    <FrameLayout
+                        android:id="@+id/flShowMessageCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|right">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/home_function_red_tip" />
+
+                        <TextView
+                            android:id="@+id/tvMessageNumberCount"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white0"
+                            android:textSize="@dimen/font14" />
+                    </FrameLayout>
+                </FrameLayout>
+
 
                 <TextView
                     android:layout_width="wrap_content"

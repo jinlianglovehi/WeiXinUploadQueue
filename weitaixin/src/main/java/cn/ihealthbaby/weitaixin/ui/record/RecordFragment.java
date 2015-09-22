@@ -51,6 +51,7 @@ import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.mine.WoInformationActivity;
 import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
 import cn.ihealthbaby.weitaixin.ui.monitor.LocalRecordPlayActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
@@ -117,7 +118,7 @@ public class RecordFragment extends BaseFragment {
 
     @OnClick(R.id.ivWoHeadIcon)
     public void WoHeadIcon() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), GuardianStateActivity.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), WoInformationActivity.class);
         startActivity(intent);
     }
 
@@ -139,7 +140,7 @@ public class RecordFragment extends BaseFragment {
 
         context = (MeMainFragmentActivity) getActivity();
         initView();
-        pullHeadDatas();
+//
         pullDatas();
 
 //      registerForContextMenu(pullToRefresh.getRefreshableView());
@@ -214,6 +215,7 @@ public class RecordFragment extends BaseFragment {
     }
 
 
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 1, Menu.NONE, "删除");
@@ -259,6 +261,7 @@ public class RecordFragment extends BaseFragment {
     private void pullHeadDatas() {
         User user = SPUtil.getUser(getActivity().getApplicationContext());
         if (SPUtil.isLogin(getActivity().getApplicationContext()) && user != null) {
+            LogUtil.d(TAG, "getHeadPic==>"+user.getHeadPic());
             ImageLoader.getInstance().displayImage(user.getHeadPic(), ivWoHeadIcon, setDisplayImageOptions());
             tvWoHeadName.setText(user.getName());
             tvWoHeadDeliveryTime.setText(DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
@@ -272,7 +275,9 @@ public class RecordFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        pullHeadDatas();
     }
+
 
 
     private void initView() {
@@ -541,7 +546,6 @@ public class RecordFragment extends BaseFragment {
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .displayer(new SimpleBitmapDisplayer())
-//				.displayer(new RoundedBitmapDisplayer(5))
                 .build();
         return options;
     }

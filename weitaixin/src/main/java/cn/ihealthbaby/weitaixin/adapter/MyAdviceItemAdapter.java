@@ -318,8 +318,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
 	private void deleteRecordItem(final int position) {
 		if (datas.size() > 0) {
-			AdviceItem adviceItem = datas.get(position);
-			if (adviceItem.getStatus() != Record.UPLOAD_STATE_CLOUD) {
+			final AdviceItem adviceItem = datas.get(position);
+			final int status = adviceItem.getStatus();
+			if (status != 1) { //  等待回复1    的记录不能删除
 				final CustomDialog customDialog = new CustomDialog();
 				Dialog dialog = customDialog.createDialog1(context, "正在删除...");
 				dialog.show();
@@ -327,8 +328,17 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 					@Override
 					public void call(Result<Void> t) {
 						if (t.isSuccess()) {
+							if (status == 4) {
+								try {
+									recordBusinessDao.deleteByLocalRecordId(adviceItem.getClientId());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+
 							ToastUtil.show(context, "删除成功");
 							datas.remove(position);
+
 							notifyDataSetChanged();
 						} else {
 							ToastUtil.show(context, t.getMsgMap() + "");
@@ -337,7 +347,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 					}
 				}, context);
 			} else {
-				ToastUtil.show(context, "请先上传，才能删除");
+				ToastUtil.show(context, "问医生的记录不能删除");
 				cancel();
 			}
 		}

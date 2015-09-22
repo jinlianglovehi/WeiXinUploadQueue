@@ -129,7 +129,7 @@ public class LoginActivity extends BaseActivity {
                         if (data!=null&&data.getAccountToken()!=null) {
                             WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
                             SPUtil.saveUser(LoginActivity.this, data);
-                            ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
+//                            ToastUtil.show(LoginActivity.this.getApplicationContext(), "登录成功");
 
                             Intent intent=new Intent(getApplicationContext(), AdviceSettingService.class);
                             startService(intent);
@@ -157,11 +157,11 @@ public class LoginActivity extends BaseActivity {
                             startActivity(intentMain);
                             LoginActivity.this.finish();
                         }else{
-                            ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap() + "");
+                            ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
                             customDialog.dismiss();
                         }
                     } else {
-                        ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap() + "");
+                        ToastUtil.show(LoginActivity.this.getApplicationContext(), t.getMsgMap().get("account") + "");
                         customDialog.dismiss();
                     }
                 }
