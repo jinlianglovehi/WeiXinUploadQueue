@@ -150,7 +150,7 @@ public class MonitorFragment extends BaseFragment {
 					case Constants.MESSAGE_READ_FETAL_DATA:
 						FHRPackage fhrPackage = (FHRPackage) msg.obj;
 						int fhr1 = fhrPackage.getFHR1();
-						DataStorage.fhrPackage.setFHRPackage(fhrPackage);
+						DataStorage.fhrPackage=fhrPackage;
 						if (tvBluetooth != null) {
 							if (fhr1 >= safemin && fhr1 <= safemax) {
 								tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
@@ -470,6 +470,7 @@ public class MonitorFragment extends BaseFragment {
 		connected = false;
 		needRecord = false;
 		needPlay = true;
+		getAdviceSetting();
 		if (audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
 			audioTrack.flush();
 			audioTrack.play();

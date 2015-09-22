@@ -21,12 +21,13 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
+import cn.ihealthbaby.weitaixin.library.event.FetalMovementEvent;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
-import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
+import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
@@ -73,11 +74,13 @@ public class MonitorActivity extends BaseActivity {
 	TextView tvStartTime;
 	@Bind(R.id.fm_count)
 	TextView fmCount;
-	private ExpendableCountDownTimer countDownTimer;
+	private FixedRateCountDownTimer countDownTimer;
 	private long lastFetalMoveTime;
 	private int width;
 	private int safemin = 110;
 	private int safemax = 160;
+	private int limitMax = 210;
+	private int limitMin = 60;
 
 	@OnClick(R.id.back)
 	public void back() {
@@ -89,7 +92,7 @@ public class MonitorActivity extends BaseActivity {
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
 	}
 
-	@OnClick(R.id.curve_simple)
+	@OnClick({R.id.curve_simple, R.id.hs})
 	public void curveDetial() {
 		Intent intent = new Intent(getApplicationContext(), MonitorDetialActivity.class);
 		long consumedTime = countDownTimer.getConsumedTime();
@@ -101,7 +104,7 @@ public class MonitorActivity extends BaseActivity {
 		startActivity(intent);
 	}
 
-	@OnClick(value = {R.id.tv_record, R.id.btn_start})
+	@OnClick(value = {R.id.tv_record, R.id.btn_start, R.id.rl_function})
 	public void fetalMovement() {
 		long consumedTime = countDownTimer.getConsumedTime();
 		int position = (int) (consumedTime / countDownTimer.getInterval());
@@ -126,7 +129,6 @@ public class MonitorActivity extends BaseActivity {
 		function.setText("立即结束");
 		function.setVisibility(View.VISIBLE);
 		//
-		//
 		getAdviceSetting();
 		getData();
 		DisplayMetrics metric = new DisplayMetrics();
@@ -136,14 +138,15 @@ public class MonitorActivity extends BaseActivity {
 		roundProgressMask.setBackgroundResource(R.drawable.round_background_3);
 		configCurveSimple();
 		final long interval = 500;
-		countDownTimer = new ExpendableCountDownTimer(duration, interval) {
-			private int fhr;
-			private long lasttime;
+		countDownTimer = new FixedRateCountDownTimer(duration, interval) {
+//			private int fhr;
+//			private long lasttime;
 
 			@Override
 			public void onStart(long startTime) {
 				hint.setText("已记录" + DateTimeTool.million2mmss(getConsumedTime()));
 				tvStartTime.setText(DateTimeTool.million2hhmmss(recordStartTime.getTime()) + "开始记录");
+				tick();
 			}
 
 			@Override
@@ -168,9 +171,24 @@ public class MonitorActivity extends BaseActivity {
 			}
 
 			private void tick() {
+				//绘制圆形进度
 				roundProgressMask.setAngel((float) (360 * getConsumedTime() / getDuration()));
 				roundProgressMask.postInvalidate();
-				long time = DataStorage.fhrPackage.getTime();
+				//获取当前心率值
+				int fhr = DataStorage.fhrPackage.getFHR1();
+				//如果越界,则值设置为0
+				if ((fhr > limitMax || fhr < limitMin)) {
+					fhr = 0;
+				}
+				if (fhr >= safemin && fhr <= safemax) {
+					tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
+				} else {
+					tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
+				}
+				tvBluetooth.setText(fhr + "");
+				//加入到图中
+				curveSimple.addPoint(fhr);
+				curveSimple.postInvalidate();
 				hint.setText("已记录" + DateTimeTool.million2mmss(getConsumedTime()));
 				int size = curveSimple.getHearts().size();
 				if (size > 0) {
@@ -178,22 +196,6 @@ public class MonitorActivity extends BaseActivity {
 				} else {
 					fmCount.setText("未记录胎动");
 				}
-				if (lasttime < time) {
-					fhr = DataStorage.fhrPackage.getFHR1();
-					if (tvBluetooth != null) {
-						if (fhr >= safemin && fhr <= safemax) {
-							tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
-						} else {
-							tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
-						}
-						tvBluetooth.setText(fhr + "");
-					}
-					lasttime = time;
-				} else {
-					fhr = 0;
-				}
-				curveSimple.addPoint(fhr);
-				curveSimple.postInvalidate();
 				if (!hs.isTouching()) {
 					hs.smoothScrollTo((int) (curveSimple.getCurrentPositionX() - width / 2), 0);
 				}
@@ -245,6 +247,10 @@ public class MonitorActivity extends BaseActivity {
 		lastFetalMoveTime = 0;
 		DataStorage.fhrs.clear();
 		DataStorage.fms.clear();
+	}
+
+	public void onEventMainThread(FetalMovementEvent event) {
+		rlMovement.performClick();
 	}
 
 	public void onEventMainThread(MonitorTerminateEvent event) {

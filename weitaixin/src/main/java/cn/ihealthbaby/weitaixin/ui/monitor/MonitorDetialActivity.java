@@ -17,12 +17,13 @@ import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
+import cn.ihealthbaby.weitaixin.library.event.FetalMovementEvent;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
-import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
+import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
@@ -66,7 +67,7 @@ public class MonitorDetialActivity extends BaseActivity {
 	private long interval;
 	private int width;
 	private boolean needReset = true;
-	private ExpendableCountDownTimer countDownTimer;
+	private FixedRateCountDownTimer countDownTimer;
 	private long lastFMTime;
 	private boolean terminate;
 	private int safemin;
@@ -74,12 +75,13 @@ public class MonitorDetialActivity extends BaseActivity {
 
 	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
-		long consumedTime = countDownTimer.getConsumedTime();
-		int position = (int) (consumedTime / countDownTimer.getInterval());
-		if (lastFMTime == 0 || consumedTime - lastFMTime >= 3 * 1000) {
-			savePosition(position);
-			lastFMTime = consumedTime;
-		}
+//		long consumedTime = countDownTimer.getConsumedTime();
+//		int position = (int) (consumedTime / countDownTimer.getInterval());
+//		if (lastFMTime == 0 || consumedTime - lastFMTime >= 3 * 1000) {
+//			savePosition(position);
+//			lastFMTime = consumedTime;
+//		}
+		EventBus.getDefault().post(new FetalMovementEvent());
 	}
 
 	@OnClick(R.id.function)
@@ -109,7 +111,10 @@ public class MonitorDetialActivity extends BaseActivity {
 		interval = getIntent().getLongExtra(Constants.INTENT_INTERVAL, 0);
 		getAdviceSetting();
 		configCurve();
-		countDownTimer = new ExpendableCountDownTimer(duration, interval) {
+		countDownTimer = new FixedRateCountDownTimer(duration, 1000) {
+			public boolean reset;
+			public long lastStart;
+
 			@Override
 			public void onStart(long startTime) {
 				terminate = false;
@@ -122,23 +127,25 @@ public class MonitorDetialActivity extends BaseActivity {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
+				long start = System.currentTimeMillis();
 				if (DataStorage.fhrs.size() > 0 || !terminate) {
 					curve.resetPoints();
 					curve.postInvalidate();
 					tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
 					int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
-					if (bpm != null) {
-						if (fhr1 >= safemin && fhr1 <= safemax) {
-							bpm.setTextColor(Color.parseColor("#49DCB8"));
-						} else {
-							bpm.setTextColor(Color.parseColor("#FE0058"));
-						}
-						bpm.setText(fhr1 + "");
+					if (fhr1 >= safemin && fhr1 <= safemax) {
+						bpm.setTextColor(Color.parseColor("#49DCB8"));
+					} else {
+						bpm.setTextColor(Color.parseColor("#FE0058"));
 					}
+					bpm.setText(fhr1 + "");
 				}
 				if (!chs.isTouching()) {
 					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
 				}
+				long stop = System.currentTimeMillis();
+				LogUtil.d("MonitorDetialActivity", "duration:[%s] , interval:[%s] ,consumedTime:[%s]s ,listSize:[%s]", (stop - start), start - lastStart, getConsumedTime() / 1000, curve.getFhrs().size());
+				lastStart = start;
 			}
 
 			@Override
