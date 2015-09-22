@@ -132,7 +132,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
                         tvOrderDetailsPullway.setText(deliverTypeArr[deliverType] + "");
                     }
 
-                    tvOrderDetailsPrice.setText("总计￥" + orderDetail.getTotalFee() + "");
+                    tvOrderDetailsPrice.setText("总计" +PayUtils.showPrice(orderDetail.getTotalFee()));
 
                     orderStatus = orderDetail.getOrderStatus();
 
@@ -397,7 +397,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
 
             OrderItem orderItem = this.datas.get(position);
             viewHolder.tvName.setText(orderItem.getProductName());
-            viewHolder.tvPrice.setText(orderItem.getPrice()+"");
+            viewHolder.tvPrice.setText(PayUtils.showPrice(orderItem.getPrice())+"");
 
             return convertView;
         }

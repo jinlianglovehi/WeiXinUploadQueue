@@ -30,6 +30,7 @@ import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.pay.PayAffirmPaymentActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
+import cn.ihealthbaby.weitaixin.ui.pay.PayUtils;
 import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 
 
@@ -92,7 +93,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
         viewHolder.tvPayType.setText("【"+PayConstant.orderType[order.getOrderStatus()]+"】");
         viewHolder.tvGoodsName.setText(order.getDescription()+"");
         viewHolder.tvGoodsTime.setText(DateTimeTool.date2St2(order.getCreateTime(), "yyyy-MM-dd HH: mm"));
-        viewHolder.tvPayPriceText.setText("￥" + (order.getTotalFee()/100) + "");
+        viewHolder.tvPayPriceText.setText(PayUtils.showPrice(order.getTotalFee()));
 
         //0 待付款-未支付,  1 待发货,  2待收货,  3订单结束,   4 订单取消
         if (order.getOrderStatus()==PayConstant.notPay) {

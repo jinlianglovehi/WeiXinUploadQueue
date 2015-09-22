@@ -77,7 +77,6 @@ public class WoInfoFragment extends BaseFragment {
     @Bind(R.id.tv_message_count)
     TextView mTvMessageCount;
     private View view;
-    private boolean isNoTwo = true;
 
 
     private static WoInfoFragment instance;
@@ -93,7 +92,6 @@ public class WoInfoFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        if (isNoTwo) {
         view = inflater.inflate(R.layout.fragment_wo_info, null);
         ButterKnife.bind(this, view);
 
@@ -101,9 +99,6 @@ public class WoInfoFragment extends BaseFragment {
         title_text.setText("我的");
         init();
 
-        isNoTwo = false;
-//        }
-        LogUtil.e("WoInfoFragment+Coco7", "WoInfoFragment+Null");
         return view;
     }
 
@@ -170,7 +165,6 @@ public class WoInfoFragment extends BaseFragment {
 
     @OnClick(R.id.ll_4)
     public void ll_4() {
-//        Intent intent = new Intent(getActivity().getApplicationContext(), InfoEditActivity.class);
         Intent intent = new Intent(getActivity().getApplicationContext(), GradedActivity.class);
         startActivity(intent);
     }

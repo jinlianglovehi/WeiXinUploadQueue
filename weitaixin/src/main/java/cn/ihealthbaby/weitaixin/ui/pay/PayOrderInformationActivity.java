@@ -337,7 +337,7 @@ public class PayOrderInformationActivity extends BaseActivity {
 
             Product product = this.datas.get(position);
             viewHolder.tvName.setText(product.getName() + "");
-            viewHolder.tvPrice.setText("￥"+(product.getPrice()/100)+"");
+            viewHolder.tvPrice.setText(PayUtils.showPrice(product.getPrice()));
             viewHolder.tvDescription.setText(product.getDescription()+"");
 
             if (currentPosition == position) {
@@ -433,7 +433,7 @@ public class PayOrderInformationActivity extends BaseActivity {
             final Product product = this.datas.get(position);
             final int goodsTPrice=goodsTotalPrice.get(position);
             viewHolder.tvName.setText(product.getName()+"");
-            viewHolder.tvPrice.setText("￥" + (goodsTPrice/100) + "");
+            viewHolder.tvPrice.setText(PayUtils.showPrice(goodsTPrice));
 
             int tCount = countGoods.get(position);
             viewHolder.tvCountText.setText(tCount + "");
@@ -475,7 +475,7 @@ public class PayOrderInformationActivity extends BaseActivity {
                         viewHolder.tvCountText.setText(countGoods.get(position) + "");
                         priceCount -= product.getPrice();
                     }
-                    tvPriceGoingOrder.setText("总计￥"+(priceCount/100));
+                    tvPriceGoingOrder.setText("总计"+PayUtils.showPrice(priceCount));
                     notifyDataSetChanged();
                 }
             });
@@ -500,7 +500,7 @@ public class PayOrderInformationActivity extends BaseActivity {
                         viewHolder.tvCountText.setText(countGoods.get(position) + "");
                         priceCount += product.getPrice();
                     }
-                    tvPriceGoingOrder.setText("总计￥"+(priceCount/100));
+                    tvPriceGoingOrder.setText("总计"+PayUtils.showPrice(priceCount));
                     notifyDataSetChanged();
                 }
             });
@@ -579,7 +579,7 @@ public class PayOrderInformationActivity extends BaseActivity {
 
             Product product = this.datas.get(position);
             viewHolder.tvName.setText(product.getName()+"");
-            viewHolder.tvPrice.setText("￥"+(product.getPrice()/100)+"");
+            viewHolder.tvPrice.setText(PayUtils.showPrice(product.getPrice()));
             viewHolder.tvDescription.setText(product.getDescription()+"");
 
             return convertView;

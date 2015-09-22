@@ -31,6 +31,8 @@ import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
+import cn.ihealthbaby.weitaixin.ui.pay.PayOrderDetailsActivity;
 
 
 public class WoMessageActivity extends BaseActivity {
@@ -123,9 +125,10 @@ public class WoMessageActivity extends BaseActivity {
                     intent.putExtra("informationId", item.getId());
                     startActivity(intent);
                 } else if (type == 2) {
-                    ToastUtil.show(getApplicationContext(), "敬请期待");
+                    Intent intent = new Intent(getApplicationContext(), PayOrderDetailsActivity.class);
+                    intent.putExtra(PayConstant.ORDERID, item.getId());
+                    startActivity(intent);
                 }
-//                ToastUtil.show(getApplicationContext(),(position-1)+":"+item.getTitle()+" : "+item.getId());
             }
         });
 

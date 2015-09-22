@@ -105,8 +105,14 @@ public class AskDoctorActivity extends BaseActivity {
                     Service data = t.getData();
                     if (data!=null) {
                         totalCount=data.getTotalCount();
-                        usedCount=data.getUsedCount();
-                        tvOtherInfo.setText("共"+totalCount+"次，已咨询"+usedCount+"次，剩余"+(totalCount-usedCount)+"次");
+                        if (totalCount == -1) {
+                            usedCount = data.getUsedCount();
+                            tvOtherInfo.setText("共" + "无限" + "次，已咨询" + usedCount + "次，剩余" + "无限" + "次");
+                        } else {
+                            usedCount = data.getUsedCount();
+                            int number = totalCount - usedCount;
+                            tvOtherInfo.setText("共" + totalCount + "次，已咨询" + usedCount + "次，剩余" + (number) + "次");
+                        }
                     } else {
                         ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
                     }
@@ -123,22 +129,22 @@ public class AskDoctorActivity extends BaseActivity {
     public void tvSendDoctorAction( ) {
         String askDoctorText = etAskDoctorText.getText().toString();
         if (TextUtils.isEmpty(askDoctorText)) {
-            ToastUtil.show(getApplicationContext(), "详情描述，便于医生诊断~~~");
+            ToastUtil.show(getApplicationContext(), "详情描述，便于医生诊断");
             return;
         }
-        if ((totalCount-usedCount)<=0) {
-            ToastUtil.show(getApplicationContext(), "没有咨询次数了~~~");
+        if ((totalCount-usedCount)==0) {
+            ToastUtil.show(getApplicationContext(), "没有咨询次数了");
             return;
         }
 
-        if (adviceItemId==-1) {
-            ToastUtil.show(getApplicationContext(), "id不对~~~");
+        if (adviceItemId == -1) {
+            ToastUtil.show(getApplicationContext(), "id不对");
             return;
         }
 
 
         final CustomDialog customDialog = new CustomDialog();
-        final Dialog dialog=customDialog.createDialog1(this, "发送中...");
+        Dialog dialog=customDialog.createDialog1(this, "正在发送中...");
         dialog.show();
 
         AskForm askForm=new AskForm();
@@ -147,22 +153,20 @@ public class AskDoctorActivity extends BaseActivity {
         ApiManager.getInstance().adviceApi.askDoctor(askForm, new HttpClientAdapter.Callback<Integer>() {
             @Override
             public void call(Result<Integer> t) {
-                if (customDialog.isNoCancel) {
-                    if (t.isSuccess()) {
+                    if (t.getStatus()==Result.SUCCESS) {
                         int data = t.getData();
-                        if (data==0) {
-                            Intent intent=new Intent();
-                            intent.putExtra("positionExtra",position);
-                            setResult(RESULT_OK,intent);
+                        if (data == 0) {
+                            Intent intent = new Intent();
+                            intent.putExtra("positionExtra", position);
+                            setResult(RESULT_OK, intent);
                             AskDoctorActivity.this.finish();
-                        }else if(data==1){
+                        } else if (data == 1) {
                             ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), "没有咨询次数");
                         }
                     } else {
                         ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
                     }
-                }
-                dialog.dismiss();
+                customDialog.dismiss();
             }
         },getRequestTag());
 
