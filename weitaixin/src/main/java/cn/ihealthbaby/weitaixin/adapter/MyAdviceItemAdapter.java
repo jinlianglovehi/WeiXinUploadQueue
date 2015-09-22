@@ -31,13 +31,11 @@ import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.R;
- 
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
-import cn.ihealthbaby.weitaixin.library.data.model.MyAdviceItem;
- 
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
@@ -262,18 +260,18 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		if (status == 0) {
 			Intent intent = new Intent(context, AskDoctorActivity.class);
 			LogUtil.d("AskDocgetId", "AskDocgetId = " + adviceItem.getId());
-			intent.putExtra("adviceItemId", adviceItem.getId());
-			intent.putExtra("adviceItemPurpose", adviceItem.getAskPurpose());
-			intent.putExtra("adviceItemFeeling", adviceItem.getFeeling());
-			intent.putExtra("position", position);
+			intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
+			intent.putExtra(Constants.INTENT_PURPOSE, adviceItem.getAskPurpose());
+			intent.putExtra(Constants.INTENT_FEELING, adviceItem.getFeeling());
+			intent.putExtra(Constants.INTENT_POSITION, position);
 			context.startActivityForResult(intent, requestCode);
 		} else if (status == 1) {
 			Intent intent = new Intent(context, WaitReplyingActivity.class);
-			intent.putExtra("relatedId", adviceItem.getId());
+			intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
 			context.startActivity(intent);
 		} else if (status == 2) {
 			Intent intent = new Intent(context, ReplyedActivity.class);
-			intent.putExtra("relatedId", adviceItem.getId());
+			intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
 			context.startActivity(intent);
 		} else if (status == Record.UPLOAD_STATE_CLOUD) {
 			final CustomDialog customDialog = new CustomDialog();

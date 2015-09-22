@@ -646,7 +646,7 @@ public class MonitorFragment extends BaseFragment {
 		Date recordStartTime = record.getRecordStartTime();
 		//
 		Gson gson = new Gson();
-		RecordData recordData = new RecordData();
+		RecordData recordData = Util.getDefaultRecordData(getActivity().getApplicationContext());
 		Data data = new Data();
 		data.setInterval(500);
 		data.setHeartRate(DataStorage.fhrs);
@@ -655,6 +655,10 @@ public class MonitorFragment extends BaseFragment {
 		recordData.setData(data);
 		String dataString = gson.toJson(recordData);
 		record.setRecordData(dataString);
+		record.setPurposeId(Record.PURPOSE_FM_NORMAL);
+		record.setPurposeString("日常监护");
+		record.setFeelingId(Record.FEELING_NORMAL);
+		record.setFeelingString("一般");
 		record.setDuration((DataStorage.fhrs.size() / 2));
 		record.setSoundPath(getRecordFile().getPath());
 		try {

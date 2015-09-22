@@ -23,6 +23,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -70,7 +71,7 @@ public class WaitReplyingActivity extends BaseActivity {
 
         apiManager=ApiManager.getInstance();
 
-        long relatedId=getIntent().getLongExtra("relatedId", 0);
+        long relatedId=getIntent().getLongExtra(Constants.INTENT_ID, 0);
 
 
         dialog=new CustomDialog().createDialog1(this,"加载中...");

@@ -22,6 +22,7 @@ import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.library.tools.MaxLengthWatcher;
@@ -60,10 +61,10 @@ public class AskDoctorActivity extends BaseActivity {
         title_text.setText("问医生");
 //      back.setVisibility(View.INVISIBLE);
 
-        adviceItemId = getIntent().getLongExtra("adviceItemId", -1);
-        position = getIntent().getIntExtra("position", -1);
-        adviceItemPurpose = getIntent().getStringExtra("adviceItemPurpose");
-        adviceItemFeeling = getIntent().getStringExtra("adviceItemFeeling");
+        adviceItemId = getIntent().getLongExtra(Constants.INTENT_ID, -1);
+        position = getIntent().getIntExtra(Constants.INTENT_POSITION, -1);
+        adviceItemPurpose = getIntent().getStringExtra(Constants.INTENT_PURPOSE);
+        adviceItemFeeling = getIntent().getStringExtra(Constants.INTENT_FEELING);
         LogUtil.d("getIntent==",position+ " getIntent= " +adviceItemId);
 
         tvPurpose.setText("监护目的:" + adviceItemPurpose);

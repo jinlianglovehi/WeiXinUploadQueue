@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,10 +49,10 @@ public abstract class RecordPlayActivity extends BaseActivity {
 	ImageView play;
 	@Bind(R.id.replay)
 	ImageView replay;
-	@Bind(R.id.tv_record)
-	TextView tvRecord;
-	@Bind(R.id.btn_start)
-	ImageView btnStart;
+	@Bind(R.id.tv_business)
+	TextView tvBusiness;
+	@Bind(R.id.btn_business)
+	ImageView btnBusiness;
 	@Bind(R.id.rl_function)
 	RelativeLayout rlFunction;
 	@Bind(R.id.back)
@@ -66,12 +65,6 @@ public abstract class RecordPlayActivity extends BaseActivity {
 	TextView bpm;
 	@Bind(R.id.red_heart)
 	ImageView redHeart;
-	@Bind(R.id.ivDelectAction)
-	ImageView ivDelectAction;
-	@Bind(R.id.tvDelectAction)
-	TextView tvDelectAction;
-	@Bind(R.id.flDelAction)
-	FrameLayout flDelAction;
 	@Bind(R.id.tv_start_time)
 	TextView tvStartTime;
 	@Bind(R.id.tv_consum_time)
@@ -97,7 +90,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		countDownTimer.restart();
 	}
 
-	@OnClick(R.id.btn_start)
+	@OnClick(R.id.btn_business)
 	public void function(View view) {
 		function();
 	}
@@ -117,6 +110,8 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		mediaPlayer = new MediaPlayer();
+		btnBusiness.setImageResource(R.drawable.button_upload);
+		tvBusiness.setText("上传监测图");
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
 			public int fmposition;
 			public int position;

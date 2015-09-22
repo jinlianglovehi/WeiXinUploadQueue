@@ -109,8 +109,34 @@ public class CloudRecordPlayActivity extends BaseActivity {
 		countDownTimer.restart();
 	}
 
-	@OnClick(R.id.btn_start)
+	@OnClick(R.id.btn_business)
 	public void function(View view) {
+		int status = getIntent().getIntExtra(Constants.INTENT_STATUS, -1);
+		Intent intent = new Intent();
+		switch (status) {
+			//0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除(弃用) 4 本地数据 -1未获取到数据
+			case 0:
+				intent.setClass(getApplicationContext(), AskDoctorActivity.class);
+				intent.putExtra(Constants.INTENT_ID, getIntent().getLongExtra(Constants.INTENT_ID, 0));
+				intent.putExtra(Constants.INTENT_PURPOSE, getIntent().getStringExtra(Constants.INTENT_PURPOSE));
+				intent.putExtra(Constants.INTENT_FEELING, getIntent().getStringExtra(Constants.INTENT_FEELING));
+				intent.putExtra(Constants.INTENT_POSITION, getIntent().getStringExtra(Constants.INTENT_POSITION));
+				break;
+			case 1:
+				intent.setClass(getApplicationContext(), WaitReplyingActivity.class);
+				intent.putExtra(Constants.INTENT_ID, getIntent().getStringExtra(Constants.INTENT_ID));
+				break;
+			case 2:
+				intent.setClass(getApplicationContext(), ReplyedActivity.class);
+				intent.putExtra(Constants.INTENT_ID, getIntent().getStringExtra(Constants.INTENT_ID));
+				break;
+			case 4:
+			case -1:
+			default:
+				ToastUtil.show(getApplicationContext(), "数据格式错误,status");
+				break;
+		}
+		startActivity(intent);
 	}
 
 	@Override
@@ -134,26 +160,19 @@ public class CloudRecordPlayActivity extends BaseActivity {
 			//0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除(弃用) 4 本地数据 -1未获取到数据
 			case 0:
 				btnBusiness.setImageResource(R.drawable.button_ask_doctor);
-				intent.setClass(getApplicationContext(), AskDoctorActivity.class);
 				break;
 			case 1:
 				btnBusiness.setImageResource(R.drawable.button_wait_reply);
-				intent.setClass(getApplicationContext(), WaitReplyingActivity.class);
 				break;
 			case 2:
 				btnBusiness.setImageResource(R.drawable.button_check);
-				intent.setClass(getApplicationContext(), ReplyedActivity.class);
 				break;
 			case 4:
-				btnBusiness.setImageResource(R.drawable.button_upload);
-				break;
 			case -1:
+			default:
 				ToastUtil.show(getApplicationContext(), "数据格式错误,status");
 				break;
-			default:
-				break;
 		}
-		startActivity(intent);
 	}
 
 	private void config() {
