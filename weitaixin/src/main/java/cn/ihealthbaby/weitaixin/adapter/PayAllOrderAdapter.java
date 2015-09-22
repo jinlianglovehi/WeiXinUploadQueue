@@ -91,7 +91,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
         final Order order = this.datas.get(position);
         viewHolder.tvPayType.setText("【"+PayConstant.orderType[order.getOrderStatus()]+"】");
         viewHolder.tvGoodsName.setText(order.getDescription()+"");
-        viewHolder.tvGoodsTime.setText(DateTimeTool.date2St2(order.getCreateTime(), "yyyy-MM-dd hh: mm"));
+        viewHolder.tvGoodsTime.setText(DateTimeTool.date2St2(order.getCreateTime(), "yyyy-MM-dd HH: mm"));
         viewHolder.tvPayPriceText.setText("￥" + (order.getTotalFee()/100) + "");
 
         //0 待付款-未支付,  1 待发货,  2待收货,  3订单结束,   4 订单取消
@@ -209,7 +209,7 @@ public class PayAllOrderAdapter extends BaseAdapter {
         }
 
 
-        LogUtil.d("OrdeorderrStatus","OrdeorderrStatus==> "+order.getOrderStatus());
+        LogUtil.d("OrdeorderrStatus", "OrdeorderrStatus==> "+order.getOrderStatus());
 
         return convertView;
     }

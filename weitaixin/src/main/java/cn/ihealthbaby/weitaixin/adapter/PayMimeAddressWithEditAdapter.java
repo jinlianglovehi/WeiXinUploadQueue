@@ -120,6 +120,7 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
             } else {
                 viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose_un);
             }
+            viewHolder.ivAddressImaged.setOnClickListener(null);
         }else {
             if (address.getIsDef()) {
                 viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose);

@@ -54,6 +54,7 @@
     <color name="green3">#FF01CF97</color>
     <color name="green4">#FFE9fffA</color>
     <color name="green5">#FF63E1DF</color>
+    <color name="green6">#FF3DD0AC</color>
     <!--background-->
     <color name="background_white">@color/white0</color>
     <color name="background_gray">@color/gray6</color>

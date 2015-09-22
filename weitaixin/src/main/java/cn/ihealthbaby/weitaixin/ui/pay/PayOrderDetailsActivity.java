@@ -54,7 +54,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
 
 //    private int hospitalStatus=-1;
 
-    private long orderId;
+    private long orderId=-1;
     private int orderStatus;
     private MyGoodsListAdapter adapter;
     private ArrayList<OrderItem> orderItems;
@@ -111,7 +111,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
         ApiManager.getInstance().orderApi.getOrder(orderId, new HttpClientAdapter.Callback<OrderDetail>() {
             @Override
             public void call(Result<OrderDetail> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus()==Result.SUCCESS) {
                     orderDetail = t.getData();
                     if (orderDetail == null) {
                         ToastUtil.show(getApplicationContext(), "没有数据");

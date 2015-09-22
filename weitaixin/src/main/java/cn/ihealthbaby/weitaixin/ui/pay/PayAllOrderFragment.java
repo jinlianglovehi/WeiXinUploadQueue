@@ -36,7 +36,8 @@ public class PayAllOrderFragment extends BaseFragment {
 
     private final static String TAG = "PayAllOrderFragment";
 
-    @Bind(R.id.payPullToRefreshAllOrder) PullToRefreshListView payPullToRefreshAllOrder;
+    @Bind(R.id.payPullToRefreshAllOrder)
+    PullToRefreshListView payPullToRefreshAllOrder;
 
     private PayMimeOrderActivity context;
     private PayAllOrderAdapter adapter;
@@ -64,22 +65,24 @@ public class PayAllOrderFragment extends BaseFragment {
         return view;
     }
 
-    private int pageIndex=1, pageSize=10;
+    private int pageIndex = 1, pageSize = 10;
+
     private void pullDatas() {
-        final CustomDialog customDialog=new CustomDialog();
+        final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(getActivity(), "数据加载中...");
         dialog.show();
         ApiManager.getInstance().orderApi.getOrders(PayConstant.orderAll, pageIndex, pageSize, new HttpClientAdapter.Callback<PageData<Order>>() {
             @Override
             public void call(Result<PageData<Order>> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus() == Result.SUCCESS) {
                     PageData<Order> data = t.getData();
                     ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
                     if (orders != null && orders.size() <= 0) {
                         ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据");
+                    } else {
+                        adapter.setDatas(orders);
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.setDatas(orders);
-                    adapter.notifyDataSetChanged();
                 } else {
                     ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
                 }
@@ -98,19 +101,23 @@ public class PayAllOrderFragment extends BaseFragment {
         payPullToRefreshAllOrder.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) { //下拉刷新
-                pageIndex=1;
+                pageIndex = 1;
                 ApiManager.getInstance().orderApi.getOrders(PayConstant.orderAll, pageIndex, pageSize, new HttpClientAdapter.Callback<PageData<Order>>() {
                     @Override
                     public void call(Result<PageData<Order>> t) {
-                        if (t.isSuccess()) {
+                        if (t.getStatus() == Result.SUCCESS) {
                             PageData<Order> data = t.getData();
                             ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
-                            adapter.setDatas(orders);
-                            adapter.notifyDataSetChanged();
+                            if (orders != null && orders.size() > 0) {
+                                adapter.setDatas(orders);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                ToastUtil.show(getActivity(), "没有刷新到数据");
+                            }
                         } else {
                             ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
                         }
-                        pageIndex=1;
+                        pageIndex = 1;
                         if (payPullToRefreshAllOrder != null) {
                             payPullToRefreshAllOrder.onRefreshComplete();
                         }
@@ -123,15 +130,16 @@ public class PayAllOrderFragment extends BaseFragment {
                 ApiManager.getInstance().orderApi.getOrders(PayConstant.orderAll, (++pageIndex), pageSize, new HttpClientAdapter.Callback<PageData<Order>>() {
                     @Override
                     public void call(Result<PageData<Order>> t) {
-                        if (t.isSuccess()) {
+                        if (t.getStatus() == Result.SUCCESS) {
                             PageData<Order> data = t.getData();
                             ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
-                            if (orders.size()<=0) {
+                            if (orders.size() <= 0) {
                                 --pageIndex;
-                                ToastUtil.show(getActivity().getApplicationContext(),"没有更多数据");
+                                ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据");
+                            } else {
+                                adapter.addDatas(orders);
+                                adapter.notifyDataSetChanged();
                             }
-                            adapter.addDatas(orders);
-                            adapter.notifyDataSetChanged();
                         } else {
                             ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
                             --pageIndex;
@@ -147,10 +155,13 @@ public class PayAllOrderFragment extends BaseFragment {
         payPullToRefreshAllOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Order order = (Order) adapter.getItem(position - 1);
-                Intent intent=new Intent(getActivity().getApplicationContext(), PayOrderDetailsActivity.class);
-                intent.putExtra(PayConstant.ORDERID, order.getId());
-                startActivity(intent);
+                int index = position - 1;
+                if (index >= 0) {
+                    Order order = (Order) adapter.getItem(index);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), PayOrderDetailsActivity.class);
+                    intent.putExtra(PayConstant.ORDERID, order.getId());
+                    startActivity(intent);
+                }
             }
         });
 
@@ -207,7 +218,6 @@ public class PayAllOrderFragment extends BaseFragment {
         super.onResume();
         pullDatas();
     }
-
 
 
 }

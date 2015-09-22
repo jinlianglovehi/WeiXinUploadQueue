@@ -23,7 +23,6 @@
         android:phoneNumber="true"
         android:singleLine="true"
         android:textColor="@color/black1"
-        android:textColorHint="@color/text_color_hint"
         android:textSize="@dimen/font_normal"/>
 
     <FrameLayout
@@ -47,7 +46,6 @@
             android:password="true"
             android:singleLine="true"
             android:textColor="@color/black1"
-            android:textColorHint="@color/text_color_hint"
             android:textSize="@dimen/font_normal"/>
 
         <CheckBox
@@ -83,7 +81,6 @@
             android:padding="18dp"
             android:singleLine="true"
             android:textColor="@color/black1"
-            android:textColorHint="@color/text_color_hint"
             android:textSize="@dimen/font_normal"/>
 
         <TextView

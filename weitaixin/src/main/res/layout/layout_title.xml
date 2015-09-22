@@ -49,7 +49,7 @@
 
     <FrameLayout
         android:id="@+id/flDelAction"
-        android:layout_width="70dp"
+        android:layout_width="60dp"
         android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -60,7 +60,7 @@
             android:layout_width="46dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:padding="16dp"
+            android:padding="14dp"
             android:scaleType="fitXY"
             android:src="@drawable/address_delect" />
 

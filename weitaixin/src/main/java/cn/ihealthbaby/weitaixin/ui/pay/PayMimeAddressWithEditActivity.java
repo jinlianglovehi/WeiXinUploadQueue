@@ -23,26 +23,37 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressAdapter;
 import cn.ihealthbaby.weitaixin.adapter.PayMimeAddressWithEditAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 public class PayMimeAddressWithEditActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
-    @Bind(R.id.flDelAction) FrameLayout flDelAction;
-    @Bind(R.id.ivDelectAction) ImageView ivDelectAction;
-    @Bind(R.id.tvDelectAction) TextView tvDelectAction;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
+    @Bind(R.id.flDelAction)
+    FrameLayout flDelAction;
+    @Bind(R.id.ivDelectAction)
+    ImageView ivDelectAction;
+    @Bind(R.id.tvDelectAction)
+    TextView tvDelectAction;
     //
 
-    @Bind(R.id.lvAddressAllOrder) ListView lvAddressAllOrder;
-    @Bind(R.id.tvTextTip) TextView tvTextTip;
-    @Bind(R.id.tvAddNewAddress) TextView tvAddNewAddress;
+    @Bind(R.id.lvAddressAllOrder)
+    ListView lvAddressAllOrder;
+    @Bind(R.id.tvTextTip)
+    TextView tvTextTip;
+    @Bind(R.id.tvAddNewAddress)
+    TextView tvAddNewAddress;
 
 
     private PayMimeAddressWithEditAdapter adapter;
@@ -80,13 +91,13 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
         if (tag) {
             tvDelectAction.setVisibility(View.VISIBLE);
             ivDelectAction.setVisibility(View.GONE);
-            adapter.isDel=true;
+            adapter.isDel = true;
             tvTextTip.setVisibility(View.INVISIBLE);
             tvAddNewAddress.setText("确定");
         } else {
             tvDelectAction.setVisibility(View.GONE);
             ivDelectAction.setVisibility(View.VISIBLE);
-            adapter.isDel=false;
+            adapter.isDel = false;
             tvTextTip.setVisibility(View.VISIBLE);
             tvAddNewAddress.setText("添加新地址");
         }
@@ -100,40 +111,76 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
         boolean tag = (boolean) flDelAction.getTag();
         if (tag) {
             Intent intent = new Intent(this, PayAddAddressActivity.class);
-
             startActivity(intent);
         } else {
-            HashMap<Integer, Boolean> addset = adapter.addressMap;
+            CustomDialog customDialog = new CustomDialog();
+            Dialog dialog1 = customDialog.createDialog1(this, "删除地址...");
+            dialog1.show();
+//
+//            final ArrayList<Long> addressDel = new ArrayList<Long>();
+            final HashMap<Integer, Boolean> addset = adapter.addressMap;
             for (int i = 0; i < addset.size(); i++) {
                 if (addset.get(i)) {
-                    adapter.datas.remove(i);
-                    addset.remove(i);
+                    final long addressId = adapter.datas.get(i).getId();
+//                    final int finalI = i;
+                    ApiManager.getInstance().addressApi.delete(addressId, new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
+                        @Override
+                        public void handleData(Void data) throws Exception {
+//                            adapter.datas.remove(finalI);
+//                            addset.remove(finalI);
+//                            addressDel.add(addressId);
+                        }
+                    }), getRequestTag());
                 }
             }
-            for (int i = 0; i < addset.size(); i++) {
-                addset.put(i, false);
-            }
-            adapter.notifyDataSetChanged();
+//
+//            ArrayList<Address> newAddress= adapter.datas;
+//
+//            for (int i = 0; i < addressDel.size(); i++) {
+//                long addressId = addressDel.get(i);
+//                for (int j = 0; j < newAddress.size(); j++) {
+//                    long addID = newAddress.get(j).getId();
+//                    if (addID == addressId) {
+//                        newAddress.remove(j);
+//                        break;
+//                    }
+//                }
+//            }
+//
+//
+//            adapter.addressMap = new HashMap<Integer, Boolean>();
+//            for (int i = 0; i < adapter.datas.size(); i++) {
+//                adapter.addressMap.put(i, false);
+//            }
+//
+//            adapter.notifyDataSetChanged();
 
             //
+            adapter.isDel = false;
             tvDelectAction.setVisibility(View.GONE);
             ivDelectAction.setVisibility(View.VISIBLE);
-            adapter.isDel=false;
             tvTextTip.setVisibility(View.VISIBLE);
             tvAddNewAddress.setText("添加新地址");
             flDelAction.setTag(true);
+
+            adapter.notifyDataSetChanged();
+
+            customDialog.dismiss();
+
+            pullData();
         }
+
     }
 
 
     private void pullData() {
-        final CustomDialog customDialog=new CustomDialog();
+        final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
         ApiManager.getInstance().addressApi.getAddresss(new HttpClientAdapter.Callback<ApiList<Address>>() {
             @Override
             public void call(Result<ApiList<Address>> t) {
-                if (t.isSuccess()) {
+                if (t.getStatus() == Result.SUCCESS) {
                     ApiList<Address> data = t.getData();
                     ArrayList<Address> addressList = (ArrayList<Address>) data.getList();
                     LogUtil.d("addressList", "addressList =%s ", addressList);
@@ -163,17 +210,16 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
                     boolean isSeleced = adapter.addressMap.get(position);
                     adapter.addressMap.put(position, !isSeleced);
                     adapter.notifyDataSetChanged();
-                }else{
+                } else {
                     Address item = (Address) adapter.getItem(position);
-                    Intent intent=new Intent(getApplicationContext(),PayAddAddressWithEditActivity.class);
-                    intent.putExtra("AddressItem",item);
+                    Intent intent = new Intent(getApplicationContext(), PayAddAddressWithEditActivity.class);
+                    intent.putExtra("AddressItem", item);
                     startActivity(intent);
                 }
             }
         });
 
     }
-
 
 
     @OnClick(R.id.back)

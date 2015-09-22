@@ -24,15 +24,10 @@ public class HomePageFragment extends BaseFragment {
     private final static String TAG = "HomePageFragment";
 
 
-    @Bind(R.id.back)
-    RelativeLayout back;
-    @Bind(R.id.title_text)
-    TextView title_text;
-    @Bind(R.id.function)
-    TextView function;
+    @Bind(R.id.back) RelativeLayout back;
+    @Bind(R.id.title_text) TextView title_text;
+    @Bind(R.id.function) TextView function;
 //
-
-    View view;
 
     private static HomePageFragment instance;
 
@@ -47,16 +42,16 @@ public class HomePageFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home_page, null);
+        View view = inflater.inflate(R.layout.fragment_home_page, null);
         ButterKnife.bind(this, view);
-        init(view);
+
+        title_text.setText("首页");
+
         back.setVisibility(View.INVISIBLE);
+
         return view;
     }
 
-    private void init(View view) {
-        title_text.setText("首页");
-    }
 
 
     @OnClick(R.id.title_text)
@@ -78,7 +73,6 @@ public class HomePageFragment extends BaseFragment {
 
 
 }
-
 
 
 
