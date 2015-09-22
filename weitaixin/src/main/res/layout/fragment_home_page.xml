@@ -2,18 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray17"
-    tools:context="cn.ihealthbaby.weitaixin.ui.LoginActivity">
+    android:background="@color/gray5">
 
-    <include
-        android:id="@+id/head_title_id"
-        layout="@layout/layout_title" />
 
 
     <RelativeLayout
         android:id="@+id/rlHomeHeadArea"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="240dp"
         android:layout_below="@id/head_title_id"
         android:background="@color/green6">
 
@@ -156,7 +152,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="18dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -207,6 +203,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
+            android:layout_marginTop="18dp"
             android:orientation="horizontal">
 
             <LinearLayout

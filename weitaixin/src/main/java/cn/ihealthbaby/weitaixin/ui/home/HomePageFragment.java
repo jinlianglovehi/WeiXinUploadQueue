@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.home;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,8 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.mine.WoMessageActivity;
 import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.PayMimeOrderActivity;
@@ -25,9 +28,10 @@ public class HomePageFragment extends BaseFragment {
     private final static String TAG = "HomePageFragment";
 
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+//    @Bind(R.id.rlNavHead) RelativeLayout rlNavHead;
+//    @Bind(R.id.back) RelativeLayout back;
+//    @Bind(R.id.title_text) TextView title_text;
+//    @Bind(R.id.function) TextView function;
 
 //
 
@@ -36,6 +40,7 @@ public class HomePageFragment extends BaseFragment {
     @Bind(R.id.llHomeFunctionThreeAction) LinearLayout llHomeFunctionThreeAction;
     @Bind(R.id.llHomeFunctionFourAction) LinearLayout llHomeFunctionFourAction;
 
+    MeMainFragmentActivity meMainFragmentActivity;
 
     private static HomePageFragment instance;
 
@@ -53,43 +58,48 @@ public class HomePageFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_home_page, null);
         ButterKnife.bind(this, view);
 
-        title_text.setText("首页");
+//        title_text.setText("首页");
 
-        back.setVisibility(View.INVISIBLE);
+//        back.setVisibility(View.INVISIBLE);
+//        rlNavHead.setBackgroundResource(R.color.green6);
+
+        meMainFragmentActivity = (MeMainFragmentActivity) getActivity();
 
         return view;
     }
 
 
-    @OnClick(R.id.title_text)
-    public void title_text() {
-        Intent intent=new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
-        startActivity(intent);
-    }
+//    @OnClick(R.id.title_text)
+//    public void title_text() {
+//        Intent intent=new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
+//        startActivity(intent);
+//    }
 
 
 
     @OnClick(R.id.llHomeFunctionOneAction)
     public void llHomeFunctionOneAction() {
-
+        meMainFragmentActivity.iv_tab_02();
     }
 
 
     @OnClick(R.id.llHomeFunctionTwoAction)
     public void llHomeFunctionTwoAction() {
-
+        Intent intent = new Intent(getActivity().getApplicationContext(), WoMessageActivity.class);
+        startActivity(intent);
     }
 
 
     @OnClick(R.id.llHomeFunctionThreeAction)
     public void llHomeFunctionThreeAction() {
-
+        meMainFragmentActivity.iv_tab_03();
     }
 
 
     @OnClick(R.id.llHomeFunctionFourAction)
     public void llHomeFunctionFourAction() {
-
+        Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
+        startActivity(intent);
     }
 
 
