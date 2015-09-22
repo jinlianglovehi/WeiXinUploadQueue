@@ -1,29 +1,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white0"
-              android:orientation="vertical"
-              tools:context="cn.ihealthbaby.weitaixin.ui.RegistActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white0"
+    android:orientation="vertical"
+    tools:context="cn.ihealthbaby.weitaixin.ui.RegistActivity">
 
-    <include layout="@layout/layout_title"/>
+    <include layout="@layout/layout_title" />
 
-    <EditText
-        android:id="@+id/et_phone_number"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="53dp"
+        android:layout_height="54dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/frame_selector"
-        android:hint="请输入正确的手机号"
-        android:maxLength="11"
-        android:numeric="integer"
-        android:padding="18dp"
-        android:phoneNumber="true"
-        android:singleLine="true"
-        android:textColor="@color/black1"
-        android:textSize="@dimen/font_normal"/>
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@null"
+            android:paddingLeft="14dp"
+            android:hint="请输入正确的手机号"
+            android:maxLength="11"
+            android:numeric="integer"
+            android:phoneNumber="true"
+            android:singleLine="true"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/font_normal" />
+    </LinearLayout>
+
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -36,17 +44,17 @@
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="53dp"
+            android:layout_height="54dp"
+            android:paddingLeft="14dp"
             android:layout_marginRight="60dp"
             android:background="@null"
             android:hint="请输入密码"
             android:inputType="textPassword"
             android:maxLength="20"
-            android:padding="18dp"
             android:password="true"
             android:singleLine="true"
             android:textColor="@color/black1"
-            android:textSize="@dimen/font_normal"/>
+            android:textSize="@dimen/font_normal" />
 
         <CheckBox
             android:id="@+id/ivShowPassword"
@@ -55,7 +63,7 @@
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="20dp"
             android:background="@drawable/eye_selector"
-            android:button="@null"/>
+            android:button="@null" />
 
     </FrameLayout>
 
@@ -71,17 +79,17 @@
         <EditText
             android:id="@+id/et_mark_number"
             android:layout_width="0dp"
-            android:layout_height="53dp"
+            android:layout_height="54dp"
+            android:paddingLeft="14dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/frame_selector"
             android:hint="请输入验证码"
             android:maxLength="6"
             android:numeric="integer"
-            android:padding="18dp"
             android:singleLine="true"
             android:textColor="@color/black1"
-            android:textSize="@dimen/font_normal"/>
+            android:textSize="@dimen/font_normal" />
 
         <TextView
             android:id="@+id/tv_mark_num_text"
@@ -93,7 +101,7 @@
             android:singleLine="true"
             android:text="发送验证码"
             android:textColor="@color/black0"
-            android:textSize="@dimen/font_normal"/>
+            android:textSize="@dimen/font_normal" />
     </LinearLayout>
 
     <LinearLayout
@@ -110,7 +118,7 @@
             android:layout_height="18dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/pitch"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -119,7 +127,7 @@
             android:layout_marginLeft="8dp"
             android:singleLine="true"
             android:text="我已阅读并接受"
-            android:textSize="@dimen/font_normal14"/>
+            android:textSize="@dimen/font_normal14" />
 
         <TextView
             android:id="@+id/tvRuleRegister"
@@ -129,7 +137,7 @@
             android:singleLine="true"
             android:text="《微胎心注册条款》"
             android:textColor="@color/button_login"
-            android:textSize="@dimen/font_normal14"/>
+            android:textSize="@dimen/font_normal14" />
     </LinearLayout>
 
     <TextView
@@ -145,5 +153,5 @@
         android:singleLine="true"
         android:text="确定"
         android:textColor="@drawable/text_color_selector"
-        android:textSize="@dimen/font_normal"/>
+        android:textSize="@dimen/font_normal" />
 </LinearLayout>
