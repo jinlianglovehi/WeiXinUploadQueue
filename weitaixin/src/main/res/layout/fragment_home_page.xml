@@ -11,6 +11,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/rlHomeHeadArea"
         android:layout_width="match_parent"
         android:layout_height="230dp"
         android:layout_below="@id/head_title_id"
@@ -19,12 +20,12 @@
         <RelativeLayout
             android:id="@+id/rlPregnancyDate"
             android:layout_width="150dp"
-            android:layout_toRightOf="@+id/ivHomeHeadImg"
-            android:layout_marginBottom="10dp"
-            android:layout_above="@+id/rlProduceDate"
             android:layout_height="24dp"
-            android:layout_marginLeft="-50dp"
+            android:layout_above="@+id/rlProduceDate"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="-50dp"
+            android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:background="@drawable/home_head_one">
 
             <TextView
@@ -52,9 +53,9 @@
             android:id="@+id/rlProduceDate"
             android:layout_width="150dp"
             android:layout_height="24dp"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="-50dp"
             android:layout_toRightOf="@+id/ivHomeHeadImg"
-            android:layout_centerVertical="true"
             android:background="@drawable/home_head_two">
 
             <TextView
@@ -83,11 +84,11 @@
             android:id="@+id/rltvMonitorDate"
             android:layout_width="150dp"
             android:layout_height="24dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="-50dp"
             android:layout_below="@+id/rlProduceDate"
-            android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="-50dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:background="@drawable/home_head_three">
 
             <TextView
@@ -143,9 +144,114 @@
             android:textColor="@color/white0"
             android:textSize="@dimen/font18" />
 
-
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rlHomeHeadArea"
+        android:background="@color/white0"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/llHomeFunctionOneAction"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/home_function_action_selector"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/home_function_img_one" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="胎心监护" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llHomeFunctionTwoAction"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/home_function_action_selector"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/home_function_img_two" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="医生回复" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/llHomeFunctionThreeAction"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/home_function_action_selector"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/home_function_img_three" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="监测记录" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llHomeFunctionFourAction"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/home_function_action_selector"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/home_function_img_four" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="我的帐户" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
 
