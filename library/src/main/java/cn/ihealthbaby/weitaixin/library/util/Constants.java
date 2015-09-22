@@ -50,4 +50,7 @@ public class Constants {
 	public static final String INTENT_ID = "ID";
 	public static final int CODE_200_OK = 200;
 	public static final String INTENT_STATUS = "STATUS";
+	public static final String INTENT_FEELING = "FEELING";
+	public static final String INTENT_PURPOSE = "PURPOSE";
+	public static final String INTENT_POSITION = "POSITION";
 }

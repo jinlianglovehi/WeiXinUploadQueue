@@ -4,16 +4,16 @@ package cn.ihealthbaby.weitaixin.library.data.model.data;
  * Created by liuhongjian on 15/9/9 13:31.
  */
 public class RecordData {
-	private String v;
+	private int v;
 	private Data data;
 	private Device device;
 	private HostDevice hostDevice;
 
-	public String getV() {
+	public int getV() {
 		return v;
 	}
 
-	public void setV(String v) {
+	public void setV(int v) {
 		this.v = v;
 	}
 

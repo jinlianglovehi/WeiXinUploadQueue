@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -14,6 +16,10 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
+import cn.ihealthbaby.weitaixin.library.data.model.data.Device;
+import cn.ihealthbaby.weitaixin.library.data.model.data.HostDevice;
+import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 
 public class Util {
 	public static float getDensity(Context context) {
@@ -189,5 +195,41 @@ public class Util {
 			}
 		}
 		return positions;
+	}
+
+	/**
+	 * { "v": 1,//(必选)数据结构版本 "data":{//(必选) "heartRate":[158,123],  //(必选)胎儿心率, 按照 interval 间隔
+	 * "fm":[1500,3500],       //胎动 fetalMovement , 监测开始后的第xxx 毫秒 "afm":[1500,3500],      //自动胎动
+	 * autoFetalMovement, 监测开始后的第xxx 毫秒 "doctor":[1500,3500],   //医生干预 , 监测开始后的第xxx 毫秒 "interval":
+	 * 500,        //(必选)心率时间间隔,毫秒 "time":1400000000       //(必选)开始时间,UTC 毫秒时间戳 }, "device": {
+	 * //(必选)探头 "sn":"",                //(必选)设备id "type":0,              //(必选)设备型号 "version":1
+	 * //(必选)设备版本号 }, "hostDevice":{            //宿主设备（允许app的设备） "deviceId":"", //设备id "type":"",
+	 * //类型 "os":"",                //os 版本信息字符串 "imei":"", //设备imei 可选 "softVersion":""
+	 * //我们的软件版本字符串格式 } }
+	 *
+	 * @return
+	 */
+	public static RecordData getDefaultRecordData(Context context) {
+		RecordData recordData = new RecordData();
+		recordData.setV(1);
+		Device device = new Device();
+		device.setSn(SPUtil.getServiceInfo(context).getSerialnum());
+		device.setType(0);
+		device.setVersion(1);
+		HostDevice hostDevice = new HostDevice();
+		hostDevice.setDeviceId(getDeviceId(context));
+		hostDevice.setOs("Android" + Build.VERSION.CODENAME + Build.DEVICE);
+		hostDevice.setType(android.os.Build.MODEL);
+		hostDevice.setImei(getDeviceId(context));
+		hostDevice.setSoftVersion("1");
+		recordData.setDevice(device);
+		recordData.setHostDevice(hostDevice);
+		return recordData;
+	}
+
+	public static String getDeviceId(Context context) {
+		TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		String deviceId = tm.getDeviceId();
+		return deviceId;
 	}
 }

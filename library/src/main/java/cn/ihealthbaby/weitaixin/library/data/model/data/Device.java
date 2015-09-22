@@ -5,8 +5,8 @@ package cn.ihealthbaby.weitaixin.library.data.model.data;
  */
 public class Device {
 	private String sn;
-	private String type;
-	private String version;
+	private int type;
+	private int version;
 
 	public String getSn() {
 		return sn;
@@ -16,19 +16,21 @@ public class Device {
 		this.sn = sn;
 	}
 
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 
-	public String getVersion() {
+	public int getVersion() {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
+
+
 }
