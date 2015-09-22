@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.request;
 
 import android.support.annotation.NonNull;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -22,6 +23,8 @@ public abstract class AbstractReqeust<T> extends Request<Result<T>> {
 	public AbstractReqeust(int method, String url, Response.ErrorListener listener, HttpClientAdapter.Callback callback) {
 		super(method, url, listener);
 		this.callback = callback;
+		//默认超时60s
+		setRetryPolicy(new DefaultRetryPolicy(60*1000, 0, 1f));
 	}
 
 	@Override
