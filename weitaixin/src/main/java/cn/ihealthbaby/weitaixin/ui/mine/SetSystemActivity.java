@@ -134,8 +134,8 @@ public class SetSystemActivity extends BaseActivity {
             }
 
             @Override
-            public void handleValidator(Context context, Void data) throws Exception {
-                super.handleValidator(context, data);
+            public void handleValidator(Context context ) throws Exception {
+                super.handleValidator(context );
                 customDialog.dismiss();
                 LogUtil.d("handleValidator super", "handleValidator super");
             }
