@@ -3,7 +3,6 @@ package cn.ihealthbaby.weitaixin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 
 import java.util.Map;
 
@@ -59,13 +58,19 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			 */
 			case Result.VALIDATOR:
 				Map<String, Object> msgMap = result.getMsgMap();
-				// TODO: 15/7/23 提示消息
-				ToastUtil.show(context, msgMap.toString()+"Result.VALIDATOR");
-				LogUtil.e(TAG, "call", result.getMsg());
-
+				// TODO: 15/9/22   依次输出msg的值
+				if (msgMap != null || msgMap.size() > 0) {
+					StringBuilder stringBuilder = new StringBuilder();
+					for (Object o : msgMap.values()) {
+						stringBuilder.append(o.toString());
+						stringBuilder.append("/r/n");
+					}
+					ToastUtil.show(context, stringBuilder.toString());
+				}
+				LogUtil.e(TAG, "Result.VALIDATOR", msgMap);
 				//
 				try {
-					business.handleValidator(context, result.getData());
+					business.handleValidator(context);
 				} catch (Exception e) {
 					e.printStackTrace();
 					LogUtil.d(TAG, "Result.VALIDATORException==> " + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
@@ -78,8 +83,6 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.ACCOUNT_ERROR:
 				Map<String, Object> msgMapERROR = result.getMsgMap();
 				ToastUtil.show(context, msgMapERROR + "请求失效，请重新登录ACCOUNT_ERROR");
-
-
 				try {
 					SPUtil.clearUser(context);
 					WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
@@ -109,7 +112,6 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleException();
 				}
 				break;
-
 			default:
 				LogUtil.d(TAG, "Result.default==> " + result.getMsgMap() + "Result.default");
 				business.handleException();

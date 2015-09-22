@@ -7,9 +7,14 @@ import android.content.Context;
  */
 public interface Business<T> {
 	void handleData(T data) throws Exception;
-	void handleValidator(Context context, T data) throws Exception;
+
+	void handleValidator(Context context) throws Exception;
+
 	void handleAccountError(Context context, T data) throws Exception;
+
 	void handleError(Context context, T data) throws Exception;
+
 	void handleException();
-	void handleDefault() ;
+
+	void handleDefault();
 }
