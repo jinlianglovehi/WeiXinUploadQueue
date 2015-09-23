@@ -14,10 +14,6 @@ import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
  */
 public abstract class AbstractBusiness<T> implements Business<T> {
 	@Override
-	public void handleData(T data) {
-	}
-
-	@Override
 	public void handleValidator(Context context) {
 	}
 
