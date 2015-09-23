@@ -1,13 +1,16 @@
 package cn.ihealthbaby.weitaixin.ui;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +26,7 @@ import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.ImageTool;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
@@ -148,11 +152,23 @@ public class WelcomeActivity extends BaseActivity {
         ivWelcome05 = (ImageView)view05.findViewById(R.id.ivWelcome05);
         tvNextAction = (TextView)view05.findViewById(R.id.tvNextAction);
 
-        view01.setImageResource(R.drawable.pay_choose);
-        view02.setImageResource(R.drawable.pay_choose);
-        view03.setImageResource(R.drawable.pay_choose);
-        view04.setImageResource(R.drawable.pay_choose);
-        ivWelcome05.setImageResource(R.drawable.pay_choose);
+
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        int screenWidth = wm.getDefaultDisplay().getWidth();
+        int screenHeight = wm.getDefaultDisplay().getHeight();
+
+
+        Bitmap bitmap01 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_01, screenWidth, screenHeight);
+        Bitmap bitmap02 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_02, screenWidth, screenHeight);
+        Bitmap bitmap03 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_03, screenWidth, screenHeight);
+        Bitmap bitmap04 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_04, screenWidth, screenHeight);
+        Bitmap bitmap05 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome, screenWidth, screenHeight);
+
+        view01.setImageBitmap(bitmap01);
+        view02.setImageBitmap(bitmap02);
+        view03.setImageBitmap(bitmap03);
+        view04.setImageBitmap(bitmap04);
+        ivWelcome05.setImageBitmap(bitmap05);
 
         tvNextAction.setOnClickListener(new View.OnClickListener() {
             @Override

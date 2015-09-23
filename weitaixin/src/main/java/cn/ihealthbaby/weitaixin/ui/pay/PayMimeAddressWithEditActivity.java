@@ -132,6 +132,8 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
                     }), getRequestTag());
                 }
             }
+
+
 //
 //            ArrayList<Address> newAddress= adapter.datas;
 //

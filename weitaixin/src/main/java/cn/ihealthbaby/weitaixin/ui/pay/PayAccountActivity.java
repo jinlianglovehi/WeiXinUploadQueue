@@ -27,13 +27,14 @@ public class PayAccountActivity extends BaseActivity {
     TextView function;
 
     //
-    @Bind(R.id.rlPayMimeOrder) RelativeLayout rlPayMimeOrder;
-    @Bind(R.id.tvPayAccountRentDay) TextView tvPayAccountRentDay;
+    @Bind(R.id.rlPayMimeOrder)
+    RelativeLayout rlPayMimeOrder;
+    @Bind(R.id.tvPayAccountRentDay)
+    TextView tvPayAccountRentDay;
 
 
     private User user;
     private long orderId = -1;
-
 
 
     @Override
@@ -58,26 +59,32 @@ public class PayAccountActivity extends BaseActivity {
     }
 
 
+    private final int ACTIVATE_SERVICE = 2;
+
     private void pullData() {
-        if(user!=null){
+        if (user != null) {
             boolean hasService = user.getHasService();
             if (hasService) {
-
-            }else {
+                ApiManager.getInstance().serviceApi.getByUser(new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
+                    @Override
+                    public void handleData(Service data) {
+                        if (data != null) {
+                            //0 开通未绑定设备,1绑定未激活服务,2服务已激活,3服务结束,4服务已取消
+                            if (data.getServiceStatus() == ACTIVATE_SERVICE) {
+                                tvPayAccountRentDay.setText("已开通" + data.getRentedDays() + "天");
+                                orderId = data.getOrderId();
+                            } else {
+                                tvPayAccountRentDay.setText("租用设备");
+                                orderId = data.getOrderId();
+                            }
+                        }
+                    }
+                }), getRequestTag());
+            } else {
                 tvPayAccountRentDay.setText("租用设备");
                 orderId = -1;
             }
         }
-
-        ApiManager.getInstance().serviceApi.getByUser(new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
-            @Override
-            public void handleData(Service data)  {
-                if (data != null) {
-                    tvPayAccountRentDay.setText("已开通" + data.getRentedDays() + "天");
-                    orderId = data.getOrderId();
-                }
-            }
-        }),getRequestTag());
     }
 
 
@@ -95,6 +102,9 @@ public class PayAccountActivity extends BaseActivity {
                     Intent intentOrderDetails = new Intent(this, PayOrderDetailsActivity.class);
                     intentOrderDetails.putExtra(PayConstant.ORDERID, orderId);
                     startActivity(intentOrderDetails);
+                } else {
+                    Intent intent = new Intent(this, PayRentInformationActivity.class);
+                    startActivity(intent);
                 }
             } else {
                 Intent intent = new Intent(this, PayRentInformationActivity.class);

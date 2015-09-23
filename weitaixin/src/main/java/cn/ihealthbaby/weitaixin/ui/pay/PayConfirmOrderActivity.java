@@ -185,23 +185,41 @@ public class PayConfirmOrderActivity extends BaseActivity {
         this.finish();
     }
 
+
+    private final int REQUESTCODE_MIMEADDRESS = 8;
+    public static final int RESULTCODE_MIMEADDRESS = 9;
+
+    private final int REQUESTCODE_ADDADDRESS = 6;
+    public static final int RESULTCODE_ADDADDRESS = 7;
+
+
     @OnClick(R.id.rlNoneGet)
     public void NoneGet() {
         Intent intent=new Intent(getApplicationContext(),PayAddAddressActivity.class);
-        startActivityForResult(intent, 666);
+        startActivityForResult(intent, REQUESTCODE_ADDADDRESS);
     }
 
     @OnClick(R.id.rlExpressageGet)
     public void rlExpressageGet() {
         Intent intent=new Intent(getApplicationContext(),PayMimeAddressActivity.class);
-        startActivityForResult(intent, 888);
+        startActivityForResult(intent, REQUESTCODE_MIMEADDRESS);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==888) {
-            if (resultCode==999) {
+
+        if (requestCode==REQUESTCODE_ADDADDRESS) {
+            if (resultCode==RESULTCODE_ADDADDRESS) {
+                if (data!=null) {
+                    ExpressageAction();
+                }
+            }
+        }
+
+
+        if (requestCode==REQUESTCODE_MIMEADDRESS) {
+            if (resultCode==RESULTCODE_MIMEADDRESS) {
                 if (data!=null) {
                     Address addressItem = (Address) data.getSerializableExtra("addressItem");
                     tvAddressName.setText(addressItem.getLinkMan());

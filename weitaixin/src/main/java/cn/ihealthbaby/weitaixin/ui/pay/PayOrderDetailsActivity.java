@@ -25,6 +25,7 @@ import cn.ihealthbaby.client.model.OrderDetail;
 import cn.ihealthbaby.client.model.OrderItem;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -117,10 +118,13 @@ public class PayOrderDetailsActivity extends BaseActivity {
                         ToastUtil.show(getApplicationContext(), "没有数据");
                         return;
                     }
+
+                    LogUtil.d("orderDetail", orderDetail.getOrderStatus()+" orderD有数etail==>"+orderDetail);
+
                     tvOrderGoodsNumber.setText(orderDetail.getId() + "");
                     tvAddressName.setText(orderDetail.getAddress().getLinkMan());
                     tvAddressPhoneNumber.setText(orderDetail.getAddress().getMobile());
-                    tvAddressText.setText(orderDetail.getAddress().getAddress());
+                    tvAddressText.setText(orderDetail.getAddress().getArea()+orderDetail.getAddress().getAddress()+"");
 
 
                     int payType = orderDetail.getPayType();

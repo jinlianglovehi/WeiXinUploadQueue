@@ -16,15 +16,15 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
  * Created by Think on 2015/9/2.
  */
 public class UploadRecord {
-	public static void uploadRecord(final BaseActivity context, AdviceItem adviceItem) {
-		final CustomDialog customDialog = new CustomDialog();
-		Dialog dialog = customDialog.createDialog1(context, "上传中...");
-		dialog.show();
-		AdviceForm adviceForm = new AdviceForm();
-		UUID uuid = UUID.randomUUID();
-		adviceForm.setClientId(uuid + "");
-		adviceForm.setTestTime(adviceItem.getTestTime());
-		adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
+    public static void uploadRecord(final BaseActivity context, AdviceItem adviceItem) {
+        final CustomDialog customDialog = new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(context, "上传中...");
+        dialog.show();
+        AdviceForm adviceForm = new AdviceForm();
+        UUID uuid = UUID.randomUUID();
+        adviceForm.setClientId(uuid + "");
+        adviceForm.setTestTime(adviceItem.getTestTime());
+        adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
 //            adviceForm.setData();
 //            adviceForm.setAskPurpose();
 //            adviceForm.setDataType();
@@ -33,19 +33,28 @@ public class UploadRecord {
 //            adviceForm.setFetalTonePath();
 //            adviceForm.setLatitude();
 //            adviceForm.setLongitude();
-		ApiManager.getInstance().adviceApi.uploadData(adviceForm, new HttpClientAdapter.Callback<Long>() {
-			@Override
-			public void call(Result<Long> t) {
-				if (t.isSuccess()) {
-					Long data = t.getData();
-					ToastUtil.show(context, "上传成功");
-				} else {
-					ToastUtil.show(context, t.getMsgMap() + "");
-				}
-				customDialog.dismiss();
-			}
-		}, context);
-	}
+        ApiManager.getInstance().adviceApi.uploadData(adviceForm,
+                new DefaultCallback<Long>(context, new AbstractBusiness<Long>() {
+                    @Override
+                    public void handleData(Long data) {
+                        ToastUtil.show(context, "上传成功");
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), context);
+
+    }
+
 }
 
 

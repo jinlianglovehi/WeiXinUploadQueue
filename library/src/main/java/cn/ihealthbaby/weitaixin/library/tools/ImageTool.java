@@ -1,10 +1,13 @@
 package cn.ihealthbaby.weitaixin.library.tools;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * Created by Think on 2015/8/21.
@@ -53,4 +56,52 @@ public class ImageTool {
         return baos.toByteArray();
     }
 
+
+//    public static Bitmap decodeSampledBitmap(Resources res, int resId, int reqWidth, int reqHeight) {
+//        byte[] bytes = bitmap2Byte(null);
+//        BitmapFactory.decodeByteArray(bytes,0,bytes.length,options);
+//    }
+
+
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+
+    public static byte[] bitmap2Byte(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
+        return baos.toByteArray();
+    }
+
+
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 3;
+
+        if (height > reqHeight || width > reqWidth) {
+            if (width > height) {
+                inSampleSize = Math.round((float)height / (float)reqHeight);
+            } else {
+                inSampleSize = Math.round((float)width / (float)reqWidth);
+            }
+        }
+        LogUtil.d("inSampleSize", "inSampleSize==>" + inSampleSize);
+        LogUtil.d("inSampleSize", width+ "inSampleSize==>" + height);
+        LogUtil.d("inSampleSize", reqWidth+ "inSampleSize==>" + reqHeight);
+        return inSampleSize;
+    }
+
+
 }
+
+
+
+

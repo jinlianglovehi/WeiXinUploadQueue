@@ -165,6 +165,8 @@ public class PayAddAddressActivity extends BaseActivity {
             public void call(Result<Void> t) {
                 if (t.getStatus() == Result.SUCCESS) {
                     Void data = t.getData();
+                    Intent intent = new Intent();
+                    setResult(PayConfirmOrderActivity.RESULTCODE_ADDADDRESS, intent);
                     finish();
                 } else {
                     ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");

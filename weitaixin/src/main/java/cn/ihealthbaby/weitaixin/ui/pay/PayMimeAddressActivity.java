@@ -119,7 +119,7 @@ public class PayMimeAddressActivity extends BaseActivity {
                             adapter.notifyDataSetChanged();
                             Intent intent = new Intent();
                             intent.putExtra("addressItem", item);
-                            setResult(999, intent);
+                            setResult(PayConfirmOrderActivity.RESULTCODE_MIMEADDRESS, intent);
                             PayMimeAddressActivity.this.finish();
                         } else {
                             ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
