@@ -19,11 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePopupWindow;
+import com.bigkoo.pickerview.lib.WheelTime;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,6 +37,8 @@ import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -95,8 +99,12 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
         form = new UserInfoForm();
 
+        WheelTime.setSTART_YEAR(1888);
+        WheelTime.setEND_YEAR(3000);
+
         mTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
         mExpectTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
+
         //时间选择后回调
         mTimePopupWindow.setOnTimeSelectListener(new TimePopupWindow.OnTimeSelectListener() {
 
@@ -121,6 +129,17 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         });
 
     }
+
+    public Date getDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+        try {
+            return sdf.parse("1888年1月1日");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
 
     @Override
     protected void onResume() {

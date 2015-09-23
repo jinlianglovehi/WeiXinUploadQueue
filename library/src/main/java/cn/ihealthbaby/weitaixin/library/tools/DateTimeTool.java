@@ -67,16 +67,13 @@ public class DateTimeTool {
 
 	public static Date str2Date(String dateStr) {
 		if (TextUtils.isEmpty(dateStr)) {
-			LogUtil.d("testTime", "str2Date=1=> " + dateStr);
 			return new Date();
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
 		try {
-			LogUtil.d("testTime", "str2Date=2=> " + dateStr);
 			return sdf.parse(dateStr);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			LogUtil.d("testTime", "str2Date=3=> " + dateStr + "  eeeee  " + e.toString());
 			return null;
 		}
 	}
