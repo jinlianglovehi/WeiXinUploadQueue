@@ -19,6 +19,19 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    def now = new Date().dateTimeString
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称: 例如 weitaixin_v1.0_2015-01-15_debug.apk
+                        def fileName = "weitaixin_v${defaultConfig.versionName}_time.apk"
+                        output.outputFile = new File(outputFile.parent, fileName.replace("time",now))
+                    }
+                }
+            }
+        }
     }
     dexOptions {
         incremental false
