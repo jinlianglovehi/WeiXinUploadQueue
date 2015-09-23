@@ -308,7 +308,6 @@ public class RecordFragment extends BaseFragment {
                         new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
                             @Override
                             public void handleData(PageData<AdviceItem> data) {
-                                super.handleData(data);
                                 ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
                                 if (dataList.size() > 0) {
