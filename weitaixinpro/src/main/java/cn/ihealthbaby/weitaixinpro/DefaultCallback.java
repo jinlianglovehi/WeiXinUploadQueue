@@ -46,7 +46,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleData(data);
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap()+"1111");
+					ToastUtil.show(context, result.getMsgMap() + "1111");
 				}
 				break;
 			/**
@@ -55,12 +55,11 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.VALIDATOR:
 				Map<String, Object> msgMap = result.getMsgMap();
 				// TODO: 15/7/23 提示消息
-				ToastUtil.show(context, msgMap.toString()+"2222");
+				ToastUtil.show(context, msgMap.toString() + "2222");
 				LogUtil.e(TAG, "call", result.getMsg());
-
 				//
 				try {
-					business.handleValidator(context, result.getData());
+					business.handleValidator(context);
 				} catch (Exception e) {
 					e.printStackTrace();
 					ToastUtil.show(context, result.getMsgMap() + "22-33");
@@ -79,8 +78,6 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 						ToastUtil.show(context, errorStr + "请求失效，请重新登录3333");
 					}
 				}
-
-
 //				try {
 //					SPUtil.clearUser(context);
 //					WeiTaiXinProApplication.getInstance().mAdapter.setAccountToken(null);
@@ -102,15 +99,14 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.ERROR:
 				ToastUtil.show(context, result.getMsgMap() + "5555");
 				try {
-					business.handleError(context, result.getData());
+//					business.handleError(context, result.getData());
 				} catch (Exception e) {
 					e.printStackTrace();
 					ToastUtil.show(context, result.getMsgMap() + "6666");
 				}
 				break;
-
 			default:
-				ToastUtil.show(context, result.getMsgMap()+"7777");
+				ToastUtil.show(context, result.getMsgMap() + "7777");
 				break;
 		}
 	}
