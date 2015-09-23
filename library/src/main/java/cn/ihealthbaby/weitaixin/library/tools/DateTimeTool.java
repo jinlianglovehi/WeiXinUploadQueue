@@ -120,6 +120,20 @@ public class DateTimeTool {
 		return weeks + "周+" + days;
 	}
 
+	// 怀孕天数
+	public static int getGestationalDays(Date deliveryTime) {
+		return (int) ((new Date().getTime() / 1000 - deliveryTime.getTime()
+				/ 1000 + 280 * 24 * 3600) / 3600 / 24);
+
+	}
+
+	// 距离预产期天数
+	public static int fromDeliveryTime(Date deliveryTime) {
+		return (int) ((deliveryTime.getTime() / 1000 - new Date().getTime() / 1000) / 3600 / 24);
+
+	}
+
+
 	public static void main(String[] args) {
 		String s = getGestationalWeeks(new Date(new Date().getTime() + 1000 * 3600 * 24 * 6));
 		System.out.println(s);

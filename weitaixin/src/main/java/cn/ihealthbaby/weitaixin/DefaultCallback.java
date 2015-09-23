@@ -25,6 +25,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 
 	@Override
 	public void call(Result<T> result) {
+
 		if (result == null) {
 			return;
 		}

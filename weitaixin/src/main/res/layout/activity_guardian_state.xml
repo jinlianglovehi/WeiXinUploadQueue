@@ -129,7 +129,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-310dp"
         android:layout_below="@id/rlCenterRound"
-        android:src="@drawable/grade_progress" />
+        android:src="@drawable/guardian_heart" />
 
 
     <TextView

@@ -84,24 +84,28 @@ public class GuardianStateActivity extends BaseActivity {
 		this.finish();
 	}
 
+
+	private int guardianPurposeIndexPosition=0;
+	private int guardianMoodIndexPosition=0;
 	@OnClick(R.id.flGuardianPurpose)
 	public void GuardianPurpose(FrameLayout flGuardianPurpose) {
 		if (askPurposetypes == null) {
-			ToastUtil.show(getApplicationContext(), "没数据~~~");
+			ToastUtil.show(getApplicationContext(), "没获取到数据");
 			return;
 		}
 		myPoPoWinGuardian = new MyPoPoWinGuardian(this);
-		myPoPoWinGuardian.initPurposetData(askPurposetypes);
+		myPoPoWinGuardian.initPurposetData(askPurposetypes, guardianPurposeIndexPosition);
 		myPoPoWinGuardian.showAtLocation(flGuardianPurpose);
 		myPoPoWinGuardian.setOnDismissListener(new PopupWindow.OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				if (myPoPoWinGuardian.indexPosition == -1) {
-					purposeText = null;
-				} else {
-					purposeText = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
-					tvGuardianPurposeText.setText(purposeText + "");
-				}
+//				if (myPoPoWinGuardian.getIndexPosition() == -1) {
+//					purposeText = null;
+//				} else {
+				guardianPurposeIndexPosition = myPoPoWinGuardian.getGuardianPurposeIndexPosition();
+				purposeText = askPurposetypes.get(myPoPoWinGuardian.getGuardianPurposeIndexPosition()).getValue();
+				tvGuardianPurposeText.setText(purposeText + "");
+//				}
 			}
 		});
 	}
@@ -109,21 +113,22 @@ public class GuardianStateActivity extends BaseActivity {
 	@OnClick(R.id.flGuardianMood)
 	public void GuardianMood(FrameLayout flGuardianMood) {
 		if (feelingTypes == null) {
-			ToastUtil.show(getApplicationContext(), "没数据~~~");
+			ToastUtil.show(getApplicationContext(), "没获取到数据");
 			return;
 		}
 		myPoPoWinGuardian1 = new MyPoPoWinGuardian(this);
-		myPoPoWinGuardian1.initFeelingTypeData(feelingTypes);
+		myPoPoWinGuardian1.initFeelingTypeData(feelingTypes, guardianMoodIndexPosition);
 		myPoPoWinGuardian1.showAtLocation(flGuardianMood);
 		myPoPoWinGuardian1.setOnDismissListener(new PopupWindow.OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				if (myPoPoWinGuardian1.indexPosition == -1) {
-					moodText = null;
-				} else {
-					moodText = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
-					tvGuardianMoodText.setText(moodText + "");
-				}
+//				if (myPoPoWinGuardian1.getIndexPosition() == -1) {
+//					moodText = null;
+//				} else {
+				guardianMoodIndexPosition=myPoPoWinGuardian1.getGuardianMoodIndexPosition();
+				moodText = feelingTypes.get(myPoPoWinGuardian1.getGuardianMoodIndexPosition()).getValue();
+				tvGuardianMoodText.setText(moodText + "");
+//				}
 			}
 		});
 	}
@@ -144,10 +149,10 @@ public class GuardianStateActivity extends BaseActivity {
 		}
 		Intent intent = getIntent();
 		intent.setClass(getApplicationContext(), LocalRecordPlayActivity.class);
-		int purposeId = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getId();
-		String purposeString = askPurposetypes.get(myPoPoWinGuardian.indexPosition).getValue();
-		int feelingId = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getId();
-		String feelingString = feelingTypes.get(myPoPoWinGuardian1.indexPosition).getValue();
+		int purposeId = askPurposetypes.get(myPoPoWinGuardian.getGuardianPurposeIndexPosition()).getId();
+		String purposeString = askPurposetypes.get(myPoPoWinGuardian.getGuardianPurposeIndexPosition()).getValue();
+		int feelingId = feelingTypes.get(myPoPoWinGuardian1.getGuardianMoodIndexPosition()).getId();
+		String feelingString = feelingTypes.get(myPoPoWinGuardian1.getGuardianMoodIndexPosition()).getValue();
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
 		try {
 			String localRecordId = getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID);

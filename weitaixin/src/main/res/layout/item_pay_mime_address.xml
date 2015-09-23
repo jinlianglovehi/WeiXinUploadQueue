@@ -58,12 +58,23 @@
 
         <TextView
             android:id="@+id/tvAddressPhoneNumber"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:text="137645645453"
             android:textColor="@color/black0"
             android:textSize="@dimen/font14" />
+
+        <ImageView
+            android:id="@+id/ivArrowAddress"
+            android:layout_width="20dp"
+            android:visibility="invisible"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="12dp"
+            android:src="@drawable/wo_head_arrow_right" />
+
     </LinearLayout>
 
 
@@ -87,20 +98,13 @@
             android:id="@+id/tvAddressText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="22dp"
             android:layout_marginLeft="8dp"
-            android:text="北京海淀区的撒大撒旦"
+            android:text="海淀区的撒的撒的撒的撒的撒的撒的撒的撒的撒的撒的撒的撒大"
             android:textColor="@color/black0"
             android:textSize="@dimen/font14" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivArrowAddress"
-        android:layout_width="20dp"
-        android:visibility="invisible"
-        android:layout_marginRight="20dp"
-        android:layout_height="12dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/wo_head_arrow_right" />
+
 
 </RelativeLayout>

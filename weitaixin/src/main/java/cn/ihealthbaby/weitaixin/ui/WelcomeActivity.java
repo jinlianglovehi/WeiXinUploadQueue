@@ -24,6 +24,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
@@ -64,7 +65,7 @@ public class WelcomeActivity extends BaseActivity {
             public void run() {
                 ivWelcomeStart.setVisibility(View.GONE);
             }
-        }, 1000);
+        }, 2000);
 
 //        initView();
 
@@ -74,6 +75,9 @@ public class WelcomeActivity extends BaseActivity {
                 final CustomDialog customDialog = new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(this, "刷新用户数据...");
                 dialog.show();
+
+                Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
+                startService(intentAdvice);
 
                 ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                     @Override
@@ -224,6 +228,9 @@ public class WelcomeActivity extends BaseActivity {
             Dialog dialog = customDialog.createDialog1(this, "刷新用户数据...");
             dialog.show();
 
+            Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
+            startService(intentAdvice);
+
             ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                 @Override
                 public void handleData(User data)   {
@@ -274,6 +281,9 @@ public class WelcomeActivity extends BaseActivity {
                 final CustomDialog customDialog = new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(this, "刷新用户数据...");
                 dialog.show();
+
+                Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
+                startService(intentAdvice);
 
                 ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                     @Override

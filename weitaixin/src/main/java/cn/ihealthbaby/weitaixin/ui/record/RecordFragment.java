@@ -225,7 +225,6 @@ public class RecordFragment extends BaseFragment {
     }
 
 
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 1, Menu.NONE, "删除");
@@ -271,7 +270,7 @@ public class RecordFragment extends BaseFragment {
     private void pullHeadDatas() {
         User user = SPUtil.getUser(getActivity().getApplicationContext());
         if (SPUtil.isLogin(getActivity().getApplicationContext()) && user != null) {
-            LogUtil.d(TAG, "getHeadPic==>"+user.getHeadPic());
+            LogUtil.d(TAG, "getHeadPic==>" + user.getHeadPic());
             ImageLoader.getInstance().displayImage(user.getHeadPic(), ivWoHeadIcon, setDisplayImageOptions());
             tvWoHeadName.setText(user.getName());
             tvWoHeadDeliveryTime.setText(DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
@@ -287,7 +286,6 @@ public class RecordFragment extends BaseFragment {
         super.onResume();
         pullHeadDatas();
     }
-
 
 
     private void initView() {
@@ -306,34 +304,48 @@ public class RecordFragment extends BaseFragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) { //上拉加载更多
-                ApiManager.getInstance().adviceApi.getAdviceItems((++pageIndex), pageSize, new HttpClientAdapter.Callback<PageData<AdviceItem>>() {
-                    @Override
-                    public void call(Result<PageData<AdviceItem>> t) {
-                        if (t.getStatus() == Result.SUCCESS) {
-                            PageData<AdviceItem> data = t.getData();
-                            ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
-                            LogUtil.d("PageData", "ArrayList: " + dataList.size());
+                ApiManager.getInstance().adviceApi.getAdviceItems((++pageIndex), pageSize,
+                        new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
+                            @Override
+                            public void handleData(PageData<AdviceItem> data) {
+                                super.handleData(data);
+                                ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
-                            if (dataList.size() > 0) {
-                                countNumber = data.getCount();
-                                tvUsedCount.setText(countNumber + "");
-                                adapter.addDatas(dataList);
-                                adapter.notifyDataSetChanged();
-                                mAdviceItems = adapter.datas;
-                            } else {
-                                ToastUtil.show(context, "没有更多数据了~~~");
-                                pageIndex--;
+                                if (dataList.size() > 0) {
+                                    countNumber = data.getCount();
+                                    tvUsedCount.setText(countNumber + "");
+                                    adapter.addDatas(dataList);
+                                    adapter.notifyDataSetChanged();
+                                    mAdviceItems = adapter.datas;
+                                } else {
+                                    ToastUtil.show(context, "没有更多数据了");
+                                    pageIndex--;
+                                }
+
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
                             }
-                        } else {
-                            ToastUtil.show(context, t.getMsgMap() + "");
-                            pageIndex--;
-                        }
-                        if (pullToRefresh != null) {
-                            pullToRefresh.onRefreshComplete();
-                        }
-                    }
 
-                }, getRequestTag());
+                            @Override
+                            public void handleClientError(Exception e) {
+                                super.handleClientError(e);
+                                pageIndex--;
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                pageIndex--;
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+                        }), getRequestTag()
+                );
             }
         });
 
@@ -394,11 +406,12 @@ public class RecordFragment extends BaseFragment {
         return records;
     }
 
+
     public void pullFirstData(final CustomDialog customDialogTwo) {
         ApiManager.getInstance().adviceApi.getAdviceItems(1, pageSize,
                 new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
                     @Override
-                    public void handleData(PageData<AdviceItem> data)   {
+                    public void handleData(PageData<AdviceItem> data) {
                         final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 
                         ArrayList<Record> records = getLocalDB();
@@ -438,28 +451,38 @@ public class RecordFragment extends BaseFragment {
                     @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
-                        ArrayList<Record> records = getLocalDB();
-                        if (records != null && records.size() > 0) {
-                            adapter.setDatas(switchList(records));
-                            adapter.notifyDataSetChanged();
-                            mAdviceItems = adapter.datas;
-                            countNumber = adapter.datas.size();
-                        } else {
-                            ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
-                            countNumber = 0;
-                        }
-                        if (tvUsedCount != null) {
-                            tvUsedCount.setText(countNumber + "");
-                        }
-                        if (pullToRefresh != null) {
-                            pullToRefresh.onRefreshComplete();
-                        }
-                        if (customDialogTwo != null) {
-                            customDialogTwo.dismiss();
-                        }
+                        getCache(customDialogTwo);
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        getCache(customDialogTwo);
                     }
                 }), getRequestTag());
 
+    }
+
+    public void getCache(CustomDialog customDialogTwo) {
+        ArrayList<Record> records = getLocalDB();
+        if (records != null && records.size() > 0) {
+            adapter.setDatas(switchList(records));
+            adapter.notifyDataSetChanged();
+            mAdviceItems = adapter.datas;
+            countNumber = adapter.datas.size();
+        } else {
+            ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
+            countNumber = 0;
+        }
+        if (tvUsedCount != null) {
+            tvUsedCount.setText(countNumber + "");
+        }
+        if (pullToRefresh != null) {
+            pullToRefresh.onRefreshComplete();
+        }
+        if (customDialogTwo != null) {
+            customDialogTwo.dismiss();
+        }
     }
 
 

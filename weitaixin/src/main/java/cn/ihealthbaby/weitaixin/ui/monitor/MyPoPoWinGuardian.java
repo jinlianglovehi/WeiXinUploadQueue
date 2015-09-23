@@ -98,28 +98,60 @@ public class MyPoPoWinGuardian extends PopupWindow {
     }
 
 
+    private int guardianPurposeIndexPosition = 0;
 
-    public void initPurposetData(List<AskPurposeType> askPurposetypes) {
+    private int guardianMoodIndexPosition = 0;
+
+
+    public int getGuardianMoodIndexPosition() {
+        return guardianMoodIndexPosition;
+    }
+
+    public void setGuardianMoodIndexPosition(int guardianMoodIndexPosition) {
+        this.guardianMoodIndexPosition = guardianMoodIndexPosition;
+    }
+
+    public int getGuardianPurposeIndexPosition() {
+        return guardianPurposeIndexPosition;
+    }
+
+    public void setGuardianPurposeIndexPosition(int guardianPurposeIndexPosition) {
+        this.guardianPurposeIndexPosition = guardianPurposeIndexPosition;
+    }
+
+
+
+    public void initPurposetData(List<AskPurposeType> askPurposetypes, int guardianPurposeIndexPosition) {
+        this.guardianPurposeIndexPosition=guardianPurposeIndexPosition;
         final MyGuardianPurposeAdapter myGuardianPurposeAdapter = new MyGuardianPurposeAdapter(context);
         myGuardianPurposeAdapter.askPurposetypes=askPurposetypes;
         lvGuardianPurpose.setAdapter(myGuardianPurposeAdapter);
         lvGuardianPurpose.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                myGuardianPurposeAdapter.isFirst = false;
-                indexPosition = position;
+//                myGuardianPurposeAdapter.isFirst = false;
+                MyPoPoWinGuardian.this.guardianPurposeIndexPosition = position;
                 myGuardianPurposeAdapter.notifyDataSetChanged();
                 disMiss();
             }
         });
     }
 
-    public int indexPosition = -1;
+//    private int indexPosition = 0;
+//
+//    public int getIndexPosition() {
+//        return indexPosition;
+//    }
+//
+//    public void setIndexPosition(int indexPosition) {
+//        this.indexPosition = indexPosition;
+//    }
+
     public class MyGuardianPurposeAdapter extends BaseAdapter {
 
         public List<AskPurposeType> askPurposetypes=new ArrayList<AskPurposeType>();
         private LayoutInflater inflater;
-        public boolean isFirst = true;
+//        public boolean isFirst = true;
 
 
         public MyGuardianPurposeAdapter(Context context) {
@@ -152,17 +184,17 @@ public class MyPoPoWinGuardian extends PopupWindow {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             viewHolder.tvTime.setText(askPurposetypes.get(position).getValue()+"");
-            if (indexPosition == position) {
+            if (MyPoPoWinGuardian.this.guardianPurposeIndexPosition == position) {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.gray9));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
             }
-            if (isFirst && position == 0) {
-                viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
-                viewHolder.tvState.setVisibility(View.VISIBLE);
-            }
+//            if (isFirst && position == 0) {
+//                viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
+//                viewHolder.tvState.setVisibility(View.VISIBLE);
+//            }
             return convertView;
         }
 
@@ -179,15 +211,16 @@ public class MyPoPoWinGuardian extends PopupWindow {
 
 
 
-    public void initFeelingTypeData(List<FeelingType> feelingTypes) {
+    public void initFeelingTypeData(List<FeelingType> feelingTypes, int guardianMoodIndexPosition) {
+        this.guardianMoodIndexPosition=guardianMoodIndexPosition;
         final MyGuardianFeelingTypeAdapter myGuardianFeelingTypeAdapter = new MyGuardianFeelingTypeAdapter(context);
         myGuardianFeelingTypeAdapter.feelingTypes=feelingTypes;
         lvGuardianPurpose.setAdapter(myGuardianFeelingTypeAdapter);
         lvGuardianPurpose.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                myGuardianFeelingTypeAdapter.isFirst = false;
-                indexPosition = position;
+//                myGuardianFeelingTypeAdapter.isFirst = false;
+                MyPoPoWinGuardian.this.guardianMoodIndexPosition = position;
                 myGuardianFeelingTypeAdapter.notifyDataSetChanged();
                 disMiss();
             }
@@ -199,7 +232,7 @@ public class MyPoPoWinGuardian extends PopupWindow {
 
         public List<FeelingType> feelingTypes=new ArrayList<FeelingType>();
         private LayoutInflater inflater;
-        public boolean isFirst = true;
+//        public boolean isFirst = true;
 
         public MyGuardianFeelingTypeAdapter(Context context) {
             inflater = LayoutInflater.from(context);
@@ -231,17 +264,17 @@ public class MyPoPoWinGuardian extends PopupWindow {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             viewHolder.tvTime.setText(feelingTypes.get(position).getValue()+"");
-            if (indexPosition == position) {//convertView.isSelected()
+            if (MyPoPoWinGuardian.this.guardianMoodIndexPosition == position) {//convertView.isSelected()
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.gray9));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
             }
-            if (isFirst && position == 0) {
-                viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
-                viewHolder.tvState.setVisibility(View.VISIBLE);
-            }
+//            if (isFirst && position == 0) {
+//                viewHolder.tvTime.setTextColor(context.getResources().getColor(R.color.green0));
+//                viewHolder.tvState.setVisibility(View.VISIBLE);
+//            }
             return convertView;
         }
 

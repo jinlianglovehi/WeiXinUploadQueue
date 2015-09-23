@@ -73,12 +73,8 @@
         <activity android:name=".ui.pay.PayMimeOrderActivity" />
         <activity android:name=".ui.pay.PayMimeAddressActivity" />
         <activity android:name=".ui.pay.PayMimeAddressWithEditActivity" />
-        <activity
-            android:name=".ui.pay.PayAddAddressActivity"
-            android:windowSoftInputMode="stateVisible" />
-        <activity
-            android:name=".ui.pay.PayAddAddressWithEditActivity"
-            android:windowSoftInputMode="stateVisible" />
+        <activity android:name=".ui.pay.PayAddAddressActivity" />
+        <activity android:name=".ui.pay.PayAddAddressWithEditActivity" />
         <activity android:name=".ui.pay.PayRentInformationActivity" />
         <activity android:name=".ui.pay.PayHospitalChooseActivity" />
         <activity android:name=".ui.pay.PayRentChooseProvincesLeftActivity" />
