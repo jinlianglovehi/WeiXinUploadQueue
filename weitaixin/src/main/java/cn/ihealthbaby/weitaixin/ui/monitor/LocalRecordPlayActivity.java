@@ -1,5 +1,8 @@
 package cn.ihealthbaby.weitaixin.ui.monitor;
 
+import android.content.Intent;
+import android.view.View;
+
 import com.google.gson.Gson;
 import com.qiniu.android.http.ResponseInfo;
 
@@ -8,10 +11,11 @@ import org.json.JSONObject;
 import java.io.File;
 
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
+import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
@@ -20,6 +24,7 @@ import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
+import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
 
 /**
  * Created by liuhongjian on 15/9/20 13:13.
@@ -34,20 +39,31 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		asynUploadEngine.init(new File(FileUtil.getVoiceDir(getApplicationContext()), uuid));
 		asynUploadEngine.setOnFinishActivity(new AsynUploadEngine.FinishedToDoWork() {
 			@Override
-			public void onFinishedWork(final String key, ResponseInfo info, JSONObject response) {
-				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record, key), new HttpClientAdapter.Callback<Long>() {
+			public void onFinishedWork(final String key, final ResponseInfo info, JSONObject response) {
+				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record, key), new DefaultCallback<Long>(getApplicationContext(), new AbstractBusiness<Long>() {
 					@Override
-					public void call(Result<Long> t) {
-						dialog.dismiss();
-						if (t.isSuccess()) {
-							ToastUtil.show(getApplicationContext(), "上传成功");
-							Long data = t.getData();
-							saveDataToDatabase(data);
-						} else {
-							ToastUtil.show(getApplicationContext(), t.getMsg());
-						}
+					public void handleData(final Long data) {
+						ToastUtil.show(getApplicationContext(), "上传成功");
+						btnBusiness.setImageResource(R.drawable.button_ask_doctor);
+						btnBusiness.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								Intent intent = new Intent(getApplicationContext(), AskDoctorActivity.class);
+								intent.putExtra(Constants.INTENT_ID, data);
+								if (record != null) {
+									if (record.getPurposeString() != null) {
+										intent.putExtra(Constants.INTENT_FEELING, record.getPurposeString());
+									}
+									if (record.getFeelingString() != null) {
+										intent.putExtra(Constants.INTENT_PURPOSE, record.getFeelingString());
+									}
+								}
+								startActivity(intent);
+							}
+						});
+						saveDataToDatabase(data);
 					}
-				}, getRequestTag());
+				}), getRequestTag());
 			}
 		});
 	}
