@@ -4,12 +4,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,15 +15,13 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.AbstractBusiness;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
@@ -281,13 +277,13 @@ public class WelcomeActivity extends BaseActivity {
 
                 ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                     @Override
-                    public void handleData(User data) throws Exception {
+                    public void handleData(User data)   {
                         SPUtil.saveUser(WelcomeActivity.this, data);
                         customDialog.dismiss();
                     }
 
                     @Override
-                    public void handleException() {
+                    public void handleException(Exception e) {
                         customDialog.dismiss();
                         Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
                         startActivity(intentHasRiskscore);
