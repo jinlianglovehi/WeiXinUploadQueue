@@ -199,8 +199,7 @@ public class HomePageFragment extends BaseFragment {
 
     @OnClick(R.id.llHomeFunctionFourAction)
     public void llHomeFunctionFourAction() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), GuardianStateActivity.class);
-//      Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
+      Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
         startActivity(intent);
     }
 
