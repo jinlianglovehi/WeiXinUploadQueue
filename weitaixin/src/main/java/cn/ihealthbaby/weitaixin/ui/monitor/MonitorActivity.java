@@ -249,7 +249,7 @@ public class MonitorActivity extends BaseActivity {
 	}
 
 	public void onEventMainThread(FetalMovementEvent event) {
-		rlMovement.performClick();
+		fetalMovement();
 	}
 
 	public void onEventMainThread(MonitorTerminateEvent event) {
