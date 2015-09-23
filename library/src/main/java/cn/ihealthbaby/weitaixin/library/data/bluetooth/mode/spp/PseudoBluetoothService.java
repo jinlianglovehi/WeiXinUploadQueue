@@ -353,8 +353,7 @@ public class PseudoBluetoothService {
 			// given BluetoothDevice
 			try {
 				if (secure) {
-					tmp = device.createRfcommSocketToServiceRecord(
-							                                              Constants.COMMON_UUID);
+					tmp = device.createRfcommSocketToServiceRecord(Constants.COMMON_UUID);
 				} else {
 					tmp = device.createInsecureRfcommSocketToServiceRecord(Constants.COMMON_UUID);
 					LogUtil.e("bluetoothScanner", "" + "COMMON_UUID：" + Constants.COMMON_UUID);
