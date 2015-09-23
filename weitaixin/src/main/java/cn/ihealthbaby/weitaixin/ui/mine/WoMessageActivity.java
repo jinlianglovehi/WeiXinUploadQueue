@@ -26,9 +26,12 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Information;
 import cn.ihealthbaby.client.model.PageData;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
@@ -112,23 +115,38 @@ public class WoMessageActivity extends BaseActivity {
         pullToRefresh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Information item = (Information) adapter.getItem(position - 1);
-                // 0 系统消息, 1 医生回复消息  2支付消息
-                int type = item.getType();
-                if (type == 0) {
-                    Intent intent = new Intent(getApplicationContext(), WoMessagOfSystemMessageActivity.class);
-                    intent.putExtra("SysMsg", item.getRelatedId());
-                    startActivity(intent);
-                } else if (type == 1) {
-                    Intent intent = new Intent(getApplicationContext(), WoMessagOfReplyMessageActivity.class);
-                    intent.putExtra("AdviceReply", item.getRelatedId());
-                    intent.putExtra("informationId", item.getId());
-                    startActivity(intent);
-                } else if (type == 2) {
-                    Intent intent = new Intent(getApplicationContext(), PayOrderDetailsActivity.class);
-                    intent.putExtra(PayConstant.ORDERID, item.getId());
-                    startActivity(intent);
-                }
+
+                final Information item = (Information) adapter.getItem(position - 1);
+
+                LogUtil.d("Information","Information==> "+item);
+
+
+                ApiManager.getInstance().informationApi.readInformation(item.getId(), new DefaultCallback<Void>(WoMessageActivity.this, new AbstractBusiness<Void>() {
+                    @Override
+                    public void handleData(Void data) {
+                        item.setReadNums(item.getReadNums() + 1);
+                        adapter.notifyDataSetChanged();
+
+                        // 0 系统消息, 1 医生回复消息  2支付消息
+                        int type = item.getType();
+                        if (type == 0) {
+                            Intent intent = new Intent(getApplicationContext(), WoMessagOfSystemMessageActivity.class);
+                            intent.putExtra("SysMsg", item.getRelatedId());
+                            startActivity(intent);
+                        } else if (type == 1) {
+                            Intent intent = new Intent(getApplicationContext(), WoMessagOfReplyMessageActivity.class);
+                            intent.putExtra("AdviceReply", item.getRelatedId());
+                            intent.putExtra("informationId", item.getId());
+                            startActivity(intent);
+                        } else if (type == 2) {
+                            Intent intent = new Intent(getApplicationContext(), PayOrderDetailsActivity.class);
+                            intent.putExtra(PayConstant.ORDERID, item.getRelatedId());
+                            startActivity(intent);
+                        }
+
+                    }
+                }), getRequestTag());
+
             }
         });
 

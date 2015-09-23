@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,6 +24,8 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.client.model.OrderDetail;
 import cn.ihealthbaby.client.model.OrderItem;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -33,29 +36,42 @@ import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 
 public class PayOrderDetailsActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
 
 //    @Bind(R.id.rlExpressageAction) RelativeLayout rlExpressageAction;
 
 
-    @Bind(R.id.tvAddressName) TextView tvAddressName;
-    @Bind(R.id.tvAddressPhoneNumber) TextView tvAddressPhoneNumber;
-    @Bind(R.id.tvAddressText) TextView tvAddressText;
-    @Bind(R.id.tvOrderGoodsNumber) TextView tvOrderGoodsNumber;
-    @Bind(R.id.lvGoodsList) ListView lvGoodsList;
-    @Bind(R.id.tvPayAffirmGoodsOrGoPay) TextView tvPayAffirmGoodsOrGoPay;
-    @Bind(R.id.tvCancelOrder) TextView tvCancelOrder;
-    @Bind(R.id.tvOrderDetailsPayway) TextView tvOrderDetailsPayway;
-    @Bind(R.id.tvOrderDetailsPullway) TextView tvOrderDetailsPullway;
-    @Bind(R.id.tvOrderDetailsPrice) TextView tvOrderDetailsPrice;
+    @Bind(R.id.tvAddressName)
+    TextView tvAddressName;
+    @Bind(R.id.tvAddressPhoneNumber)
+    TextView tvAddressPhoneNumber;
+    @Bind(R.id.tvAddressText)
+    TextView tvAddressText;
+    @Bind(R.id.tvOrderGoodsNumber)
+    TextView tvOrderGoodsNumber;
+    @Bind(R.id.lvGoodsList)
+    ListView lvGoodsList;
+    @Bind(R.id.tvPayAffirmGoodsOrGoPay)
+    TextView tvPayAffirmGoodsOrGoPay;
+    @Bind(R.id.tvCancelOrder)
+    TextView tvCancelOrder;
+    @Bind(R.id.tvOrderDetailsPayway)
+    TextView tvOrderDetailsPayway;
+    @Bind(R.id.tvOrderDetailsPullway)
+    TextView tvOrderDetailsPullway;
+    @Bind(R.id.tvOrderDetailsPrice)
+    TextView tvOrderDetailsPrice;
 
 //    private int hospitalStatus=-1;
 
-    private long orderId=-1;
+    private long orderId = -1;
     private int orderStatus;
     private MyGoodsListAdapter adapter;
     private ArrayList<OrderItem> orderItems;
@@ -93,9 +109,6 @@ public class PayOrderDetailsActivity extends BaseActivity {
     }
 
 
-
-
-
     private void pullData() {
         adapter = new MyGoodsListAdapter(this, null);
         lvGoodsList.setAdapter(adapter);
@@ -106,88 +119,97 @@ public class PayOrderDetailsActivity extends BaseActivity {
             return;
         }
 
-        final CustomDialog customDialog=new CustomDialog();
+        final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().orderApi.getOrder(orderId, new HttpClientAdapter.Callback<OrderDetail>() {
-            @Override
-            public void call(Result<OrderDetail> t) {
-                if (t.getStatus()==Result.SUCCESS) {
-                    orderDetail = t.getData();
-                    if (orderDetail == null) {
-                        ToastUtil.show(getApplicationContext(), "没有数据");
-                        return;
+        ApiManager.getInstance().orderApi.getOrder(orderId,
+                new DefaultCallback<OrderDetail>(this, new AbstractBusiness<OrderDetail>() {
+                    @Override
+                    public void handleData(OrderDetail data) {
+                        orderDetail = data;
+                        if (orderDetail == null) {
+                            ToastUtil.show(getApplicationContext(), "没有数据");
+                            return;
+                        }
+
+                        LogUtil.d("orderDetail", orderDetail.getOrderStatus() + " orderD有数etail==>" + orderDetail);
+
+                        tvOrderGoodsNumber.setText(orderDetail.getId() + "");
+                        tvAddressName.setText(orderDetail.getAddress().getLinkMan());
+                        tvAddressPhoneNumber.setText(orderDetail.getAddress().getMobile());
+                        tvAddressText.setText(orderDetail.getAddress().getArea() + orderDetail.getAddress().getAddress() + "");
+
+
+                        int payType = orderDetail.getPayType();
+                        if (payType >= 0 && payType <= 3) {
+                            tvOrderDetailsPayway.setText(payTypeArr[payType] + "");
+                        }
+                        int deliverType = orderDetail.getDeliverType();
+                        if (deliverType >= 0 && deliverType <= 1) {
+                            tvOrderDetailsPullway.setText(deliverTypeArr[deliverType] + "");
+                        }
+
+                        tvOrderDetailsPrice.setText("总计" + PayUtils.showPrice(orderDetail.getTotalFee()));
+
+                        orderStatus = orderDetail.getOrderStatus();
+
+
+                        //0 待付款-未支付,  1 待发货,  2待收货,  3订单结束,   4 订单取消
+                        if (orderDetail.getOrderStatus() == PayConstant.notPay) {
+                            tvCancelOrder.setVisibility(View.VISIBLE);
+                            tvCancelOrder.setText("取消订单");
+                            tvPayAffirmGoodsOrGoPay.setVisibility(View.VISIBLE);
+                            tvPayAffirmGoodsOrGoPay.setText("去支付");
+                            tvPayAffirmGoodsOrGoPay.setBackgroundColor(getResources().getColor(R.color.red0));
+                        }
+
+                        if (orderDetail.getOrderStatus() == PayConstant.gettingGoods) {
+                            tvCancelOrder.setVisibility(View.GONE);
+                            tvPayAffirmGoodsOrGoPay.setVisibility(View.VISIBLE);
+                            tvPayAffirmGoodsOrGoPay.setText("确认收货");
+                            tvPayAffirmGoodsOrGoPay.setBackgroundColor(getResources().getColor(R.color.green0));
+                        }
+
+                        if (orderDetail.getOrderStatus() == PayConstant.sendingGoods) {
+                            tvCancelOrder.setVisibility(View.GONE);
+                            tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
+                        }
+
+
+                        if (orderDetail.getOrderStatus() == PayConstant.orderFinish) {
+                            tvCancelOrder.setVisibility(View.VISIBLE);
+                            tvCancelOrder.setText("删除");
+                            tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
+                        }
+
+
+                        if (orderDetail.getOrderStatus() == PayConstant.orderCancel) {
+                            tvCancelOrder.setVisibility(View.VISIBLE);
+                            tvCancelOrder.setText("删除");
+                            tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
+                        }
+
+
+                        orderItems = (ArrayList<OrderItem>) orderDetail.getOrderItems();
+                        adapter.setDatas(orderItems);
+                        adapter.notifyDataSetChanged();
+
+                        customDialog.dismiss();
                     }
 
-                    LogUtil.d("orderDetail", orderDetail.getOrderStatus()+" orderD有数etail==>"+orderDetail);
-
-                    tvOrderGoodsNumber.setText(orderDetail.getId() + "");
-                    tvAddressName.setText(orderDetail.getAddress().getLinkMan());
-                    tvAddressPhoneNumber.setText(orderDetail.getAddress().getMobile());
-                    tvAddressText.setText(orderDetail.getAddress().getArea()+orderDetail.getAddress().getAddress()+"");
-
-
-                    int payType = orderDetail.getPayType();
-                    if (payType >= 0 && payType <= 3) {
-                        tvOrderDetailsPayway.setText(payTypeArr[payType] + "");
-                    }
-                    int deliverType = orderDetail.getDeliverType();
-                    if (deliverType >= 0 && deliverType <= 1) {
-                        tvOrderDetailsPullway.setText(deliverTypeArr[deliverType] + "");
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
                     }
 
-                    tvOrderDetailsPrice.setText("总计" +PayUtils.showPrice(orderDetail.getTotalFee()));
-
-                    orderStatus = orderDetail.getOrderStatus();
-
-
-                    //0 待付款-未支付,  1 待发货,  2待收货,  3订单结束,   4 订单取消
-                    if (orderDetail.getOrderStatus() == PayConstant.notPay) {
-                        tvCancelOrder.setVisibility(View.VISIBLE);
-                        tvCancelOrder.setText("取消订单");
-                        tvPayAffirmGoodsOrGoPay.setVisibility(View.VISIBLE);
-                        tvPayAffirmGoodsOrGoPay.setText("去支付");
-                        tvPayAffirmGoodsOrGoPay.setBackgroundColor(getResources().getColor(R.color.red0));
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
                     }
-
-                    if (orderDetail.getOrderStatus() == PayConstant.gettingGoods) {
-                        tvCancelOrder.setVisibility(View.GONE);
-                        tvPayAffirmGoodsOrGoPay.setVisibility(View.VISIBLE);
-                        tvPayAffirmGoodsOrGoPay.setText("确认收货");
-                        tvPayAffirmGoodsOrGoPay.setBackgroundColor(getResources().getColor(R.color.green0));
-                    }
-
-                    if (orderDetail.getOrderStatus() == PayConstant.sendingGoods) {
-                        tvCancelOrder.setVisibility(View.GONE);
-                        tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
-                    }
-
-
-                    if (orderDetail.getOrderStatus() == PayConstant.orderFinish) {
-                        tvCancelOrder.setVisibility(View.VISIBLE);
-                        tvCancelOrder.setText("删除");
-                        tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
-                    }
-
-
-                    if (orderDetail.getOrderStatus() == PayConstant.orderCancel) {
-                        tvCancelOrder.setVisibility(View.VISIBLE);
-                        tvCancelOrder.setText("删除");
-                        tvPayAffirmGoodsOrGoPay.setVisibility(View.GONE);
-                    }
-
-
-                    orderItems = (ArrayList<OrderItem>) orderDetail.getOrderItems();
-                    adapter.setDatas(orderItems);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+                }), getRequestTag());
     }
-
 
 
     @OnClick(R.id.back)
@@ -200,34 +222,43 @@ public class PayOrderDetailsActivity extends BaseActivity {
     public void tvCancelOrder() {
         if (orderDetail.getOrderStatus() == PayConstant.notPay) {
             cancelOrder();
-        } else if (orderDetail.getOrderStatus() == PayConstant.orderFinish||orderDetail.getOrderStatus() == PayConstant.orderCancel) {
+        } else if (orderDetail.getOrderStatus() == PayConstant.orderFinish || orderDetail.getOrderStatus() == PayConstant.orderCancel) {
             deleteOrder();
         }
     }
 
 
     public void cancelOrder() {
-        PayDialog payDialog=new PayDialog(this,new String[]{"确定取消订单","不取消","确定取消"});
+        PayDialog payDialog = new PayDialog(this, new String[]{"确定取消订单", "不取消", "确定取消"});
         payDialog.show();
-        payDialog.operationAction=new PayDialog.OperationAction() {
+        payDialog.operationAction = new PayDialog.OperationAction() {
             @Override
             public void payYes(Object... obj) {
-                final CustomDialog customDialog=new CustomDialog();
+                final CustomDialog customDialog = new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(PayOrderDetailsActivity.this, "取消中...");
                 dialog.show();
-                ApiManager.getInstance().orderApi.cancel(orderDetail.getId(), new HttpClientAdapter.Callback<Void>() {
-                    @Override
-                    public void call(Result<Void> t) {
-                        if (t.isSuccess()) {
-                            ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), "取消成功");
-//                            orderDetail.setOrderStatus(PayConstant.orderCancel);
-                            PayOrderDetailsActivity.this.finish();
-                        } else {
-                            ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), t.getMsgMap() + "");
-                        }
-                        customDialog.dismiss();
-                    }
-                }, getRequestTag());
+                ApiManager.getInstance().orderApi.cancel(orderDetail.getId(),
+                        new DefaultCallback<Void>(PayOrderDetailsActivity.this, new AbstractBusiness<Void>() {
+                            @Override
+                            public void handleData(Void data) {
+                                ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), "取消成功");
+//                              orderDetail.setOrderStatus(PayConstant.orderCancel);
+                                PayOrderDetailsActivity.this.finish();
+                                customDialog.dismiss();
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                customDialog.dismiss();
+                            }
+
+                            @Override
+                            public void handleClientError(Exception e) {
+                                super.handleClientError(e);
+                                customDialog.dismiss();
+                            }
+                        }), getRequestTag());
             }
 
             @Override
@@ -238,28 +269,36 @@ public class PayOrderDetailsActivity extends BaseActivity {
     }
 
 
-
     public void deleteOrder() {
-        PayDialog payDialog=new PayDialog(this,new String[]{"确定删除订单","不删除","确定删除"});
+        PayDialog payDialog = new PayDialog(this, new String[]{"确定删除订单", "不删除", "确定删除"});
         payDialog.show();
-        payDialog.operationAction=new PayDialog.OperationAction() {
+        payDialog.operationAction = new PayDialog.OperationAction() {
             @Override
             public void payYes(Object... obj) {
-                final CustomDialog customDialog=new CustomDialog();
+                final CustomDialog customDialog = new CustomDialog();
                 Dialog dialog = customDialog.createDialog1(PayOrderDetailsActivity.this, "删除中...");
                 dialog.show();
-                ApiManager.getInstance().orderApi.delete(orderDetail.getId(), new HttpClientAdapter.Callback<Void>() {
-                    @Override
-                    public void call(Result<Void> t) {
-                        if (t.isSuccess()) {
-                            ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), "删除成功");
-                            PayOrderDetailsActivity.this.finish();
-                        } else {
-                            ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), t.getMsgMap() + "");
-                        }
-                        customDialog.dismiss();
-                    }
-                }, getRequestTag());
+                ApiManager.getInstance().orderApi.delete(orderDetail.getId(),
+                        new DefaultCallback<Void>(PayOrderDetailsActivity.this, new AbstractBusiness<Void>() {
+                            @Override
+                            public void handleData(Void data) {
+                                ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), "删除成功");
+                                PayOrderDetailsActivity.this.finish();
+                                customDialog.dismiss();
+                            }
+
+                            @Override
+                            public void handleClientError(Exception e) {
+                                super.handleClientError(e);
+                                customDialog.dismiss();
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                customDialog.dismiss();
+                            }
+                        }), getRequestTag());
             }
 
             @Override
@@ -277,32 +316,41 @@ public class PayOrderDetailsActivity extends BaseActivity {
             return;
         }
 
-        if (orderDetail.getOrderStatus()==PayConstant.notPay) {
-            Intent intent=new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
+        if (orderDetail.getOrderStatus() == PayConstant.notPay) {
+            Intent intent = new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
             LocalProductData.getLocal().put(LocalProductData.PriceCount, orderDetail.getTotalFee());
             intent.putExtra(PayConstant.ORDERID, orderDetail.getId());
             startActivity(intent);
-        }else if(orderDetail.getOrderStatus()==PayConstant.gettingGoods){
-            PayDialog payDialog=new PayDialog(PayOrderDetailsActivity.this,new String[]{"确定收货","不收货","确定收货"});
+        } else if (orderDetail.getOrderStatus() == PayConstant.gettingGoods) {
+            PayDialog payDialog = new PayDialog(PayOrderDetailsActivity.this, new String[]{"确定收货", "不收货", "确定收货"});
             payDialog.show();
-            payDialog.operationAction=new PayDialog.OperationAction() {
+            payDialog.operationAction = new PayDialog.OperationAction() {
                 @Override
                 public void payYes(Object... obj) {
-                    final CustomDialog customDialog=new CustomDialog();
+                    final CustomDialog customDialog = new CustomDialog();
                     Dialog dialog = customDialog.createDialog1(PayOrderDetailsActivity.this, "收货中...");
                     dialog.show();
-                    ApiManager.getInstance().orderApi.confirmReceive(orderDetail.getId(), new HttpClientAdapter.Callback<Void>() {
-                        @Override
-                        public void call(Result<Void> t) {
-                            if (t.isSuccess()) {
-                                ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), "收货成功");
-                                PayOrderDetailsActivity.this.finish();
-                            } else {
-                                ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), t.getMsgMap() + "");
-                            }
-                            customDialog.dismiss();
-                        }
-                    }, getRequestTag());
+                    ApiManager.getInstance().orderApi.confirmReceive(orderDetail.getId(),
+                            new DefaultCallback<Void>(PayOrderDetailsActivity.this, new AbstractBusiness<Void>() {
+                                @Override
+                                public void handleData(Void data) {
+                                    ToastUtil.show(PayOrderDetailsActivity.this.getApplicationContext(), "收货成功");
+                                    PayOrderDetailsActivity.this.finish();
+                                    customDialog.dismiss();
+                                }
+
+                                @Override
+                                public void handleClientError(Exception e) {
+                                    super.handleClientError(e);
+                                    customDialog.dismiss();
+                                }
+
+                                @Override
+                                public void handleException(Exception e) {
+                                    super.handleException(e);
+                                    customDialog.dismiss();
+                                }
+                            }), getRequestTag());
                 }
 
                 @Override
@@ -312,7 +360,6 @@ public class PayOrderDetailsActivity extends BaseActivity {
             };
         }
     }
-
 
 
 //    @OnClick(R.id.rlNoneGet)
@@ -342,7 +389,6 @@ public class PayOrderDetailsActivity extends BaseActivity {
 //            }
 //        }
 //    }
-
 
 
     public class MyGoodsListAdapter extends BaseAdapter {
@@ -401,14 +447,16 @@ public class PayOrderDetailsActivity extends BaseActivity {
 
             OrderItem orderItem = this.datas.get(position);
             viewHolder.tvName.setText(orderItem.getProductName());
-            viewHolder.tvPrice.setText(PayUtils.showPrice(orderItem.getPrice())+"");
+            viewHolder.tvPrice.setText(PayUtils.showPrice(orderItem.getPrice()) + "");
 
             return convertView;
         }
 
         class ViewHolder {
-            @Bind(R.id.tvName) TextView tvName;
-            @Bind(R.id.tvPrice) TextView tvPrice;
+            @Bind(R.id.tvName)
+            TextView tvName;
+            @Bind(R.id.tvPrice)
+            TextView tvPrice;
 
             public ViewHolder(View itemView) {
                 ButterKnife.bind(this, itemView);
@@ -416,7 +464,6 @@ public class PayOrderDetailsActivity extends BaseActivity {
         }
 
     }
-
 
 
 }
