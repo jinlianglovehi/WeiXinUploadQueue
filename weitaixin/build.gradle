@@ -12,7 +12,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 19
         versionCode 1
-        versionName "1.1"
+        versionName "0.1"
     }
     buildTypes {
         release {
@@ -27,7 +27,7 @@ android {
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
                         // 输出apk名称: 例如 weitaixin_v1.0_2015-01-15_debug.apk
                         def fileName = "weitaixin_v${defaultConfig.versionName}_time.apk"
-                        output.outputFile = new File(outputFile.parent, fileName.replace("time",now))
+                        output.outputFile = new File(outputFile.parent, fileName.replace("time", now))
                     }
                 }
             }
