@@ -157,7 +157,7 @@ public class RecordFragment extends BaseFragment {
                 }
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (adapter.selectedViewOld != null) {
+                        if (adapter.selectedViewOld != null && adapter.selectedViewOld != adapter.selectedView) {
                             adapter.cancel(adapter.selectedViewOld);
                         }
                         selectedView = adapter.getSelectedView();
@@ -177,12 +177,23 @@ public class RecordFragment extends BaseFragment {
                                 if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
                                     selectedView.setX(-adapter.recordDelete.getWidth());
                                 } else {
-                                    if (selectedView != null) {
+                                    if (selectedView != null && selectedView.getX() >= -adapter.recordDelete.getWidth()) {
                                         selectedView.setX(selectedView.getX() + distanceX);
                                     }
                                 }
                             }
                         } else {
+//                            float distanceY = event.getY() - oldY;
+//                            if (Math.abs(distanceX) > Math.abs(distanceY)&&selectedView.getX()<=0) {
+//                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
+//                                    selectedView.setX(0);
+//                                } else {
+//                                    if (selectedView != null) {
+//                                        selectedView.setX(selectedView.getX() + distanceX);
+//                                    }
+//                                }
+//                            }
+
                             adapter.cancel();
                         }
                         oldX = event.getX();
