@@ -128,6 +128,14 @@ public class HomePageFragment extends BaseFragment {
                     flShowMessageCount.setVisibility(View.INVISIBLE);
                 }
             }
+
+            @Override
+            public void handleClientError(Exception e) {
+                super.handleClientError(e);
+                if (messageCount == 0) {
+                    flShowMessageCount.setVisibility(View.INVISIBLE);
+                }
+            }
         }), getRequestTag());
         return view;
     }
@@ -199,7 +207,7 @@ public class HomePageFragment extends BaseFragment {
 
     @OnClick(R.id.llHomeFunctionFourAction)
     public void llHomeFunctionFourAction() {
-      Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
         startActivity(intent);
     }
 

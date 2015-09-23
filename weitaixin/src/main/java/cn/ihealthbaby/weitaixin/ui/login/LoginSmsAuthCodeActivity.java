@@ -19,6 +19,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.LoginByAuthForm;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -161,26 +163,36 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
 
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode() {
-        ApiManager.getInstance().accountApi.getAuthCode(phone_number, 1, new HttpClientAdapter.Callback<Boolean>() {
-            @Override
-            public void call(Result<Boolean> t) {
-                if (t.isSuccess()) {
-                    Boolean data = t.getData();
-                    if (data) {
-                        isHasAuthCode = true;
-                    } else {
+        ApiManager.getInstance().accountApi.getAuthCode(phone_number, 1,
+                new DefaultCallback<Boolean>(this, new AbstractBusiness<Boolean>() {
+                    @Override
+                    public void handleData(Boolean data) {
+                        if (data) {
+                            isHasAuthCode = true;
+                        } else {
+                            isHasAuthCode = false;
+                            cancel();
+                            ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), "重新获取短信验证码");
+                        }
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
                         isHasAuthCode = false;
                         cancel();
-                        ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsg() + "重新获取短信验证码");
+                        dialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap().get("mobile") + "");
-                    isHasAuthCode = false;
-                    cancel();
-                }
-                dialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        isHasAuthCode = false;
+                        cancel();
+                        dialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
@@ -228,11 +240,10 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
 
 
         LoginByAuthForm loginByAuthForm = new LoginByAuthForm(phone_number, Integer.parseInt(mark_number), "123456789", 1.0d, 1.0d);
-        ApiManager.getInstance().accountApi.loginByAuthCode(loginByAuthForm, new HttpClientAdapter.Callback<User>() {
-            @Override
-            public void call(Result<User> t) {
-                    if (t.getStatus() == Result.SUCCESS) {
-                        User data = t.getData();
+        ApiManager.getInstance().accountApi.loginByAuthCode(loginByAuthForm,
+                new DefaultCallback<User>(this, new AbstractBusiness<User>() {
+                    @Override
+                    public void handleData(User data) {
                         if (data != null && data.getAccountToken() != null) {
                             WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
                             SPUtil.saveUser(LoginSmsAuthCodeActivity.this, data);
@@ -242,10 +253,10 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                             Intent intent = new Intent(getApplicationContext(), AdviceSettingService.class);
                             startService(intent);
 
-                            if(data.getIsInit()){
+                            if (data.getIsInit()) {
                                 customDialog.dismiss();
                                 LoginSmsAuthCodeActivity.this.finish();
-                                Intent intentIsInit=new Intent(LoginSmsAuthCodeActivity.this, InfoEditActivity.class);
+                                Intent intentIsInit = new Intent(LoginSmsAuthCodeActivity.this, InfoEditActivity.class);
                                 startActivity(intentIsInit);
                                 return;
                             }
@@ -259,18 +270,25 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                             }
 
 
-                            Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
+                            Intent intentMain = new Intent(getApplicationContext(), MeMainFragmentActivity.class);
                             startActivity(intentMain);
                             LoginSmsAuthCodeActivity.this.finish();
-                        } else {
-                            ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap()+ "");
                         }
-                    } else {
-                        ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), t.getMsgMap()+ "");
+                        customDialog.dismiss();
                     }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 

@@ -21,6 +21,8 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Order;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -114,19 +116,30 @@ public class PayAllOrderAdapter extends BaseAdapter {
                             final CustomDialog customDialog=new CustomDialog();
                             Dialog dialog = customDialog.createDialog1(context, "取消中...");
                             dialog.show();
-                            ApiManager.getInstance().orderApi.cancel(order.getId(), new HttpClientAdapter.Callback<Void>() {
-                                @Override
-                                public void call(Result<Void> t) {
-                                    if (t.isSuccess()) {
-                                        ToastUtil.show(context.getApplicationContext(), "取消成功");
-                                        order.setOrderStatus(PayConstant.orderCancel);
-                                        notifyDataSetChanged();
-                                    } else {
-                                        ToastUtil.show(context.getApplicationContext(), t.getMsgMap() + "");
-                                    }
-                                    customDialog.dismiss();
-                                }
-                            }, context);
+                            ApiManager.getInstance().orderApi.cancel(order.getId(),
+                                    new DefaultCallback<Void>(context, new AbstractBusiness<Void>() {
+                                        @Override
+                                        public void handleData(Void data) {
+                                            ToastUtil.show(context.getApplicationContext(), "取消成功");
+                                            order.setOrderStatus(PayConstant.orderCancel);
+                                            notifyDataSetChanged();
+                                            customDialog.dismiss();
+                                        }
+
+                                        @Override
+                                        public void handleClientError(Exception e) {
+                                            super.handleClientError(e);
+                                            ToastUtil.show(context.getApplicationContext(), "取消失败");
+                                            customDialog.dismiss();
+                                        }
+
+                                        @Override
+                                        public void handleException(Exception e) {
+                                            super.handleException(e);
+                                            ToastUtil.show(context.getApplicationContext(), "取消失败");
+                                            customDialog.dismiss();
+                                        }
+                                    }), context);
                         }
 
                         @Override
@@ -163,19 +176,30 @@ public class PayAllOrderAdapter extends BaseAdapter {
                             final CustomDialog customDialog=new CustomDialog();
                             Dialog dialog = customDialog.createDialog1(context, "收货中...");
                             dialog.show();
-                            ApiManager.getInstance().orderApi.confirmReceive(order.getId(), new HttpClientAdapter.Callback<Void>() {
-                                @Override
-                                public void call(Result<Void> t) {
-                                    if (t.isSuccess()) {
-                                        ToastUtil.show(context.getApplicationContext(), "收货成功");
-                                        order.setOrderStatus(PayConstant.orderFinish);
-                                        notifyDataSetChanged();
-                                    } else {
-                                        ToastUtil.show(context.getApplicationContext(), t.getMsgMap() + "");
-                                    }
-                                    customDialog.dismiss();
-                                }
-                            }, context);
+                            ApiManager.getInstance().orderApi.confirmReceive(order.getId(),
+                                    new DefaultCallback<Void>(context, new AbstractBusiness<Void>() {
+                                        @Override
+                                        public void handleData(Void data) {
+                                            ToastUtil.show(context.getApplicationContext(), "确认收货成功");
+                                            order.setOrderStatus(PayConstant.orderFinish);
+                                            notifyDataSetChanged();
+                                            customDialog.dismiss();
+                                        }
+
+                                        @Override
+                                        public void handleClientError(Exception e) {
+                                            super.handleClientError(e);
+                                            ToastUtil.show(context.getApplicationContext(), "确认收货失败");
+                                            customDialog.dismiss();
+                                        }
+
+                                        @Override
+                                        public void handleException(Exception e) {
+                                            super.handleException(e);
+                                            ToastUtil.show(context.getApplicationContext(), "确认收货失败");
+                                            customDialog.dismiss();
+                                        }
+                                    }), context);
                         }
 
                         @Override
@@ -241,19 +265,30 @@ public class PayAllOrderAdapter extends BaseAdapter {
                         final CustomDialog customDialog = new CustomDialog();
                         Dialog dialog = customDialog.createDialog1(context, "删除中...");
                         dialog.show();
-                        ApiManager.getInstance().orderApi.delete(order.getId(), new HttpClientAdapter.Callback<Void>() {
-                            @Override
-                            public void call(Result<Void> t) {
-                                if (t.isSuccess()) {
-                                    ToastUtil.show(context.getApplicationContext(), "删除成功");
-                                    datas.remove(position);
-                                    notifyDataSetChanged();
-                                } else {
-                                    ToastUtil.show(context.getApplicationContext(), t.getMsgMap() + "");
-                                }
-                                customDialog.dismiss();
-                            }
-                        }, context);
+                        ApiManager.getInstance().orderApi.delete(order.getId(),
+                                new DefaultCallback<Void>(context, new AbstractBusiness<Void>() {
+                                    @Override
+                                    public void handleData(Void data) {
+                                        ToastUtil.show(context.getApplicationContext(), "删除成功");
+                                        datas.remove(position);
+                                        notifyDataSetChanged();
+                                        customDialog.dismiss();
+                                    }
+
+                                    @Override
+                                    public void handleClientError(Exception e) {
+                                        super.handleClientError(e);
+                                        ToastUtil.show(context.getApplicationContext(), "删除失败");
+                                        customDialog.dismiss();
+                                    }
+
+                                    @Override
+                                    public void handleException(Exception e) {
+                                        super.handleException(e);
+                                        ToastUtil.show(context.getApplicationContext(), "删除失败");
+                                        customDialog.dismiss();
+                                    }
+                                }), context);
                     }
 
                     @Override

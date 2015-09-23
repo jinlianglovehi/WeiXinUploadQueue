@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,7 +26,9 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Address;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -39,9 +42,9 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     public int currentPosition = -1;
     public Address addressOld;
-    public boolean isDel=false;
+    public boolean isDel = false;
 
-    public HashMap<Integer,Boolean> addressMap=new HashMap<Integer,Boolean>();
+    public HashMap<Integer, Boolean> addressMap = new HashMap<Integer, Boolean>();
 
     public PayMimeAddressWithEditAdapter(Activity context, ArrayList<Address> datas) {
         mInflater = LayoutInflater.from(context);
@@ -98,7 +101,7 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
         final Address address = this.datas.get(position);
         viewHolder.tvAddressName.setText(address.getLinkMan());
         viewHolder.tvAddressPhoneNumber.setText(address.getMobile());
-        viewHolder.tvAddressText.setText(address.getArea()+address.getAddress()+"");
+        viewHolder.tvAddressText.setText(address.getArea() + address.getAddress() + "");
 
         LogUtil.d("getIsDef", address.getIsDef() + "  sssssss " + position);
 
@@ -112,7 +115,7 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
         viewHolder.ivArrowAddress.setVisibility(View.VISIBLE);
 
 
-        if(isDel){
+        if (isDel) {
             viewHolder.ivArrowAddress.setVisibility(View.INVISIBLE);
             Boolean aBoolean = addressMap.get(position);
             if (aBoolean) {
@@ -121,7 +124,7 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
                 viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose_un);
             }
             viewHolder.ivAddressImaged.setOnClickListener(null);
-        }else {
+        } else {
             if (address.getIsDef()) {
                 viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose);
             } else {
@@ -133,32 +136,43 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
                     final CustomDialog customDialog = new CustomDialog();
                     Dialog dialog = customDialog.createDialog1(context, "数据加载中...");
                     dialog.show();
-                    ApiManager.getInstance().addressApi.setDef(address.getId(), new HttpClientAdapter.Callback<Void>() {
-                        @Override
-                        public void call(Result<Void> t) {
-                            if (t.isSuccess()) {
-                                currentPosition = (position);
-                                for (int i = 0; i < datas.size(); i++) {
-                                    Address addRess = datas.get(i);
-                                    addRess.setIsDef(false);
-                                    if (i == position) {
-                                        address.setIsDef(true);
+                    ApiManager.getInstance().addressApi.setDef(address.getId(),
+                            new DefaultCallback<Void>(context, new AbstractBusiness<Void>() {
+                                @Override
+                                public void handleData(Void data) {
+                                    currentPosition = (position);
+                                    for (int i = 0; i < datas.size(); i++) {
+                                        Address addRess = datas.get(i);
+                                        addRess.setIsDef(false);
+                                        if (i == position) {
+                                            address.setIsDef(true);
+                                        }
                                     }
-                                }
-                                datas.add(0, datas.remove(position));
+                                    datas.add(0, datas.remove(position));
 
-                                notifyDataSetChanged();
+                                    notifyDataSetChanged();
 
 //                            Intent intent = new Intent();
 //                            intent.putExtra("addressItem", address);
 //                            context.setResult(999, intent);
 //                            context.finish();
-                            } else {
-                                ToastUtil.show(context, t.getMsgMap() + "");
-                            }
-                            customDialog.dismiss();
-                        }
-                    }, context);
+
+                                    customDialog.dismiss();
+                                }
+
+                                @Override
+                                public void handleException(Exception e) {
+                                    super.handleException(e);
+                                    customDialog.dismiss();
+                                }
+
+                                @Override
+                                public void handleClientError(Exception e) {
+                                    super.handleClientError(e);
+                                    customDialog.dismiss();
+                                }
+
+                            }), context);
                 }
             });
         }
@@ -169,11 +183,16 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
 
 
     static class ViewHolder {
-        @Bind(R.id.ivAddressImaged) ImageView ivAddressImaged;
-        @Bind(R.id.tvAddressName) TextView tvAddressName;
-        @Bind(R.id.tvAddressPhoneNumber) TextView tvAddressPhoneNumber;
-        @Bind(R.id.tvAddressText) TextView tvAddressText;
-        @Bind(R.id.ivArrowAddress) ImageView ivArrowAddress;
+        @Bind(R.id.ivAddressImaged)
+        ImageView ivAddressImaged;
+        @Bind(R.id.tvAddressName)
+        TextView tvAddressName;
+        @Bind(R.id.tvAddressPhoneNumber)
+        TextView tvAddressPhoneNumber;
+        @Bind(R.id.tvAddressText)
+        TextView tvAddressText;
+        @Bind(R.id.ivArrowAddress)
+        ImageView ivArrowAddress;
 
         public ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);

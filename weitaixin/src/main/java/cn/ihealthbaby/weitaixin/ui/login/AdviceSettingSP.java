@@ -2,12 +2,16 @@ package cn.ihealthbaby.weitaixin.ui.login;
 
 import android.content.Context;
 
+import java.util.Map;
+
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
@@ -22,21 +26,23 @@ public class AdviceSettingSP {
             ServiceInfo serviceInfo = user.getServiceInfo();
             if (serviceInfo != null) {
                 long hid = serviceInfo.getHospitalId();
-                ApiManager.getInstance().adviceApi.getAdviceSetting(hid, new HttpClientAdapter.Callback<AdviceSetting>() {
-                    @Override
-                    public void call(Result<AdviceSetting> t) {
-                        if (t.getStatus()== Result.SUCCESS) {
-                            AdviceSetting data = t.getData();
-                            if (data != null) {
-                                SPUtil.saveAdviceSetting(context, data);
-                            } else {
-                                ToastUtil.show(context, t.getMsgMap() + "");
+                ApiManager.getInstance().adviceApi.getAdviceSetting(hid,
+                        new DefaultCallback<AdviceSetting>(context, new AbstractBusiness<AdviceSetting>() {
+                            @Override
+                            public void handleData(AdviceSetting data) {
+                                    SPUtil.saveAdviceSetting(context, data);
                             }
-                        } else {
-                            ToastUtil.show(context, t.getMsgMap() + "");
-                        }
-                    }
-                }, "");
+
+                            @Override
+                            public void handleClientError(Exception e) {
+                                super.handleClientError(e);
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                            }
+                        }), "");
             }
         }
     }

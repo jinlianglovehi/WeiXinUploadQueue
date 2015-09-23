@@ -23,6 +23,8 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.LoginByPasswordForm;
 import cn.ihealthbaby.client.form.RegForm;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -245,23 +247,33 @@ public class RegistActivity extends BaseActivity {
         final CustomDialog customDialog = new CustomDialog();
         final Dialog dialog = customDialog.createDialog1(this, "注册中...");
         dialog.show();
-        ApiManager.getInstance().accountApi.register(regForm, new HttpClientAdapter.Callback<User>() {
-            @Override
-            public void call(Result<User> t) {
-                    if (t.getStatus()==Result.SUCCESS) {
-                        User data = t.getData();
-                        if (data != null && data.getAccountToken() != null) {
-                            ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
-                            loginActionOfReg();
-                        } else {
-                            ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+"");
-                        }
-                    } else {
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+"");
+        ApiManager.getInstance().accountApi.register(regForm,
+                new DefaultCallback<User>(this, new AbstractBusiness<User>() {
+                    @Override
+                    public void handleData(User data) {
+                        ToastUtil.show(RegistActivity.this.getApplicationContext(), "注册成功");
+                        loginActionOfReg();
+                        customDialog.dismiss();
                     }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                        Intent intent=new Intent(RegistActivity.this,LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                        Intent intent=new Intent(RegistActivity.this,LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }), getRequestTag());
     }
 
 

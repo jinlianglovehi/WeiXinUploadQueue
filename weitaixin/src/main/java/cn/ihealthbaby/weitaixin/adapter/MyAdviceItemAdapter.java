@@ -29,7 +29,9 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
@@ -292,27 +294,34 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			adviceForm.setDeviceType(1);
 //          adviceForm.setLatitude(adviceItem.get);
 //          adviceForm.setLongitude();
-			ApiManager.getInstance().adviceApi.uploadData(adviceForm, new HttpClientAdapter.Callback<Long>() {
-				@Override
-				public void call(Result<Long> t) {
-					if (t.isSuccess()) {
-						Long data = t.getData();
-
-						oneRecord.setUploadState(Record.UPLOAD_STATE_CLOUD);
-						try {
-							recordBusinessDao.update(oneRecord);
-						} catch (Exception e) {
-							e.printStackTrace();
+			ApiManager.getInstance().adviceApi.uploadData(adviceForm,
+					new DefaultCallback<Long>(context, new AbstractBusiness<Long>() {
+						@Override
+						public void handleData(Long data) {
+							oneRecord.setUploadState(Record.UPLOAD_STATE_CLOUD);
+							try {
+								recordBusinessDao.update(oneRecord);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							ToastUtil.show(context, "上传成功");
+							adviceItem.setStatus(0);
+							notifyDataSetChanged();
+							customDialog.dismiss();
 						}
-						ToastUtil.show(context, "上传成功");
-						adviceItem.setStatus(0);
-						notifyDataSetChanged();
-					} else {
-						ToastUtil.show(context, t.getMsgMap() + "");
-					}
-					customDialog.dismiss();
-				}
-			}, context);
+
+						@Override
+						public void handleClientError(Exception e) {
+							super.handleClientError(e);
+							customDialog.dismiss();
+						}
+
+						@Override
+						public void handleException(Exception e) {
+							super.handleException(e);
+							customDialog.dismiss();
+						}
+					}), context);
 		}
 	}
 
@@ -324,28 +333,37 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 				final CustomDialog customDialog = new CustomDialog();
 				Dialog dialog = customDialog.createDialog1(context, "正在删除...");
 				dialog.show();
-				ApiManager.getInstance().adviceApi.delete(adviceItem.getId(), new HttpClientAdapter.Callback<Void>() {
-					@Override
-					public void call(Result<Void> t) {
-						if (t.isSuccess()) {
-							if (status == 4) {
-								try {
-									recordBusinessDao.deleteByLocalRecordId(adviceItem.getClientId());
-								} catch (Exception e) {
-									e.printStackTrace();
+				ApiManager.getInstance().adviceApi.delete(adviceItem.getId(),
+						new DefaultCallback<Void>(context, new AbstractBusiness<Void>() {
+							@Override
+							public void handleData(Void data) {
+								if (status == 4) {
+									try {
+										recordBusinessDao.deleteByLocalRecordId(adviceItem.getClientId());
+										ToastUtil.show(context, "删除成功");
+										datas.remove(position);
+									} catch (Exception e) {
+										e.printStackTrace();
+										ToastUtil.show(context, "删除失败");
+									}
 								}
+
+								notifyDataSetChanged();
+								customDialog.dismiss();
 							}
 
-							ToastUtil.show(context, "删除成功");
-							datas.remove(position);
+							@Override
+							public void handleException(Exception e) {
+								super.handleException(e);
+								customDialog.dismiss();
+							}
 
-							notifyDataSetChanged();
-						} else {
-							ToastUtil.show(context, t.getMsgMap() + "");
-						}
-						customDialog.dismiss();
-					}
-				}, context);
+							@Override
+							public void handleClientError(Exception e) {
+								super.handleClientError(e);
+								customDialog.dismiss();
+							}
+						}), context);
 			} else {
 				ToastUtil.show(context, "问医生的记录不能删除");
 				cancel();
