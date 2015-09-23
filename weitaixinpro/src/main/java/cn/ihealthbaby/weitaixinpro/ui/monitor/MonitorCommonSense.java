@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.Urls;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
+import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
@@ -64,7 +64,7 @@ public class MonitorCommonSense extends BaseActivity {
 
         ApiManager.getInstance().urlApi.getUrls(new DefaultCallback<Urls>(getApplicationContext(), new AbstractBusiness<Urls>() {
             @Override
-            public void handleData(Urls data) throws Exception {
+            public void handleData(Urls data)   {
                 mWvMonitorCommonSence.loadUrl(data.getKnowledge());
                 customDialog.dismiss();
             }

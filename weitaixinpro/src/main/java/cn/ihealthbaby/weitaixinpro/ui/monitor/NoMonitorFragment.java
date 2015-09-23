@@ -15,8 +15,8 @@ import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.ServiceInside;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
@@ -63,7 +63,7 @@ public class NoMonitorFragment extends BaseFragment implements MonitorAdapter.Be
 				ApiManager.getInstance().hClientAccountApi.getServiceInsides(SPUtil.getHClientUser(getActivity()).getDepartmentId(), 0, page, pageSize,
 						                                                            new DefaultCallback<PageData<ServiceInside>>(getActivity(), new AbstractBusiness<PageData<ServiceInside>>() {
 							                                                            @Override
-							                                                            public void handleData(PageData<ServiceInside> data) throws Exception {
+							                                                            public void handleData(PageData<ServiceInside> data) {
 								                                                            mServiceInsidePageData = data;
 								                                                            if (data.getCount() > 0) {
 									                                                            mAdapter.clearAddSetData(data.getValue());
@@ -86,7 +86,7 @@ public class NoMonitorFragment extends BaseFragment implements MonitorAdapter.Be
 		ApiManager.getInstance().hClientAccountApi.getServiceInsides(SPUtil.getHClientUser(getActivity()).getDepartmentId(), 0, page, pageSize,
 				                                                            new DefaultCallback<PageData<ServiceInside>>(getActivity(), new AbstractBusiness<PageData<ServiceInside>>() {
 					                                                            @Override
-					                                                            public void handleData(PageData<ServiceInside> data) throws Exception {
+					                                                            public void handleData(PageData<ServiceInside> data) {
 						                                                            mServiceInsidePageData = data;
 						                                                            if (data.getCount() > 0) {
 							                                                            mAdapter.addData(data.getValue());

@@ -1,7 +1,6 @@
 package cn.ihealthbaby.weitaixinpro;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import java.util.Map;
 
@@ -26,6 +25,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 
 	@Override
 	public void call(Result<T> result) {
+
 		if (result == null) {
 			return;
 		}
@@ -37,7 +37,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.SUCCESS:
 				T data = result.getData();
 				if (data != null) {
-					LogUtil.v(TAG, data.toString());
+					LogUtil.d(TAG, "Result.SUCCESS" + data.toString());
 				}
 				/**
 				 * 处理业务
@@ -46,68 +46,84 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleData(data);
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "1111");
+					LogUtil.d(TAG, "Result.SUCCESS.Exception" + e.toString());
+					business.handleException(e);
 				}
 				break;
 			/**
 			 * 参数验证失败
 			 */
 			case Result.VALIDATOR:
-				Map<String, Object> msgMap = result.getMsgMap();
-				// TODO: 15/7/23 提示消息
-				ToastUtil.show(context, msgMap.toString() + "2222");
-				LogUtil.e(TAG, "call", result.getMsg());
+				String msgMapString = map2String(result.getMsgMap());
+				if (msgMapString != null) {
+					ToastUtil.show(context, msgMapString);
+					LogUtil.e(TAG, "Result.VALIDATOR", msgMapString);
+				}
 				//
 				try {
 					business.handleValidator(context);
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "22-33");
+					LogUtil.d(TAG, "Result.VALIDATOR.Exception==> " + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
+					business.handleException(e);
 				}
 				break;
 			/**
 			 * 账号授权错误
 			 */
 			case Result.ACCOUNT_ERROR:
-				Map<String, Object> msgMapERROR = result.getMsgMap();
-				if (msgMapERROR != null) {
-					String errorStr = msgMapERROR.toString().trim();
-					if (TextUtils.isEmpty(errorStr)) {
-						ToastUtil.show(context, "请求失效，请重新登录3333");
-					} else {
-						ToastUtil.show(context, errorStr + "请求失效，请重新登录3333");
-					}
+				String map2String = map2String(result.getMsgMap());
+				if (map2String != null) {
+					ToastUtil.show(context, map2String);
+					LogUtil.e(TAG, "Result.ACCOUNT_ERROR" + map2String);
 				}
-//				try {
-//					SPUtil.clearUser(context);
-//					WeiTaiXinProApplication.getInstance().mAdapter.setAccountToken(null);
-//					if (context instanceof Activity) {
-//						Intent intent = new Intent(context, LoginActivity.class);
-//						//context是Activity类型   appContext有问题
-//						context.startActivity(intent);
-////						context.finish();
-//					}
-//					business.handleAccountError(context, result.getData());
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//					ToastUtil.show(context, result.getMsgMap() + "4444");
-//				}
+				try {
+					business.handleAccountError(context, result.getMsgMap());
+				} catch (Exception e) {
+					e.printStackTrace();
+					business.handleException(e);
+				}
+				break;
+			/**
+			 *
+			 */
+			case Result.CLIENT_ERROR:
+				Exception exception = result.getException();
+				LogUtil.e(TAG, "CLIENT_ERROR" + exception);
+				business.handleClientError(exception);
 				break;
 			/**
 			 * 服务器错误
 			 */
 			case Result.ERROR:
-				ToastUtil.show(context, result.getMsgMap() + "5555");
+				String map2String1 = map2String(result.getMsgMap());
+				if (map2String1 != null) {
+					ToastUtil.show(context, "Result.ERROR" + map2String1);
+					LogUtil.e(TAG, "Result.ERROR" + map2String1);
+				}
 				try {
-//					business.handleError(context, result.getData());
+					business.handleError(result.getMsgMap());
 				} catch (Exception e) {
 					e.printStackTrace();
-					ToastUtil.show(context, result.getMsgMap() + "6666");
+					LogUtil.e(TAG, "Result.ERROR" + map2String1 + e.toString());
+					business.handleException(e);
 				}
 				break;
 			default:
-				ToastUtil.show(context, result.getMsgMap() + "7777");
 				break;
+		}
+	}
+
+	public String map2String(Map map) {
+		if (map != null && map.size() > 0) {
+			StringBuilder stringBuilder = new StringBuilder();
+			for (Object o : map.values()) {
+				stringBuilder.append(o.toString());
+				stringBuilder.append("/r/n");
+			}
+			return stringBuilder.toString();
+		} else {
+			return null;
 		}
 	}
 }

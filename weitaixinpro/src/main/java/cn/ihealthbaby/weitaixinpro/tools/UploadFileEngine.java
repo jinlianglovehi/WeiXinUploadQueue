@@ -20,11 +20,11 @@ import cn.ihealthbaby.client.form.UpdateHeadPicForm;
 import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.client.model.UploadModel;
 import cn.ihealthbaby.client.model.User;
-import cn.ihealthbaby.weitaixin.library.data.net.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
+import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.WeiTaiXinProApplication;
 ;
@@ -109,7 +109,7 @@ public class UploadFileEngine {
          */
         callable4 = new DefaultCallback<UploadModel>(context, new AbstractBusiness<UploadModel>() {
             @Override
-            public void handleData(UploadModel data) throws Exception {
+            public void handleData(UploadModel data)  {
                 uploadFile(file, data.getKey(), data.getToken());
             }
         });
