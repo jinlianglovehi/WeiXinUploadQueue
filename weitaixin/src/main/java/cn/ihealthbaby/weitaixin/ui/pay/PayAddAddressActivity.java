@@ -18,6 +18,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AddressForm;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -160,20 +162,28 @@ public class PayAddAddressActivity extends BaseActivity {
         addressForm.setMobile(addressPhone);
         addressForm.setArea(addAddressArea);
         addressForm.setAddress(addressDetailAddress);
-        ApiManager.getInstance().addressApi.create(addressForm, new HttpClientAdapter.Callback<Void>() {
-            @Override
-            public void call(Result<Void> t) {
-                if (t.getStatus() == Result.SUCCESS) {
-                    Void data = t.getData();
-                    Intent intent = new Intent();
-                    setResult(PayConfirmOrderActivity.RESULTCODE_ADDADDRESS, intent);
-                    finish();
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+        ApiManager.getInstance().addressApi.create(addressForm,
+                new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
+                    @Override
+                    public void handleData(Void data) {
+                        Intent intent = new Intent();
+                        setResult(PayConfirmOrderActivity.RESULTCODE_ADDADDRESS, intent);
+                        customDialog.dismiss();
+                        finish();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }),getRequestTag());
     }
 
 

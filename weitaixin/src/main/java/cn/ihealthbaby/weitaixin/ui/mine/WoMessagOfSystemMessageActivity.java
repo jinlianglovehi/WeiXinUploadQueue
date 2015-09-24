@@ -12,6 +12,8 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.SysMsg;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -56,29 +58,35 @@ public class WoMessagOfSystemMessageActivity extends BaseActivity {
 
         long relatedId = getIntent().getLongExtra("SysMsg", 0);
 
-
-        dialog = new CustomDialog().createDialog1(this, "加载中...");
+        final CustomDialog customDialog = new CustomDialog();
+        dialog = customDialog.createDialog1(this, "加载中...");
         dialog.show();
 
-        ApiManager.getInstance().informationApi.getSysMsg(relatedId, new HttpClientAdapter.Callback<SysMsg>() {
-            @Override
-            public void call(Result<SysMsg> t) {
-                if (t.isSuccess()) {
-                    SysMsg data = t.getData();
-                    if (data != null) {
-                        tv_title_system_message.setText(data.getTitle());
-                        tv_createtime_system_message.setText(DateTimeTool.date2Str(data.getCreateTime(),"MM月dd日"));
-                        tv_context_system_message.setText(data.getContext());
-                        tv_author_system_message.setText(data.getAuthor());
-                    } else {
-                        ToastUtil.show(getApplicationContext(), t.getMsg());
+        ApiManager.getInstance().informationApi.getSysMsg(relatedId,
+                new DefaultCallback<SysMsg>(this, new AbstractBusiness<SysMsg>() {
+                    @Override
+                    public void handleData(SysMsg data) {
+                        if (data != null) {
+                            tv_title_system_message.setText(data.getTitle());
+                            tv_createtime_system_message.setText(DateTimeTool.date2Str(data.getCreateTime(), "MM月dd日"));
+                            tv_context_system_message.setText(data.getContext());
+                            tv_author_system_message.setText(data.getAuthor());
+                        }
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsg());
-                }
-                dialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
     @Override

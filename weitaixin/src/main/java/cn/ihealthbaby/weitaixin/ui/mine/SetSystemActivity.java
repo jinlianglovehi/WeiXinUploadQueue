@@ -129,10 +129,10 @@ public class SetSystemActivity extends BaseActivity {
             public void handleData(Void data)   {
                 SPUtil.clearUser(SetSystemActivity.this);
                 WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
+                customDialog.dismiss();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
-                customDialog.dismiss();
             }
 
             @Override

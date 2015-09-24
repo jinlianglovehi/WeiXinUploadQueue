@@ -23,16 +23,24 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 public class PayAddAddressWithEditActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
-    @Bind(R.id.tvAddAddressName)   EditText tvAddAddressName;
-    @Bind(R.id.tvAddAddressPhone)   EditText tvAddAddressPhone;
-    @Bind(R.id.tvAddAddressDetailAddress)   EditText tvAddAddressDetailAddress;
-    @Bind(R.id.tvSubmitAddress)   TextView tvSubmitAddress;
-    @Bind(R.id.tvAddAddressArea)   TextView tvAddAddressArea;
+    @Bind(R.id.tvAddAddressName)
+    EditText tvAddAddressName;
+    @Bind(R.id.tvAddAddressPhone)
+    EditText tvAddAddressPhone;
+    @Bind(R.id.tvAddAddressDetailAddress)
+    EditText tvAddAddressDetailAddress;
+    @Bind(R.id.tvSubmitAddress)
+    TextView tvSubmitAddress;
+    @Bind(R.id.tvAddAddressArea)
+    TextView tvAddAddressArea;
 
     public final static int INTENT_REQUEST_CODE = 500;
     public final static int INTENT_RESULT_CODE = 501;
@@ -49,9 +57,9 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
 
         title_text.setText("修改地址");
 
-        PayConstant.AreasString="";
+        PayConstant.AreasString = "";
 
-        address= (Address) getIntent().getSerializableExtra("AddressItem");
+        address = (Address) getIntent().getSerializableExtra("AddressItem");
 
 
         initView();
@@ -68,11 +76,11 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
     }
 
     private void initView() {
-        if (address!=null){
+        if (address != null) {
             tvAddAddressName.setText(address.getLinkMan());
             tvAddAddressPhone.setText(address.getMobile());
             tvAddAddressArea.setText(address.getArea());
-            tvAddAddressDetailAddress.setText(address.getArea()+address.getAddress());
+            tvAddAddressDetailAddress.setText(address.getArea() + address.getAddress());
         }
 
         String addressName = tvAddAddressName.getText().toString().trim();
@@ -96,10 +104,9 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
 
     @OnClick(R.id.rl3Functioned)
     public void FunctionedAddAddressArea() {
-        Intent intent=new Intent(this, PayChooseAddressProvinceActivity.class);
+        Intent intent = new Intent(this, PayChooseAddressProvinceActivity.class);
         startActivity(intent);
     }
-
 
 
 //
@@ -128,7 +135,7 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
         String addAddressArea = tvAddAddressArea.getText().toString().trim();
 
         if (TextUtils.isEmpty(addressName)) {
-            ToastUtil.show(getApplicationContext(),"请填写收货人");
+            ToastUtil.show(getApplicationContext(), "请填写收货人");
             return;
         }
         if (addressName != null && addressName.length() < 2) {
@@ -136,39 +143,50 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
             return;
         }
         if (TextUtils.isEmpty(addressPhone)) {
-            ToastUtil.show(getApplicationContext(),"请填写收货人的手机号");
+            ToastUtil.show(getApplicationContext(), "请填写收货人的手机号");
             return;
         }
         if (addressPhone != null && addressPhone.length() != 11) {
-            ToastUtil.show(getApplicationContext(),"手机号必须是11位数字");
+            ToastUtil.show(getApplicationContext(), "手机号必须是11位数字");
             return;
         }
-        if (TextUtils.isEmpty(addAddressArea)||"请选择所在地区".equals(addAddressArea)) {
-            ToastUtil.show(getApplicationContext(),"请选择所在地区");
+        if (TextUtils.isEmpty(addAddressArea) || "请选择所在地区".equals(addAddressArea)) {
+            ToastUtil.show(getApplicationContext(), "请选择所在地区");
             return;
         }
         if (TextUtils.isEmpty(addressDetailAddress)) {
-            ToastUtil.show(getApplicationContext(),"请填写收货人的详细地址");
+            ToastUtil.show(getApplicationContext(), "请填写收货人的详细地址");
             return;
         }
 
-        final CustomDialog customDialog=new CustomDialog();
+        final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
 
-        AddressForm addressForm=new AddressForm();
+        AddressForm addressForm = new AddressForm();
         addressForm.setLinkMan(addressName);
         addressForm.setMobile(addressPhone);
         addressForm.setArea(addAddressArea);
         addressForm.setAddress(addressDetailAddress);
 
-        ApiManager.getInstance().addressApi.update(address.getId(),addressForm,new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
-            @Override
-            public void handleData(Void data) {
-                customDialog.dismiss();
-                finish();
-            }
-        }), getRequestTag());
+        ApiManager.getInstance().addressApi.update(address.getId(), addressForm,
+                new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
+                    @Override
+                    public void handleData(Void data) {
+                        customDialog.dismiss();
+                        finish();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                    }
+                }), getRequestTag());
 
     }
 

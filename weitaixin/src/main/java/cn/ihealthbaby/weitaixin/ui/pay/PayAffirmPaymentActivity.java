@@ -15,6 +15,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.WXPayForm;
 import cn.ihealthbaby.client.model.WXPrePay;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -89,23 +91,30 @@ public class PayAffirmPaymentActivity extends BaseActivity {
         WXPayForm wxPayForm=new WXPayForm();
         wxPayForm.setOrderId(orderId);
 //        wxPayForm.setSpbillCreateIp();
-        ApiManager.getInstance().payApi.getWXPrePay(wxPayForm, new HttpClientAdapter.Callback<WXPrePay>() {
-            @Override
-            public void call(Result<WXPrePay> t) {
-                if (t.isSuccess()) {
-                    WXPrePay data = t.getData();
+        ApiManager.getInstance().payApi.getWXPrePay(wxPayForm,
+                new DefaultCallback<WXPrePay>(this, new AbstractBusiness<WXPrePay>() {
+                    @Override
+                    public void handleData(WXPrePay data) {
 //                    if (!TextUtils.isEmpty(orderDetail)) {
 //                        PayAlipayUtil payAlipayUtil=new PayAlipayUtil(PayAffirmPaymentActivity.this);
 //                        payAlipayUtil.payAction(orderDetail);
 //                    } else {
 //                        ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
 //                    }
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }),getRequestTag());
     }
 
     @OnClick(R.id.llPaymenyAlipay)
@@ -118,23 +127,29 @@ public class PayAffirmPaymentActivity extends BaseActivity {
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "支付宝支付请求中...");
         dialog.show();
-        ApiManager.getInstance().payApi.getAlipayOrderInfo(orderId, new HttpClientAdapter.Callback<String>() {
-            @Override
-            public void call(Result<String> t) {
-                if (t.isSuccess()) {
-                    String data = t.getData();
-                    if (!TextUtils.isEmpty(data)) {
-                        PayAlipayUtil payAlipayUtil=new PayAlipayUtil(PayAffirmPaymentActivity.this);
-                        payAlipayUtil.payAction(data);
-                    } else {
-                        ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
+        ApiManager.getInstance().payApi.getAlipayOrderInfo(orderId,
+                new DefaultCallback<String>(this, new AbstractBusiness<String>() {
+                    @Override
+                    public void handleData(String data) {
+                        if (!TextUtils.isEmpty(data)) {
+                            PayAlipayUtil payAlipayUtil=new PayAlipayUtil(PayAffirmPaymentActivity.this);
+                            payAlipayUtil.payAction(data);
+                        }
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 

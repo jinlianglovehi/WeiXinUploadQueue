@@ -20,6 +20,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.ChangePasswordForm;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
@@ -152,26 +154,40 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode() {
         User user = SPUtil.getUser(this);
-        ApiManager.getInstance().accountApi.getAuthCode(user.getMobile(), 2, new HttpClientAdapter.Callback<Boolean>() {
-            @Override
-            public void call(Result<Boolean> t) {
-                if (t.isSuccess()) {
-                    Boolean data = t.getData();
-                    if (data) {
-                        isHasAuthCode = true;
-                    } else {
+        ApiManager.getInstance().accountApi.getAuthCode(user.getMobile(), 2,
+                new DefaultCallback<Boolean>(this, new AbstractBusiness<Boolean>() {
+                    @Override
+                    public void handleData(Boolean data) {
+                        if (data) {
+                            isHasAuthCode = true;
+                        } else {
+                            isHasAuthCode = false;
+                            cancel();
+                            ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
+                        }
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
+
                         isHasAuthCode = false;
                         cancel();
-                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg() + "重新获取验证码");
+                        dialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
-                    isHasAuthCode = false;
-                    cancel();
-                }
-                dialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
+
+                        isHasAuthCode = false;
+                        cancel();
+                        dialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
@@ -180,7 +196,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
         if (isHasAuthCode) {
             tvRegistAction2();
         } else {
-            ToastUtil.show(getApplicationContext(), "先获取验证码~~");
+            ToastUtil.show(getApplicationContext(), "请先获取验证码");
         }
 
     }
@@ -213,23 +229,29 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
 
         ChangePasswordForm changePasswordForm = new ChangePasswordForm(Integer.parseInt(mark_number), newPassword);
 
-        ApiManager.getInstance().accountApi.changePassword(changePasswordForm, new HttpClientAdapter.Callback<Boolean>() {
-            @Override
-            public void call(Result<Boolean> t) {
-                    if (t.isSuccess()) {
-                        Boolean data = t.getData();
+        ApiManager.getInstance().accountApi.changePassword(changePasswordForm,
+                new DefaultCallback<Boolean>(this, new AbstractBusiness<Boolean>() {
+                    @Override
+                    public void handleData(Boolean data) {
                         if (data) {
                             ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "修改密码成功");
                             finish();
-                        } else {
-                            ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
                         }
-                    } else {
-                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
+                        dialog.dismiss();
                     }
-                dialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        dialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 

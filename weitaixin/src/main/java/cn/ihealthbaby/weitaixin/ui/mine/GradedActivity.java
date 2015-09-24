@@ -66,18 +66,25 @@ public class GradedActivity extends BaseActivity {
             finish();
             return;
         }else{
-            ApiManager.getInstance().riskScoreApi.getQuestions(hospitalId, new HttpClientAdapter.Callback<ApiList<Question>>() {
-                @Override
-                public void call(Result<ApiList<Question>> t) {
-                    if (t.getStatus()==Result.SUCCESS) {
-                        questionList = t.getData();
-                        questionIndex = 0;
-                        start();
-                    } else {
-                        ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
-                    }
-                }
-            }, getRequestTag());
+            ApiManager.getInstance().riskScoreApi.getQuestions(hospitalId,
+                    new DefaultCallback<ApiList<Question>>(this, new AbstractBusiness<ApiList<Question>>() {
+                        @Override
+                        public void handleData(ApiList<Question> data) {
+                            questionList = data;
+                            questionIndex = 0;
+                            start();
+                        }
+
+                        @Override
+                        public void handleClientError(Exception e) {
+                            super.handleClientError(e);
+                        }
+
+                        @Override
+                        public void handleException(Exception e) {
+                            super.handleException(e);
+                        }
+                    }), getRequestTag());
         }
     }
 
@@ -118,17 +125,24 @@ public class GradedActivity extends BaseActivity {
             questionIndex++;
 
         } else if (questionIndex != 0 && questionIndex == questionList.getList().size()) {
-            ApiManager.getInstance().riskScoreApi.submitQuestionnaire(mAnswerForms, new HttpClientAdapter.Callback<RiskScore>() {
-                @Override
-                public void call(Result<RiskScore> t) {
-                    if (t.getStatus()==Result.SUCCESS) {
-                        mRiskScore = t.getData();
-                        result();
-                    } else {
-                        ToastUtil.show(getApplicationContext(), t.getMsgMap()+"");
-                    }
-                }
-            }, getRequestTag());
+            ApiManager.getInstance().riskScoreApi.submitQuestionnaire(mAnswerForms,
+                    new DefaultCallback<RiskScore>(this, new AbstractBusiness<RiskScore>() {
+                        @Override
+                        public void handleData(RiskScore data) {
+                            mRiskScore = data;
+                            result();
+                        }
+
+                        @Override
+                        public void handleException(Exception e) {
+                            super.handleException(e);
+                        }
+
+                        @Override
+                        public void handleClientError(Exception e) {
+                            super.handleClientError(e);
+                        }
+                    }), getRequestTag());
         }
     }
 

@@ -73,42 +73,73 @@ public class WoMessageActivity extends BaseActivity {
         pullToRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) { //下拉刷新
-                ApiManager.getInstance().informationApi.getInformations(1, 10, new HttpClientAdapter.Callback<PageData<Information>>() {
-                    @Override
-                    public void call(Result<PageData<Information>> t) {
-                        if (t.isSuccess()) {
-                            PageData<Information> data = t.getData();
-                            dataList = null;
-                            dataList = (ArrayList<Information>) data.getValue();
-                            adapter.setDatas(dataList);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            ToastUtil.show(getApplicationContext(), t.getMsg());
-                        }
-                        pageIndex = 1;
-                        pullToRefresh.onRefreshComplete();
-                    }
-                }, getRequestTag());
+                ApiManager.getInstance().informationApi.getInformations(1, 10,
+                        new DefaultCallback<PageData<Information>>(WoMessageActivity.this, new AbstractBusiness<PageData<Information>>() {
+                            @Override
+                            public void handleData(PageData<Information> data) {
+                                dataList = null;
+                                dataList = (ArrayList<Information>) data.getValue();
+                                adapter.setDatas(dataList);
+                                adapter.notifyDataSetChanged();
+                                pageIndex = 1;
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
+                            public void handleClientError(Exception e) {
+                                super.handleClientError(e);
+                                pageIndex = 1;
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                pageIndex = 1;
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+                        }), getRequestTag());
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) { //上拉加载更多
-                ApiManager.getInstance().informationApi.getInformations((++pageIndex), pageSize, new HttpClientAdapter.Callback<PageData<Information>>() {
-                    @Override
-                    public void call(Result<PageData<Information>> t) {
-                        if (t.isSuccess()) {
-                            PageData<Information> data = t.getData();
-                            dataList = null;
-                            dataList = (ArrayList<Information>) data.getValue();
-                            adapter.addDatas(dataList);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            ToastUtil.show(getApplicationContext(), t.getMsg());
-                            pageIndex--;
-                        }
-                        pullToRefresh.onRefreshComplete();
-                    }
-                }, getRequestTag());
+                ApiManager.getInstance().informationApi.getInformations((++pageIndex), pageSize,
+                        new DefaultCallback<PageData<Information>>(WoMessageActivity.this, new AbstractBusiness<PageData<Information>>() {
+                            @Override
+                            public void handleData(PageData<Information> data) {
+                                dataList = null;
+                                dataList = (ArrayList<Information>) data.getValue();
+                                adapter.addDatas(dataList);
+                                adapter.notifyDataSetChanged();
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
+                            public void handleClientError(Exception e) {
+                                super.handleClientError(e);
+                                pageIndex--;
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                pageIndex--;
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+                        }), getRequestTag());
             }
         });
 
@@ -118,7 +149,7 @@ public class WoMessageActivity extends BaseActivity {
 
                 final Information item = (Information) adapter.getItem(position - 1);
 
-                LogUtil.d("Information","Information==> "+item);
+                LogUtil.d("Information", "Information==> " + item);
 
 
                 ApiManager.getInstance().informationApi.readInformation(item.getId(), new DefaultCallback<Void>(WoMessageActivity.this, new AbstractBusiness<Void>() {
@@ -189,32 +220,48 @@ public class WoMessageActivity extends BaseActivity {
 
     private void pullDatas() {
 
-        dialog = new CustomDialog().createDialog1(this, "数据加载中...");
+        final CustomDialog customDialog = new CustomDialog();
+        dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
 
-        ApiManager.getInstance().informationApi.getInformations(1, 10, new HttpClientAdapter.Callback<PageData<Information>>() {
-            @Override
-            public void call(Result<PageData<Information>> t) {
-                if (t.isSuccess()) {
-                    PageData<Information> data = t.getData();
-                    dataList = null;
-                    dataList = (ArrayList<Information>) data.getValue();
-                    adapter.setDatas(dataList);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsg());
-                }
-                pullToRefresh.onRefreshComplete();
-                dialog.dismiss();
-            }
-        }, getRequestTag());
+        ApiManager.getInstance().informationApi.getInformations(1, 10,
+                new DefaultCallback<PageData<Information>>(this, new AbstractBusiness<PageData<Information>>() {
+                    @Override
+                    public void handleData(PageData<Information> data) {
+                        dataList = null;
+                        dataList = (ArrayList<Information>) data.getValue();
+                        adapter.setDatas(dataList);
+                        adapter.notifyDataSetChanged();
+                        if (pullToRefresh!=null) {
+                            pullToRefresh.onRefreshComplete();
+                        }
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        if (pullToRefresh!=null) {
+                            pullToRefresh.onRefreshComplete();
+                        }
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        if (pullToRefresh!=null) {
+                            pullToRefresh.onRefreshComplete();
+                        }
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
     @OnClick(R.id.back)
     public void onBack() {
         this.finish();
     }
-
 
 
     public class ReceiveBroadCast extends BroadcastReceiver {
@@ -241,7 +288,7 @@ public class WoMessageActivity extends BaseActivity {
     }
 
     @OnClick(R.id.back)
-    public void backOnclick(){
+    public void backOnclick() {
         finish();
     }
 }

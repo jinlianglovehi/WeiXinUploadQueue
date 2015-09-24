@@ -76,28 +76,42 @@ public class WelcomeActivity extends BaseActivity {
 
                 if (SPUtil.isNoFirstStartApp(WelcomeActivity.this)) {
                     if (SPUtil.getUser(WelcomeActivity.this) != null) {
-                        final CustomDialog customDialog = new CustomDialog();
-                        Dialog dialog = customDialog.createDialog1(WelcomeActivity.this, "刷新用户数据...");
-                        dialog.show();
+                        CustomDialog customDialog = null;
+                        try {
+                            customDialog = new CustomDialog();
+                            Dialog dialog = customDialog.createDialog1(WelcomeActivity.this, "刷新用户数据...");
+                            dialog.show();
 
-                        Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
-                        startService(intentAdvice);
+                            Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
+                            startService(intentAdvice);
 
-                        ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(WelcomeActivity.this, new AbstractBusiness<User>() {
-                            @Override
-                            public void handleData(User data) {
-                                SPUtil.saveUser(WelcomeActivity.this, data);
+                            final CustomDialog finalCustomDialog = customDialog;
+                            ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(WelcomeActivity.this, new AbstractBusiness<User>() {
+                                @Override
+                                public void handleData(User data) {
+                                    SPUtil.saveUser(WelcomeActivity.this, data);
+                                    if (finalCustomDialog != null) {
+                                        finalCustomDialog.dismiss();
+                                    }
+                                }
+
+                                @Override
+                                public void handleException(Exception e) {
+                                    if (finalCustomDialog != null) {
+                                        finalCustomDialog.dismiss();
+                                    }
+                                    Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
+                                    startActivity(intentHasRiskscore);
+                                    finish();
+                                }
+                            }), getRequestTag());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (customDialog != null) {
                                 customDialog.dismiss();
                             }
+                        }
 
-                            @Override
-                            public void handleException(Exception e) {
-                                customDialog.dismiss();
-                                Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
-                                startActivity(intentHasRiskscore);
-                                finish();
-                            }
-                        }), getRequestTag());
 
                         if (SPUtil.isLogin(WelcomeActivity.this)) {
                             if (SPUtil.getUser(WelcomeActivity.this).getIsInit()) {
@@ -141,7 +155,7 @@ public class WelcomeActivity extends BaseActivity {
     }
 
 
-    public void initDataView(){
+    public void initDataView() {
 
         mListViews = new ArrayList<View>();
         mInflater = this.getLayoutInflater();

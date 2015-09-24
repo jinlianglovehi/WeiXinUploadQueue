@@ -106,16 +106,15 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void handleData(AdviceStatistics data) {
                 if (data != null) {
+                    messageCount += data.getAdviceUnReadReplyCount();
                     if (messageCount != 0) {
                         flShowMessageCount.setVisibility(View.VISIBLE);
                         tvMessageNumberCount.setText(messageCount + "");
                     }
 
+                    monitorCount += data.getAdviceUploadCount();
                     monitorCount += getLocalDB();
-                    if (monitorCount != 0) {
-                        flShowMessageCount.setVisibility(View.VISIBLE);
-                        tvMonitorDayNumber.setText(monitorCount + "");
-                    }
+                    tvMonitorDayNumber.setText(monitorCount + "");
                 } else {
                     ToastUtil.show(getActivity(), "没有获取到数据");
                 }

@@ -23,6 +23,8 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -117,23 +119,30 @@ public class WoInfoFragment extends BaseFragment {
 
     private void setTextHead() {
 
-        ApiManager.getInstance().informationApi.getUnReadCount(new HttpClientAdapter.Callback<Integer>() {
-            @Override
-            public void call(Result<Integer> t) {
-                if (t.isSuccess()) {
-                    if (t.getData() > 0) {
-                        mTvMessageCount.setVisibility(View.VISIBLE);
-                        mTvMessageCount.setText(t.getData() + "");
-                    } else {
+        ApiManager.getInstance().informationApi.getUnReadCount(
+                new DefaultCallback<Integer>(getActivity(), new AbstractBusiness<Integer>() {
+                    @Override
+                    public void handleData(Integer data) {
+                        if (data > 0) {
+                            mTvMessageCount.setVisibility(View.VISIBLE);
+                            mTvMessageCount.setText(data + "");
+                        } else {
+                            mTvMessageCount.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
                         mTvMessageCount.setVisibility(View.GONE);
                     }
 
-                } else {
-                    mTvMessageCount.setVisibility(View.GONE);
-                }
-
-            }
-        }, getRequestTag());
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        mTvMessageCount.setVisibility(View.GONE);
+                    }
+                }), getRequestTag());
 
 
         User user = SPUtil.getUser(getActivity().getApplicationContext());

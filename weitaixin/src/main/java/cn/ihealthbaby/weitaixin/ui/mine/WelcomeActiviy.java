@@ -14,6 +14,8 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -54,20 +56,34 @@ public class WelcomeActiviy extends BaseActivity {
         Dialog dialog = customDialog.createDialog1(this, "加载中...");
         dialog.show();
 
-        ApiManager.getInstance().urlApi.getPrivacyAgreementUrl(new HttpClientAdapter.Callback<String>() {
-            @Override
-            public void call(Result<String> t) {
-                if (t.isSuccess()) {
-                    mWvWelcome.loadUrl(t.getData());
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+        ApiManager.getInstance().urlApi.getPrivacyAgreementUrl(
+                new DefaultCallback<String>(this, new AbstractBusiness<String>() {
+                    @Override
+                    public void handleData(String data) {
+                        mWvWelcome.loadUrl(data);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
 
     }
+
 
     @OnClick(R.id.back)
     public void backOnclick() {
         finish();
     }
+
+
 }

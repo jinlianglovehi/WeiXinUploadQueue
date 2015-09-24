@@ -18,21 +18,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.LoginByPasswordForm;
 import cn.ihealthbaby.client.form.RegForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
-import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 
@@ -139,52 +136,62 @@ public class RegistActivity extends BaseActivity {
 
         isSend = false;
 
-        ApiManager.getInstance().accountApi.getAuthCode(phone_number, 0, new HttpClientAdapter.Callback<Boolean>() {
-            @Override
-            public void call(Result<Boolean> t) {
-                if (t.getStatus() == Result.SUCCESS) {
-                    Boolean data = t.getData();
-                    if (data) {
-                        tv_mark_num_text.setBackgroundResource(R.color.gray1);
-                        tv_mark_num_text.setTextColor(getResources().getColor(R.color.gray2));
-                        isHasAuthCode = true;
+        ApiManager.getInstance().accountApi.getAuthCode(phone_number, 0,
+                new DefaultCallback<Boolean>(this, new AbstractBusiness<Boolean>() {
+                    @Override
+                    public void handleData(Boolean data) {
+                        if (data) {
+                            tv_mark_num_text.setBackgroundResource(R.color.gray1);
+                            tv_mark_num_text.setTextColor(getResources().getColor(R.color.gray2));
+                            isHasAuthCode = true;
 //                      tv_regist_action.setEnabled(true);
-                        try {
-                            countDownTimer = new CountDownTimer(60000, 1000) {
-                                @Override
-                                public void onTick(long millisUntilFinished) {
-                                    tv_mark_num_text.setText(millisUntilFinished / 1000 + "秒之后重发");
-                                    isSend = false;
-                                }
+                            try {
+                                countDownTimer = new CountDownTimer(60000, 1000) {
+                                    @Override
+                                    public void onTick(long millisUntilFinished) {
+                                        tv_mark_num_text.setText(millisUntilFinished / 1000 + "秒之后重发");
+                                        isSend = false;
+                                    }
 
-                                @Override
-                                public void onFinish() {
-                                    tv_mark_num_text.setText("发送验证码");
-                                    isSend = true;
-                                    customDialog.dismiss();
-                                    tv_mark_num_text.setBackgroundResource(R.drawable.shape_send_verifycode);
-                                    tv_mark_num_text.setTextColor(getResources().getColor(R.color.black0));
-                                }
-                            };
-                            countDownTimer.start();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                                    @Override
+                                    public void onFinish() {
+                                        tv_mark_num_text.setText("发送验证码");
+                                        isSend = true;
+                                        customDialog.dismiss();
+                                        tv_mark_num_text.setBackgroundResource(R.drawable.shape_send_verifycode);
+                                        tv_mark_num_text.setTextColor(getResources().getColor(R.color.black0));
+                                    }
+                                };
+                                countDownTimer.start();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                cancel(customDialog);
+                            }
+                        } else {
+                            isHasAuthCode = false;
                             cancel(customDialog);
+//                      tv_regist_action.setEnabled(false);
+                            ToastUtil.show(RegistActivity.this.getApplicationContext(), "请重新获取验证码");
                         }
-                    } else {
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
                         isHasAuthCode = false;
                         cancel(customDialog);
-//                      tv_regist_action.setEnabled(false);
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+ ",请重新获取验证码");
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+ "");
-                    isHasAuthCode = false;
-                    cancel(customDialog);
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        isHasAuthCode = false;
+                        cancel(customDialog);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
     public void cancel(CustomDialog customDialog) {
@@ -260,7 +267,7 @@ public class RegistActivity extends BaseActivity {
                     public void handleClientError(Exception e) {
                         super.handleClientError(e);
                         customDialog.dismiss();
-                        Intent intent=new Intent(RegistActivity.this,LoginActivity.class);
+                        Intent intent = new Intent(RegistActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                     }
@@ -269,7 +276,7 @@ public class RegistActivity extends BaseActivity {
                     public void handleException(Exception e) {
                         super.handleException(e);
                         customDialog.dismiss();
-                        Intent intent=new Intent(RegistActivity.this,LoginActivity.class);
+                        Intent intent = new Intent(RegistActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                     }
@@ -282,45 +289,49 @@ public class RegistActivity extends BaseActivity {
     public void loginActionOfReg() {
         loginForm = new LoginByPasswordForm(phone_number, password, "123456789", 1.0d, 1.0d);
 
-        ApiManager.getInstance().accountApi.loginByPassword(loginForm, new HttpClientAdapter.Callback<User>() {
-            @Override
-            public void call(Result<User> t) {
-                if (t.getStatus() == Result.SUCCESS) {
-                    User data = t.getData();
-                    if (data.getAccountToken() != null) {
-                        WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
-                        SPUtil.saveUser(RegistActivity.this,data);
+        ApiManager.getInstance().accountApi.loginByPassword(loginForm,
+                new DefaultCallback<User>(this, new AbstractBusiness<User>() {
+                    @Override
+                    public void handleData(User data) {
+                        if (data.getAccountToken() != null) {
+                            WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(data.getAccountToken());
+                            SPUtil.saveUser(RegistActivity.this, data);
 
-                        Intent intentService = new Intent(getApplicationContext(), AdviceSettingService.class);
-                        startService(intentService);
+                            Intent intentService = new Intent(getApplicationContext(), AdviceSettingService.class);
+                            startService(intentService);
 
-                        if(data.getIsInit()){
-                            Intent intentIsInit=new Intent(RegistActivity.this, InfoEditActivity.class);
-                            startActivity(intentIsInit);
+                            if (data.getIsInit()) {
+                                Intent intentIsInit = new Intent(RegistActivity.this, InfoEditActivity.class);
+                                startActivity(intentIsInit);
+                                RegistActivity.this.finish();
+                                return;
+                            }
+
+
+                            if (!data.getHasRiskscore() && SPUtil.getHospitalId(RegistActivity.this) != -1) {
+                                Intent intentHasRiskscore = new Intent(RegistActivity.this, GradedActivity.class);
+                                startActivity(intentHasRiskscore);
+                                RegistActivity.this.finish();
+                                return;
+                            }
+
+
+                            Intent intentMain = new Intent(getApplicationContext(), MeMainFragmentActivity.class);
+                            startActivity(intentMain);
                             RegistActivity.this.finish();
-                            return;
                         }
-
-
-                        if(!data.getHasRiskscore()&& SPUtil.getHospitalId(RegistActivity.this) != -1){
-                            Intent intentHasRiskscore=new Intent(RegistActivity.this, GradedActivity.class);
-                            startActivity(intentHasRiskscore);
-                            RegistActivity.this.finish();
-                            return;
-                        }
-
-
-                        Intent intentMain=new Intent(getApplicationContext(), MeMainFragmentActivity.class);
-                        startActivity(intentMain);
-                        RegistActivity.this.finish();
-                    } else {
-                        ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap()+ "");
                     }
-                } else {
-                    ToastUtil.show(RegistActivity.this.getApplicationContext(), t.getMsgMap() + "");
-                }
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                    }
+                }), getRequestTag());
     }
 
 

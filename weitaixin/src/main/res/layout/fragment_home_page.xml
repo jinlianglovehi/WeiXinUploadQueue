@@ -23,7 +23,7 @@
             android:layout_above="@+id/rlProduceDate"
             android:layout_centerVertical="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="-50dp"
+            android:layout_marginLeft="-40dp"
             android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:background="@drawable/home_head_one">
 
@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="14dp"
+                android:layout_marginRight="6dp"
                 android:layout_toLeftOf="@+id/tvPregnancyDayNumber"
                 android:singleLine="true"
                 android:text="怀孕天数"
@@ -39,11 +39,11 @@
 
             <TextView
                 android:id="@+id/tvPregnancyDayNumber"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="8dp"
                 android:text=""
                 android:textColor="@color/white0" />
         </RelativeLayout>
@@ -53,7 +53,7 @@
             android:layout_width="150dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="-50dp"
+            android:layout_marginLeft="-36dp"
             android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:background="@drawable/home_head_two">
 
@@ -69,11 +69,11 @@
 
             <TextView
                 android:id="@+id/tvProduceDayNumber"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="8dp"
                 android:text=""
                 android:textColor="@color/white0" />
         </RelativeLayout>
@@ -85,7 +85,7 @@
             android:layout_height="20dp"
             android:layout_below="@+id/rlProduceDate"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="-50dp"
+            android:layout_marginLeft="-40dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:background="@drawable/home_head_three">
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="34dp"
+                android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@+id/tvMonitorDayNumber"
                 android:singleLine="true"
                 android:text="已监测"
@@ -102,11 +102,11 @@
 
             <TextView
                 android:id="@+id/tvMonitorDayNumber"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="8dp"
                 android:text=""
                 android:textColor="@color/white0" />
         </RelativeLayout>
@@ -131,7 +131,7 @@
             android:layout_height="100dp"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:src="@drawable/button_monitor_helper" />
+            android:src="@drawable/home_head_img" />
 
 
         <TextView

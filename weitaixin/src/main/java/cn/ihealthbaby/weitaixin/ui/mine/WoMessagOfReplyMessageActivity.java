@@ -21,6 +21,8 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceReply;
 import cn.ihealthbaby.client.model.ReplyDetail;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
@@ -96,55 +98,71 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
         informationId = getIntent().getLongExtra("informationId", 0);
 
 
-        dialog = new CustomDialog().createDialog1(this, "加载中...");
+        final CustomDialog customDialog = new CustomDialog();
+        dialog = customDialog.createDialog1(this, "加载中...");
         dialog.show();
 
-        ApiManager.getInstance().adviceApi.getReplyDetail(relatedId, new HttpClientAdapter.Callback<ReplyDetail>() {
-            @Override
-            public void call(Result<ReplyDetail> t) {
-                if (t.isSuccess()) {
-                    ReplyDetail data = t.getData();
-                    if (data != null) {
-                        User user = SPUtil.getUser(WoMessagOfReplyMessageActivity.this);
-                        ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
-                        tv_wo_head_name.setText(user.getName());
-                        tvAskPurpose.setText("监护目的: " + data.getAskPurpose());
-                        tvFeeling.setText("监护心情: " + data.getFeeling());
-                        tvQuestion.setText(data.getQuestion());
-                        mTvDate.setText(DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
-                        tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime(), "MM月dd日 hh:mm"));
+        ApiManager.getInstance().adviceApi.getReplyDetail(relatedId,
+                new DefaultCallback<ReplyDetail>(this, new AbstractBusiness<ReplyDetail>() {
+                    @Override
+                    public void handleData(ReplyDetail data) {
+                        if (data != null) {
+                            User user = SPUtil.getUser(WoMessagOfReplyMessageActivity.this);
+                            ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
+                            tv_wo_head_name.setText(user.getName());
+                            tvAskPurpose.setText("监护目的: " + data.getAskPurpose());
+                            tvFeeling.setText("监护心情: " + data.getFeeling());
+                            tvQuestion.setText(data.getQuestion());
+                            mTvDate.setText(DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
+                            tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime(), "MM月dd日 hh:mm"));
 
-                        AdviceReply adviceReply = data.getAdviceReply();
-                        if (adviceReply != null) {
-                            ImageLoader.getInstance().displayImage(adviceReply.getDoctorHeadPic(), ivDoctorHeadPic, setDisplayImageOptions());
-                            tvDoctorName.setText(adviceReply.getDoctorName());
-                            tvDoctorTitle.setText(adviceReply.getDoctorTitle());
-                            tvHospitalName.setText(adviceReply.getHospitalName());
-                            tvReplyContext.setText(adviceReply.getReplyContext());
-                            tvReplyTime.setText(RelativeDateFormat.format(adviceReply.getReplyTime()));
+                            AdviceReply adviceReply = data.getAdviceReply();
+                            if (adviceReply != null) {
+                                ImageLoader.getInstance().displayImage(adviceReply.getDoctorHeadPic(), ivDoctorHeadPic, setDisplayImageOptions());
+                                tvDoctorName.setText(adviceReply.getDoctorName());
+                                tvDoctorTitle.setText(adviceReply.getDoctorTitle());
+                                tvHospitalName.setText(adviceReply.getHospitalName());
+                                tvReplyContext.setText(adviceReply.getReplyContext());
+                                tvReplyTime.setText(RelativeDateFormat.format(adviceReply.getReplyTime()));
+                            }
                         }
-                    } else {
-                        ToastUtil.show(getApplicationContext(), t.getMsg());
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsg());
-                }
-                dialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
 
 
-        ApiManager.getInstance().informationApi.readInformation(informationId, new HttpClientAdapter.Callback<Void>() {
-            @Override
-            public void call(Result<Void> t) {
-                if (t.isSuccess()) {
-                    Intent intent = new Intent();
-                    intent.putExtra("data", informationId);
-                    intent.setAction(REPLYMESSAGENOTIFICATION);
-                    sendBroadcast(intent);
-                }
-            }
-        }, getRequestTag());
+        ApiManager.getInstance().informationApi.readInformation(informationId,
+                new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
+                    @Override
+                    public void handleData(Void data) {
+                        Intent intent = new Intent();
+                        intent.putExtra("data", informationId);
+                        intent.setAction(REPLYMESSAGENOTIFICATION);
+                        sendBroadcast(intent);
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                    }
+                }), getRequestTag());
     }
 
     @Override

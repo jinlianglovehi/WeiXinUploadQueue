@@ -20,7 +20,9 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AskPurposeType;
 import cn.ihealthbaby.client.model.CommonConfig;
 import cn.ihealthbaby.client.model.FeelingType;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
@@ -64,19 +66,27 @@ public class GuardianStateActivity extends BaseActivity {
 		final CustomDialog customDialog = new CustomDialog();
 		Dialog dialog = customDialog.createDialog1(this, "加载中...");
 		dialog.show();
-		ApiManager.getInstance().commonApi.getCommonConfig(new HttpClientAdapter.Callback<CommonConfig>() {
-			@Override
-			public void call(Result<CommonConfig> t) {
-				if (t.isSuccess()) {
-					CommonConfig data = t.getData();
-					askPurposetypes = data.getAskPurposetypes();
-					feelingTypes = data.getFeelingTypes();
-				} else {
-					ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-				}
-				customDialog.dismiss();
-			}
-		}, getRequestTag());
+		ApiManager.getInstance().commonApi.getCommonConfig(
+				new DefaultCallback<CommonConfig>(this, new AbstractBusiness<CommonConfig>() {
+					@Override
+					public void handleData(CommonConfig data) {
+						askPurposetypes = data.getAskPurposetypes();
+						feelingTypes = data.getFeelingTypes();
+						customDialog.dismiss();
+					}
+
+					@Override
+					public void handleClientError(Exception e) {
+						super.handleClientError(e);
+						customDialog.dismiss();
+					}
+
+					@Override
+					public void handleException(Exception e) {
+						super.handleException(e);
+						customDialog.dismiss();
+					}
+				}), getRequestTag());
 	}
 
 	@OnClick(R.id.back)
