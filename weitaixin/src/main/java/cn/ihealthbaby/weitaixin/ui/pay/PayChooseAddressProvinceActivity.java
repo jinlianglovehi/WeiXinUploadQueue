@@ -24,7 +24,9 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Province;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -33,13 +35,17 @@ import de.greenrobot.event.EventBus;
 
 public class PayChooseAddressProvinceActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
 
-    @Bind(R.id.lvPayChooseAddressArea) ListView lvPayChooseAddressArea;
+    @Bind(R.id.lvPayChooseAddressArea)
+    ListView lvPayChooseAddressArea;
 
 
     @Override
@@ -68,8 +74,8 @@ public class PayChooseAddressProvinceActivity extends BaseActivity {
     }
 
 
-
     MyPayChooseAddressAreaAdapter adapter;
+
     private void pullData() {
         adapter = new MyPayChooseAddressAreaAdapter(this, null);
         lvPayChooseAddressArea.setAdapter(adapter);
@@ -77,11 +83,11 @@ public class PayChooseAddressProvinceActivity extends BaseActivity {
         lvPayChooseAddressArea.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.currentPosition=position;
+                adapter.currentPosition = position;
                 adapter.notifyDataSetChanged();
 
                 Province item = (Province) adapter.getItem(position);
-                Intent intent=new Intent(getApplicationContext(), PayChooseAddressCityActivity.class);
+                Intent intent = new Intent(getApplicationContext(), PayChooseAddressCityActivity.class);
                 intent.putExtra("Provinceid", item.getProvinceid());
                 intent.putExtra("Areas", item.getProvince());
                 startActivity(intent);
@@ -89,27 +95,35 @@ public class PayChooseAddressProvinceActivity extends BaseActivity {
         });
 
 
-        final CustomDialog customDialog=new CustomDialog();
+        final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().addressApi.getProvinces(0, new HttpClientAdapter.Callback<ApiList<Province>>() {
-            @Override
-            public void call(Result<ApiList<Province>> t) {
-                if (t.isSuccess()) {
-                    ApiList<Province> data = t.getData();
-                    ArrayList<Province> list = (ArrayList<Province>) data.getList();
-                    if (list!=null&&list.size()>0) {
-                        adapter.setDatas(list);
-                        adapter.notifyDataSetChanged();
-                    }else {
-                        ToastUtil.show(getApplicationContext(),"没有更多数据~~~");
+        ApiManager.getInstance().addressApi.getProvinces(0,
+                new DefaultCallback<ApiList<Province>>(this, new AbstractBusiness<ApiList<Province>>() {
+                    @Override
+                    public void handleData(ApiList<Province> data) {
+                        ArrayList<Province> list = (ArrayList<Province>) data.getList();
+                        if (list != null && list.size() > 0) {
+                            adapter.setDatas(list);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            ToastUtil.show(getApplicationContext(), "没有更多数据");
+                        }
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(getApplicationContext(),t.getMsgMap()+"");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
@@ -119,12 +133,11 @@ public class PayChooseAddressProvinceActivity extends BaseActivity {
     }
 
 
-
     public class MyPayChooseAddressAreaAdapter extends BaseAdapter {
         private Context context;
         private ArrayList<Province> datas;
         private LayoutInflater mInflater;
-        public int currentPosition=-1;
+        public int currentPosition = -1;
 
         public MyPayChooseAddressAreaAdapter(Context context, ArrayList<Province> datas) {
             mInflater = LayoutInflater.from(context);
@@ -175,13 +188,13 @@ public class PayChooseAddressProvinceActivity extends BaseActivity {
             }
 
             Province provinceName = this.datas.get(position);
-            viewHolder.tvName.setText(provinceName.getProvince()+"");
+            viewHolder.tvName.setText(provinceName.getProvince() + "");
 
             if (currentPosition == position) {
                 convertView.setBackgroundColor(getResources().getColor(R.color.gray1));
                 viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.gray1));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 convertView.setBackgroundColor(getResources().getColor(R.color.white0));
                 viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.white0));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
@@ -191,7 +204,8 @@ public class PayChooseAddressProvinceActivity extends BaseActivity {
         }
 
         class ViewHolder {
-            @Bind(R.id.tvName)  TextView tvName;
+            @Bind(R.id.tvName)
+            TextView tvName;
             @Bind(R.id.tvState)
             ImageView tvState;
 

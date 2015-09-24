@@ -26,6 +26,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.client.model.PageData;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.PayAllOrderAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -70,23 +72,31 @@ public class PayGettingGoodsFragment extends BaseFragment {
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(getActivity(), "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().orderApi.getOrders(PayConstant.gettingGoods, pageIndex, pageSize, new HttpClientAdapter.Callback<PageData<Order>>() {
-            @Override
-            public void call(Result<PageData<Order>> t) {
-                if (t.isSuccess()) {
-                    PageData<Order> data = t.getData();
-                    ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
-                    if (orders != null && orders.size() <= 0) {
-                        ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据~~~");
+        ApiManager.getInstance().orderApi.getOrders(PayConstant.gettingGoods, pageIndex, pageSize,
+                new DefaultCallback<PageData<Order>>(getActivity(), new AbstractBusiness<PageData<Order>>() {
+                    @Override
+                    public void handleData(PageData<Order> data) {
+                        ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
+                        if (orders != null && orders.size() <= 0) {
+                            ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据~~~");
+                        }
+                        adapter.setDatas(orders);
+                        adapter.notifyDataSetChanged();
+                        customDialog.dismiss();
                     }
-                    adapter.setDatas(orders);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
     private  PayAllOrderAdapter adapter;
@@ -100,48 +110,77 @@ public class PayGettingGoodsFragment extends BaseFragment {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) { //下拉刷新
                 pageIndex=1;
-                ApiManager.getInstance().orderApi.getOrders(PayConstant.gettingGoods, pageIndex, pageSize, new HttpClientAdapter.Callback<PageData<Order>>() {
-                    @Override
-                    public void call(Result<PageData<Order>> t) {
-                        if (t.isSuccess()) {
-                            PageData<Order> data = t.getData();
-                            ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
-                            adapter.setDatas(orders);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
-                        }
-                        pageIndex=1;
-                        if (payPullToRefreshAllOrder != null) {
-                            payPullToRefreshAllOrder.onRefreshComplete();
-                        }
-                    }
-                }, getRequestTag());
+                ApiManager.getInstance().orderApi.getOrders(PayConstant.gettingGoods, pageIndex, pageSize,
+                        new DefaultCallback<PageData<Order>>(getActivity(), new AbstractBusiness<PageData<Order>>() {
+                            @Override
+                            public void handleData(PageData<Order> data) {
+                                ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
+                                adapter.setDatas(orders);
+                                adapter.notifyDataSetChanged();
+                                pageIndex=1;
+                                if (payPullToRefreshAllOrder != null) {
+                                    payPullToRefreshAllOrder.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
+                            public void handleClientError(Exception e) {
+                                super.handleClientError(e);
+                                pageIndex=1;
+                                if (payPullToRefreshAllOrder != null) {
+                                    payPullToRefreshAllOrder.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                pageIndex=1;
+                                if (payPullToRefreshAllOrder != null) {
+                                    payPullToRefreshAllOrder.onRefreshComplete();
+                                }
+                            }
+                        }), getRequestTag());
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) { //上拉加载更多
-                ApiManager.getInstance().orderApi.getOrders(PayConstant.gettingGoods, (++pageIndex), pageSize, new HttpClientAdapter.Callback<PageData<Order>>() {
-                    @Override
-                    public void call(Result<PageData<Order>> t) {
-                        if (t.isSuccess()) {
-                            PageData<Order> data = t.getData();
-                            ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
-                            if (orders.size()<=0) {
-                                --pageIndex;
-                                ToastUtil.show(getActivity().getApplicationContext(),"没有更多数据");
+                ApiManager.getInstance().orderApi.getOrders(PayConstant.gettingGoods, (++pageIndex), pageSize,
+
+                        new DefaultCallback<PageData<Order>>(getActivity(), new AbstractBusiness<PageData<Order>>() {
+                            @Override
+                            public void handleData(PageData<Order> data) {
+                                ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
+                                if (orders.size() <= 0) {
+                                    --pageIndex;
+                                    ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据");
+                                }
+                                adapter.addDatas(orders);
+                                adapter.notifyDataSetChanged();
+
+                                if (payPullToRefreshAllOrder != null) {
+                                    payPullToRefreshAllOrder.onRefreshComplete();
+                                }
                             }
-                            adapter.addDatas(orders);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            ToastUtil.show(getActivity().getApplicationContext(), t.getMsgMap() + "");
-                            --pageIndex;
-                        }
-                        if (payPullToRefreshAllOrder != null) {
-                            payPullToRefreshAllOrder.onRefreshComplete();
-                        }
-                    }
-                }, getRequestTag());
+
+                            @Override
+                            public void handleClientError(Exception e) {
+                                super.handleClientError(e);
+                                --pageIndex;
+                                if (payPullToRefreshAllOrder != null) {
+                                    payPullToRefreshAllOrder.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                --pageIndex;
+                                if (payPullToRefreshAllOrder != null) {
+                                    payPullToRefreshAllOrder.onRefreshComplete();
+                                }
+                            }
+                        }), getRequestTag());
             }
         });
 

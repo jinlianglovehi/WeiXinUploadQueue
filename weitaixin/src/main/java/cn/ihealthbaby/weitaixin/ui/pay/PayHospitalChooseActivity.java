@@ -24,6 +24,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Hospital;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -90,23 +92,31 @@ public class PayHospitalChooseActivity extends BaseActivity {
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().hospitalApi.getHospitalsByCity(cityId, new HttpClientAdapter.Callback<ApiList<Hospital>>() {
-            @Override
-            public void call(Result<ApiList<Hospital>> t) {
-                if (t.isSuccess()) {
-                    ApiList<Hospital> data = t.getData();
-                    ArrayList<Hospital> hospitalList = (ArrayList<Hospital>) data.getList();
-                    if (hospitalList.size()<=0) {
-                        ToastUtil.show(getApplicationContext(), "没有数据");
+        ApiManager.getInstance().hospitalApi.getHospitalsByCity(cityId,
+                new DefaultCallback<ApiList<Hospital>>(this, new AbstractBusiness<ApiList<Hospital>>() {
+                    @Override
+                    public void handleData(ApiList<Hospital> data) {
+                        ArrayList<Hospital> hospitalList = (ArrayList<Hospital>) data.getList();
+                        if (hospitalList.size()<=0) {
+                            ToastUtil.show(getApplicationContext(), "没有数据");
+                        }
+                        adapter.setDatas(hospitalList);
+                        adapter.notifyDataSetChanged();
+                        customDialog.dismiss();
                     }
-                    adapter.setDatas(hospitalList);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }),getRequestTag());
     }
 
 

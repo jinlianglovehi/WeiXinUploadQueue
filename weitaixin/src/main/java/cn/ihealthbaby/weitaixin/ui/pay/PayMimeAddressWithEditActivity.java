@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -115,56 +116,35 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
             CustomDialog customDialog = new CustomDialog();
             Dialog dialog1 = customDialog.createDialog1(this, "删除地址...");
             dialog1.show();
-//
-//          final ArrayList<Long> addressDel = new ArrayList<Long>();
-            final HashMap<Integer, Boolean> addset = adapter.addressMap;
+
+
+            List<Long> addressDel = new ArrayList<Long>();
+            HashMap<Integer, Boolean> addset = adapter.addressMap;
             for (int i = 0; i < addset.size(); i++) {
                 if (addset.get(i)) {
-                    final long addressId = adapter.datas.get(i).getId();
-//                    final int finalI = i;
-                    ApiManager.getInstance().addressApi.delete(addressId, new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
-                        @Override
-                        public void handleData(Void data)   {
-//                            adapter.datas.remove(finalI);
-//                            addset.remove(finalI);
-//                            addressDel.add(addressId);
-                        }
-
-                        @Override
-                        public void handleClientError(Exception e) {
-                            super.handleClientError(e);
-                        }
-
-                        @Override
-                        public void handleException(Exception e) {
-                            super.handleException(e);
-                        }
-                    }), getRequestTag());
+                    addressDel.add(adapter.datas.get(i).getId());
                 }
             }
 
+            ApiManager.getInstance().addressApi.delete(addressDel, new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
+                @Override
+                public void handleData(Void data) {
+//                    adapter.datas.remove(finalI);
+//                    addset.remove(finalI);
+//                    addressDel.add(addressId);
+                }
 
-//
-//            ArrayList<Address> newAddress= adapter.datas;
-//
-//            for (int i = 0; i < addressDel.size(); i++) {
-//                long addressId = addressDel.get(i);
-//                for (int j = 0; j < newAddress.size(); j++) {
-//                    long addID = newAddress.get(j).getId();
-//                    if (addID == addressId) {
-//                        newAddress.remove(j);
-//                        break;
-//                    }
-//                }
-//            }
-//
-//
-//            adapter.addressMap = new HashMap<Integer, Boolean>();
-//            for (int i = 0; i < adapter.datas.size(); i++) {
-//                adapter.addressMap.put(i, false);
-//            }
-//
-//            adapter.notifyDataSetChanged();
+                @Override
+                public void handleClientError(Exception e) {
+                    super.handleClientError(e);
+                }
+
+                @Override
+                public void handleException(Exception e) {
+                    super.handleException(e);
+                }
+            }), getRequestTag());
+
 
             //
             adapter.isDel = false;

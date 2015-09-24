@@ -24,7 +24,9 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.City;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -33,13 +35,17 @@ import de.greenrobot.event.EventBus;
 
 public class PayChooseAddressCityActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
 
-    @Bind(R.id.lvPayChooseAddressArea) ListView lvPayChooseAddressArea;
+    @Bind(R.id.lvPayChooseAddressArea)
+    ListView lvPayChooseAddressArea;
 
 
     private String Provinceid;
@@ -55,8 +61,8 @@ public class PayChooseAddressCityActivity extends BaseActivity {
 
         title_text.setText("所选城市");
 
-        Provinceid=getIntent().getStringExtra("Provinceid");
-        Areas=getIntent().getStringExtra("Areas");
+        Provinceid = getIntent().getStringExtra("Provinceid");
+        Areas = getIntent().getStringExtra("Areas");
 
         EventBus.getDefault().register(this);
 
@@ -76,6 +82,7 @@ public class PayChooseAddressCityActivity extends BaseActivity {
 
 
     MyPayChooseAddressCityAdapter adapter;
+
     private void pullData() {
         adapter = new MyPayChooseAddressCityAdapter(this, null);
         lvPayChooseAddressArea.setAdapter(adapter);
@@ -83,39 +90,47 @@ public class PayChooseAddressCityActivity extends BaseActivity {
         lvPayChooseAddressArea.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.currentPosition=position;
+                adapter.currentPosition = position;
                 adapter.notifyDataSetChanged();
 
                 City item = (City) adapter.getItem(position);
-                Intent intent=new Intent(getApplicationContext(), PayChooseAddressAreasActivity.class);
+                Intent intent = new Intent(getApplicationContext(), PayChooseAddressAreasActivity.class);
                 intent.putExtra("Cityid", item.getCityid());
-                intent.putExtra("Areas", Areas+item.getCity());
+                intent.putExtra("Areas", Areas + item.getCity());
                 startActivity(intent);
             }
         });
 
 
-        final CustomDialog customDialog=new CustomDialog();
+        final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().addressApi.getCities(Provinceid, 0, new HttpClientAdapter.Callback<ApiList<City>>() {
-            @Override
-            public void call(Result<ApiList<City>> t) {
-                if (t.isSuccess()) {
-                    ApiList<City> data = t.getData();
-                    ArrayList<City> list = (ArrayList<City>) data.getList();
-                    if (list!=null&&list.size()>0) {
-                        adapter.setDatas(list);
-                        adapter.notifyDataSetChanged();
-                    }else {
-                        ToastUtil.show(getApplicationContext(),"没有更多数据~~~");
+        ApiManager.getInstance().addressApi.getCities(Provinceid, 0,
+                new DefaultCallback<ApiList<City>>(this, new AbstractBusiness<ApiList<City>>() {
+                    @Override
+                    public void handleData(ApiList<City> data) {
+                        ArrayList<City> list = (ArrayList<City>) data.getList();
+                        if (list != null && list.size() > 0) {
+                            adapter.setDatas(list);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            ToastUtil.show(getApplicationContext(), "没有更多数据");
+                        }
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(getApplicationContext(),t.getMsgMap()+"");
-                }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
@@ -125,12 +140,11 @@ public class PayChooseAddressCityActivity extends BaseActivity {
     }
 
 
-
     public class MyPayChooseAddressCityAdapter extends BaseAdapter {
         private Context context;
         private ArrayList<City> datas;
         private LayoutInflater mInflater;
-        public int currentPosition=-1;
+        public int currentPosition = -1;
 
         public MyPayChooseAddressCityAdapter(Context context, ArrayList<City> datas) {
             mInflater = LayoutInflater.from(context);
@@ -181,13 +195,13 @@ public class PayChooseAddressCityActivity extends BaseActivity {
             }
 
             City city = this.datas.get(position);
-            viewHolder.tvName.setText(city.getCity()+"");
+            viewHolder.tvName.setText(city.getCity() + "");
 
             if (currentPosition == position) {
                 convertView.setBackgroundColor(getResources().getColor(R.color.gray1));
                 viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.gray1));
                 viewHolder.tvState.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 convertView.setBackgroundColor(getResources().getColor(R.color.white0));
                 viewHolder.tvName.setBackgroundColor(getResources().getColor(R.color.white0));
                 viewHolder.tvState.setVisibility(View.INVISIBLE);
@@ -197,8 +211,10 @@ public class PayChooseAddressCityActivity extends BaseActivity {
         }
 
         class ViewHolder {
-            @Bind(R.id.tvName)  TextView tvName;
-            @Bind(R.id.tvState)  ImageView tvState;
+            @Bind(R.id.tvName)
+            TextView tvName;
+            @Bind(R.id.tvState)
+            ImageView tvState;
 
             public ViewHolder(View itemView) {
                 ButterKnife.bind(this, itemView);

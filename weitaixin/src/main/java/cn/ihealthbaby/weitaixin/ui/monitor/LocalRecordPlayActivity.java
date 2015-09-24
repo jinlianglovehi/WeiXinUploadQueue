@@ -12,6 +12,7 @@ import java.io.File;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
@@ -40,9 +41,10 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		asynUploadEngine.setOnFinishActivity(new AsynUploadEngine.FinishedToDoWork() {
 			@Override
 			public void onFinishedWork(final String key, final ResponseInfo info, JSONObject response) {
-				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record, key), new DefaultCallback<Long>(getApplicationContext(), new AbstractBusiness<Long>() {
+				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record, key),
+						new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
 					@Override
-					public void handleData(final Long data) {
+					public void handleData(final AdviceItem data) {
 						ToastUtil.show(getApplicationContext(), "上传成功");
 						btnBusiness.setImageResource(R.drawable.button_ask_doctor);
 						btnBusiness.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +63,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 								startActivity(intent);
 							}
 						});
-						saveDataToDatabase(data);
+						saveDataToDatabase(data.getId());
 					}
 				}), getRequestTag());
 			}

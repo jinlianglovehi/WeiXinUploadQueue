@@ -29,6 +29,8 @@ import cn.ihealthbaby.client.form.ServiceOrderForm;
 import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.client.model.Product;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -40,42 +42,60 @@ import de.greenrobot.event.EventBus;
 
 public class PayConfirmOrderActivity extends BaseActivity {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
-    @Bind(R.id.lvGoodsList) ListView lvGoodsList;
-    @Bind(R.id.ivExpressageAction) ImageView ivExpressageAction;
-    @Bind(R.id.ivHospitalAction) ImageView ivHospitalAction;
+    @Bind(R.id.lvGoodsList)
+    ListView lvGoodsList;
+    @Bind(R.id.ivExpressageAction)
+    ImageView ivExpressageAction;
+    @Bind(R.id.ivHospitalAction)
+    ImageView ivHospitalAction;
 
-    @Bind(R.id.rlExpressageAction) RelativeLayout rlExpressageAction;
-    @Bind(R.id.rlHospitalAction) RelativeLayout rlHospitalAction;
+    @Bind(R.id.rlExpressageAction)
+    RelativeLayout rlExpressageAction;
+    @Bind(R.id.rlHospitalAction)
+    RelativeLayout rlHospitalAction;
 
-    @Bind(R.id.rlHospitalGet) RelativeLayout rlHospitalGet;
-    @Bind(R.id.rlNoneGet) RelativeLayout rlNoneGet;
-    @Bind(R.id.rlExpressageGet) RelativeLayout rlExpressageGet;
+    @Bind(R.id.rlHospitalGet)
+    RelativeLayout rlHospitalGet;
+    @Bind(R.id.rlNoneGet)
+    RelativeLayout rlNoneGet;
+    @Bind(R.id.rlExpressageGet)
+    RelativeLayout rlExpressageGet;
 
-    @Bind(R.id.tvHospitalName) TextView tvHospitalName;
-    @Bind(R.id.tvDoctorName) TextView tvDoctorName;
-    @Bind(R.id.tvPrice) TextView tvPrice;
-    @Bind(R.id.tvSericeSubmitOrder) TextView tvSericeSubmitOrder;
-    @Bind(R.id.tvAddressName) TextView tvAddressName;
-    @Bind(R.id.tvAddressPhoneNumber) TextView tvAddressPhoneNumber;
-    @Bind(R.id.tvAddressText) TextView tvAddressText;
-    @Bind(R.id.tvHospitalAddress) TextView tvHospitalAddress;
+    @Bind(R.id.tvHospitalName)
+    TextView tvHospitalName;
+    @Bind(R.id.tvDoctorName)
+    TextView tvDoctorName;
+    @Bind(R.id.tvPrice)
+    TextView tvPrice;
+    @Bind(R.id.tvSericeSubmitOrder)
+    TextView tvSericeSubmitOrder;
+    @Bind(R.id.tvAddressName)
+    TextView tvAddressName;
+    @Bind(R.id.tvAddressPhoneNumber)
+    TextView tvAddressPhoneNumber;
+    @Bind(R.id.tvAddressText)
+    TextView tvAddressText;
+    @Bind(R.id.tvHospitalAddress)
+    TextView tvHospitalAddress;
 
     private ArrayList<HashMap<String, String>> datas = new ArrayList<HashMap<String, String>>();
     private MyGoodsListAdapter myGoodsListAdapter;
-    private int priceCount=0;
-    private ServiceOrderForm serviceOrderForm=new ServiceOrderForm();
-    public ArrayList<OrderItemForm> orderItemForms=new ArrayList<OrderItemForm>();
-    private boolean isHospitalFlag=false;
-    private long addressId=-1;
-    private int deliverType=-1;
-    private int hospitalStatus=-1;
+    private int priceCount = 0;
+    private ServiceOrderForm serviceOrderForm = new ServiceOrderForm();
+    public ArrayList<OrderItemForm> orderItemForms = new ArrayList<OrderItemForm>();
+    private boolean isHospitalFlag = false;
+    private long addressId = -1;
+    private int deliverType = -1;
+    private int hospitalStatus = -1;
     private String hospitalAddress;
-
 
 
     @Override
@@ -115,27 +135,28 @@ public class PayConfirmOrderActivity extends BaseActivity {
     }
 
 
-    private HashMap<Integer,Integer>  countGoods=new HashMap<Integer,Integer>();
+    private HashMap<Integer, Integer> countGoods = new HashMap<Integer, Integer>();
+
     private void pullData() {
 //        tvPrice.setText("总计￥"+(priceCount/100)+"");
-        tvPrice.setText("总计"+PayUtils.showPrice(priceCount));
-        myGoodsListAdapter=new MyGoodsListAdapter(this,null);
+        tvPrice.setText("总计" + PayUtils.showPrice(priceCount));
+        myGoodsListAdapter = new MyGoodsListAdapter(this, null);
         lvGoodsList.setAdapter(myGoodsListAdapter);
 
         //
-        ArrayList<Product> products01= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name01);
-        ArrayList<Product> products02= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name02);
-        ArrayList<Product> products03= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name03);
-        ArrayList<Product> products04= (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name04);
+        ArrayList<Product> products01 = (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name01);
+        ArrayList<Product> products02 = (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name02);
+        ArrayList<Product> products03 = (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name03);
+        ArrayList<Product> products04 = (ArrayList<Product>) LocalProductData.getLocal().get(LocalProductData.Name04);
 
-        countGoods= (HashMap<Integer, Integer>) LocalProductData.getLocal().get(LocalProductData.CountGoods);
+        countGoods = (HashMap<Integer, Integer>) LocalProductData.getLocal().get(LocalProductData.CountGoods);
 
-        productFor(products01,LocalProductData.Name01);
-        productFor(products02,LocalProductData.Name02);
-        productFor(products03,LocalProductData.Name03);
-        productFor(products04,LocalProductData.Name04);
+        productFor(products01, LocalProductData.Name01);
+        productFor(products02, LocalProductData.Name02);
+        productFor(products03, LocalProductData.Name03);
+        productFor(products04, LocalProductData.Name04);
 
-        HashMap<String, String> expressDataMap=new HashMap<String, String>();
+        HashMap<String, String> expressDataMap = new HashMap<String, String>();
         expressDataMap.put("快递费用", "0");
         datas.add(expressDataMap);
 
@@ -147,17 +168,17 @@ public class PayConfirmOrderActivity extends BaseActivity {
         LocalProductData.getLocal().put(LocalProductData.PriceCount, priceCount);
     }
 
-    public void productFor(ArrayList<Product> productDatas,String flag){
-        if (productDatas==null) {
+    public void productFor(ArrayList<Product> productDatas, String flag) {
+        if (productDatas == null) {
             return;
         }
 
 
-        for(int i=0;i<productDatas.size();i++){
+        for (int i = 0; i < productDatas.size(); i++) {
             Product product = productDatas.get(i);
 //            priceCount+=product.getPrice();
 
-            HashMap<String, String> dataMap=new HashMap<String, String>();
+            HashMap<String, String> dataMap = new HashMap<String, String>();
             if (flag == LocalProductData.Name03) {
                 dataMap.put(product.getName() + "*" + countGoods.get(i), product.getPrice() * countGoods.get(i) + "");
                 priceCount += product.getPrice() * countGoods.get(i);
@@ -168,7 +189,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
 
             datas.add(dataMap);
 
-            OrderItemForm itemForm=new OrderItemForm();
+            OrderItemForm itemForm = new OrderItemForm();
             itemForm.setAmount(1);
             if (flag == LocalProductData.Name03) {
                 itemForm.setAmount(countGoods.get(i));
@@ -195,13 +216,13 @@ public class PayConfirmOrderActivity extends BaseActivity {
 
     @OnClick(R.id.rlNoneGet)
     public void NoneGet() {
-        Intent intent=new Intent(getApplicationContext(),PayAddAddressActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PayAddAddressActivity.class);
         startActivityForResult(intent, REQUESTCODE_ADDADDRESS);
     }
 
     @OnClick(R.id.rlExpressageGet)
     public void rlExpressageGet() {
-        Intent intent=new Intent(getApplicationContext(),PayMimeAddressActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PayMimeAddressActivity.class);
         startActivityForResult(intent, REQUESTCODE_MIMEADDRESS);
     }
 
@@ -209,18 +230,18 @@ public class PayConfirmOrderActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode==REQUESTCODE_ADDADDRESS) {
-            if (resultCode==RESULTCODE_ADDADDRESS) {
-                if (data!=null) {
+        if (requestCode == REQUESTCODE_ADDADDRESS) {
+            if (resultCode == RESULTCODE_ADDADDRESS) {
+                if (data != null) {
                     ExpressageAction();
                 }
             }
         }
 
 
-        if (requestCode==REQUESTCODE_MIMEADDRESS) {
-            if (resultCode==RESULTCODE_MIMEADDRESS) {
-                if (data!=null) {
+        if (requestCode == REQUESTCODE_MIMEADDRESS) {
+            if (resultCode == RESULTCODE_MIMEADDRESS) {
+                if (data != null) {
                     Address addressItem = (Address) data.getSerializableExtra("addressItem");
                     tvAddressName.setText(addressItem.getLinkMan());
                     tvAddressPhoneNumber.setText(addressItem.getMobile());
@@ -233,7 +254,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
 
     @OnClick(R.id.tvSericeSubmitOrder)
     public void SericeSubmitOrder() {
-        final CustomDialog customDialog=new CustomDialog();
+        final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
 
@@ -244,32 +265,40 @@ public class PayConfirmOrderActivity extends BaseActivity {
         serviceOrderForm.setItemForms(orderItemForms);
         serviceOrderForm.setDeliverType(deliverType);
         serviceOrderForm.setAddressId(addressId);
-        ApiManager.getInstance().orderApi.submitServiceOrder(serviceOrderForm, new HttpClientAdapter.Callback<Order>() {
-            @Override
-            public void call(Result<Order> result) {
-                if (result.isSuccess()) {
-                    Order data = result.getData();
-                    LogUtil.d("dataInteger", "dataInteger  =  " + data);
-                    if (data !=null) {
-                        long orderId=data.getId();
-                        Intent intent = new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
-                        intent.putExtra(PayConstant.ORDERID, orderId);
-                        startActivity(intent);
-                    } else {
-                        ToastUtil.show(getApplicationContext(), "尚有未结束的服务");
+        ApiManager.getInstance().orderApi.submitServiceOrder(serviceOrderForm,
+                new DefaultCallback<Order>(this, new AbstractBusiness<Order>() {
+                    @Override
+                    public void handleData(Order data) {
+                        LogUtil.d("dataInteger", "dataInteger  =  " + data);
+                        if (data != null) {
+                            long orderId = data.getId();
+                            Intent intent = new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
+                            intent.putExtra(PayConstant.ORDERID, orderId);
+                            startActivity(intent);
+                        } else {
+                            ToastUtil.show(getApplicationContext(), "尚有未结束的服务");
+                        }
+                        customDialog.dismiss();
                     }
-                }else {
-                    ToastUtil.show(getApplicationContext(), result.getMsgMap()+"");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
     @OnClick(R.id.rlExpressageAction)
     public void ExpressageAction() {
-        final CustomDialog customDialog=new CustomDialog();
+        final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
         ivExpressageAction.setImageResource(R.drawable.pay_choose_un);
@@ -277,30 +306,38 @@ public class PayConfirmOrderActivity extends BaseActivity {
         ivExpressageAction.setImageResource(R.drawable.pay_choose);
         rlExpressageGet.setVisibility(View.GONE);
         rlHospitalGet.setVisibility(View.GONE);
-        isHospitalFlag=false;
-        deliverType=1;
-        ApiManager.getInstance().addressApi.getDefAddresss(new HttpClientAdapter.Callback<Address>() {
-            @Override
-            public void call(Result<Address> t) {
-                if (t.isSuccess()) {
-                    Address data = t.getData();
-                    if (data==null) {
-                        rlNoneGet.setVisibility(View.VISIBLE);
-                        rlExpressageGet.setVisibility(View.GONE);
-                    }else {
-                        rlNoneGet.setVisibility(View.GONE);
-                        rlExpressageGet.setVisibility(View.VISIBLE);
-                        tvAddressName.setText(data.getLinkMan());
-                        tvAddressPhoneNumber.setText(data.getMobile());
-                        tvAddressText.setText(data.getArea() + data.getAddress() + "");
-                        addressId = data.getId();
+        isHospitalFlag = false;
+        deliverType = 1;
+        ApiManager.getInstance().addressApi.getDefAddresss(
+                new DefaultCallback<Address>(this, new AbstractBusiness<Address>() {
+                    @Override
+                    public void handleData(Address data) {
+                        if (data == null) {
+                            rlNoneGet.setVisibility(View.VISIBLE);
+                            rlExpressageGet.setVisibility(View.GONE);
+                        } else {
+                            rlNoneGet.setVisibility(View.GONE);
+                            rlExpressageGet.setVisibility(View.VISIBLE);
+                            tvAddressName.setText(data.getLinkMan());
+                            tvAddressPhoneNumber.setText(data.getMobile());
+                            tvAddressText.setText(data.getArea() + data.getAddress() + "");
+                            addressId = data.getId();
+                        }
+                        customDialog.dismiss();
                     }
-                }else {
-                    ToastUtil.show(getApplicationContext(),t.getMsgMap()+"");
-                }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
@@ -314,30 +351,29 @@ public class PayConfirmOrderActivity extends BaseActivity {
         rlNoneGet.setVisibility(View.GONE);
         rlHospitalGet.setVisibility(View.VISIBLE);
         tvHospitalName.setText(LocalProductData.getLocal().get(LocalProductData.HospitalName) + "");
-        tvDoctorName.setText(LocalProductData.getLocal().get(LocalProductData.DoctorName)+"");
-        isHospitalFlag=true;
-        deliverType=0;
-        addressId=0;
-        tvHospitalAddress.setText(hospitalAddress+"");
+        tvDoctorName.setText(LocalProductData.getLocal().get(LocalProductData.DoctorName) + "");
+        isHospitalFlag = true;
+        deliverType = 0;
+        addressId = 0;
+        tvHospitalAddress.setText(hospitalAddress + "");
     }
-
 
 
     public class MyGoodsListAdapter extends BaseAdapter {
         private Context context;
-        private ArrayList<HashMap<String,String>> datas;
+        private ArrayList<HashMap<String, String>> datas;
         private LayoutInflater mInflater;
         public int currentPosition;
 
-        public MyGoodsListAdapter(Context context, ArrayList<HashMap<String,String>> datas) {
+        public MyGoodsListAdapter(Context context, ArrayList<HashMap<String, String>> datas) {
             mInflater = LayoutInflater.from(context);
             this.context = context;
             setDatas(datas);
         }
 
-        public void setDatas(ArrayList<HashMap<String,String>> datas) {
+        public void setDatas(ArrayList<HashMap<String, String>> datas) {
             if (datas == null) {
-                this.datas = new ArrayList<HashMap<String,String>>();
+                this.datas = new ArrayList<HashMap<String, String>>();
             } else {
                 this.datas.clear();
                 this.datas = datas;
@@ -345,7 +381,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
         }
 
 
-        public void addDatas(ArrayList<HashMap<String,String>> datas) {
+        public void addDatas(ArrayList<HashMap<String, String>> datas) {
             if (datas != null) {
                 this.datas.addAll(datas);
             }
@@ -383,22 +419,23 @@ public class PayConfirmOrderActivity extends BaseActivity {
             Iterator iter = goodsList.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
-                viewHolder.tvName.setText(entry.getKey()+"");
+                viewHolder.tvName.setText(entry.getKey() + "");
                 viewHolder.tvPrice.setText(PayUtils.showPrice(Integer.parseInt(entry.getValue() + "")));
             }
             return convertView;
         }
 
         class ViewHolder {
-            @Bind(R.id.tvName) TextView tvName;
-            @Bind(R.id.tvPrice) TextView tvPrice;
+            @Bind(R.id.tvName)
+            TextView tvName;
+            @Bind(R.id.tvPrice)
+            TextView tvPrice;
 
             public ViewHolder(View itemView) {
                 ButterKnife.bind(this, itemView);
             }
         }
     }
-
 
 
 }

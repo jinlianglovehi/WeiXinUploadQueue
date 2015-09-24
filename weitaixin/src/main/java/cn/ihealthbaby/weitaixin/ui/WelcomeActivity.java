@@ -39,8 +39,10 @@ import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
  */
 public class WelcomeActivity extends BaseActivity {
 
-    @Bind(R.id.viewPagerWelcome) ViewPager viewPagerWelcome;
-    @Bind(R.id.ivWelcomeStart) ImageView ivWelcomeStart;
+    @Bind(R.id.viewPagerWelcome)
+    ViewPager viewPagerWelcome;
+    @Bind(R.id.ivWelcomeStart)
+    ImageView ivWelcomeStart;
 
 
     private ArrayList<View> mListViews;
@@ -65,82 +67,81 @@ public class WelcomeActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         ivWelcomeStart.setVisibility(View.VISIBLE);
+
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 ivWelcomeStart.setVisibility(View.GONE);
-            }
-        }, 10000);
 
-//        initView();
+                if (SPUtil.isNoFirstStartApp(WelcomeActivity.this)) {
+                    if (SPUtil.getUser(WelcomeActivity.this) != null) {
+                        final CustomDialog customDialog = new CustomDialog();
+                        Dialog dialog = customDialog.createDialog1(WelcomeActivity.this, "刷新用户数据...");
+                        dialog.show();
 
+                        Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
+                        startService(intentAdvice);
 
-        if (SPUtil.isNoFirstStartApp(this)) {
-            if (SPUtil.getUser(this) != null) {
-                final CustomDialog customDialog = new CustomDialog();
-                Dialog dialog = customDialog.createDialog1(this, "刷新用户数据...");
-                dialog.show();
+                        ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(WelcomeActivity.this, new AbstractBusiness<User>() {
+                            @Override
+                            public void handleData(User data) {
+                                SPUtil.saveUser(WelcomeActivity.this, data);
+                                customDialog.dismiss();
+                            }
 
-                Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
-                startService(intentAdvice);
+                            @Override
+                            public void handleException(Exception e) {
+                                customDialog.dismiss();
+                                Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
+                                startActivity(intentHasRiskscore);
+                                finish();
+                            }
+                        }), getRequestTag());
 
-                ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
-                    @Override
-                    public void handleData(User data)   {
-                        SPUtil.saveUser(WelcomeActivity.this, data);
-                        customDialog.dismiss();
-                    }
+                        if (SPUtil.isLogin(WelcomeActivity.this)) {
+                            if (SPUtil.getUser(WelcomeActivity.this).getIsInit()) {
+                                Intent intentIsInit = new Intent(WelcomeActivity.this, InfoEditActivity.class);
+                                startActivity(intentIsInit);
+                                return;
+                            }
 
-                    @Override
-                    public void handleException(Exception e) {
-                        customDialog.dismiss();
-                        Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
-                        startActivity(intentHasRiskscore);
-                        finish();
-                    }
-                }), getRequestTag());
+                            if (!SPUtil.getUser(WelcomeActivity.this).getHasRiskscore()) {
+                                if (SPUtil.getHospitalId(WelcomeActivity.this) != -1) {
+                                    Intent intentHasRiskscore = new Intent(WelcomeActivity.this, GradedActivity.class);
+                                    startActivity(intentHasRiskscore);
+                                    return;
+                                }
+                            }
 
-                if (SPUtil.isLogin(this)) {
-                    if (SPUtil.getUser(this).getIsInit()) {
-                        Intent intentIsInit = new Intent(this, InfoEditActivity.class);
-                        startActivity(intentIsInit);
-                        return;
-                    }
-
-                    if (!SPUtil.getUser(this).getHasRiskscore()) {
-                        if (SPUtil.getHospitalId(this) != -1) {
-                            Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
-                            startActivity(intentHasRiskscore);
+                            Intent intent = new Intent(WelcomeActivity.this, MeMainFragmentActivity.class);
+                            startActivity(intent);
+                            finish();
                             return;
                         }
+                    } else {
+                        Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return;
                     }
-
-                    Intent intent = new Intent(this, MeMainFragmentActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
+                } else {
+                    initView();
                 }
-            } else {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-                return;
+
+
+                if (!SPUtil.isNoFirstStartApp(WelcomeActivity.this)) {
+                    SPUtil.setNoFirstStartApp(WelcomeActivity.this);
+                }
             }
-        } else {
-            initView();
-        }
+        }, 4000);
 
 
-
-        if (!SPUtil.isNoFirstStartApp(this)) {
-            SPUtil.setNoFirstStartApp(this);
-        }
-
+        initDataView();
     }
 
 
-    private void initView() {
+    public void initDataView(){
 
         mListViews = new ArrayList<View>();
         mInflater = this.getLayoutInflater();
@@ -150,8 +151,8 @@ public class WelcomeActivity extends BaseActivity {
         view03 = (ImageView) mInflater.inflate(R.layout.viewpager_item, null);
         view04 = (ImageView) mInflater.inflate(R.layout.viewpager_item, null);
         view05 = (View) mInflater.inflate(R.layout.viewpager_item_last, null);
-        ivWelcome05 = (ImageView)view05.findViewById(R.id.ivWelcome05);
-        tvNextAction = (TextView)view05.findViewById(R.id.tvNextAction);
+        ivWelcome05 = (ImageView) view05.findViewById(R.id.ivWelcome05);
+        tvNextAction = (TextView) view05.findViewById(R.id.tvNextAction);
 
 
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -191,11 +192,13 @@ public class WelcomeActivity extends BaseActivity {
         mListViews.add(view04);
         mListViews.add(view05);
 
+    }
 
+
+    private void initView() {
         startAdapter = new StartPagerAdapter();
         viewPagerWelcome.setAdapter(startAdapter);
         viewPagerWelcome.setCurrentItem(0);
-
 
         viewPagerWelcome.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -220,7 +223,7 @@ public class WelcomeActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            LogUtil.d("mListViews.size()","mListViews.size()"+mListViews.size());
+            LogUtil.d("mListViews.size()", "mListViews.size()" + mListViews.size());
             return mListViews.size();
         }
 
@@ -233,7 +236,7 @@ public class WelcomeActivity extends BaseActivity {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             super.destroyItem(container, position, object);
-//            (ViewPager) container).removeView(mListViews.get(position));
+            container.removeView(mListViews.get(position));
         }
 
         @Override
@@ -242,7 +245,6 @@ public class WelcomeActivity extends BaseActivity {
         }
 
     }
-
 
 
     public void tv_enter() {
@@ -256,7 +258,7 @@ public class WelcomeActivity extends BaseActivity {
 
             ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                 @Override
-                public void handleData(User data)   {
+                public void handleData(User data) {
                     SPUtil.saveUser(WelcomeActivity.this, data);
                     customDialog.dismiss();
                 }
@@ -310,7 +312,7 @@ public class WelcomeActivity extends BaseActivity {
 
                 ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                     @Override
-                    public void handleData(User data)   {
+                    public void handleData(User data) {
                         SPUtil.saveUser(WelcomeActivity.this, data);
                         customDialog.dismiss();
                     }
