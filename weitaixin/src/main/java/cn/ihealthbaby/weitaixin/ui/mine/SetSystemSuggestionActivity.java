@@ -84,14 +84,12 @@ public class SetSystemSuggestionActivity extends BaseActivity {
         ApiManager.getInstance().feedBackApi.create(form, new HttpClientAdapter.Callback<Void>() {
             @Override
             public void call(Result<Void> t) {
-                if (customDialog.isNoCancel) {
                     if (t.isSuccess()) {
                         ToastUtil.show(SetSystemSuggestionActivity.this.getApplicationContext(), "提交成功");
                         SetSystemSuggestionActivity.this.finish();
                     } else {
                         ToastUtil.show(SetSystemSuggestionActivity.this.getApplicationContext(), t.getMsg());
                     }
-                }
                 dialog.dismiss();
             }
         }, getRequestTag());

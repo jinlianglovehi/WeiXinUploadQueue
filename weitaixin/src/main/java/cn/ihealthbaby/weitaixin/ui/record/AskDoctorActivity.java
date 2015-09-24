@@ -19,6 +19,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AskForm;
 import cn.ihealthbaby.client.model.Service;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -98,29 +100,33 @@ public class AskDoctorActivity extends BaseActivity {
 
     private int totalCount,usedCount;
     private void pullData(){
-        ApiManager.getInstance().serviceApi.getByUser(new HttpClientAdapter.Callback<Service>() {
-            @Override
-            public void call(Result<Service> t) {
-                if (t.isSuccess()) {
-                    Service data = t.getData();
-                    if (data!=null) {
-                        totalCount=data.getTotalCount();
-                        if (totalCount == -1) {
-                            usedCount = data.getUsedCount();
-                            tvOtherInfo.setText("共" + "无限" + "次，已咨询" + usedCount + "次，剩余" + "无限" + "次");
-                        } else {
-                            usedCount = data.getUsedCount();
-                            int number = totalCount - usedCount;
-                            tvOtherInfo.setText("共" + totalCount + "次，已咨询" + usedCount + "次，剩余" + (number) + "次");
+        ApiManager.getInstance().serviceApi.getByUser(
+                new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
+                    @Override
+                    public void handleData(Service data) {
+                        if (data!=null) {
+                            totalCount=data.getTotalCount();
+                            if (totalCount == -1) {
+                                usedCount = data.getUsedCount();
+                                tvOtherInfo.setText("共" + "无限" + "次，已咨询" + usedCount + "次，剩余" + "无限" + "次");
+                            } else {
+                                usedCount = data.getUsedCount();
+                                int number = totalCount - usedCount;
+                                tvOtherInfo.setText("共" + totalCount + "次，已咨询" + usedCount + "次，剩余" + (number) + "次");
+                            }
                         }
-                    } else {
-                        ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
                     }
-                } else {
-                    ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
-                }
-            }
-        },getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                    }
+                }),getRequestTag());
     }
 
 
@@ -150,11 +156,10 @@ public class AskDoctorActivity extends BaseActivity {
         AskForm askForm=new AskForm();
         askForm.setAdviceId(adviceItemId);
         askForm.setQuestion(askDoctorText);
-        ApiManager.getInstance().adviceApi.askDoctor(askForm, new HttpClientAdapter.Callback<Integer>() {
-            @Override
-            public void call(Result<Integer> t) {
-                    if (t.getStatus()==Result.SUCCESS) {
-                        int data = t.getData();
+        ApiManager.getInstance().adviceApi.askDoctor(askForm,
+                new DefaultCallback<Integer>(this, new AbstractBusiness<Integer>() {
+                    @Override
+                    public void handleData(Integer data) {
                         if (data == 0) {
                             Intent intent = new Intent();
                             intent.putExtra("positionExtra", position);
@@ -163,12 +168,21 @@ public class AskDoctorActivity extends BaseActivity {
                         } else if (data == 1) {
                             ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), "没有咨询次数");
                         }
-                    } else {
-                        ToastUtil.show(AskDoctorActivity.this.getApplicationContext(), t.getMsgMap()+"");
+                        customDialog.dismiss();
                     }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }),getRequestTag());
 
     }
 

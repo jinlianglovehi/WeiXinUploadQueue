@@ -216,7 +216,6 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
         ApiManager.getInstance().accountApi.changePassword(changePasswordForm, new HttpClientAdapter.Callback<Boolean>() {
             @Override
             public void call(Result<Boolean> t) {
-                if (customDialog.isNoCancel) {
                     if (t.isSuccess()) {
                         Boolean data = t.getData();
                         if (data) {
@@ -228,7 +227,6 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                     } else {
                         ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), t.getMsg());
                     }
-                }
                 dialog.dismiss();
             }
         }, getRequestTag());

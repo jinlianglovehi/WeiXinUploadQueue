@@ -295,9 +295,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 //          adviceForm.setLatitude(adviceItem.get);
 //          adviceForm.setLongitude();
 			ApiManager.getInstance().adviceApi.uploadData(adviceForm,
-					new DefaultCallback<Long>(context, new AbstractBusiness<Long>() {
+					new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
 						@Override
-						public void handleData(Long data) {
+						public void handleData(AdviceItem data) {
 							oneRecord.setUploadState(Record.UPLOAD_STATE_CLOUD);
 							try {
 								recordBusinessDao.update(oneRecord);

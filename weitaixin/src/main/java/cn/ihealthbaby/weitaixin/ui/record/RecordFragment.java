@@ -237,28 +237,37 @@ public class RecordFragment extends BaseFragment {
             case 1:
                 if (mAdviceItems.size() > 0) {
                     AdviceItem adviceItem = mAdviceItems.get((int) menuInfo.id);
-                    if (adviceItem.getStatus() != 3) {
+                    if (adviceItem.getStatus() != 1) {
                         final CustomDialog customDialog = new CustomDialog();
                         Dialog dialog = customDialog.createDialog1(context, "正在删除...");
                         dialog.show();
-                        ApiManager.getInstance().adviceApi.delete(adviceItem.getId(), new HttpClientAdapter.Callback<Void>() {
-                            @Override
-                            public void call(Result<Void> t) {
-                                if (t.isSuccess()) {
-                                    ToastUtil.show(context, "删除成功");
-                                    adapter.datas.remove((int) menuInfo.id);
-                                    adapter.notifyDataSetChanged();
-                                    if (tvUsedCount != null) {
-                                        tvUsedCount.setText((--countNumber) + "");
+                        ApiManager.getInstance().adviceApi.delete(adviceItem.getId(),
+                                new DefaultCallback<Void>(getActivity(), new AbstractBusiness<Void>() {
+                                    @Override
+                                    public void handleData(Void data) {
+                                        adapter.datas.remove((int) menuInfo.id);
+                                        adapter.notifyDataSetChanged();
+                                        if (tvUsedCount != null) {
+                                            tvUsedCount.setText((--countNumber) + "");
+                                        }
+                                        ToastUtil.show(context, "删除成功");
+                                        customDialog.dismiss();
                                     }
-                                } else {
-                                    ToastUtil.show(context, t.getMsgMap() + "");
-                                }
-                                customDialog.dismiss();
-                            }
-                        }, context);
+
+                                    @Override
+                                    public void handleClientError(Exception e) {
+                                        super.handleClientError(e);
+                                        customDialog.dismiss();
+                                    }
+
+                                    @Override
+                                    public void handleException(Exception e) {
+                                        super.handleException(e);
+                                        customDialog.dismiss();
+                                    }
+                                }), context);
                     } else {
-                        ToastUtil.show(context, "请先上传，才能删除");
+                        ToastUtil.show(context, "问医生的记录不能删除");
                     }
                 }
                 break;

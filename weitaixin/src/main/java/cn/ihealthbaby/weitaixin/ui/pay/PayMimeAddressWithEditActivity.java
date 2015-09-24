@@ -129,6 +129,16 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
 //                            addset.remove(finalI);
 //                            addressDel.add(addressId);
                         }
+
+                        @Override
+                        public void handleClientError(Exception e) {
+                            super.handleClientError(e);
+                        }
+
+                        @Override
+                        public void handleException(Exception e) {
+                            super.handleException(e);
+                        }
                     }), getRequestTag());
                 }
             }
@@ -178,25 +188,33 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
         final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().addressApi.getAddresss(new HttpClientAdapter.Callback<ApiList<Address>>() {
-            @Override
-            public void call(Result<ApiList<Address>> t) {
-                if (t.getStatus() == Result.SUCCESS) {
-                    ApiList<Address> data = t.getData();
-                    ArrayList<Address> addressList = (ArrayList<Address>) data.getList();
-                    LogUtil.d("addressList", "addressList =%s ", addressList);
-                    if (addressList.size() <= 0) {
-                        ToastUtil.show(getApplicationContext(), "没有数据");
-                    } else {
-                        adapter.setDatas(addressList);
-                        adapter.notifyDataSetChanged();
+        ApiManager.getInstance().addressApi.getAddresss(
+                new DefaultCallback<ApiList<Address>>(this, new AbstractBusiness<ApiList<Address>>() {
+                    @Override
+                    public void handleData(ApiList<Address> data) {
+                        ArrayList<Address> addressList = (ArrayList<Address>) data.getList();
+                        LogUtil.d("addressList", "addressList =%s ", addressList);
+                        if (addressList.size() <= 0) {
+                            ToastUtil.show(getApplicationContext(), "没有数据");
+                        } else {
+                            adapter.setDatas(addressList);
+                            adapter.notifyDataSetChanged();
+                        }
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
@@ -204,20 +222,28 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
         final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().addressApi.getAddresss(new HttpClientAdapter.Callback<ApiList<Address>>() {
-            @Override
-            public void call(Result<ApiList<Address>> t) {
-                if (t.getStatus() == Result.SUCCESS) {
-                    ApiList<Address> data = t.getData();
-                    ArrayList<Address> addressList = (ArrayList<Address>) data.getList();
-                    adapter.setDatas(addressList);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+        ApiManager.getInstance().addressApi.getAddresss(
+                new DefaultCallback<ApiList<Address>>(this, new AbstractBusiness<ApiList<Address>>() {
+                    @Override
+                    public void handleData(ApiList<Address> data) {
+                        ArrayList<Address> addressList = (ArrayList<Address>) data.getList();
+                        adapter.setDatas(addressList);
+                        adapter.notifyDataSetChanged();
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 

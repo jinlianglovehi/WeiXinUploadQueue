@@ -30,6 +30,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Doctor;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -222,20 +224,28 @@ public class PayRentInformationActivity extends BaseActivity {
                     final CustomDialog customDialog=new CustomDialog();
                     Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
                     dialog.show();
-                    ApiManager.getInstance().doctorApi.getDoctorsByHospital(hospitalId, new HttpClientAdapter.Callback<ApiList<Doctor>>() {
-                        @Override
-                        public void call(Result<ApiList<Doctor>> t) {
-                            if (t.isSuccess()) {
-                                ApiList<Doctor> data = t.getData();
-                                ArrayList<Doctor> doctorList = (ArrayList<Doctor>) data.getList();
-                                adapter.setDatas(doctorList);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                            }
-                            customDialog.dismiss();
-                        }
-                    },getRequestTag());
+                    ApiManager.getInstance().doctorApi.getDoctorsByHospital(hospitalId,
+                            new DefaultCallback<ApiList<Doctor>>(this, new AbstractBusiness<ApiList<Doctor>>() {
+                                @Override
+                                public void handleData(ApiList<Doctor> data) {
+                                    ArrayList<Doctor> doctorList = (ArrayList<Doctor>) data.getList();
+                                    adapter.setDatas(doctorList);
+                                    adapter.notifyDataSetChanged();
+                                    customDialog.dismiss();
+                                }
+
+                                @Override
+                                public void handleClientError(Exception e) {
+                                    super.handleClientError(e);
+                                    customDialog.dismiss();
+                                }
+
+                                @Override
+                                public void handleException(Exception e) {
+                                    super.handleException(e);
+                                    customDialog.dismiss();
+                                }
+                            }),getRequestTag());
                 }
             }
         }

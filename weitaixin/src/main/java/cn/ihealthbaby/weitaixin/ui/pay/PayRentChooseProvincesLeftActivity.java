@@ -25,6 +25,8 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.City;
 import cn.ihealthbaby.client.model.Province;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -100,26 +102,32 @@ public class PayRentChooseProvincesLeftActivity extends BaseActivity {
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
         // 0 全部省份    1 筛选有开通线上服务医院的省份
-        ApiManager.getInstance().addressApi.getProvinces(1, new HttpClientAdapter.Callback<ApiList<Province>>() {
-            @Override
-            public void call(Result<ApiList<Province>> t) {
-                if (t.getStatus()==Result.SUCCESS) {
-                    ApiList<Province> data = t.getData();
-
-                    ArrayList<Province> leftCityList = (ArrayList<Province>) data.getList();
-
-                    if (leftCityList != null && leftCityList.size() > 0) {
-                        adapterLeft.setDatas(leftCityList);
-                        adapterLeft.notifyDataSetChanged();
-                    } else {
-                        ToastUtil.show(getApplicationContext(), "没有数据");
+        ApiManager.getInstance().addressApi.getProvinces(1,
+                new DefaultCallback<ApiList<Province>>(this, new AbstractBusiness<ApiList<Province>>() {
+                    @Override
+                    public void handleData(ApiList<Province> data) {
+                        ArrayList<Province> leftCityList = (ArrayList<Province>) data.getList();
+                        if (leftCityList != null && leftCityList.size() > 0) {
+                            adapterLeft.setDatas(leftCityList);
+                            adapterLeft.notifyDataSetChanged();
+                        } else {
+                            ToastUtil.show(getApplicationContext(), "没有数据");
+                        }
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }) , getRequestTag());
     }
 
 

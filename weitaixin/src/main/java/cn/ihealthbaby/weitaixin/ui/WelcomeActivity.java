@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,13 +64,14 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.activity_main_welcome);
         ButterKnife.bind(this);
 
+        ivWelcomeStart.setVisibility(View.VISIBLE);
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 ivWelcomeStart.setVisibility(View.GONE);
             }
-        }, 2000);
+        }, 10000);
 
 //        initView();
 
@@ -131,7 +133,6 @@ public class WelcomeActivity extends BaseActivity {
 
 
 
-
         if (!SPUtil.isNoFirstStartApp(this)) {
             SPUtil.setNoFirstStartApp(this);
         }
@@ -158,17 +159,23 @@ public class WelcomeActivity extends BaseActivity {
         int screenHeight = wm.getDefaultDisplay().getHeight();
 
 
-        Bitmap bitmap01 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_01, 108, 192);
-        Bitmap bitmap02 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_02, 108, 192);
-        Bitmap bitmap03 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_03, 108, 192);
-        Bitmap bitmap04 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_04, 108, 192);
-        Bitmap bitmap05 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome, 108, 192);
+//        Bitmap bitmap01 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_01, 108, 192);
+//        Bitmap bitmap02 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_02, 108, 192);
+//        Bitmap bitmap03 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_03, 108, 192);
+//        Bitmap bitmap04 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_04, 108, 192);
+//        Bitmap bitmap05 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome, 108, 192);
+//
+//        view01.setImageBitmap(bitmap01);
+//        view02.setImageBitmap(bitmap02);
+//        view03.setImageBitmap(bitmap03);
+//        view04.setImageBitmap(bitmap04);
+//        ivWelcome05.setImageBitmap(bitmap05);
 
-        view01.setImageBitmap(bitmap01);
-        view02.setImageBitmap(bitmap02);
-        view03.setImageBitmap(bitmap03);
-        view04.setImageBitmap(bitmap04);
-        ivWelcome05.setImageBitmap(bitmap05);
+        view01.setImageResource(R.drawable.start_01);
+        view02.setImageResource(R.drawable.start_02);
+        view03.setImageResource(R.drawable.start_03);
+        view04.setImageResource(R.drawable.start_04);
+        ivWelcome05.setImageResource(R.drawable.start_04);
 
         tvNextAction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,9 +200,7 @@ public class WelcomeActivity extends BaseActivity {
         viewPagerWelcome.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int arg0) {
-                if(arg0==startAdapter.getCount()-1){
 
-                }
             }
 
             @Override
@@ -210,6 +215,7 @@ public class WelcomeActivity extends BaseActivity {
         });
     }
 
+
     private class StartPagerAdapter extends PagerAdapter {
 
         @Override
@@ -219,14 +225,15 @@ public class WelcomeActivity extends BaseActivity {
         }
 
         @Override
-        public Object instantiateItem(View collection, int position) {
-            ((ViewPager) collection).addView(mListViews.get(position), 0);
+        public Object instantiateItem(ViewGroup container, int position) {
+            ((ViewPager) container).addView(mListViews.get(position), 0);
             return mListViews.get(position);
         }
 
         @Override
-        public void destroyItem(View collection, int position, Object view) {
-            ((ViewPager) collection).removeView(mListViews.get(position));
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+//            (ViewPager) container).removeView(mListViews.get(position));
         }
 
         @Override

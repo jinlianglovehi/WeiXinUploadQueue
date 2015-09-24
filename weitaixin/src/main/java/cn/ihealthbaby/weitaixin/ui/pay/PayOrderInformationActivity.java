@@ -25,6 +25,8 @@ import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Product;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -127,61 +129,71 @@ public class PayOrderInformationActivity extends BaseActivity {
         final CustomDialog customDialog=new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
-        ApiManager.getInstance().productApi.getInitProducts(HospitalId, new HttpClientAdapter.Callback<ApiList<Product>>() {
-            @Override
-            public void call(Result<ApiList<Product>> t) {
-                if (t.isSuccess()) {
-                    ApiList<Product> data = t.getData();
-                    ArrayList<Product> list = (ArrayList<Product>) data.getList();
+        ApiManager.getInstance().productApi.getInitProducts(HospitalId,
+                new DefaultCallback<ApiList<Product>>(this, new AbstractBusiness<ApiList<Product>>() {
+                    @Override
+                    public void handleData(ApiList<Product> data) {
+                        ArrayList<Product> list = (ArrayList<Product>) data.getList();
 
-                    //商品类型 0 押金, 1 耗材包 , 2 租金 ,3 咨询费
-                    for (int i = 0; i < list.size(); i++) {
-                        Product product = list.get(i);
+                        //商品类型 0 押金, 1 耗材包 , 2 租金 ,3 咨询费
+                        for (int i = 0; i < list.size(); i++) {
+                            Product product = list.get(i);
 
-                        int productType = product.getProductType();
-                        if (productType == 0) {
-                            cashPledgeProduct.add(product);
-                            priceCount += product.getPrice();
-                        } else if (productType == 1) {
-                            couplingProduct.add(product);
-                            priceCount += product.getPrice();
-                        } else if (productType == 2) {
-                            rentProduct.add(product);
-                            if(isAddPrice){
+                            int productType = product.getProductType();
+                            if (productType == 0) {
+                                cashPledgeProduct.add(product);
                                 priceCount += product.getPrice();
-                                isAddPrice=false;
+                            } else if (productType == 1) {
+                                couplingProduct.add(product);
+                                priceCount += product.getPrice();
+                            } else if (productType == 2) {
+                                rentProduct.add(product);
+                                if(isAddPrice){
+                                    priceCount += product.getPrice();
+                                    isAddPrice=false;
+                                }
+                            } else if (productType == 3) {
+                                consultProduct.add(product);
+                                priceCount += product.getPrice();
                             }
-                        } else if (productType == 3) {
-                            consultProduct.add(product);
-                            priceCount += product.getPrice();
                         }
+
+                        LogUtil.d("cashPledgeProductaa", "cashPledgeProduct==%s=> %s", cashPledgeProduct.size(), cashPledgeProduct);
+                        myCashPledgeProductAdapter.setDatas(cashPledgeProduct);
+                        myCashPledgeProductAdapter.notifyDataSetChanged();
+                        LocalProductData.getLocal().put(LocalProductData.Name01, cashPledgeProduct);
+
+                        myRentProductAdapter.setDatas(rentProduct);
+                        myRentProductAdapter.notifyDataSetChanged();
+                        LocalProductData.getLocal().put(LocalProductData.Name02, rentProduct);
+
+                        myCouplingProductAdapter.setDatas(couplingProduct);
+                        myCouplingProductAdapter.notifyDataSetChanged();
+                        LocalProductData.getLocal().put(LocalProductData.Name03, couplingProduct);
+
+                        myConsultProductAdapter.setDatas(consultProduct);
+                        myConsultProductAdapter.notifyDataSetChanged();
+                        LocalProductData.getLocal().put(LocalProductData.Name04, consultProduct);
+
+
+                        tvPriceGoingOrder.setText("总计"+PayUtils.showPrice(priceCount));
+
+                        customDialog.dismiss();
                     }
 
-                    LogUtil.d("cashPledgeProductaa", "cashPledgeProduct==%s=> %s", cashPledgeProduct.size(), cashPledgeProduct);
-                    myCashPledgeProductAdapter.setDatas(cashPledgeProduct);
-                    myCashPledgeProductAdapter.notifyDataSetChanged();
-                    LocalProductData.getLocal().put(LocalProductData.Name01, cashPledgeProduct);
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
 
-                    myRentProductAdapter.setDatas(rentProduct);
-                    myRentProductAdapter.notifyDataSetChanged();
-                    LocalProductData.getLocal().put(LocalProductData.Name02, rentProduct);
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
 
-                    myCouplingProductAdapter.setDatas(couplingProduct);
-                    myCouplingProductAdapter.notifyDataSetChanged();
-                    LocalProductData.getLocal().put(LocalProductData.Name03, couplingProduct);
-
-                    myConsultProductAdapter.setDatas(consultProduct);
-                    myConsultProductAdapter.notifyDataSetChanged();
-                    LocalProductData.getLocal().put(LocalProductData.Name04, consultProduct);
-
-
-                    tvPriceGoingOrder.setText("总计￥"+(priceCount/100));
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-                }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+                }),getRequestTag());
     }
 
 

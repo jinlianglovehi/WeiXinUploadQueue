@@ -20,6 +20,8 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceReply;
 import cn.ihealthbaby.client.model.ReplyDetail;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -74,44 +76,48 @@ public class ReplyedActivity extends BaseActivity {
 
         long relatedId=getIntent().getLongExtra(Constants.INTENT_ID, 0);
 
-
-        dialog=new CustomDialog().createDialog1(this,"加载中...");
+        final CustomDialog customDialog = new CustomDialog();
+        dialog=customDialog.createDialog1(this, "加载中...");
         dialog.show();
 
-        ApiManager.getInstance().adviceApi.getReplyDetail(relatedId, new HttpClientAdapter.Callback<ReplyDetail>() {
-            @Override
-            public void call(Result<ReplyDetail> t) {
-                if (t.isSuccess()) {
-                    ReplyDetail data = t.getData();
-                    LogUtil.d("ReplyDetail","%s",data.toString());
-                    System.err.println("ReplyDetail： "+data.toString());
-                    if (data != null) {
-                        User user = SPUtil.getUser(ReplyedActivity.this);
-                        ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
-                        tv_wo_head_name.setText(user.getName());
-                        tvAskPurpose.setText("监护目的: " + data.getAskPurpose());
-                        tvFeeling.setText("监护心情: " + data.getFeeling());
-                        tvQuestion.setText(data.getQuestion());
-                        tvAskTime.setText(DateTimeTool.date2St2(data.getAskTime(), "MM月dd日 HH:mm"));
+        ApiManager.getInstance().adviceApi.getReplyDetail(relatedId,
+                new DefaultCallback<ReplyDetail>(this, new AbstractBusiness<ReplyDetail>() {
+                    @Override
+                    public void handleData(ReplyDetail data) {
+                        if (data != null) {
+                            User user = SPUtil.getUser(ReplyedActivity.this);
+                            ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
+                            tv_wo_head_name.setText(user.getName());
+                            tvAskPurpose.setText("监护目的: " + data.getAskPurpose());
+                            tvFeeling.setText("监护心情: " + data.getFeeling());
+                            tvQuestion.setText(data.getQuestion());
+                            tvAskTime.setText(DateTimeTool.date2St2(data.getAskTime(), "MM月dd日 HH:mm"));
 
-                        AdviceReply adviceReply = data.getAdviceReply();
-                        if (adviceReply!=null) {
-                            ImageLoader.getInstance().displayImage(adviceReply.getDoctorHeadPic(), ivDoctorHeadPic, setDisplayImageOptions());
-                            tvDoctorName.setText(adviceReply.getDoctorName());
-                            tvDoctorTitle.setText(adviceReply.getDoctorTitle());
-                            tvHospitalName.setText(adviceReply.getHospitalName());
-                            tvReplyContext.setText(adviceReply.getReplyContext());
-                            tvReplyTime.setText(DateTimeTool.date2St2(adviceReply.getReplyTime(), "MM月dd日 HH:mm"));
+                            AdviceReply adviceReply = data.getAdviceReply();
+                            if (adviceReply!=null) {
+                                ImageLoader.getInstance().displayImage(adviceReply.getDoctorHeadPic(), ivDoctorHeadPic, setDisplayImageOptions());
+                                tvDoctorName.setText(adviceReply.getDoctorName());
+                                tvDoctorTitle.setText(adviceReply.getDoctorTitle());
+                                tvHospitalName.setText(adviceReply.getHospitalName());
+                                tvReplyContext.setText(adviceReply.getReplyContext());
+                                tvReplyTime.setText(DateTimeTool.date2St2(adviceReply.getReplyTime(), "MM月dd日 HH:mm"));
+                            }
                         }
-                    } else {
-                        ToastUtil.show(getApplicationContext(), t.getMsg());
+                        customDialog.dismiss();
                     }
-                } else {
-                    ToastUtil.show(getApplicationContext(), t.getMsg());
-                }
-                dialog.dismiss();
-            }
-        }, getRequestTag());
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
 
     }
 
