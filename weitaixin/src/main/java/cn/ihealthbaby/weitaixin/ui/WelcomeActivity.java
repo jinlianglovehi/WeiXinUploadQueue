@@ -158,11 +158,11 @@ public class WelcomeActivity extends BaseActivity {
         int screenHeight = wm.getDefaultDisplay().getHeight();
 
 
-        Bitmap bitmap01 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_01, screenWidth, screenHeight);
-        Bitmap bitmap02 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_02, screenWidth, screenHeight);
-        Bitmap bitmap03 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_03, screenWidth, screenHeight);
-        Bitmap bitmap04 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_04, screenWidth, screenHeight);
-        Bitmap bitmap05 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome, screenWidth, screenHeight);
+        Bitmap bitmap01 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_01, 108, 192);
+        Bitmap bitmap02 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_02, 108, 192);
+        Bitmap bitmap03 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_03, 108, 192);
+        Bitmap bitmap04 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_04, 108, 192);
+        Bitmap bitmap05 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome, 108, 192);
 
         view01.setImageBitmap(bitmap01);
         view02.setImageBitmap(bitmap02);

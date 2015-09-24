@@ -38,6 +38,7 @@ public class UploadRecord {
                     @Override
                     public void handleData(Long data) {
                         ToastUtil.show(context, "上传成功");
+                        customDialog.dismiss();
                     }
 
                     @Override

@@ -108,18 +108,26 @@ public class UploadFileEngine {
 //                uploadFile(file, data.getKey(), data.getToken());
 //            }
 //        });
-        ApiManager.getInstance().uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
-            @Override
-            public void call(Result<UploadModel> t) {
-                if (t.getStatus()== Result.SUCCESS) {
-                    UploadModel data = t.getData();
-                    uploadFile(file, data.getKey(), data.getToken());
-                } else {
-                    ToastUtil.show(context, t.getMsgMap()+"");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+        ApiManager.getInstance().uploadApi.getUploadToken(0,
+                new DefaultCallback<UploadModel>(context, new AbstractBusiness<UploadModel>() {
+                    @Override
+                    public void handleData(UploadModel data) {
+                        uploadFile(file, data.getKey(), data.getToken());
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
@@ -128,18 +136,26 @@ public class UploadFileEngine {
         /**
          * 请求上传key 和 上传token
          */
-        ApiManager.getInstance().uploadApi.getUploadToken(0, new HttpClientAdapter.Callback<UploadModel>() {
-            @Override
-            public void call(Result<UploadModel> t) {
-                if (t.getStatus()==Result.SUCCESS) {
-                    UploadModel data = t.getData();
-                    uploadFile(dataBty, data.getKey(), data.getToken());
-                } else {
-                    ToastUtil.show(context, t.getMsgMap()+"");
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+        ApiManager.getInstance().uploadApi.getUploadToken(0,
+                new DefaultCallback<UploadModel>(context, new AbstractBusiness<UploadModel>() {
+                    @Override
+                    public void handleData(UploadModel data) {
+                        uploadFile(dataBty, data.getKey(), data.getToken());
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        customDialog.dismiss();
+                    }
+                }), getRequestTag());
     }
 
 
@@ -151,51 +167,75 @@ public class UploadFileEngine {
 
     public void completeInfoAction(){
         form.setHeadPic(key);
-        ApiManager.getInstance().userApi.completeInfo(form, new HttpClientAdapter.Callback<User>() {
-            @Override
-            public void call(Result<User> t) {
-                if (t.getStatus()==Result.SUCCESS) {
-                    User data = t.getData();
-                    if (data != null) {
-                        SPUtil.saveUser(context,data);
-                        if (finishActivity != null) {
-                            WeiTaiXinApplication.getInstance().putValue("InfoEdit","true");
-                            finishActivity.onFinishActivity(true);
+        ApiManager.getInstance().userApi.completeInfo(form,
+                new DefaultCallback<User>(context, new AbstractBusiness<User>() {
+                    @Override
+                    public void handleData(User data) {
+                        if (data != null) {
+                            SPUtil.saveUser(context,data);
+                            if (finishActivity != null) {
+                                WeiTaiXinApplication.getInstance().putValue("InfoEdit","true");
+                                finishActivity.onFinishActivity(true);
+                            }
+                        } else {
+//                            WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
+                            ToastUtil.show(context, "完善个人资料失败");
                         }
-                    } else {
-                        WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        if (finishActivity != null) {
+                            finishActivity.onFinishActivity(false);
+                        }
+//                        WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
                         ToastUtil.show(context, "完善个人资料失败");
+                        customDialog.dismiss();
                     }
-                } else {
-                    if (finishActivity != null) {
-                        finishActivity.onFinishActivity(false);
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        if (finishActivity != null) {
+                            finishActivity.onFinishActivity(false);
+                        }
+//                        WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
+                        ToastUtil.show(context, "完善个人资料失败");
+                        customDialog.dismiss();
                     }
-                    WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
-                    ToastUtil.show(context, "完善个人资料失败" + t.getMsgMap());
-                }
-                customDialog.dismiss();
-            }
-        }, getRequestTag());
+                }), getRequestTag());
     }
 
 
     public void updateHeadPicAction(){
         UpdateHeadPicForm updateHeadPicForm=new UpdateHeadPicForm();
         updateHeadPicForm.setHeadPicPath(key);
-        ApiManager.getInstance().userApi.updateHeadPic(updateHeadPicForm, new HttpClientAdapter.Callback<String>() {
-            @Override
-            public void call(Result<String> t) {
-                if (t.getStatus()==Result.SUCCESS) {
-                    String headPicStr = t.getData();
-                    SPUtil.saveHeadPic(context,headPicStr);
-                    LogUtil.e("errdata", "errdata服务器头像上传: " + headPicStr);
-                    ToastUtil.show(context.getApplicationContext(), "服务器头像上传成功");
-                } else {
-                    ToastUtil.show(context.getApplicationContext(), "服务器头像上传失败"+t.getMsgMap());
-                }
-                customDialog.dismiss();
-            }
-        },getRequestTag());
+        ApiManager.getInstance().userApi.updateHeadPic(updateHeadPicForm,
+                new DefaultCallback<String>(context, new AbstractBusiness<String>() {
+                    @Override
+                    public void handleData(String data) {
+                        SPUtil.saveHeadPic(context,data);
+                        LogUtil.e("errdata", "errdata服务器头像上传: " + data);
+                        ToastUtil.show(context.getApplicationContext(), "头像成功上传到服务器上");
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        ToastUtil.show(context.getApplicationContext(), "头像上传到服务器失败");
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        ToastUtil.show(context.getApplicationContext(), "头像上传到服务器失败");
+                        customDialog.dismiss();
+                    }
+                }),getRequestTag());
     }
 
 

@@ -93,9 +93,9 @@ public class ImageTool {
                 inSampleSize = Math.round((float)width / (float)reqWidth);
             }
         }
-        LogUtil.d("inSampleSize", "inSampleSize==>" + inSampleSize);
-        LogUtil.d("inSampleSize", width+ "inSampleSize==>" + height);
-        LogUtil.d("inSampleSize", reqWidth+ "inSampleSize==>" + reqHeight);
+        LogUtil.d("inSampleSize", "缩放比例==>" + inSampleSize);
+        LogUtil.d("inSampleSize", width+ "图片真实宽高==>" + height);
+        LogUtil.d("inSampleSize", reqWidth+ "要的宽高==>" + reqHeight);
         return inSampleSize;
     }
 
