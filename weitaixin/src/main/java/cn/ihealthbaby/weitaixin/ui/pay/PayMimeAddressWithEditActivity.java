@@ -121,8 +121,11 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
             List<Long> addressDel = new ArrayList<Long>();
             HashMap<Integer, Boolean> addset = adapter.addressMap;
             for (int i = 0; i < addset.size(); i++) {
-                if (addset.get(i)) {
-                    addressDel.add(adapter.datas.get(i).getId());
+                if (addset.get(i) && adapter.datas.size() == addset.size()) {
+                    Address address = adapter.datas.get(i);
+                    if (address != null) {
+                        addressDel.add(address.getId());
+                    }
                 }
             }
 
@@ -132,6 +135,13 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
 //                    adapter.datas.remove(finalI);
 //                    addset.remove(finalI);
 //                    addressDel.add(addressId);
+
+//                    adapter.addressMap = new HashMap<Integer, Boolean>();
+//                    for (int i = 0; i < adapter.datas.size(); i++) {
+//                        adapter.addressMap.put(i, false);
+//                    }
+
+                    adapter.setClearMap();
                 }
 
                 @Override

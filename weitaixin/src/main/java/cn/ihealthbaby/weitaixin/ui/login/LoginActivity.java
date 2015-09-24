@@ -27,6 +27,7 @@ import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
@@ -70,10 +71,7 @@ public class LoginActivity extends BaseActivity {
         title_text.setText("登录");
         back.setVisibility(View.INVISIBLE);
 
-        String rememberMobile = SPUtil.getRememberMobile(getApplicationContext());
-        if (!TextUtils.isEmpty(rememberMobile)) {
-            et_phone_number_login.setText(rememberMobile);
-        }
+
 
         ivShowPassword.setTag("0");
     }
@@ -197,6 +195,12 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        String rememberMobile = SPUtil.getRememberMobile(getApplicationContext());
+        LogUtil.d("rememberMobile", "rememberMobile==>" + rememberMobile);
+        if (!TextUtils.isEmpty(rememberMobile)) {
+            et_phone_number_login.setText(rememberMobile);
+        }
+
         if (SPUtil.isLogin(this)) {
             finish();
         }

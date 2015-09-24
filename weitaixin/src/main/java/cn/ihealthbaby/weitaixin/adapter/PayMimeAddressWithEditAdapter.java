@@ -59,11 +59,16 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
             this.datas.clear();
             this.datas = datas;
         }
+        setClearMap();
+    }
+
+
+    public void setClearMap(){
+        addressMap.clear();
         for (int i = 0; i < this.datas.size(); i++) {
             addressMap.put(i, false);
         }
     }
-
 
     public void addDatas(ArrayList<Address> datas) {
         if (datas != null) {

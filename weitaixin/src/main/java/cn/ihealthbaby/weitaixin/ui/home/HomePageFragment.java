@@ -66,8 +66,10 @@ public class HomePageFragment extends BaseFragment {
     TextView tvHomeHeadName;
     @Bind(R.id.flShowMessageCount)
     FrameLayout flShowMessageCount;
-    @Bind(R.id.tvMessageNumberCount) TextView tvMessageNumberCount;
-    @Bind(R.id.tvGestationalWeeks) TextView tvGestationalWeeks;
+    @Bind(R.id.tvMessageNumberCount)
+    TextView tvMessageNumberCount;
+    @Bind(R.id.tvGestationalWeeks)
+    TextView tvGestationalWeeks;
     @Bind(R.id.tvPregnancyDayNumber)
     TextView tvPregnancyDayNumber;
     @Bind(R.id.tvProduceDayNumber)
@@ -157,21 +159,22 @@ public class HomePageFragment extends BaseFragment {
 
     private void pullHeadDatas() {
         User user = SPUtil.getUser(getActivity().getApplicationContext());
-
-        Date deliveryTime = user.getDeliveryTime();
-        if (deliveryTime != null) {
-            tvPregnancyDayNumber.setText(DateTimeTool.getGestationalDays(deliveryTime)+"");
-            tvProduceDayNumber.setText(DateTimeTool.fromDeliveryTime(deliveryTime) + "");
-            String gestationalWeeks = DateTimeTool.getGestationalWeeks(deliveryTime);
-            String[] split = gestationalWeeks.split("\\+");
-            String gWeeks = "";
-            if (split.length == 1) {
-                gWeeks = split[0];
+        if (user != null) {
+            Date deliveryTime = user.getDeliveryTime();
+            if (deliveryTime != null) {
+                tvPregnancyDayNumber.setText(DateTimeTool.getGestationalDays(deliveryTime) + "");
+                tvProduceDayNumber.setText(DateTimeTool.fromDeliveryTime(deliveryTime) + "");
+                String gestationalWeeks = DateTimeTool.getGestationalWeeks(deliveryTime);
+                String[] split = gestationalWeeks.split("\\+");
+                String gWeeks = "";
+                if (split.length == 1) {
+                    gWeeks = split[0];
+                }
+                if (split.length == 2) {
+                    gWeeks = split[0];
+                }
+                tvGestationalWeeks.setText(gWeeks + "");
             }
-            if (split.length == 2) {
-                gWeeks = split[0];
-            }
-            tvGestationalWeeks.setText(gWeeks + "");
         }
 
 

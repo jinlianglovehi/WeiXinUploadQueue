@@ -106,7 +106,7 @@ public class GradedActivity extends BaseActivity {
             questionDialog.setOnclick(new QuestionDialog.onClickTrue() {
                 @Override
                 public void onClick(View v) {
-                    answerForm.setAnswer(0);
+                    answerForm.setAnswer(1);
                     mAnswerForms.addAnswerForms(answerForm);
                     questionDialog.dismiss();
                     start();
@@ -114,7 +114,7 @@ public class GradedActivity extends BaseActivity {
             }, new QuestionDialog.onClickFalse() {
                 @Override
                 public void onClick(View v) {
-                    answerForm.setAnswer(1);
+                    answerForm.setAnswer(0);
                     mAnswerForms.addAnswerForms(answerForm);
                     questionDialog.dismiss();
                     start();

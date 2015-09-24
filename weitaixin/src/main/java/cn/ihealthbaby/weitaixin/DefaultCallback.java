@@ -119,7 +119,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			StringBuilder stringBuilder = new StringBuilder();
 			for (Object o : map.values()) {
 				stringBuilder.append(o.toString());
-				stringBuilder.append("/r/n");
+				stringBuilder.append("\r\n");
 			}
 			return stringBuilder.toString();
 		} else {

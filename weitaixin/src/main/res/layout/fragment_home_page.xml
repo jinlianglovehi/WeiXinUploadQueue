@@ -45,6 +45,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
                 android:text=""
+                android:gravity="right"
                 android:textColor="@color/white0" />
         </RelativeLayout>
 
@@ -71,6 +72,7 @@
                 android:id="@+id/tvProduceDayNumber"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
+                android:gravity="right"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
@@ -106,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:gravity="right"
                 android:layout_marginRight="8dp"
                 android:text=""
                 android:textColor="@color/white0" />
@@ -123,7 +126,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="@color/white0"
-            android:textSize="@dimen/font14" />
+            android:textSize="@dimen/font12" />
 
         <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
             android:id="@+id/ivHomeHeadImg"

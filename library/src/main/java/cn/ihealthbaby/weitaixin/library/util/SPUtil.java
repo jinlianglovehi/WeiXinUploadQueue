@@ -19,6 +19,7 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 public class SPUtil {
     private static final String FILE_NAME = "weitaixin_share_data";
     private static final String FILE_NAME_USER = "user_share_data";
+    private static final String FILE_NAME_REMEMBERMOBILE = "remembermobile_share_data";
     private static final String FILE_NAME_SERVICEINFO = "serviceinfo_share_data";
     private static final String FILE_NAME_TEMP = "temp_share_data";
 
@@ -80,7 +81,7 @@ public class SPUtil {
     }
 
     public static String getRememberMobile(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FILE_NAME_REMEMBERMOBILE, Context.MODE_PRIVATE);
         return sp.getString("RememberMobile", "");
     }
 
@@ -98,7 +99,10 @@ public class SPUtil {
         editor.putLong("Id", user.getId());
         if (user.getMobile() != null) {
             editor.putString("Mobile", user.getMobile());
-            editor.putString("RememberMobile", user.getMobile());
+            SharedPreferences spMobile = context.getSharedPreferences(FILE_NAME_REMEMBERMOBILE, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editorMobile = spMobile.edit();
+            editorMobile.putString("RememberMobile", user.getMobile());
+            editorMobile.commit();
         }
         if (user.getName() != null) {
             editor.putString("Name", user.getName());
