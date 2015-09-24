@@ -156,10 +156,10 @@ public class RegistActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         tv_mark_num_text.setText("发送验证码");
-                                        isSend = true;
-                                        customDialog.dismiss();
                                         tv_mark_num_text.setBackgroundResource(R.drawable.shape_send_verifycode);
                                         tv_mark_num_text.setTextColor(getResources().getColor(R.color.black0));
+                                        isSend = true;
+                                        customDialog.dismiss();
                                     }
                                 };
                                 countDownTimer.start();
@@ -170,7 +170,6 @@ public class RegistActivity extends BaseActivity {
                         } else {
                             isHasAuthCode = false;
                             cancel(customDialog);
-//                      tv_regist_action.setEnabled(false);
                             ToastUtil.show(RegistActivity.this.getApplicationContext(), "请重新获取验证码");
                         }
                         customDialog.dismiss();

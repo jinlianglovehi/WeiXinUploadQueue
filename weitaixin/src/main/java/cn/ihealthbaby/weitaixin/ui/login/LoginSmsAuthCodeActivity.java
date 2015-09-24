@@ -118,79 +118,90 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                 return;
             }
 
-            tv_mark_number_text_smsauthcode.setBackgroundResource(R.color.gray1);
-            tv_mark_number_text_smsauthcode.setTextColor(getResources().getColor(R.color.gray2));
 
-            try {
-                dialog = new CustomDialog().createDialog1(this, "短信验证码发送中...");
-                dialog.show();
-                getAuthCode();
+            getAuthCode();
 
-
-                countDownTimer = new CountDownTimer(60000, 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        tv_mark_number_text_smsauthcode.setText(millisUntilFinished / 1000 + "秒之后重发");
-                        isSend = false;
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        tv_mark_number_text_smsauthcode.setText("发送验证码");
-                        tv_mark_number_text_smsauthcode.setBackgroundResource(R.drawable.shape_send_verifycode);
-                        tv_mark_number_text_smsauthcode.setTextColor(getResources().getColor(R.color.black0));
-                        isSend = true;
-                        dialog.dismiss();
-                    }
-                };
-                countDownTimer.start();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                cancel();
-            }
         }
     }
 
 
-    public void cancel() {
+    public void cancel(CustomDialog customDialog) {
         tv_mark_number_text_smsauthcode.setText("发送验证码");
         isSend = true;
         countDownTimer.cancel();
-        dialog.dismiss();
+        customDialog.dismiss();
     }
 
 
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode() {
+
+        final CustomDialog customDialog = new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(this, "验证码发送中...");
+        dialog.show();
+
+
+        isSend = false;
+
+
         ApiManager.getInstance().accountApi.getAuthCode(phone_number, 1,
                 new DefaultCallback<Boolean>(this, new AbstractBusiness<Boolean>() {
                     @Override
                     public void handleData(Boolean data) {
                         if (data) {
+
+                            tv_mark_number_text_smsauthcode.setBackgroundResource(R.color.gray1);
+                            tv_mark_number_text_smsauthcode.setTextColor(getResources().getColor(R.color.gray2));
+
+
                             isHasAuthCode = true;
+
+                            try {
+                                countDownTimer = new CountDownTimer(60000, 1000) {
+                                    @Override
+                                    public void onTick(long millisUntilFinished) {
+                                        tv_mark_number_text_smsauthcode.setText(millisUntilFinished / 1000 + "秒之后重发");
+                                        isSend = false;
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        tv_mark_number_text_smsauthcode.setText("发送验证码");
+                                        tv_mark_number_text_smsauthcode.setBackgroundResource(R.drawable.shape_send_verifycode);
+                                        tv_mark_number_text_smsauthcode.setTextColor(getResources().getColor(R.color.black0));
+                                        isSend = true;
+                                        customDialog.dismiss();
+                                    }
+                                };
+                                countDownTimer.start();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                cancel(customDialog);
+                            }
+
                         } else {
                             isHasAuthCode = false;
-                            cancel();
+                            cancel(customDialog);
                             ToastUtil.show(LoginSmsAuthCodeActivity.this.getApplicationContext(), "重新获取短信验证码");
                         }
-                        dialog.dismiss();
+                        customDialog.dismiss();
                     }
 
                     @Override
                     public void handleClientError(Exception e) {
                         super.handleClientError(e);
                         isHasAuthCode = false;
-                        cancel();
-                        dialog.dismiss();
+                        cancel(customDialog);
+                        customDialog.dismiss();
                     }
 
                     @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
                         isHasAuthCode = false;
-                        cancel();
-                        dialog.dismiss();
+                        cancel(customDialog);
+                        customDialog.dismiss();
                     }
                 }), getRequestTag());
     }
@@ -202,10 +213,10 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
             if (isChecked) {
                 tvLogieActionSmsAuthCode();
             } else {
-                ToastUtil.show(getApplicationContext(), "不接受，不能登录哦~~");
+                ToastUtil.show(getApplicationContext(), "不接受，不能登录哦");
             }
         } else {
-            ToastUtil.show(getApplicationContext(), "先获取验证码~~");
+            ToastUtil.show(getApplicationContext(), "先获取验证码");
         }
     }
 
