@@ -27,6 +27,7 @@
 
             <ImageView
                 android:layout_width="68dp"
+                android:layout_gravity="center"
                 android:layout_height="68dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/pay_account_rent" />
@@ -51,6 +52,7 @@
 
             <ImageView
                 android:layout_width="68dp"
+                android:layout_gravity="center"
                 android:layout_height="68dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/pay_account_coupling" />

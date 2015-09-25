@@ -38,6 +38,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
+import cn.ihealthbaby.weitaixin.ui.widget.CustomListView;
 import de.greenrobot.event.EventBus;
 
 public class PayConfirmOrderActivity extends BaseActivity {
@@ -51,7 +52,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
     //
 
     @Bind(R.id.lvGoodsList)
-    ListView lvGoodsList;
+    CustomListView lvGoodsList;
     @Bind(R.id.ivExpressageAction)
     ImageView ivExpressageAction;
     @Bind(R.id.ivHospitalAction)

@@ -8,60 +8,95 @@
         android:id="@+id/head_title_id"
         layout="@layout/layout_title" />
 
-    <ListView
-        android:id="@+id/lvCashPledgeProduct"
-        android:layout_width="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/head_title_id"
-        android:layout_marginTop="2dp"
-        android:background="@color/white0" />
 
-
-    <TextView
-        android:id="@+id/tv2sy"
+    <ScrollView
+        android:id="@+id/scrollViewl"
         android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:layout_below="@id/lvCashPledgeProduct"
-        android:background="@color/gray5"
-        android:gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:text="租凭方式"
-        android:textColor="@color/gray12"
-        android:textSize="@dimen/font14" />
-
-    <ListView
-        android:id="@+id/lvRentProduct"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv2sy"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="@color/white0" />
-
-
-    <ListView
-        android:id="@+id/lvCouplingProduct"
-        android:layout_width="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/lvRentProduct"
-        android:layout_marginTop="26dp"
-        android:background="@color/white0" />
-
-
-    <ListView
-        android:id="@+id/lvConsultProduct"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
         android:layout_above="@+id/rl10Function"
-        android:layout_below="@id/lvCouplingProduct"
-        android:layout_marginTop="26dp"
-        android:background="@color/white0" />
+        android:layout_below="@id/head_title_id"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <cn.ihealthbaby.weitaixin.ui.widget.CustomListView
+                android:id="@+id/lvCashPledgeProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/white0"
+                android:clickable="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:fadingEdge="none"
+
+                android:focusable="false"
+                android:listSelector="@android:color/transparent" />
+
+
+            <TextView
+                android:id="@+id/tv2sy"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_below="@id/lvCashPledgeProduct"
+                android:background="@color/gray5"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:text="租凭方式"
+                android:textColor="@color/gray12"
+                android:textSize="@dimen/font14" />
+
+            <cn.ihealthbaby.weitaixin.ui.widget.CustomListView
+                android:id="@+id/lvRentProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv2sy"
+                android:background="@color/white0"
+                android:clickable="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:fadingEdge="none"
+                android:focusable="false"
+                android:listSelector="@android:color/transparent" />
+
+
+            <cn.ihealthbaby.weitaixin.ui.widget.CustomListView
+                android:id="@+id/lvCouplingProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lvRentProduct"
+                android:layout_marginTop="26dp"
+                android:background="@color/white0"
+                android:clickable="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:fadingEdge="none"
+                android:focusable="false"
+                android:listSelector="@android:color/transparent" />
+
+
+            <cn.ihealthbaby.weitaixin.ui.widget.CustomListView
+                android:id="@+id/lvConsultProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lvCouplingProduct"
+                android:layout_marginTop="26dp"
+                android:background="@color/white0"
+                android:clickable="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:fadingEdge="none"
+                android:focusable="false"
+                android:listSelector="@android:color/transparent" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 
     <RelativeLayout

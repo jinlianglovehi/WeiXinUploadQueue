@@ -33,6 +33,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.widget.CustomListView;
 import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 
 public class PayOrderDetailsActivity extends BaseActivity {
@@ -58,7 +59,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
     @Bind(R.id.tvOrderGoodsNumber)
     TextView tvOrderGoodsNumber;
     @Bind(R.id.lvGoodsList)
-    ListView lvGoodsList;
+    CustomListView lvGoodsList;
     @Bind(R.id.tvPayAffirmGoodsOrGoPay)
     TextView tvPayAffirmGoodsOrGoPay;
     @Bind(R.id.tvCancelOrder)
@@ -67,8 +68,12 @@ public class PayOrderDetailsActivity extends BaseActivity {
     TextView tvOrderDetailsPayway;
     @Bind(R.id.tvOrderDetailsPullway)
     TextView tvOrderDetailsPullway;
-    @Bind(R.id.tvOrderDetailsPrice)
-    TextView tvOrderDetailsPrice;
+    @Bind(R.id.tvOrderDetailsPrice)TextView tvOrderDetailsPrice;
+    @Bind(R.id.rlHospitalGet)RelativeLayout rlHospitalGet;
+    @Bind(R.id.rlExpressageGet)RelativeLayout rlExpressageGet;
+    @Bind(R.id.tvHospitalName)TextView tvHospitalName;
+    @Bind(R.id.tvDoctorName)TextView tvDoctorName;
+    @Bind(R.id.tvHospitalAddress)TextView tvHospitalAddress;
 
 //    private int hospitalStatus=-1;
 
@@ -81,7 +86,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
 
     private String[] payTypeArr = new String[]{"院内现金支付", "支付宝", "微信支付", "银联支付"};
     private String[] deliverTypeArr = new String[]{"到院自提", "邮寄"};
-
+    private int hospitalStatus = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +104,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
         //0 未启用,1 开通院内,2 开通院外,3 开通院外线上但不支持邮寄, 4 开通院外线上且支持邮寄
 //        hospitalStatus = (int) LocalProductData.getLocal().get(LocalProductData.HospitalStatus);
 //        hospitalAddress = (String) LocalProductData.getLocal().get(LocalProductData.HospitalAddress);
-
+//
 //        if (hospitalStatus == 3) {
 //            rlExpressageAction.setVisibility(View.GONE);
 //        } else if (hospitalStatus == 4) {
@@ -141,15 +146,33 @@ public class PayOrderDetailsActivity extends BaseActivity {
                         }
 
                         LogUtil.d("orderDetailCCC", orderDetail.getOrderStatus() + " orderD有数etail==>" + orderDetail);
+                        LogUtil.d("orderDetailCCC", orderDetail.getDeliverType()+ "==getDeliverType");
+
+
+                        // 0 到院自提,1 邮寄
+                        if (orderDetail.getDeliverType() == 0) {
+                            rlHospitalGet.setVisibility(View.VISIBLE);
+                            rlExpressageGet.setVisibility(View.GONE);
+
+                            tvHospitalName.setText(orderDetail.getHospitalName() + "");
+                            tvDoctorName.setText(orderDetail.getDoctorName() + "");
+                            tvHospitalAddress.setText(orderDetail.getHospitalAddress() + "");
+
+                        } else {
+                            rlHospitalGet.setVisibility(View.GONE);
+                            rlExpressageGet.setVisibility(View.VISIBLE);
+
+                            Address address = orderDetail.getAddress();
+                            if (address != null) {
+                                tvAddressName.setText(address.getLinkMan() + "");
+                                tvAddressPhoneNumber.setText(address.getMobile() + "");
+                                tvAddressText.setText(address.getArea() + address.getAddress() + "");
+                            }
+                        }
+
+
 
                         tvOrderGoodsNumber.setText(orderDetail.getId() + "");
-
-                        Address address = orderDetail.getAddress();
-                        if (address != null) {
-                            tvAddressName.setText(address.getLinkMan());
-                            tvAddressPhoneNumber.setText(address.getMobile());
-                            tvAddressText.setText(address.getArea() + address.getAddress() + "");
-                        }
 
 
 
@@ -204,8 +227,14 @@ public class PayOrderDetailsActivity extends BaseActivity {
 
 
                         orderItems = (ArrayList<OrderItem>) orderDetail.getOrderItems();
-                        adapter.setDatas(orderItems);
-                        adapter.notifyDataSetChanged();
+                        if (orderItems != null) {
+                            OrderItem orderItemFee = new OrderItem();
+                            orderItemFee.setPrice(orderDetail.getDeliverFee());
+                            orderItemFee.setProductName("运费");
+                            orderItems.add(orderItemFee);
+                            adapter.setDatas(orderItems);
+                            adapter.notifyDataSetChanged();
+                        }
 
                         customDialog.dismiss();
                     }

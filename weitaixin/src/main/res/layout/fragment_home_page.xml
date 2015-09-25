@@ -44,7 +44,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
-                android:text=""
+                android:text="0"
                 android:gravity="right"
                 android:textColor="@color/white0" />
         </RelativeLayout>
@@ -76,7 +76,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
-                android:text=""
+                android:text="0"
                 android:textColor="@color/white0" />
         </RelativeLayout>
 
@@ -110,7 +110,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="right"
                 android:layout_marginRight="8dp"
-                android:text=""
+                android:text="0"
                 android:textColor="@color/white0" />
         </RelativeLayout>
 

@@ -25,6 +25,7 @@ public class Constants {
 //	public static final String SERVER_URL = "http://192.168.1.3:8080/ihealthbaby-port/v1/";
 	//@jinliqiang
 //	public static final String SERVER_URL = "http://192.168.1.2:8080/port/v1/";
+
 	public static final String MOCK_SERVER_URL = "http://localhost:9800/";
 	public static final String MIME_TYPE_WAV = "audio/x-wav";
 	public static final String MIME_TYPE_JPEG = "image/jpeg";

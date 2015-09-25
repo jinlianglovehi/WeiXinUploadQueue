@@ -34,6 +34,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
+import cn.ihealthbaby.weitaixin.ui.widget.CustomListView;
 import de.greenrobot.event.EventBus;
 
 public class PayOrderInformationActivity extends BaseActivity {
@@ -43,10 +44,10 @@ public class PayOrderInformationActivity extends BaseActivity {
     @Bind(R.id.function) TextView function;
     //
 
-    @Bind(R.id.lvCashPledgeProduct) ListView lvCashPledgeProduct;
-    @Bind(R.id.lvRentProduct) ListView lvRentProduct;
-    @Bind(R.id.lvCouplingProduct) ListView lvCouplingProduct;
-    @Bind(R.id.lvConsultProduct) ListView lvConsultProduct;
+    @Bind(R.id.lvCashPledgeProduct) CustomListView lvCashPledgeProduct;
+    @Bind(R.id.lvRentProduct) CustomListView lvRentProduct;
+    @Bind(R.id.lvCouplingProduct) CustomListView lvCouplingProduct;
+    @Bind(R.id.lvConsultProduct) CustomListView lvConsultProduct;
 
     @Bind(R.id.tvPriceGoingOrder) TextView tvPriceGoingOrder;
     @Bind(R.id.tvVerifyOrder) TextView tvVerifyOrder;
