@@ -18,9 +18,9 @@ public class Constants {
 	public static final boolean MODE_LOG = MODE;
 	public static final boolean MODE_TOAST = MODE;
 	//内网
-//	public static final String SERVER_URL = "http://192.168.1.253:8080/port/v1/";
+	public static final String SERVER_URL = "http://192.168.1.253:8080/port/v1/";
 	//外网
-	public static final String SERVER_URL = "http://dev.ihealthbaby.cn:8280/v1/";
+//	public static final String SERVER_URL = "http://dev.ihealthbaby.cn:8280/v1/";
 	//@顾文昌pc
 //	public static final String SERVER_URL = "http://192.168.1.3:8080/ihealthbaby-port/v1/";
 	//@jinliqiang

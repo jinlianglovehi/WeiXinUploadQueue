@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.util.Map;
 
+import cn.ihealthbaby.client.Result;
+
 /**
  * Created by liuhongjian on 15/7/22 22:48.
  */
@@ -50,4 +52,11 @@ public interface Business<T> {
 	 * @param e
 	 */
 	void handleClientError(Exception e);
+
+	/**
+	 * 收到响应
+	 *
+	 * @param result
+	 */
+	void handleResult(Result<T> result);
 }

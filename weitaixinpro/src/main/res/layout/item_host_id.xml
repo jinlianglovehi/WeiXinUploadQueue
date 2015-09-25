@@ -10,7 +10,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="40dp"
-        android:src="@drawable/select_on"/>
+        android:src="@drawable/select_on"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,6 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="SN:"
+            android:textColor="@color/black0"
             android:textSize="22sp"/>
 
         <LinearLayout

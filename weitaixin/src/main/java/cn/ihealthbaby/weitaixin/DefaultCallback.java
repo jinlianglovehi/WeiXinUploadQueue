@@ -25,7 +25,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 
 	@Override
 	public void call(Result<T> result) {
-
+		business.handleResult(result);
 		if (result == null) {
 			return;
 		}

@@ -89,6 +89,7 @@ dependencies {
     //    testCompile 'org.mock-server:mockserver-client-java:3.9.17'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
     compile 'com.android.support:recyclerview-v7:22.2+'
+    compile 'com.android.support:support-v4:22.2.0'
     //时间选择器
     compile 'com.bigkoo:pickerview:1.0.0'
     compile 'de.greenrobot:greendao:2.0.0'

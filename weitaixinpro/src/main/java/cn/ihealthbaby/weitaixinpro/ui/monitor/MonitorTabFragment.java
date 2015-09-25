@@ -1,0 +1,108 @@
+package cn.ihealthbaby.weitaixinpro.ui.monitor;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.lang.reflect.Field;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
+
+/**
+ *
+ */
+public class MonitorTabFragment extends BaseFragment {
+	private static MonitorTabFragment instance;
+	@Bind(R.id.iv_unmonitor)
+	ImageView ivUnmonitor;
+	@Bind(R.id.rl_unmonitor)
+	RelativeLayout rlUnmonitor;
+	@Bind(R.id.iv_monitoring)
+	ImageView ivMonitoring;
+	@Bind(R.id.rl_monitoring)
+	RelativeLayout rlMonitoring;
+	@Bind(R.id.tv_host_name)
+	TextView tvHostName;
+	@Bind(R.id.tv_title)
+	TextView tvTitle;
+	@Bind(R.id.container)
+	FrameLayout container;
+	private android.support.v4.app.FragmentManager fragmentManager;
+
+	public static MonitorTabFragment getInstance() {
+		if (instance == null) {
+			instance = new MonitorTabFragment();
+		}
+		return instance;
+	}
+
+	@OnClick(R.id.rl_monitoring)
+	void change2() {
+		ivMonitoring.setVisibility(View.VISIBLE);
+		ivUnmonitor.setVisibility(View.GONE);
+//		changeFragment(new TestFragment());
+		changeFragment(new MonitoringFragment());
+	}
+
+	@OnClick(R.id.rl_unmonitor)
+	void change1() {
+		ivMonitoring.setVisibility(View.GONE);
+		ivUnmonitor.setVisibility(View.VISIBLE);
+		changeFragment(new UnmonitorFragment());
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.monitor_fragment, null);
+		fragmentManager = getChildFragmentManager();
+//		monitoringFragment = new MonitoringFragment();
+//		unmonitorFragment = new UnmonitorFragment();
+		return view;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		ButterKnife.bind(this, view);
+		change1();
+	}
+
+	private void changeFragment(Fragment fragment) {
+		if (fragment == null) {
+			return;
+		}
+		fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		try {
+			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+}

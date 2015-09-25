@@ -19,94 +19,88 @@ import cn.ihealthbaby.weitaixinpro.tools.DateTimeTool;
  * @author by kang on 2015/9/14.
  */
 public class MonitorAdapter extends BaseAdapter {
+	private List<ServiceInside> mServiceInsides;
+	private Context mContext;
+	private BeginMoniter mBeginMoniter;
 
-    private List<ServiceInside> mServiceInsides;
-    private Context mContext;
+	public MonitorAdapter(Context context) {
+		mContext = context;
+		mServiceInsides = new ArrayList<>();
+	}
 
-    private BeginMoniter mBeginMoniter;
+	@Override
+	public int getCount() {
+		return mServiceInsides.size();
+	}
 
-    public MonitorAdapter(Context context) {
-        mContext = context;
-        mServiceInsides = new ArrayList<>();
-    }
+	@Override
+	public Object getItem(int position) {
+		return null;
+	}
 
-    @Override
-    public int getCount() {
-        return mServiceInsides.size();
-    }
+	@Override
+	public long getItemId(int position) {
+		return 0;
+	}
 
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
+	@Override
+	public View getView(final int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = View.inflate(mContext, R.layout.item_monitor, null);
+			holder = new ViewHolder(convertView);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		holder.mTvDate.setText(DateTimeTool.getGestationalWeeks(mServiceInsides.get(position).getDeliveryTime()));
+		holder.mTvName.setText(mServiceInsides.get(position).getName());
+		holder.mTvTime.setText(DateTimeTool.date2St2(mServiceInsides.get(position).getBirthday(), "MM月dd日 hh:mm"));
+		holder.mTvBegin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mBeginMoniter.begin(mServiceInsides.get(position));
+			}
+		});
+		return convertView;
+	}
 
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
+	public void clearAddSetData(List<ServiceInside> serviceInsides) {
+		mServiceInsides.clear();
+		mServiceInsides.addAll(serviceInsides);
+		notifyDataSetChanged();
+	}
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = View.inflate(mContext, R.layout.item_monitor, null);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        holder.mTvDate.setText(DateTimeTool.getGestationalWeeks(mServiceInsides.get(position).getDeliveryTime()));
-        holder.mTvName.setText(mServiceInsides.get(position).getName());
-        holder.mTvTime.setText(DateTimeTool.date2St2(mServiceInsides.get(position).getBirthday(), "MM月dd日 hh:mm"));
-        holder.mTvBegin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBeginMoniter.begin(mServiceInsides.get(position));
-            }
-        });
-        return convertView;
-    }
+	public void clearData() {
+		mServiceInsides.clear();
+		notifyDataSetChanged();
+	}
 
+	public void addData(List<ServiceInside> serviceInsides) {
+		mServiceInsides.addAll(serviceInsides);
+		notifyDataSetChanged();
+	}
 
-    public void clearAddSetData(List<ServiceInside> serviceInsides) {
-        mServiceInsides.clear();
-        mServiceInsides.addAll(serviceInsides);
-        notifyDataSetChanged();
-    }
+	public void setOnLoadListener(BeginMoniter beginMoniter) {
+		mBeginMoniter = beginMoniter;
+	}
 
-    public void clearData() {
-        mServiceInsides.clear();
-        notifyDataSetChanged();
-    }
+	public interface BeginMoniter {
+		void begin(ServiceInside serviceInside);
+	}
 
+	static class ViewHolder {
+		@Bind(R.id.tv_begin)
+		TextView mTvBegin;
+		@Bind(R.id.tv_name)
+		TextView mTvName;
+		@Bind(R.id.tv_gestational_weeks)
+		TextView mTvDate;
+		@Bind(R.id.tv_time)
+		TextView mTvTime;
 
-    public void addData(List<ServiceInside> serviceInsides) {
-        mServiceInsides.addAll(serviceInsides);
-        notifyDataSetChanged();
-    }
-
-    static class ViewHolder {
-        @Bind(R.id.tv_begin)
-        TextView mTvBegin;
-        @Bind(R.id.tv_name)
-        TextView mTvName;
-        @Bind(R.id.tv_date)
-        TextView mTvDate;
-        @Bind(R.id.tv_time)
-        TextView mTvTime;
-
-        ViewHolder(View view) {
-            ButterKnife.bind(this, view);
-        }
-    }
-
-    public void setOnLoadListener(BeginMoniter beginMoniter) {
-        mBeginMoniter = beginMoniter;
-    }
-
-    public interface BeginMoniter {
-        void begin(ServiceInside serviceInside);
-    }
-
-
+		ViewHolder(View view) {
+			ButterKnife.bind(this, view);
+		}
+	}
 }
