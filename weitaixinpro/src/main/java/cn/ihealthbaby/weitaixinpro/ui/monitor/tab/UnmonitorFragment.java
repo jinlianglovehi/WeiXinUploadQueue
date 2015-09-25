@@ -23,7 +23,6 @@ import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
-import cn.ihealthbaby.weitaixinpro.ui.monitor.RecyclerViewAdapter;
 
 /**
  */
@@ -43,7 +42,7 @@ public class UnmonitorFragment extends BaseFragment {
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private List<ServiceInside> list;
 	private boolean loading;
-	private RecyclerViewAdapter adapter;
+	private UnmonitorRecyclerViewAdapter adapter;
 
 	@Nullable
 	@Override
@@ -59,7 +58,7 @@ public class UnmonitorFragment extends BaseFragment {
 		layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 		recyclerView.setLayoutManager(layoutManager);
 		list = new ArrayList<ServiceInside>();
-		adapter = new RecyclerViewAdapter(getActivity().getApplicationContext(), list);
+		adapter = new UnmonitorRecyclerViewAdapter(getActivity().getApplicationContext(), list);
 		recyclerView.setAdapter(adapter);
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override

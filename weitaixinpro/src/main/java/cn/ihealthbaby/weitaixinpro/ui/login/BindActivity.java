@@ -83,8 +83,7 @@ public class BindActivity extends BaseActivity {
 			public void handleData(HClientUser data) {
 				((WeiTaiXinProApplication) getApplication()).getAdapter().setAccountToken(data.getLoginToken());
 				SPUtil.saveHClientUser(getApplicationContext(), data);
-				Intent service = new Intent(getApplicationContext(), AdviceSettingService.class);
-				startService(service);
+				requestAdviceSetting();
 				ToastUtil.show(getApplicationContext(), "登录成功");
 				startActivity(new Intent(getApplicationContext(), MainActivity.class));
 				finish();
@@ -97,6 +96,11 @@ public class BindActivity extends BaseActivity {
 				initData();
 			}
 		}), getRequestTag());
+	}
+
+	private void requestAdviceSetting() {
+		Intent service = new Intent(getApplicationContext(), AdviceSettingService.class);
+		startService(service);
 	}
 
 	private void initView() {
@@ -121,6 +125,7 @@ public class BindActivity extends BaseActivity {
 							@Override
 							public void handleData(HClientUser data) {
 								SPUtil.saveHClientUser(getApplicationContext(), data);
+								requestAdviceSetting();
 								ToastUtil.show(getApplicationContext(), "绑定成功");
 								startActivity(new Intent(getApplicationContext(), MainActivity.class));
 								finish();

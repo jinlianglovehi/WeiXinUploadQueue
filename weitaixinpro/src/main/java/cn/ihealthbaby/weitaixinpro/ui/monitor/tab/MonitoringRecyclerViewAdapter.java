@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro.ui.monitor;
+package cn.ihealthbaby.weitaixinpro.ui.monitor.tab;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,11 +19,12 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.ui.monitor.MonitorActivity;
 
 /**
  * Created by liuhongjian on 15/9/24 13:48.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class MonitoringRecyclerViewAdapter extends RecyclerView.Adapter<MonitoringRecyclerViewAdapter.ViewHolder> {
 	private final Context context;
 	private final List<ServiceInside> list;
 	@Bind(R.id.tv_begin)
@@ -35,7 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 	@Bind(R.id.tv_time)
 	TextView tvTime;
 
-	public RecyclerViewAdapter(Context context, List<ServiceInside> list) {
+	public MonitoringRecyclerViewAdapter(Context context, List<ServiceInside> list) {
 		this.context = context;
 		this.list = list;
 	}
@@ -57,7 +58,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 				ApiManager.getInstance().hClientAccountApi.beginServicesinside(serviceInside.getId(), new DefaultCallback<Integer>(context, new AbstractBusiness<Integer>() {
 					@Override
 					public void handleData(Integer data) {
-						ToastUtil.show(context, "开始监测");
+						ToastUtil.show(context, "继续监测");
 						Intent intent = new Intent(context, MonitorActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						Bundle user = new Bundle();
@@ -70,6 +71,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 				}), this);
 			}
 		});
+		holder.tvBegin.setText("继续\\n监测");
 		holder.tvGestationalWeeks.setText(serviceInside.getGestationalWeeks() + "天");
 		holder.tvName.setText(serviceInside.getName());
 		holder.tvTime.setText(DateTimeTool.date2StrAndTime(serviceInside.getCreatetime()));

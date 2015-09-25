@@ -1,7 +1,6 @@
 package cn.ihealthbaby.weitaixinpro.ui.record;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
-import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
-import cn.ihealthbaby.weitaixinpro.ui.monitor.MonitorActivity;
 
 /**
  * Created by liuhongjian on 15/9/24 13:48.
@@ -50,23 +44,35 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		final Record record = list.get(position);
-		holder.tvBegin.setOnClickListener(new View.OnClickListener() {
+		holder.tvDate.setText(DateTimeTool.date2StrAndTime(record.getRecordStartTime()));
+		holder.tvName.setText(record.getUserName());
+		holder.tvDuration.setText(DateTimeTool.getTime2(record.getDuration()));
+		int uploadState = record.getUploadState();
+		switch (uploadState) {
+			case Record.UPLOAD_STATE_LOCAL:
+			case Record.UPLOAD_STATE_UPLOADING:
+				holder.tvUploadStatus.setText("需上传");
+				break;
+			case Record.UPLOAD_STATE_CLOUD:
+				holder.tvUploadStatus.setText("已上传");
+				break;
+			default:
+				break;
+		}
+		holder.tvUploadStatus.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//开始监测
-				ApiManager.getInstance().hClientAccountApi.beginServicesinside(record.getId(), new DefaultCallback<Integer>(context, new AbstractBusiness<Integer>() {
-					@Override
-					public void handleData(Integer data) {
-						ToastUtil.show(context, "开始监测");
-						Intent intent = new Intent(context, MonitorActivity.class);
-						context.startActivity(intent);
-					}
-				}), this);
+//				ApiManager.getInstance().hClientAccountApi.beginServicesinside(record.getId(), new DefaultCallback<Integer>(context, new AbstractBusiness<Integer>() {
+//					@Override
+//					public void handleData(Integer data) {
+//						ToastUtil.show(context, "开始监测");
+//						Intent intent = new Intent(context, MonitorActivity.class);
+//						context.startActivity(intent);
+//					}
+//				}), this);
 			}
 		});
-		holder.tvGestationalWeeks.setText(record.getGestationalWeeks() + "天");
-		holder.tvName.setText(record.getUserName());
-		holder.tvTime.setText(DateTimeTool.date2StrAndTime(record.getRecordStartTime()));
 	}
 
 	@Override
@@ -75,25 +81,17 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
-		public TextView tvBegin;
+		public TextView tvUploadStatus;
 		public TextView tvName;
-		public TextView tvTime;
-		public TextView tvGestationalWeeks;
-//		@Bind(R.id.tv_begin)
-//		TextView tvBegin;
-//		@Bind(R.id.tv_name)
-//		TextView tvName;
-//		@Bind(R.id.tv_time)
-//		TextView tvTime;
-//		@Bind(R.id.tv_gestational_weeks)
-//		TextView tvGestationalWeeks;
+		public TextView tvDuration;
+		public TextView tvDate;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
-			tvBegin = (TextView) itemView.findViewById(R.id.tv_begin);
+			tvUploadStatus = (TextView) itemView.findViewById(R.id.tv_upload_status);
 			tvName = (TextView) itemView.findViewById(R.id.tv_name);
-			tvTime = (TextView) itemView.findViewById(R.id.tv_time);
-			tvGestationalWeeks = (TextView) itemView.findViewById(R.id.tv_gestational_weeks);
+			tvDuration = (TextView) itemView.findViewById(R.id.tv_duration);
+			tvDate = (TextView) itemView.findViewById(R.id.tv_date);
 		}
 	}
 }
