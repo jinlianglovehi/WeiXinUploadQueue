@@ -15,6 +15,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -66,13 +68,15 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.activity_main_welcome);
         ButterKnife.bind(this);
 
+
+
         ivWelcomeStart.setVisibility(View.VISIBLE);
 
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ivWelcomeStart.setVisibility(View.GONE);
+
 
                 if (SPUtil.isNoFirstStartApp(WelcomeActivity.this)) {
                     if (SPUtil.getUser(WelcomeActivity.this) != null) {
@@ -115,6 +119,7 @@ public class WelcomeActivity extends BaseActivity {
 
                         if (SPUtil.isLogin(WelcomeActivity.this)) {
                             if (SPUtil.getUser(WelcomeActivity.this).getIsInit()) {
+                                ivWelcomeStart.setVisibility(View.GONE);
                                 Intent intentIsInit = new Intent(WelcomeActivity.this, InfoEditActivity.class);
                                 startActivity(intentIsInit);
                                 return;
@@ -122,6 +127,7 @@ public class WelcomeActivity extends BaseActivity {
 
                             if (!SPUtil.getUser(WelcomeActivity.this).getHasRiskscore()) {
                                 if (SPUtil.getHospitalId(WelcomeActivity.this) != -1) {
+                                    ivWelcomeStart.setVisibility(View.GONE);
                                     Intent intentHasRiskscore = new Intent(WelcomeActivity.this, GradedActivity.class);
                                     startActivity(intentHasRiskscore);
                                     return;
@@ -130,16 +136,19 @@ public class WelcomeActivity extends BaseActivity {
 
                             Intent intent = new Intent(WelcomeActivity.this, MeMainFragmentActivity.class);
                             startActivity(intent);
+                            ivWelcomeStart.setVisibility(View.GONE);
                             finish();
                             return;
                         }
                     } else {
+                        ivWelcomeStart.setVisibility(View.GONE);
                         Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                         return;
                     }
                 } else {
+                    ivWelcomeStart.setVisibility(View.GONE);
                     initView();
                 }
 

@@ -157,9 +157,9 @@ public class PayAddAddressActivity extends BaseActivity {
         addressForm.setArea(addAddressArea);
         addressForm.setAddress(addressDetailAddress);
         ApiManager.getInstance().addressApi.create(addressForm,
-                new DefaultCallback<Long>(this, new AbstractBusiness<Long>() {
+                new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
                     @Override
-                    public void handleData(Long data) {
+                    public void handleData(Void data) {
                         Intent intent = new Intent();
                         setResult(PayConfirmOrderActivity.RESULTCODE_ADDADDRESS, intent);
                         customDialog.dismiss();
