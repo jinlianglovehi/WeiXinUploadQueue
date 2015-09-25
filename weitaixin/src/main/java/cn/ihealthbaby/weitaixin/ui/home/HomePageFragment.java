@@ -30,7 +30,6 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
@@ -39,11 +38,7 @@ import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
-<<<<<<< e0aac652b78972fc0e6fde201082f8a72e0ccfaf
-import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
-=======
->>>>>>> 80831c152bfc043b0af6d4dfde639e97beb401a2
 import cn.ihealthbaby.weitaixin.ui.mine.WoInformationActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoMessageActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity;
@@ -138,8 +133,8 @@ public class HomePageFragment extends BaseFragment {
             }
 
             @Override
-            public void handleClientError(Exception e) {
-                super.handleClientError(e);
+            public void handleClientError(Context context,Exception e) {
+                super.handleClientError(context,e);
                 if (messageCount == 0) {
                     flShowMessageCount.setVisibility(View.INVISIBLE);
                 }

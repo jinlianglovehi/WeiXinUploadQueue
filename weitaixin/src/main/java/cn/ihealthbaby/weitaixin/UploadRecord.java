@@ -42,8 +42,8 @@ public class UploadRecord {
 //                    }
 //
 //                    @Override
-//                    public void handleClientError(Exception e) {
-//                        super.handleClientError(e);
+//                    public void handleClientError(Context context,Exception e) {
+//                        super.handleClientError(context,e);
 //                        customDialog.dismiss();
 //                    }
 //

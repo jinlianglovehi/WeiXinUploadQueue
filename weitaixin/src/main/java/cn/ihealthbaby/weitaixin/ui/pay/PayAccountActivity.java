@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
@@ -11,10 +12,10 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
 public class PayAccountActivity extends BaseActivity {
@@ -86,8 +87,8 @@ public class PayAccountActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context,Exception e) {
+                        super.handleClientError(context,e);
                         setOrgin();
                     }
 

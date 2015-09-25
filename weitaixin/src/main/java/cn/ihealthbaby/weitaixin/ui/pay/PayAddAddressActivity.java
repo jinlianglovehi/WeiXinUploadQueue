@@ -16,28 +16,26 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.AddressForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.CustomDialog;
 
 public class PayAddAddressActivity extends BaseActivity {
 
+    public final static int INTENT_REQUEST_CODE = 500;
+    public final static int INTENT_RESULT_CODE = 501;
     @Bind(R.id.back) RelativeLayout back;
+    //
     @Bind(R.id.title_text) TextView title_text;
     @Bind(R.id.function) TextView function;
-    //
-
     @Bind(R.id.tvAddAddressName)   EditText tvAddAddressName;
     @Bind(R.id.tvAddAddressPhone)   EditText tvAddAddressPhone;
     @Bind(R.id.tvAddAddressDetailAddress)   EditText tvAddAddressDetailAddress;
     @Bind(R.id.tvSubmitAddress)   TextView tvSubmitAddress;
     @Bind(R.id.tvAddAddressArea)   TextView tvAddAddressArea;
-
-    public final static int INTENT_REQUEST_CODE = 500;
-    public final static int INTENT_RESULT_CODE = 501;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,9 +157,9 @@ public class PayAddAddressActivity extends BaseActivity {
         addressForm.setArea(addAddressArea);
         addressForm.setAddress(addressDetailAddress);
         ApiManager.getInstance().addressApi.create(addressForm,
-                new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
+                new DefaultCallback<Long>(this, new AbstractBusiness<Long>() {
                     @Override
-                    public void handleData(Void data) {
+                    public void handleData(Long data) {
                         Intent intent = new Intent();
                         setResult(PayConfirmOrderActivity.RESULTCODE_ADDADDRESS, intent);
                         customDialog.dismiss();
