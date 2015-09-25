@@ -24,7 +24,7 @@
         <activity android:name=".ui.monitor.MonitorActivity"/>
         <activity android:name=".ui.monitor.MonitorDetialActivity"/>
 
-        <service android:name=".service.AdviceSettingService"/>
+        <service android:name=".service.ConfigService"/>
     </application>
 
 </manifest>

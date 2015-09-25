@@ -106,6 +106,9 @@ public class RecordBusinessDao {
 		List<Record> list = recordDao.queryBuilder()
 				                    .limit(pageSize)
 				                    .offset((page - 1) * pageSize)
+				                    .where(RecordDao.Properties.RecordStartTime.isNotNull())
+				                    .where(RecordDao.Properties.Duration.isNotNull())
+				                    .where(RecordDao.Properties.RecordData.isNotNull())
 				                    .where(new WhereCondition() {
 					                    @Override
 					                    public void appendTo(StringBuilder builder, String tableAlias) {
@@ -143,19 +146,24 @@ public class RecordBusinessDao {
 	 */
 	public long count(final int... uploadStates) throws Exception {
 		long count = recordDao.queryBuilder()
+				             .where(RecordDao.Properties.RecordStartTime.isNotNull())
+				             .where(RecordDao.Properties.Duration.isNotNull())
+				             .where(RecordDao.Properties.RecordData.isNotNull())
 				             .where(new WhereCondition() {
-					                    @Override
-					                    public void appendTo(StringBuilder builder, String tableAlias) {
-						                    for (int i = 0; i < uploadStates.length; i++) {
-							                    builder.append("UPLOAD_STATE = " + uploadStates[i]);
-						                    }
-					                    }
+					             @Override
+					             public void appendTo(StringBuilder builder, String tableAlias) {
+						             for (int i = 0; i < uploadStates.length; i++) {
+							             builder.append("UPLOAD_STATE = " + uploadStates[i]);
+							             if (i != uploadStates.length - 1) {
+								             builder.append(" OR ");
+							             }
+						             }
+					             }
 
-					                    @Override
-					                    public void appendValuesTo(List<Object> values) {
-					                    }
-				                    }
-				             )
+					             @Override
+					             public void appendValuesTo(List<Object> values) {
+					             }
+				             })
 				             .count();
 		return count;
 	}

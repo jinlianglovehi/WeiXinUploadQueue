@@ -14,8 +14,10 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
+import de.greenrobot.event.EventBus;
 
 /**
  *
@@ -75,6 +77,9 @@ public class MonitorTabFragment extends BaseFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		ButterKnife.bind(this, view);
+		EventBus.getDefault().register(this);
+		String hospitalName = SPUtil.getHClientUser(getActivity().getApplicationContext()).getHospitalName();
+		tvHostName.setText(hospitalName);
 		change1();
 	}
 
@@ -89,5 +94,20 @@ public class MonitorTabFragment extends BaseFragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
+		EventBus.getDefault().unregister(this);
+	}
+
+	public void onEventMainThread(CountEvent event) {
+		long count = event.getCount();
+		switch (event.getType()) {
+			case CountEvent.TYPE_UNMONITOR:
+				tvTitle.setText("未监测" + count + "条数据");
+				break;
+			case CountEvent.TYPE_MONITORING:
+				tvTitle.setText("监测中" + count + "条数据");
+				break;
+			default:
+				break;
+		}
 	}
 }

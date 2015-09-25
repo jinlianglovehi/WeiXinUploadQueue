@@ -21,6 +21,7 @@ import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.form.HClientForm;
 import cn.ihealthbaby.client.model.FetalHeart;
 import cn.ihealthbaby.client.model.HClientUser;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
@@ -28,7 +29,7 @@ import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.WeiTaiXinProApplication;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
-import cn.ihealthbaby.weitaixinpro.service.AdviceSettingService;
+import cn.ihealthbaby.weitaixinpro.service.ConfigService;
 import cn.ihealthbaby.weitaixinpro.ui.MainActivity;
 import cn.ihealthbaby.weitaixinpro.ui.adapter.HostIdAdapter;
 
@@ -83,7 +84,7 @@ public class BindActivity extends BaseActivity {
 			public void handleData(HClientUser data) {
 				((WeiTaiXinProApplication) getApplication()).getAdapter().setAccountToken(data.getLoginToken());
 				SPUtil.saveHClientUser(getApplicationContext(), data);
-				requestAdviceSetting();
+				requestAdviceSetting(data);
 				ToastUtil.show(getApplicationContext(), "登录成功");
 				startActivity(new Intent(getApplicationContext(), MainActivity.class));
 				finish();
@@ -98,8 +99,10 @@ public class BindActivity extends BaseActivity {
 		}), getRequestTag());
 	}
 
-	private void requestAdviceSetting() {
-		Intent service = new Intent(getApplicationContext(), AdviceSettingService.class);
+	private void requestAdviceSetting(HClientUser user) {
+		Intent service = new Intent(getApplicationContext(), ConfigService.class);
+		service.putExtra(Constants.INTENT_SERVICE_TYPE, ConfigService.TYPE_ADVICE_SETTING);
+		service.putExtra(Constants.INTENT_HID, user.getHospitalId());
 		startService(service);
 	}
 
@@ -125,7 +128,7 @@ public class BindActivity extends BaseActivity {
 							@Override
 							public void handleData(HClientUser data) {
 								SPUtil.saveHClientUser(getApplicationContext(), data);
-								requestAdviceSetting();
+								requestAdviceSetting(data);
 								ToastUtil.show(getApplicationContext(), "绑定成功");
 								startActivity(new Intent(getApplicationContext(), MainActivity.class));
 								finish();

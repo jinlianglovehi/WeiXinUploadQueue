@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
 import cn.ihealthbaby.weitaixinpro.ui.monitor.tab.MonitorTabFragment;
@@ -50,11 +49,6 @@ public class MainActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		fragmentManager = getSupportFragmentManager();
 		iv_tab_02();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 	}
 
 	@OnClick(R.id.ll_tab_monitor)
@@ -109,7 +103,6 @@ public class MainActivity extends BaseActivity {
 			fragmentTransaction.show(fragment);
 		}
 		oldFragment = fragment;
-		LogUtil.d("ChildCount==", "ChildCount= %s", this.container.getChildCount());
 	}
 
 	@Override

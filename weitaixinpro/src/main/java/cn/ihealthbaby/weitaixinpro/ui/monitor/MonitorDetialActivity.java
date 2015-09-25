@@ -17,7 +17,6 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
-import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
@@ -98,9 +97,9 @@ public class MonitorDetialActivity extends BaseActivity {
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
-		consumedtime = getIntent().getLongExtra(Constants.INTENT_CONSUMED_TIME, 0);
-		duration = getIntent().getLongExtra(Constants.INTENT_DURATION, 0);
-		interval = getIntent().getLongExtra(Constants.INTENT_INTERVAL, 0);
+//		consumedtime = getIntent().getLongExtra(Constants.INTENT_CONSUMED_TIME, 0);
+//		duration = getIntent().getLongExtra(Constants.INTENT_DURATION, 0);
+//		interval = getIntent().getLongExtra(Constants.INTENT_INTERVAL, 0);
 		getAdviceSetting();
 		configCurve();
 		countDownTimer = new FixedRateCountDownTimer(duration, 1000) {
@@ -172,7 +171,7 @@ public class MonitorDetialActivity extends BaseActivity {
 				}
 			}
 		};
-		countDownTimer.startAt(consumedtime);
+		countDownTimer.start();
 	}
 
 	private void configCurve() {

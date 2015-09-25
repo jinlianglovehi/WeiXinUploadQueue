@@ -46,7 +46,7 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 		final Record record = list.get(position);
 		holder.tvDate.setText(DateTimeTool.date2StrAndTime(record.getRecordStartTime()));
 		holder.tvName.setText(record.getUserName());
-		holder.tvDuration.setText(DateTimeTool.getTime2(record.getDuration()));
+		holder.tvDuration.setText(DateTimeTool.getTime2(record.getDuration()) + "");
 		int uploadState = record.getUploadState();
 		switch (uploadState) {
 			case Record.UPLOAD_STATE_LOCAL:

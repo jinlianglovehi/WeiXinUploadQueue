@@ -71,7 +71,7 @@ public class MonitoringRecyclerViewAdapter extends RecyclerView.Adapter<Monitori
 				}), this);
 			}
 		});
-		holder.tvBegin.setText("继续\\n监测");
+		holder.tvBegin.setText("继续\n" + "监测");
 		holder.tvGestationalWeeks.setText(serviceInside.getGestationalWeeks() + "天");
 		holder.tvName.setText(serviceInside.getName());
 		holder.tvTime.setText(DateTimeTool.date2StrAndTime(serviceInside.getCreatetime()));

@@ -23,6 +23,7 @@ import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
+import de.greenrobot.event.EventBus;
 
 /**
  */
@@ -115,6 +116,7 @@ public class MonitoringFragment extends BaseFragment {
 				@Override
 				public void handleData(PageData<ServiceInside> data) {
 					count = data.getCount();
+					EventBus.getDefault().post(new CountEvent(CountEvent.TYPE_MONITORING,count));
 					currentPage = data.getPage();
 					List<ServiceInside> dataList = data.getValue();
 					list.addAll(dataList);

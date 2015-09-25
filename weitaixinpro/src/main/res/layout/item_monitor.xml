@@ -40,7 +40,7 @@
             android:background="@drawable/shape_green_circle"
             android:gravity="center"
             android:scrollbars="vertical"
-            android:text="开始\n检测"
+            android:text="开始\n监测"
             android:textColor="@color/white0"/>
 
         <TextView

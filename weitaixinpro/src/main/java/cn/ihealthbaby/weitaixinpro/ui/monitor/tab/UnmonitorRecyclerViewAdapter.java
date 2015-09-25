@@ -71,6 +71,7 @@ public class UnmonitorRecyclerViewAdapter extends RecyclerView.Adapter<Unmonitor
 				}), this);
 			}
 		});
+		holder.tvBegin.setText("开始\n监测");
 		holder.tvGestationalWeeks.setText(serviceInside.getGestationalWeeks() + "天");
 		holder.tvName.setText(serviceInside.getName());
 		holder.tvTime.setText(DateTimeTool.date2StrAndTime(serviceInside.getCreatetime()));

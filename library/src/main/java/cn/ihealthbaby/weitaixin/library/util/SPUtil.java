@@ -277,6 +277,7 @@ public class SPUtil {
 		user.setDepartmentId(sp.getLong(DEPARTMENT_ID, 0));
 		user.setIndexNumber(sp.getLong(INDEX_NUMBER, 0L));
 		user.setHospitalId(sp.getLong(HOSPITAL_ID, 0L));
+		user.setHospitalName(sp.getString(HOSPITAL_NAME,null));
 		user.setSerialnum(sp.getString(SERIALNUM, null));
 		user.setDeviceId(sp.getString(DEVICE_ID, null));
 		user.setDepartmentName(sp.getString(DEPARTMENT_NAME, null));

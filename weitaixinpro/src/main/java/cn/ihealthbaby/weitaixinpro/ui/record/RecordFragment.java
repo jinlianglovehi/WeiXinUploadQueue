@@ -25,7 +25,6 @@ import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
 /**
  */
 public class RecordFragment extends BaseFragment {
-	private static final int MONITORING = 1;
 	private static final int PAGE_SIZE = 6;
 	private final static String TAG = "RecordFragment";
 	/**
@@ -111,9 +110,11 @@ public class RecordFragment extends BaseFragment {
 			public void run() {
 				try {
 					RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
-					long allCount = recordBusinessDao.allCount();
+					long allCount = recordBusinessDao.count(Record.UPLOAD_STATE_LOCAL, Record.UPLOAD_STATE_UPLOADING, Record.UPLOAD_STATE_CLOUD);
 					List<Record> records = recordBusinessDao.queryPagedRecord(page, PAGE_SIZE, Record.UPLOAD_STATE_LOCAL, Record.UPLOAD_STATE_UPLOADING, Record.UPLOAD_STATE_CLOUD);
 					list.addAll(records);
+					LogUtil.d(TAG, "count [%s], page [%s], pageSize [%s]", allCount, page, PAGE_SIZE);
+					LogUtil.d(TAG, "list=%s", records);
 					//成功查询加入list后,才更改总数,类似事务
 					count = allCount;
 					currentPage = page;

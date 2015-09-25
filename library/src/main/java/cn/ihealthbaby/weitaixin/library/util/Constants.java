@@ -58,4 +58,6 @@ public class Constants {
 	public static final String BUNDLE_USER = "USER";
 	public static final String INTENT_USER_NAME = "USER_NAME";
 	public static final String INTENT_DELIVERY_TIME = "DELIVERY_TIME";
+	public static final String INTENT_HID = "HID";
+	public static final String INTENT_SERVICE_TYPE = "SERVICE_TYPE";
 }
