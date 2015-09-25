@@ -30,6 +30,7 @@ import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
@@ -39,6 +40,7 @@ import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
+import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInformationActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoMessageActivity;
 import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
@@ -192,8 +194,13 @@ public class HomePageFragment extends BaseFragment {
 
     @OnClick(R.id.ivHomeHeadImg)
     public void ivHomeHeadImg() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), WoInformationActivity.class);
-        startActivity(intent);
+        if (SPUtil.isLogin(getActivity())) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), WoInformationActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.llHomeFunctionOneAction)
@@ -203,8 +210,13 @@ public class HomePageFragment extends BaseFragment {
 
     @OnClick(R.id.llHomeFunctionTwoAction)
     public void llHomeFunctionTwoAction() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), WoMessageActivity.class);
-        startActivity(intent);
+        if (SPUtil.isLogin(getActivity())) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), WoMessageActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.llHomeFunctionThreeAction)
@@ -214,8 +226,13 @@ public class HomePageFragment extends BaseFragment {
 
     @OnClick(R.id.llHomeFunctionFourAction)
     public void llHomeFunctionFourAction() {
-        Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
-        startActivity(intent);
+        if (SPUtil.isLogin(getActivity())) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

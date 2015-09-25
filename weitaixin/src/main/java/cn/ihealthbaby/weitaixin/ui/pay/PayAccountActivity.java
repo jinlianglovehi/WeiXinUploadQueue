@@ -35,6 +35,7 @@ public class PayAccountActivity extends BaseActivity {
 
     private User user;
     private long orderId = -1;
+    private boolean isRentEquipment=false;
 
 
     @Override
@@ -48,13 +49,14 @@ public class PayAccountActivity extends BaseActivity {
 //        tvPayAccountRentDay.setText("租用设备");
 
         orderId = -1;
-        user = SPUtil.getUser(this);
+
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
+        isRentEquipment = false;
         pullData();
     }
 
@@ -62,10 +64,12 @@ public class PayAccountActivity extends BaseActivity {
     private final int ACTIVATE_SERVICE = 2;
 
     private void pullData() {
+        user = SPUtil.getUser(this);
         if (user != null) {
             boolean hasService = user.getHasService();
             if (hasService) {
-                ApiManager.getInstance().serviceApi.getByUser(new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
+                ApiManager.getInstance().serviceApi.getByUser(
+                        new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
                     @Override
                     public void handleData(Service data) {
                         if (data != null) {
@@ -78,18 +82,34 @@ public class PayAccountActivity extends BaseActivity {
                                 orderId = data.getOrderId();
                             }
                         }
+                        isRentEquipment=true;
+                    }
+
+                    @Override
+                    public void handleClientError(Exception e) {
+                        super.handleClientError(e);
+                        setOrgin();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        setOrgin();
                     }
                 }), getRequestTag());
             } else {
-                tvPayAccountRentDay.setText("租用设备");
-                orderId = -1;
+                setOrgin();
             }
         } else {
-            tvPayAccountRentDay.setText("租用设备");
-            orderId = -1;
+            setOrgin();
         }
     }
 
+    public void setOrgin(){
+        isRentEquipment=true;
+        tvPayAccountRentDay.setText("租用设备");
+        orderId = -1;
+    }
 
     @OnClick(R.id.back)
     public void onBack() {
@@ -98,20 +118,22 @@ public class PayAccountActivity extends BaseActivity {
 
     @OnClick(R.id.llRentEquipment)
     public void RentEquipment() {
-        if (user != null) {
-            boolean hasService = user.getHasService();
-            if (hasService) {
-                if (orderId != -1) {
-                    Intent intentOrderDetails = new Intent(this, PayOrderDetailsActivity.class);
-                    intentOrderDetails.putExtra(PayConstant.ORDERID, orderId);
-                    startActivity(intentOrderDetails);
+        if (isRentEquipment) {
+            if (user != null) {
+                boolean hasService = user.getHasService();
+                if (hasService) {
+                    if (orderId != -1) {
+                        Intent intentOrderDetails = new Intent(this, PayOrderDetailsActivity.class);
+                        intentOrderDetails.putExtra(PayConstant.ORDERID, orderId);
+                        startActivity(intentOrderDetails);
+                    } else {
+                        Intent intent = new Intent(this, PayRentInformationActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
                     Intent intent = new Intent(this, PayRentInformationActivity.class);
                     startActivity(intent);
                 }
-            } else {
-                Intent intent = new Intent(this, PayRentInformationActivity.class);
-                startActivity(intent);
             }
         }
     }
