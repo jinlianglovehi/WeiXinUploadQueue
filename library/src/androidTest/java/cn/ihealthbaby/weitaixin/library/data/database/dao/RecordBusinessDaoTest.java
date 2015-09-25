@@ -18,8 +18,6 @@ public class RecordBusinessDaoTest extends InstrumentationTestCase {
 	public Record record0;
 	public String localRecordId;
 
-
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -62,7 +60,7 @@ public class RecordBusinessDaoTest extends InstrumentationTestCase {
 
 	public void testUpdate() throws Exception {
 		Record record = instance.queryByLocalRecordId(LOCAL_RECORD_ID);
-		record.setDuration(10000l);
+		record.setDuration(10000);
 		recordDao.update(record);
 		Record record1 = instance.queryByLocalRecordId(LOCAL_RECORD_ID);
 		assertNotNull(record1);

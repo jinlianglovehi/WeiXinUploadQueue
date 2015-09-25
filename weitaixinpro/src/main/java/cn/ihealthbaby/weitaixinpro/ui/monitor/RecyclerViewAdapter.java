@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -34,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 	@Bind(R.id.tv_time)
 	TextView tvTime;
 
-	public RecyclerViewAdapter(Context context, ArrayList<ServiceInside> list) {
+	public RecyclerViewAdapter(Context context, List<ServiceInside> list) {
 		this.context = context;
 		this.list = list;
 	}

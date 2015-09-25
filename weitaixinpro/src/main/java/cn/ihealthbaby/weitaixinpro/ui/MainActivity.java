@@ -78,7 +78,9 @@ public class MainActivity extends BaseActivity {
 	@OnClick(R.id.ll_tab_record)
 	public void iv_tab_03() {
 		showTab(iv_tab_03);
-		recordFragment = RecordFragment.getInstance();
+		if (recordFragment == null) {
+			recordFragment = new RecordFragment();
+		}
 		showFragment(R.id.container, recordFragment);
 	}
 

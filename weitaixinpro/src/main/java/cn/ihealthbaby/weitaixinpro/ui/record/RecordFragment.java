@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixinpro.ui.record;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,6 +43,13 @@ public class RecordFragment extends BaseFragment {
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private RecyclerView recyclerView;
 	private LinearLayoutManager layoutManager;
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			adapter.notifyDataSetChanged();
+		}
+	};
 
 	@Nullable
 	@Override
@@ -102,7 +111,7 @@ public class RecordFragment extends BaseFragment {
 				try {
 					List<Record> records = RecordBusinessDao.getInstance(getActivity().getApplicationContext()).queryPagedRecord(page, PAGE_SIZE, Record.UPLOAD_STATE_LOCAL, Record.UPLOAD_STATE_UPLOADING);
 					list.addAll(records);
-					adapter.notifyDataSetChanged();
+					handler.sendEmptyMessage(0);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
