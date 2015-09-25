@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import butterknife.Bind;
@@ -75,7 +77,7 @@ public class WoInfoFragment extends BaseFragment {
     TextView tv_wo_head_deliveryTime;
     @Nullable
     @Bind(R.id.iv_wo_head_icon)
-    RoundImageView iv_wo_head_icon;
+    ImageView iv_wo_head_icon;
     @Bind(R.id.tv_message_count)
     TextView mTvMessageCount;
     private View view;
@@ -106,7 +108,6 @@ public class WoInfoFragment extends BaseFragment {
 
     private void init() {
         setTextHead();
-
     }
 
 
@@ -201,7 +202,7 @@ public class WoInfoFragment extends BaseFragment {
                 .considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .bitmapConfig(Bitmap.Config.RGB_565)
-                .displayer(new SimpleBitmapDisplayer())
+                .displayer(new RoundedBitmapDisplayer(200))
                 .build();
         return options;
     }

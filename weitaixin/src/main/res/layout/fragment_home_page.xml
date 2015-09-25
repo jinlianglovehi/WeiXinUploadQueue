@@ -128,7 +128,7 @@
             android:textColor="@color/white0"
             android:textSize="@dimen/font12" />
 
-        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
+        <ImageView
             android:id="@+id/ivHomeHeadImg"
             android:layout_width="100dp"
             android:layout_height="100dp"

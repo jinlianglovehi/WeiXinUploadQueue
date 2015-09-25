@@ -3,6 +3,12 @@ package cn.ihealthbaby.weitaixin.library.tools;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -84,7 +90,7 @@ public class ImageTool {
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
-        int inSampleSize = 3;
+        int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
             if (width > height) {
@@ -95,10 +101,44 @@ public class ImageTool {
         }
         LogUtil.d("inSampleSize", "缩放比例==>" + inSampleSize);
         LogUtil.d("inSampleSize", width+ "图片真实宽高==>" + height);
-        LogUtil.d("inSampleSize", reqWidth+ "要的宽高==>" + reqHeight);
+        LogUtil.d("inSampleSize", reqWidth + "要的宽高==>" + reqHeight);
         return inSampleSize;
     }
 
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final Paint paint = new Paint();
+        //保证是方形，并且从中心画
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int w;
+        int deltaX = 0;
+        int deltaY = 0;
+        if (width <= height) {
+            w = width;
+            deltaY = height - w;
+        } else {
+            w = height;
+            deltaX = width - w;
+        }
+        final Rect rect = new Rect(deltaX, deltaY, w, w);
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        //圆形，所有只用一个
+
+        int radius = (int) (Math.sqrt(w * w * 2.0d) / 2);
+        canvas.drawRoundRect(rectF, radius, radius, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        return output;
+    }
 
 }
 

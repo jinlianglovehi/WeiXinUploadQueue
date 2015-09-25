@@ -76,41 +76,41 @@ public class WelcomeActivity extends BaseActivity {
 
                 if (SPUtil.isNoFirstStartApp(WelcomeActivity.this)) {
                     if (SPUtil.getUser(WelcomeActivity.this) != null) {
-                        CustomDialog customDialog = null;
-                        try {
-                            customDialog = new CustomDialog();
-                            Dialog dialog = customDialog.createDialog1(WelcomeActivity.this, "刷新用户数据...");
-                            dialog.show();
-
-                            Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
-                            startService(intentAdvice);
-
-                            final CustomDialog finalCustomDialog = customDialog;
-                            ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(WelcomeActivity.this, new AbstractBusiness<User>() {
-                                @Override
-                                public void handleData(User data) {
-                                    SPUtil.saveUser(WelcomeActivity.this, data);
-                                    if (finalCustomDialog != null) {
-                                        finalCustomDialog.dismiss();
-                                    }
-                                }
-
-                                @Override
-                                public void handleException(Exception e) {
-                                    if (finalCustomDialog != null) {
-                                        finalCustomDialog.dismiss();
-                                    }
-                                    Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
-                                    startActivity(intentHasRiskscore);
-                                    finish();
-                                }
-                            }), getRequestTag());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            if (customDialog != null) {
-                                customDialog.dismiss();
-                            }
-                        }
+//                        CustomDialog customDialog = null;
+//                        try {
+//                            customDialog = new CustomDialog();
+//                            Dialog dialog = customDialog.createDialog1(WelcomeActivity.this, "刷新用户数据...");
+//                            dialog.show();
+//
+//                            Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
+//                            startService(intentAdvice);
+//
+//                            final CustomDialog finalCustomDialog = customDialog;
+//                            ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(WelcomeActivity.this, new AbstractBusiness<User>() {
+//                                @Override
+//                                public void handleData(User data) {
+//                                    SPUtil.saveUser(WelcomeActivity.this, data);
+//                                    if (finalCustomDialog != null) {
+//                                        finalCustomDialog.dismiss();
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void handleException(Exception e) {
+//                                    if (finalCustomDialog != null) {
+//                                        finalCustomDialog.dismiss();
+//                                    }
+//                                    Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
+//                                    startActivity(intentHasRiskscore);
+//                                    finish();
+//                                }
+//                            }), getRequestTag());
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            if (customDialog != null) {
+//                                customDialog.dismiss();
+//                            }
+//                        }
 
 
                         if (SPUtil.isLogin(WelcomeActivity.this)) {
@@ -148,7 +148,7 @@ public class WelcomeActivity extends BaseActivity {
                     SPUtil.setNoFirstStartApp(WelcomeActivity.this);
                 }
             }
-        }, 4000);
+        }, 3000);
 
 
         initDataView();
@@ -186,11 +186,11 @@ public class WelcomeActivity extends BaseActivity {
 //        view04.setImageBitmap(bitmap04);
 //        ivWelcome05.setImageBitmap(bitmap05);
 
-        view01.setImageResource(R.drawable.start_01);
-        view02.setImageResource(R.drawable.start_02);
-        view03.setImageResource(R.drawable.start_03);
-        view04.setImageResource(R.drawable.start_04);
-        ivWelcome05.setImageResource(R.drawable.start_04);
+        view01.setImageResource(R.drawable.welcome_01);
+        view02.setImageResource(R.drawable.welcome_02);
+        view03.setImageResource(R.drawable.welcome_03);
+        view04.setImageResource(R.drawable.welcome_04);
+        ivWelcome05.setImageResource(R.drawable.welcome);
 
         tvNextAction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,7 +249,6 @@ public class WelcomeActivity extends BaseActivity {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
             container.removeView(mListViews.get(position));
         }
 

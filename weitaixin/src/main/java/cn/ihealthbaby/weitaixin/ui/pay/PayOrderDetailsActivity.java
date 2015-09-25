@@ -21,6 +21,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.HttpClientAdapter;
 import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.client.model.OrderDetail;
 import cn.ihealthbaby.client.model.OrderItem;
@@ -93,6 +94,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
 
         orderId = getIntent().getLongExtra(PayConstant.ORDERID, -1);
 
+        LogUtil.d("orderIdExtra", "orderIdExtra==>" + orderId);
 
         //0 未启用,1 开通院内,2 开通院外,3 开通院外线上但不支持邮寄, 4 开通院外线上且支持邮寄
 //        hospitalStatus = (int) LocalProductData.getLocal().get(LocalProductData.HospitalStatus);
@@ -105,9 +107,15 @@ public class PayOrderDetailsActivity extends BaseActivity {
 //        }
 
 
-        pullData();
+
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pullData();
+    }
 
     private void pullData() {
         adapter = new MyGoodsListAdapter(this, null);
@@ -132,12 +140,17 @@ public class PayOrderDetailsActivity extends BaseActivity {
                             return;
                         }
 
-                        LogUtil.d("orderDetail", orderDetail.getOrderStatus() + " orderD有数etail==>" + orderDetail);
+                        LogUtil.d("orderDetailCCC", orderDetail.getOrderStatus() + " orderD有数etail==>" + orderDetail);
 
                         tvOrderGoodsNumber.setText(orderDetail.getId() + "");
-                        tvAddressName.setText(orderDetail.getAddress().getLinkMan());
-                        tvAddressPhoneNumber.setText(orderDetail.getAddress().getMobile());
-                        tvAddressText.setText(orderDetail.getAddress().getArea() + orderDetail.getAddress().getAddress() + "");
+
+                        Address address = orderDetail.getAddress();
+                        if (address != null) {
+                            tvAddressName.setText(address.getLinkMan());
+                            tvAddressPhoneNumber.setText(address.getMobile());
+                            tvAddressText.setText(address.getArea() + address.getAddress() + "");
+                        }
+
 
 
                         int payType = orderDetail.getPayType();

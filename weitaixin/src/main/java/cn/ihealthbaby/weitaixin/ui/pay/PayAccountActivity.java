@@ -45,7 +45,7 @@ public class PayAccountActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("我的账户");
-        tvPayAccountRentDay.setText("租用设备");
+//        tvPayAccountRentDay.setText("租用设备");
 
         orderId = -1;
         user = SPUtil.getUser(this);
@@ -71,7 +71,7 @@ public class PayAccountActivity extends BaseActivity {
                         if (data != null) {
                             //0 开通未绑定设备,1绑定未激活服务,2服务已激活,3服务结束,4服务已取消
                             if (data.getServiceStatus() == ACTIVATE_SERVICE) {
-                                tvPayAccountRentDay.setText("已开通" + data.getRentedDays() + "天");
+                                tvPayAccountRentDay.setText("已租用设备" + data.getRentedDays() + "天");
                                 orderId = data.getOrderId();
                             } else {
                                 tvPayAccountRentDay.setText("租用设备");
@@ -84,6 +84,9 @@ public class PayAccountActivity extends BaseActivity {
                 tvPayAccountRentDay.setText("租用设备");
                 orderId = -1;
             }
+        } else {
+            tvPayAccountRentDay.setText("租用设备");
+            orderId = -1;
         }
     }
 

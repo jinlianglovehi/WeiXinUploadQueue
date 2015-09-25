@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class HomePageFragment extends BaseFragment {
     @Bind(R.id.llHomeFunctionFourAction)
     LinearLayout llHomeFunctionFourAction;
     @Bind(R.id.ivHomeHeadImg)
-    RoundImageView ivHomeHeadImg;
+    ImageView ivHomeHeadImg;
     @Bind(R.id.tvHomeHeadName)
     TextView tvHomeHeadName;
     @Bind(R.id.flShowMessageCount)
@@ -102,6 +104,8 @@ public class HomePageFragment extends BaseFragment {
             flShowMessageCount.setVisibility(View.INVISIBLE);
         }
 
+        pullHeadDatas();
+
         meMainFragmentActivity = (MeMainFragmentActivity) getActivity();
         recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
         ApiManager.getInstance().adviceApi.getStatistics(new DefaultCallback<AdviceStatistics>(getActivity(), new AbstractBusiness<AdviceStatistics>() {
@@ -138,6 +142,7 @@ public class HomePageFragment extends BaseFragment {
                 }
             }
         }), getRequestTag());
+
         return view;
     }
 
@@ -236,7 +241,8 @@ public class HomePageFragment extends BaseFragment {
                 .considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .bitmapConfig(Bitmap.Config.RGB_565)
-                .displayer(new SimpleBitmapDisplayer())
+//                .displayer(new SimpleBitmapDisplayer())
+                .displayer(new RoundedBitmapDisplayer(350))
                 .build();
         return options;
     }

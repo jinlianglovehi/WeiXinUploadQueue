@@ -17,7 +17,7 @@
         android:layout_below="@id/head_title_id"
         android:background="@color/white0">
 
-        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
+        <ImageView
             android:id="@+id/iv_wo_head_icon"
             android:layout_width="@dimen/dimen_dp_70"
             android:layout_height="@dimen/dimen_dp_70"
