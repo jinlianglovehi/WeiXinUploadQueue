@@ -2,18 +2,13 @@ package cn.ihealthbaby.weitaixin.ui.login;
 
 import android.content.Context;
 
-import java.util.Map;
-
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 /**
  * Created by chenweihua on 2015/9/14.
@@ -34,8 +29,8 @@ public class AdviceSettingSP {
                             }
 
                             @Override
-                            public void handleClientError(Exception e) {
-                                super.handleClientError(e);
+                            public void handleClientError(Context context, Exception e) {
+                                super.handleClientError(context, e);
                             }
 
                             @Override

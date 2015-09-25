@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.login;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.webkit.JsResult;
@@ -93,8 +94,8 @@ public class ProtocolActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
 

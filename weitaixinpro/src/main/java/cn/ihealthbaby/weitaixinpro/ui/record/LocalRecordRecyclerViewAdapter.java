@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro.ui.monitor;
+package cn.ihealthbaby.weitaixinpro.ui.record;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.ui.monitor.MonitorActivity;
 
 /**
  * Created by liuhongjian on 15/9/24 13:48.
@@ -41,7 +42,7 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = View.inflate(parent.getContext(), R.layout.item_monitor, null);
+		View view = View.inflate(parent.getContext(), R.layout.item_record, null);
 		ViewHolder viewHolder = new ViewHolder(view);
 		return viewHolder;
 	}

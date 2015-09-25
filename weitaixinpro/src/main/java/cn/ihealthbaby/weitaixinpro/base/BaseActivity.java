@@ -12,6 +12,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
  * Created by liuhongjian on 15/7/23 14:58.
  */
 public abstract class BaseActivity extends FragmentActivity {
+	public String TAG = getClass().getSimpleName();
 	protected RequestQueue requestQueue;
 
 	@Override

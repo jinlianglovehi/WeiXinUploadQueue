@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.record;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,8 +16,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AskForm;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -118,8 +117,8 @@ public class AskDoctorActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                     }
 
                     @Override
@@ -172,8 +171,8 @@ public class AskDoctorActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
 

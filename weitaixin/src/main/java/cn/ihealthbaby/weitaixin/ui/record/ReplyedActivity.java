@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.record;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
@@ -15,8 +16,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceReply;
 import cn.ihealthbaby.client.model.ReplyDetail;
 import cn.ihealthbaby.client.model.User;
@@ -24,10 +23,8 @@ import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
@@ -107,8 +104,8 @@ public class ReplyedActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
 

@@ -21,6 +21,8 @@
         <activity android:name=".ui.settings.MonitorSetActivity"/>
         <activity android:name=".ui.monitor.MonitorCommonSense"/>
         <activity android:name=".ui.MainActivity"/>
+        <activity android:name=".ui.monitor.MonitorActivity"/>
+        <activity android:name=".ui.monitor.MonitorDetialActivity"/>
     </application>
 
 </manifest>

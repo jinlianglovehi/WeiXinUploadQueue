@@ -15,8 +15,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
-import cn.ihealthbaby.weitaixinpro.ui.home.HomePageFragment;
-import cn.ihealthbaby.weitaixinpro.ui.monitor.MonitorTabFragment;
+import cn.ihealthbaby.weitaixinpro.ui.monitor.tab.MonitorTabFragment;
 import cn.ihealthbaby.weitaixinpro.ui.record.RecordFragment;
 import cn.ihealthbaby.weitaixinpro.ui.settings.SettingsFragment;
 
@@ -39,7 +38,6 @@ public class MainActivity extends BaseActivity {
 	LinearLayout mLlTabRecord;
 	@Bind(R.id.ll_tab_profile)
 	LinearLayout mLlTabProfile;
-	private HomePageFragment homePageFragment;
 	private MonitorTabFragment monitorTabFragment;
 	private RecordFragment recordFragment;
 	private SettingsFragment mSettingsFragment;
@@ -50,20 +48,13 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_me_main_fragment);
 		ButterKnife.bind(this);
-		showTabFirst();
+		fragmentManager = getSupportFragmentManager();
 		iv_tab_02();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-	}
-
-	public void showTabFirst() {
-		iv_tab_02.setSelected(true);
-		homePageFragment = HomePageFragment.getInstance();
-		fragmentManager = getSupportFragmentManager();
-		showFragment(R.id.container, homePageFragment);
 	}
 
 	@OnClick(R.id.ll_tab_monitor)

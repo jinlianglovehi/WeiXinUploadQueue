@@ -38,9 +38,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.model.AdviceSetting;
+import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
-import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
@@ -64,13 +64,13 @@ import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
 import de.greenrobot.event.EventBus;
 
 /**
  * Created by liuhongjian on 15/8/12 17:52.
  */
 public class MonitorFragment extends BaseFragment {
-	private final static String TAG = "MonitorFragment";
 	public SoundPool alertSound;
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
@@ -246,17 +246,20 @@ public class MonitorFragment extends BaseFragment {
 		Date recordStartTime = new Date();
 		needRecord = true;
 		needPlay = true;
-		User user = getUser();
+		Bundle user = getActivity().getIntent().getBundleExtra(Constants.BUNDLE_USER);
+		long userId = user.getLong(Constants.INTENT_USER_ID, -1);
+		String userName = user.getString(Constants.INTENT_USER_NAME);
+		Long deliveryTime = user.getLong(Constants.INTENT_DELIVERY_TIME);
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
 		Record record = new Record();
 		//必填内容:userId,userName,serialNumber,localRecordId
-		record.setUserId(user.getId());
+		record.setUserId(userId);
 		record.setSerialNumber(getDeviceName());
 		record.setUploadState(Record.UPLOAD_STATE_LOCAL);
-		record.setUserName(user.getName());
+		record.setUserName(userName);
 		record.setLocalRecordId(localRecordId);
 		record.setRecordStartTime(recordStartTime);
-		record.setGestationalWeeks(DateTimeTool.getGestationalWeeks(user.getDeliveryTime(), recordStartTime));
+		record.setGestationalWeeks(DateTimeTool.getGestationalWeeks(new Date(deliveryTime), recordStartTime));
 		try {
 			Record queryExist = recordBusinessDao.queryByLocalRecordId(record.getLocalRecordId());
 			if (queryExist != null) {
@@ -279,7 +282,7 @@ public class MonitorFragment extends BaseFragment {
 			SPUtil.clearUUID(getActivity().getApplicationContext());
 			return;
 		}
-		Intent intent = new Intent(getActivity(), MonitorActivity.class);
+		Intent intent = new Intent(getActivity(), MonitorDetialActivity.class);
 		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
 		startActivity(intent);
 	}
@@ -352,7 +355,7 @@ public class MonitorFragment extends BaseFragment {
 			}
 		};
 		reset();
-		countDownTimer = new CountDownTimer(10000, 10000) {
+		countDownTimer = new CountDownTimer(20000, 20000) {
 			@Override
 			public void onTick(long millisUntilFinished) {
 			}
@@ -539,11 +542,8 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	private String getDeviceName() {
-		String serialnum = null;
-		ServiceInfo serviceInfo = getServiceInfo();
-		if (serviceInfo != null) {
-			serialnum = serviceInfo.getSerialnum();
-		}
+		HClientUser hClientUser = SPUtil.getHClientUser(getActivity().getApplicationContext());
+		String serialnum = hClientUser.getSerialnum();
 		LogUtil.d(TAG, "serialNumber:" + serialnum);
 		return serialnum == null ? "" : serialnum;
 	}
@@ -551,10 +551,9 @@ public class MonitorFragment extends BaseFragment {
 	private ServiceInfo getServiceInfo() {
 		return SPUtil.getServiceInfo(getActivity().getApplicationContext());
 	}
-
-	private User getUser() {
-		return SPUtil.getUser(getActivity().getApplicationContext());
-	}
+//	private User getUser() {
+//		return SPUtil.getUser(getActivity().getApplicationContext());
+//	}
 
 	private File getPath() {
 		return new File(getTempFileName());
@@ -681,6 +680,12 @@ public class MonitorFragment extends BaseFragment {
 		DataStorage.fhrs.clear();
 		DataStorage.fms.clear();
 		DataStorage.fhrPackage.recycle();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		pseudoBluetoothService.stop();
 	}
 }
 

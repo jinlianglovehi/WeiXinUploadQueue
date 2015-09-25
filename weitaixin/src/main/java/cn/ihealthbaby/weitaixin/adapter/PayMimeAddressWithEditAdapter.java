@@ -3,7 +3,6 @@ package cn.ihealthbaby.weitaixin.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,22 +17,16 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.ui.pay.PayMimeAddressWithEditActivity;
-
 
 public class PayMimeAddressWithEditAdapter extends BaseAdapter {
 
@@ -172,8 +165,8 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
                                 }
 
                                 @Override
-                                public void handleClientError(Exception e) {
-                                    super.handleClientError(e);
+                                public void handleClientError(Context context, Exception e) {
+                                    super.handleClientError(context, e);
                                     customDialog.dismiss();
                                 }
 

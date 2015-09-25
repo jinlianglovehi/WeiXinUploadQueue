@@ -28,6 +28,7 @@ import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.WeiTaiXinProApplication;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
+import cn.ihealthbaby.weitaixinpro.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixinpro.ui.MainActivity;
 import cn.ihealthbaby.weitaixinpro.ui.adapter.HostIdAdapter;
 
@@ -61,8 +62,12 @@ public class BindActivity extends BaseActivity {
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
 			finish();
 		}
-		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		deviceId = tm.getDeviceId();
+		deviceId = "000000000000015";
+		try {
+			TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+			deviceId = tm.getDeviceId() == null ? deviceId : tm.getDeviceId();
+		} catch (Exception e) {
+		}
 		mTvDeviceId.setText(deviceId);
 		login();
 		initView();
@@ -78,6 +83,8 @@ public class BindActivity extends BaseActivity {
 			public void handleData(HClientUser data) {
 				((WeiTaiXinProApplication) getApplication()).getAdapter().setAccountToken(data.getLoginToken());
 				SPUtil.saveHClientUser(getApplicationContext(), data);
+				Intent service = new Intent(getApplicationContext(), AdviceSettingService.class);
+				startService(service);
 				ToastUtil.show(getApplicationContext(), "登录成功");
 				startActivity(new Intent(getApplicationContext(), MainActivity.class));
 				finish();

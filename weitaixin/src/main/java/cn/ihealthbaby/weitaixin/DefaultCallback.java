@@ -90,7 +90,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.CLIENT_ERROR:
 				Exception exception = result.getException();
 				LogUtil.e(TAG, "CLIENT_ERROR" + exception);
-				business.handleClientError(exception);
+				business.handleClientError(context, exception);
 				break;
 			/**
 			 * 服务器错误

@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,7 +17,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,13 +39,14 @@ import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+<<<<<<< e0aac652b78972fc0e6fde201082f8a72e0ccfaf
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
+=======
+>>>>>>> 80831c152bfc043b0af6d4dfde639e97beb401a2
 import cn.ihealthbaby.weitaixin.ui.mine.WoInformationActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoMessageActivity;
-import cn.ihealthbaby.weitaixin.ui.monitor.GuardianStateActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.PayAccountActivity;
-import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 public class HomePageFragment extends BaseFragment {
     private final static String TAG = "HomePageFragment";

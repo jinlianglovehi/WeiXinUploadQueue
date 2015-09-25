@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.adapter;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -18,8 +19,6 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
@@ -127,9 +126,9 @@ public class PayAllOrderAdapter extends BaseAdapter {
                                         }
 
                                         @Override
-                                        public void handleClientError(Exception e) {
-                                            super.handleClientError(e);
-                                            ToastUtil.show(context.getApplicationContext(), "取消失败");
+                                        public void handleClientError(Context context, Exception e) {
+                                            super.handleClientError(context, e);
+                                            ToastUtil.show(PayAllOrderAdapter.this.context.getApplicationContext(), "取消失败");
                                             customDialog.dismiss();
                                         }
 
@@ -187,9 +186,9 @@ public class PayAllOrderAdapter extends BaseAdapter {
                                         }
 
                                         @Override
-                                        public void handleClientError(Exception e) {
-                                            super.handleClientError(e);
-                                            ToastUtil.show(context.getApplicationContext(), "确认收货失败");
+                                        public void handleClientError(Context context, Exception e) {
+                                            super.handleClientError(context, e);
+                                            ToastUtil.show(PayAllOrderAdapter.this.context.getApplicationContext(), "确认收货失败");
                                             customDialog.dismiss();
                                         }
 
@@ -276,9 +275,9 @@ public class PayAllOrderAdapter extends BaseAdapter {
                                     }
 
                                     @Override
-                                    public void handleClientError(Exception e) {
-                                        super.handleClientError(e);
-                                        ToastUtil.show(context.getApplicationContext(), "删除失败");
+                                    public void handleClientError(Context context, Exception e) {
+                                        super.handleClientError(context, e);
+                                        ToastUtil.show(PayAllOrderAdapter.this.context.getApplicationContext(), "删除失败");
                                         customDialog.dismiss();
                                     }
 

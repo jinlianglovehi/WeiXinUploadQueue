@@ -20,20 +20,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
-import cn.ihealthbaby.client.model.City;
 import cn.ihealthbaby.client.model.Province;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.event.PayChooseCityCloseEvent;
-import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
 import de.greenrobot.event.EventBus;
 
 public class PayRentChooseProvincesLeftActivity extends BaseActivity {
@@ -117,8 +112,8 @@ public class PayRentChooseProvincesLeftActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
 

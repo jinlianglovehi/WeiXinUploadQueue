@@ -22,8 +22,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Information;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -32,7 +30,6 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
 import cn.ihealthbaby.weitaixin.ui.pay.PayOrderDetailsActivity;
@@ -88,8 +85,8 @@ public class WoMessageActivity extends BaseActivity {
                             }
 
                             @Override
-                            public void handleClientError(Exception e) {
-                                super.handleClientError(e);
+                            public void handleClientError(Context context, Exception e) {
+                                super.handleClientError(context, e);
                                 pageIndex = 1;
                                 if (pullToRefresh != null) {
                                     pullToRefresh.onRefreshComplete();
@@ -123,8 +120,8 @@ public class WoMessageActivity extends BaseActivity {
                             }
 
                             @Override
-                            public void handleClientError(Exception e) {
-                                super.handleClientError(e);
+                            public void handleClientError(Context context, Exception e) {
+                                super.handleClientError(context, e);
                                 pageIndex--;
                                 if (pullToRefresh != null) {
                                     pullToRefresh.onRefreshComplete();
@@ -239,8 +236,8 @@ public class WoMessageActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         if (pullToRefresh!=null) {
                             pullToRefresh.onRefreshComplete();
                         }

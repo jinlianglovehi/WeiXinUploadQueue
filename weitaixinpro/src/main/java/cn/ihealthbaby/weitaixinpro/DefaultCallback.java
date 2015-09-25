@@ -25,7 +25,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 
 	@Override
 	public void call(Result<T> result) {
-
+		business.handleResult(result);
 		if (result == null) {
 			return;
 		}
@@ -64,7 +64,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleValidator(context);
 				} catch (Exception e) {
 					e.printStackTrace();
-					LogUtil.d(TAG, "Result.VALIDATOR.Exception==> " + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
+					LogUtil.d(TAG, "Result.VALIDATOR.Exception" + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
 					business.handleException(e);
 				}
 				break;
@@ -90,7 +90,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.CLIENT_ERROR:
 				Exception exception = result.getException();
 				LogUtil.e(TAG, "CLIENT_ERROR" + exception);
-				business.handleClientError(exception);
+				business.handleClientError(context, exception);
 				break;
 			/**
 			 * 服务器错误
@@ -119,7 +119,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			StringBuilder stringBuilder = new StringBuilder();
 			for (Object o : map.values()) {
 				stringBuilder.append(o.toString());
-				stringBuilder.append("/r/n");
+				stringBuilder.append("\\r\\n");
 			}
 			return stringBuilder.toString();
 		} else {

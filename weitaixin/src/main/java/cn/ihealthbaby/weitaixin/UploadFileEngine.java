@@ -14,8 +14,6 @@ import org.json.JSONObject;
 import java.io.File;
 
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.UpdateHeadPicForm;
 import cn.ihealthbaby.client.form.UserInfoForm;
 import cn.ihealthbaby.client.model.UploadModel;
@@ -123,8 +121,8 @@ public class UploadFileEngine {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
                 }), getRequestTag());
@@ -145,8 +143,8 @@ public class UploadFileEngine {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
 
@@ -196,13 +194,13 @@ public class UploadFileEngine {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         if (finishActivity != null) {
                             finishActivity.onFinishActivity(false);
                         }
 //                        WeiTaiXinApplication.getInstance().putValue("InfoEdit","");
-                        ToastUtil.show(context, "完善个人资料失败");
+                        ToastUtil.show(UploadFileEngine.this.context, "完善个人资料失败");
                         customDialog.dismiss();
                     }
                 }), getRequestTag());
@@ -223,9 +221,9 @@ public class UploadFileEngine {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
-                        ToastUtil.show(context.getApplicationContext(), "头像上传到服务器失败");
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
+                        ToastUtil.show(UploadFileEngine.this.context.getApplicationContext(), "头像上传到服务器失败");
                         customDialog.dismiss();
                     }
 

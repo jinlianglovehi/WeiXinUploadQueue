@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixin.ui.record;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -32,8 +33,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
@@ -255,8 +254,8 @@ public class RecordFragment extends BaseFragment {
                                     }
 
                                     @Override
-                                    public void handleClientError(Exception e) {
-                                        super.handleClientError(e);
+                                    public void handleClientError(Context context, Exception e) {
+                                        super.handleClientError(context, e);
                                         customDialog.dismiss();
                                     }
 
@@ -336,8 +335,8 @@ public class RecordFragment extends BaseFragment {
                             }
 
                             @Override
-                            public void handleClientError(Exception e) {
-                                super.handleClientError(e);
+                            public void handleClientError(Context context, Exception e) {
+                                super.handleClientError(context, e);
                                 pageIndex--;
                                 if (pullToRefresh != null) {
                                     pullToRefresh.onRefreshComplete();
@@ -463,8 +462,8 @@ public class RecordFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         getCache(customDialogTwo);
                     }
                 }), getRequestTag());

@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import java.io.File;
 
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -67,9 +66,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 						saveDataToDatabase(data.getId());
 					}
 
-					@Override
-					public void handleResult(Result<Long> result) {
-					}
+
 				}), getRequestTag());
 			}
 		});

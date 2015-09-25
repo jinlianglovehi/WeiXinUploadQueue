@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,8 +20,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -145,8 +144,8 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
                 }
 
                 @Override
-                public void handleClientError(Exception e) {
-                    super.handleClientError(e);
+                public void handleClientError(Context context, Exception e) {
+                    super.handleClientError(context, e);
                 }
 
                 @Override
@@ -194,8 +193,8 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
 
@@ -229,8 +228,8 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
                 }), getRequestTag());

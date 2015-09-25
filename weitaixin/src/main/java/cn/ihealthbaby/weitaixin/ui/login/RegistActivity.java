@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.login;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -176,8 +177,8 @@ public class RegistActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         isHasAuthCode = false;
                         cancel(customDialog);
                         customDialog.dismiss();
@@ -263,8 +264,8 @@ public class RegistActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                         Intent intent = new Intent(RegistActivity.this, LoginActivity.class);
                         startActivity(intent);
@@ -322,8 +323,8 @@ public class RegistActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                     }
 
                     @Override

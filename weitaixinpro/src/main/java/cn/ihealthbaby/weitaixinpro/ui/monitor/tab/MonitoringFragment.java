@@ -1,8 +1,7 @@
-package cn.ihealthbaby.weitaixinpro.ui.monitor;
+package cn.ihealthbaby.weitaixinpro.ui.monitor.tab;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +23,7 @@ import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
+import cn.ihealthbaby.weitaixinpro.ui.monitor.RecyclerViewAdapter;
 
 /**
  */
@@ -40,7 +39,6 @@ public class MonitoringFragment extends BaseFragment {
 	public int currentPage;
 	public int count;
 	private List<ServiceInside> list;
-	private boolean loading;
 	private RecyclerViewAdapter adapter;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private RecyclerView recyclerView;
@@ -57,6 +55,10 @@ public class MonitoringFragment extends BaseFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+				                                          android.R.color.holo_green_light,
+				                                          android.R.color.holo_orange_light,
+				                                          android.R.color.holo_red_light);
 		layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 		recyclerView.setLayoutManager(layoutManager);
 		list = new ArrayList<ServiceInside>();
@@ -82,7 +84,6 @@ public class MonitoringFragment extends BaseFragment {
 		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				LogUtil.d(TAG, "onrefresh isRefreshing %s", swipeRefreshLayout.isRefreshing());
 				reset();
 			}
 		});
@@ -90,8 +91,9 @@ public class MonitoringFragment extends BaseFragment {
 	}
 
 	public void reset() {
-		swipeRefreshLayout.setEnabled(true);
-		swipeRefreshLayout.setRefreshing(true);
+		list.clear();
+		currentPage = 0;
+		count = 0;
 		request(FIRST_PAGE);
 	}
 
@@ -124,16 +126,10 @@ public class MonitoringFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onDetach() {
-		super.onDetach();
-		try {
-			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
+	public void onStop() {
+		super.onStop();
+		if (swipeRefreshLayout.isRefreshing()) {
+			swipeRefreshLayout.setRefreshing(false);
 		}
 	}
 }

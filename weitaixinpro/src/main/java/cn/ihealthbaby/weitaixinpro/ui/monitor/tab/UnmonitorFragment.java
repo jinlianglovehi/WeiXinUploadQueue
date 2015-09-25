@@ -1,13 +1,14 @@
-package cn.ihealthbaby.weitaixinpro.ui.monitor;
+package cn.ihealthbaby.weitaixinpro.ui.monitor.tab;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +21,16 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
-import cn.ihealthbaby.weitaixinpro.base.SwipeRefreshRecyclerViewFragment;
+import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
+import cn.ihealthbaby.weitaixinpro.ui.monitor.RecyclerViewAdapter;
 
 /**
  */
-public class UnmonitorFragment extends SwipeRefreshRecyclerViewFragment {
+public class UnmonitorFragment extends BaseFragment {
 	private static final int MONITORING = 1;
 	private static final int UNMONITOR = 0;
 	private static final int PAGE_SIZE = 20;
-	private final static String TAG = "MonitoringFragment";
 	/**
 	 * 起始页码 从1开始
 	 */
@@ -36,13 +38,24 @@ public class UnmonitorFragment extends SwipeRefreshRecyclerViewFragment {
 	public HClientUser hClientUser;
 	public int currentPage;
 	public int count;
+	private RecyclerView.LayoutManager layoutManager;
+	private RecyclerView recyclerView;
+	private SwipeRefreshLayout swipeRefreshLayout;
 	private List<ServiceInside> list;
 	private boolean loading;
 	private RecyclerViewAdapter adapter;
 
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		swipeRefreshLayout = ((SwipeRefreshLayout) inflater.inflate(R.layout.fragment_swipe_refresh_recycler, null));
+		return swipeRefreshLayout;
+	}
+
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 		layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 		recyclerView.setLayoutManager(layoutManager);
 		list = new ArrayList<ServiceInside>();
@@ -69,7 +82,6 @@ public class UnmonitorFragment extends SwipeRefreshRecyclerViewFragment {
 		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				LogUtil.d(TAG, "onrefresh isRefreshing %s", swipeRefreshLayout.isRefreshing());
 				reset();
 			}
 		});
@@ -77,8 +89,9 @@ public class UnmonitorFragment extends SwipeRefreshRecyclerViewFragment {
 	}
 
 	public void reset() {
-		swipeRefreshLayout.setEnabled(true);
-		swipeRefreshLayout.setRefreshing(true);
+		list.clear();
+		currentPage = 0;
+		count = 0;
 		request(FIRST_PAGE);
 	}
 
@@ -111,16 +124,10 @@ public class UnmonitorFragment extends SwipeRefreshRecyclerViewFragment {
 	}
 
 	@Override
-	public void onDetach() {
-		super.onDetach();
-		try {
-			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
+	public void onStop() {
+		super.onStop();
+		if (swipeRefreshLayout.isRefreshing()) {
+			swipeRefreshLayout.setRefreshing(false);
 		}
 	}
 }

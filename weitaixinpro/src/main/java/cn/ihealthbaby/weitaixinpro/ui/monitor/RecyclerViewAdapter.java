@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixinpro.ui.monitor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import butterknife.Bind;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.ServiceInside;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
@@ -46,7 +48,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
+	public void onBindViewHolder(ViewHolder holder, final int position) {
 		final ServiceInside serviceInside = list.get(position);
 		holder.tvBegin.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -57,6 +59,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 					public void handleData(Integer data) {
 						ToastUtil.show(context, "开始监测");
 						Intent intent = new Intent(context, MonitorActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						Bundle user = new Bundle();
+						user.putLong(Constants.INTENT_USER_ID, serviceInside.getUserId());
+						user.putString(Constants.INTENT_USER_NAME, serviceInside.getName());
+						user.putLong(Constants.INTENT_DELIVERY_TIME, serviceInside.getDeliveryTime().getTime());
+						intent.putExtra(Constants.BUNDLE_USER, user);
 						context.startActivity(intent);
 					}
 				}), this);
@@ -77,14 +85,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 		public TextView tvName;
 		public TextView tvTime;
 		public TextView tvGestationalWeeks;
-//		@Bind(R.id.tv_begin)
-//		TextView tvBegin;
-//		@Bind(R.id.tv_name)
-//		TextView tvName;
-//		@Bind(R.id.tv_time)
-//		TextView tvTime;
-//		@Bind(R.id.tv_gestational_weeks)
-//		TextView tvGestationalWeeks;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
@@ -92,6 +92,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 			tvName = (TextView) itemView.findViewById(R.id.tv_name);
 			tvTime = (TextView) itemView.findViewById(R.id.tv_time);
 			tvGestationalWeeks = (TextView) itemView.findViewById(R.id.tv_gestational_weeks);
+			itemView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					tvBegin.performClick();
+				}
+			});
 		}
 	}
 }

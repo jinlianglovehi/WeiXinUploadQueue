@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.mine;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,8 +15,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.form.AnswerForm;
 import cn.ihealthbaby.client.form.AnswerForms;
@@ -76,8 +75,8 @@ public class GradedActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void handleClientError(Exception e) {
-                            super.handleClientError(e);
+                        public void handleClientError(Context context, Exception e) {
+                            super.handleClientError(context, e);
                         }
 
                         @Override
@@ -139,8 +138,8 @@ public class GradedActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void handleClientError(Exception e) {
-                            super.handleClientError(e);
+                        public void handleClientError(Context context, Exception e) {
+                            super.handleClientError(context, e);
                         }
                     }), getRequestTag());
         }

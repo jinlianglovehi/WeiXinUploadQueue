@@ -39,6 +39,6 @@ public abstract class AbstractBusiness<T> implements Business<T> {
 	}
 
 	@Override
-	public void handleClientError(Exception e) {
+	public void handleClientError(Context context, Exception e) {
 	}
 }

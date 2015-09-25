@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixin.adapter;
 
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -25,8 +26,6 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -311,8 +310,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 						}
 
 						@Override
-						public void handleClientError(Exception e) {
-							super.handleClientError(e);
+						public void handleClientError(Context context, Exception e) {
+							super.handleClientError(context, e);
 							customDialog.dismiss();
 						}
 
@@ -359,8 +358,8 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 							}
 
 							@Override
-							public void handleClientError(Exception e) {
-								super.handleClientError(e);
+							public void handleClientError(Context context, Exception e) {
+								super.handleClientError(context, e);
 								customDialog.dismiss();
 							}
 						}), context);

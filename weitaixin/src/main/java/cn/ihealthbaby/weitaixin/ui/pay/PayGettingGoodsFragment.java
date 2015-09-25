@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -22,8 +23,6 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.HttpClientAdapter;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -86,8 +85,8 @@ public class PayGettingGoodsFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void handleClientError(Exception e) {
-                        super.handleClientError(e);
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
 
@@ -124,8 +123,8 @@ public class PayGettingGoodsFragment extends BaseFragment {
                             }
 
                             @Override
-                            public void handleClientError(Exception e) {
-                                super.handleClientError(e);
+                            public void handleClientError(Context context, Exception e) {
+                                super.handleClientError(context, e);
                                 pageIndex=1;
                                 if (payPullToRefreshAllOrder != null) {
                                     payPullToRefreshAllOrder.onRefreshComplete();
@@ -164,8 +163,8 @@ public class PayGettingGoodsFragment extends BaseFragment {
                             }
 
                             @Override
-                            public void handleClientError(Exception e) {
-                                super.handleClientError(e);
+                            public void handleClientError(Context context, Exception e) {
+                                super.handleClientError(context, e);
                                 --pageIndex;
                                 if (payPullToRefreshAllOrder != null) {
                                     payPullToRefreshAllOrder.onRefreshComplete();

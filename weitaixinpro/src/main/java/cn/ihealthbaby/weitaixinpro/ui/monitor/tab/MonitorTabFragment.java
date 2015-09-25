@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro.ui.monitor;
+package cn.ihealthbaby.weitaixinpro.ui.monitor.tab;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,8 +10,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.lang.reflect.Field;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,6 +37,8 @@ public class MonitorTabFragment extends BaseFragment {
 	@Bind(R.id.container)
 	FrameLayout container;
 	private android.support.v4.app.FragmentManager fragmentManager;
+	private MonitoringFragment monitoringFragment;
+	private UnmonitorFragment unmonitorFragment;
 
 	public static MonitorTabFragment getInstance() {
 		if (instance == null) {
@@ -51,15 +51,14 @@ public class MonitorTabFragment extends BaseFragment {
 	void change2() {
 		ivMonitoring.setVisibility(View.VISIBLE);
 		ivUnmonitor.setVisibility(View.GONE);
-//		changeFragment(new TestFragment());
-		changeFragment(new MonitoringFragment());
+		changeFragment(monitoringFragment);
 	}
 
 	@OnClick(R.id.rl_unmonitor)
 	void change1() {
 		ivMonitoring.setVisibility(View.GONE);
 		ivUnmonitor.setVisibility(View.VISIBLE);
-		changeFragment(new UnmonitorFragment());
+		changeFragment(unmonitorFragment);
 	}
 
 	@Nullable
@@ -67,8 +66,8 @@ public class MonitorTabFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.monitor_fragment, null);
 		fragmentManager = getChildFragmentManager();
-//		monitoringFragment = new MonitoringFragment();
-//		unmonitorFragment = new UnmonitorFragment();
+		monitoringFragment = new MonitoringFragment();
+		unmonitorFragment = new UnmonitorFragment();
 		return view;
 	}
 
@@ -90,19 +89,5 @@ public class MonitorTabFragment extends BaseFragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		try {
-			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
 	}
 }

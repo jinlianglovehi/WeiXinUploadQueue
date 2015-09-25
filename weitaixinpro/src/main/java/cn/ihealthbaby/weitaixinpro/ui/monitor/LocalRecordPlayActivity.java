@@ -91,7 +91,6 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			e.printStackTrace();
 			ToastUtil.show(getApplicationContext(), "获取数据失败");
 		}
-		// TODO: 15/9/20  临时放置
 		CustomDialog customDialog = new CustomDialog();
 		dialog = customDialog.createDialog1(this, "正在上传胎音文件...");
 	}

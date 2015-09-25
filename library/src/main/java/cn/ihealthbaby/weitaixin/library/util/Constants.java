@@ -54,4 +54,8 @@ public class Constants {
 	public static final String INTENT_FEELING = "FEELING";
 	public static final String INTENT_PURPOSE = "PURPOSE";
 	public static final String INTENT_POSITION = "POSITION";
+	public static final String INTENT_USER_ID = "USER_ID";
+	public static final String BUNDLE_USER = "USER";
+	public static final String INTENT_USER_NAME = "USER_NAME";
+	public static final String INTENT_DELIVERY_TIME = "DELIVERY_TIME";
 }

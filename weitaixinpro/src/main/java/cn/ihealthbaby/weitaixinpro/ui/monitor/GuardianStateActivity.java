@@ -20,13 +20,13 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AskPurposeType;
 import cn.ihealthbaby.client.model.CommonConfig;
 import cn.ihealthbaby.client.model.FeelingType;
-import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
 import cn.ihealthbaby.weitaixinpro.tools.CustomDialog;
 
 public class GuardianStateActivity extends BaseActivity {

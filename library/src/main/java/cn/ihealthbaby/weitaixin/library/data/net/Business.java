@@ -49,9 +49,10 @@ public interface Business<T> {
 	/**
 	 * 客户端错误
 	 *
+	 * @param context
 	 * @param e
 	 */
-	void handleClientError(Exception e);
+	void handleClientError(Context context, Exception e);
 
 	/**
 	 * 收到响应
