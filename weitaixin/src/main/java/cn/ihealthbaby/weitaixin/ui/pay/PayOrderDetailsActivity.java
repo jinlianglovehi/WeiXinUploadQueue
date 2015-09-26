@@ -358,6 +358,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
             Intent intent = new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
             LocalProductData.getLocal().put(LocalProductData.PriceCount, orderDetail.getTotalFee());
             intent.putExtra(PayConstant.ORDERID, orderDetail.getId());
+            intent.putExtra(PayConstant.TOTALFEE, orderDetail.getTotalFee());
             startActivity(intent);
         } else if (orderDetail.getOrderStatus() == PayConstant.gettingGoods) {
             PayDialog payDialog = new PayDialog(PayOrderDetailsActivity.this, new String[]{"确定收货", "不收货", "确定收货"});

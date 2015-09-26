@@ -1,9 +1,8 @@
 package cn.ihealthbaby.weitaixin.ui.pay.wxpay;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
@@ -25,66 +24,70 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import cn.ihealthbaby.client.model.WXPrePay;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.util.LoginUtil;
 
 
-public class PayActivity extends Activity {
+public class PayWxUtil {
 
-    private static final String TAG = "MicroMsg.SDKSample.PayActivity";
+    private static final String TAG = "MicroMsg.SDKSample.PayWxUtil";
 
     public PayReq req;
-    public final IWXAPI msgApi = WXAPIFactory.createWXAPI(this, null);
     public TextView show;
     public Map<String, String> resultunifiedorder;
     public StringBuffer sb;
+    public final IWXAPI msgApi;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setContentView(/*R.layout.pay*/1213221);
 
-//        show = (TextView) findViewById(R.id.editText_prepay_id);
+    public Context context;
+    public PayWxUtil(Context context, WXPrePay data){
+        this.context=context;
+        msgApi = WXAPIFactory.createWXAPI(context, null);
 
         req = new PayReq();
 
         sb = new StringBuffer();
 
-        msgApi.registerApp(Constants.APP_ID);
+        msgApi.registerApp(data.getAppId()+"");
 
-        //生成prepay_id，APP支付生成预支付订单
-        Button payBtn = (Button) findViewById(R.id.btn_cancel);
-        payBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GetPrepayIdTask getPrepayId = new GetPrepayIdTask();
-                getPrepayId.execute();
-            }
-        });
+        genPayReq(data);
+    }
 
 
-        //生成签名参数，生成APP微信支付参数
-        Button appay_pre_btn = (Button) findViewById(R.id.btn_cancel);
-        appay_pre_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                genPayReq();
-            }
-        });
+    public void s(){
+//        //生成prepay_id，APP支付生成预支付订单
+//        Button payBtn = (Button) findViewById(R.id.btn_cancel);
+//        payBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                GetPrepayIdTask getPrepayId = new GetPrepayIdTask();
+//                getPrepayId.execute();
+//            }
+//        });
 
 
+//        //生成签名参数，生成APP微信支付参数
+//        Button appay_pre_btn = (Button) findViewById(R.id.btn_cancel);
+//        appay_pre_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                genPayReq();
+//            }
+//        });
 
-        //调起微信支付
-        Button appayBtn = (Button) findViewById(R.id.btn_cancel);
-        appayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendPayReq();
-//                msgApi.registerApp(Constants.APP_ID);
-//                msgApi.sendReq(req);
-            }
-        });
+
+//
+//        //调起微信支付
+//        Button appayBtn = (Button) findViewById(R.id.btn_cancel);
+//        appayBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                sendPayReq();
+////                msgApi.registerApp(Constants.APP_ID);
+////                msgApi.sendReq(req);
+//            }
+//        });
 
 
         String packageSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
@@ -127,7 +130,7 @@ public class PayActivity extends Activity {
 
         this.sb.append("sign str\n" + sb.toString() + "\n\n");
         String appSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
-        Log.e("orion", appSign);
+        Log.e("orion",appSign);
         return appSign;
     }
 
@@ -155,7 +158,7 @@ public class PayActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            dialog = ProgressDialog.show(PayActivity.this, "提示", "正在获取预支付订单...");
+            dialog = ProgressDialog.show(context, "提示", "正在获取预支付订单...");
         }
 
         @Override
@@ -263,7 +266,7 @@ public class PayActivity extends Activity {
             packageParams.add(new BasicNameValuePair("notify_url", "http://121.40.35.3/test"));
             packageParams.add(new BasicNameValuePair("out_trade_no", genOutTradNo()));
             packageParams.add(new BasicNameValuePair("spbill_create_ip", "127.0.0.1"));
-            packageParams.add(new BasicNameValuePair("total_fee", "1"));
+            packageParams.add(new BasicNameValuePair("total_fee", "0.01"));
             packageParams.add(new BasicNameValuePair("trade_type", "APP"));
 
 
@@ -284,13 +287,13 @@ public class PayActivity extends Activity {
 
 
 
-    private void genPayReq() {
-        req.appId = Constants.APP_ID;
-        req.partnerId = Constants.MCH_ID;
-        req.prepayId = resultunifiedorder.get("prepay_id");
+    private void genPayReq(WXPrePay data) {
+        req.appId = data.getAppId();
+        req.partnerId = data.getPartnerId();
+        req.prepayId = data.getPrePayId();
         req.packageValue = "Sign=WXPay";
-        req.nonceStr = genNonceStr();
-        req.timeStamp = String.valueOf(genTimeStamp());
+        req.nonceStr =data.getNoncestr();
+        req.timeStamp =data.getTimestamp();
 
         List<NameValuePair> signParams = new LinkedList<NameValuePair>();
         signParams.add(new BasicNameValuePair("appid", req.appId));
@@ -304,7 +307,7 @@ public class PayActivity extends Activity {
 
         sb.append("sign\n" + req.sign + "\n\n");
 
-        show.setText(sb.toString());
+//        show.setText(sb.toString());
 
         Log.e("orion", signParams.toString());
 
@@ -314,6 +317,12 @@ public class PayActivity extends Activity {
 
     private void sendPayReq() {
         msgApi.registerApp(Constants.APP_ID);
+        msgApi.sendReq(req);
+    }
+
+
+    public void sendPayReq(WXPrePay data) {
+        msgApi.registerApp(data.getAppId());
         msgApi.sendReq(req);
     }
 

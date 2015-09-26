@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.ui.pay.PayAddAddressWithEditActivity;
 
 public class PayMimeAddressWithEditAdapter extends BaseAdapter {
 
@@ -121,7 +123,16 @@ public class PayMimeAddressWithEditAdapter extends BaseAdapter {
             } else {
                 viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose_un);
             }
-            viewHolder.ivAddressImaged.setOnClickListener(null);
+            viewHolder.ivAddressImaged.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isDel) {
+                        boolean isSeleced = addressMap.get(position);
+                        addressMap.put(position, !isSeleced);
+                        notifyDataSetChanged();
+                    }
+                }
+            });
         } else {
             if (address.getIsDef()) {
                 viewHolder.ivAddressImaged.setImageResource(R.drawable.pay_choose);

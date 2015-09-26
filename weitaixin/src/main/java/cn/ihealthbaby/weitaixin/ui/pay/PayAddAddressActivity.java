@@ -61,10 +61,8 @@ public class PayAddAddressActivity extends BaseActivity {
         }
     }
 
+
     private void initView() {
-
-
-
 //      User user=WeiTaiXinApplication.getInstance().user;
         User user = SPUtil.getUser(this);
         if (user!=null){
@@ -157,9 +155,9 @@ public class PayAddAddressActivity extends BaseActivity {
         addressForm.setArea(addAddressArea);
         addressForm.setAddress(addressDetailAddress);
         ApiManager.getInstance().addressApi.create(addressForm,
-                new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
+                new DefaultCallback<Long>(this, new AbstractBusiness<Long>() {
                     @Override
-                    public void handleData(Void data) {
+                    public void handleData(Long data) {
                         Intent intent = new Intent();
                         setResult(PayConfirmOrderActivity.RESULTCODE_ADDADDRESS, intent);
                         customDialog.dismiss();

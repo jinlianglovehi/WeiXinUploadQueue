@@ -8,7 +8,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -20,6 +22,7 @@
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="portrait"
         android:theme="@android:style/Theme.Light.NoTitleBar"
         tools:replace="android:icon">
         <activity
@@ -80,7 +83,13 @@
         <activity android:name=".ui.pay.PayRentChooseProvincesLeftActivity" />
         <activity android:name=".ui.pay.PayOrderInformationActivity" />
         <activity android:name=".ui.pay.PayConfirmOrderActivity" />
-        <activity android:name=".ui.pay.PayAffirmPaymentActivity" />
+        <activity android:name=".ui.pay.PayAffirmPaymentActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="wx8da8b08e973e9305"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.monitor.LocalRecordPlayActivity" />
         <activity android:name=".ui.pay.PayOrderDetailsActivity" />
         <activity android:name=".ui.pay.PayChooseAddressProvinceActivity" />
@@ -88,6 +97,20 @@
         <activity android:name=".ui.pay.PayChooseAddressAreasActivity" />
         <activity android:name=".ui.pay.PayRentChooseCityRightActivity" />
         <activity android:name=".ui.monitor.MonitorCommonSense" />
+
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
+
+
+        <receiver
+            android:name="cn.ihealthbaby.weitaixin.ui.pay.wxpay.AppRegister">
+            <intent-filter>
+                <action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" />
+            </intent-filter>
+        </receiver>
+
 
         <service android:name=".service.AdviceSettingService" />
     </application>

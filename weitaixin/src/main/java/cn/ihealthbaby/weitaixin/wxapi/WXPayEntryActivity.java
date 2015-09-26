@@ -1,11 +1,10 @@
-package cn.ihealthbaby.weitaixin.ui.pay.wxpay.wxapi;
+package cn.ihealthbaby.weitaixin.wxapi;
 
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.tencent.mm.sdk.constants.ConstantsAPI;

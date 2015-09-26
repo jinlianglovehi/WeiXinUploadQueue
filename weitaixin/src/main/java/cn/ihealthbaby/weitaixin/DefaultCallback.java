@@ -37,7 +37,8 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			case Result.SUCCESS:
 				T data = result.getData();
 				if (data != null) {
-					LogUtil.d(TAG, "Result.SUCCESS" + data.toString());
+					//报java.util.MissingFormatArgumentException: Format specifier: 2B异常
+//					LogUtil.d(TAG, "Result.SUCCESS" + data.toString());
 				}
 				/**
 				 * 处理业务

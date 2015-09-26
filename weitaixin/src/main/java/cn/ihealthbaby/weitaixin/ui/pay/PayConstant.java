@@ -25,6 +25,7 @@ public class PayConstant {
     public static final String LeftCityList = "leftCityList";
     public static final String RightCityList = "rightCityList";
     public static final String ORDERID = "orderId";
+    public static final String TOTALFEE = "totalfee";
 
 
 }

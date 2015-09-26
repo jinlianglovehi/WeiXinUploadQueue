@@ -18,11 +18,13 @@ import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.alipay.PayAlipayUtil;
 import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
+import cn.ihealthbaby.weitaixin.ui.pay.wxpay.PayWxUtil;
 import de.greenrobot.event.EventBus;
 
 public class PayAffirmPaymentActivity extends BaseActivity {
@@ -39,6 +41,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
     @Bind(R.id.llPaymenyUnionPay) LinearLayout llPaymenyUnionPay;
 
     public long orderId = -1;
+    public int totalfee = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +55,12 @@ public class PayAffirmPaymentActivity extends BaseActivity {
         EventBus.getDefault().register(this);
 
         orderId=getIntent().getLongExtra(PayConstant.ORDERID, -1);
+        totalfee=getIntent().getIntExtra(PayConstant.TOTALFEE, -1);
+        LogUtil.d(this.getClass().getSimpleName(), orderId+":orderId  totalfee:"+totalfee);
 
 //        tvTotalPrice.setText("￥"+((Integer.parseInt(LocalProductData.getLocal().get(LocalProductData.PriceCount)+""))/100)+"");
-// TODO: 15/9/22 @陈未华 有bug 类型转换异常
         tvTotalPrice.setText(PayUtils.showPrice(Integer.parseInt(LocalProductData.getLocal().get(LocalProductData.PriceCount)+"")));
+//        tvTotalPrice.setText(PayUtils.showPrice(totalfee));
     }
 
 
@@ -78,8 +83,9 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     @OnClick(R.id.llPaymenyWeixin)
     public void PaymenyWeixin() {
+        LogUtil.d("WXPrehandleDataPay",orderId+"==orderIdorderIdorderId");
         if (orderId == -1) {
-            ToastUtil.show(getApplicationContext(),"订单id生成有误");
+            ToastUtil.show(getApplicationContext(),"订单Id生成有误");
             return;
         }
 
@@ -89,17 +95,15 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
         WXPayForm wxPayForm=new WXPayForm();
         wxPayForm.setOrderId(orderId);
-//        wxPayForm.setSpbillCreateIp();
+        wxPayForm.setSpbillCreateIp("127.0.0.1");
         ApiManager.getInstance().payApi.getWXPrePay(wxPayForm,
                 new DefaultCallback<WXPrePay>(this, new AbstractBusiness<WXPrePay>() {
                     @Override
                     public void handleData(WXPrePay data) {
-//                    if (!TextUtils.isEmpty(orderDetail)) {
-//                        PayAlipayUtil payAlipayUtil=new PayAlipayUtil(PayAffirmPaymentActivity.this);
-//                        payAlipayUtil.payAction(orderDetail);
-//                    } else {
-//                        ToastUtil.show(getApplicationContext(), t.getMsgMap() + "");
-//                    }
+                        LogUtil.d("WXPrehandleDataPay",orderId+"WXPrehandleDataPay==>"+data);
+                        PayWxUtil payWxUtil=new PayWxUtil(PayAffirmPaymentActivity.this, data);
+                        payWxUtil.sendPayReq(data);
+                        customDialog.dismiss();
                     }
 
                     @Override

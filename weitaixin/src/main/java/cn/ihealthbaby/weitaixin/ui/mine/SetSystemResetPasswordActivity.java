@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixin.ui.mine;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 
 
 public class SetSystemResetPasswordActivity extends BaseActivity {
@@ -111,33 +113,9 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
 
             tv_mark_num_text_reset.setBackgroundResource(R.color.gray1);
             tv_mark_num_text_reset.setTextColor(getResources().getColor(R.color.gray2));
-            try {
-                dialog = new CustomDialog().createDialog1(this, "验证码发送中...");
-                dialog.show();
-                getAuthCode();
 
+            getAuthCode();
 
-                countDownTimer = new CountDownTimer(10000, 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        tv_mark_num_text_reset.setText(millisUntilFinished / 1000 + "秒之后重发");
-                        isSend = false;
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        tv_mark_num_text_reset.setText("发送验证码");
-                        isSend = true;
-                        dialog.dismiss();
-                        tv_mark_num_text_reset.setBackgroundResource(R.drawable.shape_send_verifycode);
-                        tv_mark_num_text_reset.setTextColor(getResources().getColor(R.color.black0));
-                    }
-                };
-                countDownTimer.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-                cancel();
-            }
         }
     }
 
@@ -152,41 +130,90 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
 
     //0 注册验证码 1 登录验证码 2 修改密码验证码.
     public void getAuthCode() {
+
+
         User user = SPUtil.getUser(this);
-        ApiManager.getInstance().accountApi.getAuthCode(user.getMobile(), 2,
-                new DefaultCallback<Boolean>(this, new AbstractBusiness<Boolean>() {
-                    @Override
-                    public void handleData(Boolean data) {
-                        if (data) {
-                            isHasAuthCode = true;
-                        } else {
-                            isHasAuthCode = false;
-                            cancel();
-                            ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
-                        }
-                        dialog.dismiss();
-                    }
+        if(user!=null){
+            String mobile = user.getMobile();
+            if (TextUtils.isEmpty(mobile)) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }else{
+                final CustomDialog customDialog = new CustomDialog();
+                dialog = customDialog.createDialog1(this, "验证码发送中...");
+                dialog.show();
 
-                    @Override
-                    public void handleClientError(Context context, Exception e) {
-                        super.handleClientError(context, e);
-                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
+                isSend = false;
 
-                        isHasAuthCode = false;
-                        cancel();
-                        dialog.dismiss();
-                    }
+                ApiManager.getInstance().accountApi.getAuthCode(user.getMobile(), 2,
+                        new DefaultCallback<Boolean>(this, new AbstractBusiness<Boolean>() {
+                            @Override
+                            public void handleData(Boolean data) {
+                                if (data) {
+                                    tv_mark_num_text_reset.setBackgroundResource(R.color.gray1);
+                                    tv_mark_num_text_reset.setTextColor(getResources().getColor(R.color.gray2));
 
-                    @Override
-                    public void handleException(Exception e) {
-                        super.handleException(e);
-                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
+                                    isHasAuthCode = true;
 
-                        isHasAuthCode = false;
-                        cancel();
-                        dialog.dismiss();
-                    }
-                }), getRequestTag());
+                                    try {
+                                        countDownTimer = new CountDownTimer(60000, 1000) {
+                                            @Override
+                                            public void onTick(long millisUntilFinished) {
+                                                tv_mark_num_text_reset.setText(millisUntilFinished / 1000 + "秒之后重发");
+                                                isSend = false;
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                tv_mark_num_text_reset.setText("发送验证码");
+                                                isSend = true;
+                                                customDialog.dismiss();
+                                                tv_mark_num_text_reset.setBackgroundResource(R.drawable.shape_send_verifycode);
+                                                tv_mark_num_text_reset.setTextColor(getResources().getColor(R.color.black0));
+                                            }
+                                        };
+                                        countDownTimer.start();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        cancel();
+                                    }
+
+                                } else {
+                                    isHasAuthCode = false;
+                                    cancel();
+                                    ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
+                                }
+                                customDialog.dismiss();
+                            }
+
+                            @Override
+                            public void handleClientError(Context context, Exception e) {
+                                super.handleClientError(context, e);
+                                ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
+
+                                isHasAuthCode = false;
+                                cancel();
+                                customDialog.dismiss();
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "请重新获取验证码");
+
+                                isHasAuthCode = false;
+                                cancel();
+                                customDialog.dismiss();
+                            }
+                        }), getRequestTag());
+            }
+        } else {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
     }
 
 

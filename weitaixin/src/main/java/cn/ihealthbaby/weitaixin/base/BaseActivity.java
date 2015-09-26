@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixin.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -58,6 +59,20 @@ public abstract class BaseActivity extends Activity {
             }
         }
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        try {
+            super.onConfigurationChanged(newConfig);
+            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                // land
+            } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                // port
+            }
+        } catch (Exception ex) {
+
+        }
     }
 
 }
