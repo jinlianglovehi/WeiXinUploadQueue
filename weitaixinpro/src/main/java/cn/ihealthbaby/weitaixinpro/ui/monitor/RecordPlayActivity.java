@@ -68,6 +68,12 @@ public abstract class RecordPlayActivity extends BaseActivity {
 	TextView tvStartTime;
 	@Bind(R.id.tv_consum_time)
 	TextView tvConsumTime;
+	@Bind(R.id.tv_data)
+	TextView tvData;
+	@Bind(R.id.btn_data)
+	ImageView btnData;
+	@Bind(R.id.rl_data)
+	RelativeLayout rlData;
 	private int width;
 	private ExpendableCountDownTimer countDownTimer;
 	private MediaPlayer mediaPlayer;
@@ -93,6 +99,13 @@ public abstract class RecordPlayActivity extends BaseActivity {
 	public void function(View view) {
 		function();
 	}
+
+	@OnClick(R.id.btn_data)
+	public void data() {
+		uploadData();
+	}
+
+	protected abstract void uploadData();
 
 	protected abstract void function();
 

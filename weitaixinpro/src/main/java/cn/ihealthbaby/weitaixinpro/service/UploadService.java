@@ -14,6 +14,7 @@ import com.qiniu.android.storage.UploadOptions;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Map;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.UploadModel;
@@ -67,6 +68,34 @@ public class UploadService extends IntentService {
 				token = data.getToken();
 				uploadManager.put(file, key, token, upCompletionHandler, options);
 			}
+
+			@Override
+			public void handleError(Map<String, Object> msgMap) {
+				super.handleError(msgMap);
+				UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
+				EventBus.getDefault().post(event);
+			}
+
+			@Override
+			public void handleClientError(Context context, Exception error) {
+				super.handleClientError(context, error);
+				UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
+				EventBus.getDefault().post(event);
+			}
+
+			@Override
+			public void handleAccountError(Context context, Map<String, Object> msgMap) {
+				super.handleAccountError(context, msgMap);
+				UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
+				EventBus.getDefault().post(event);
+			}
+
+			@Override
+			public void handleValidator(Context context) {
+				super.handleValidator(context);
+				UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
+				EventBus.getDefault().post(event);
+			}
 		}), TAG);
 	}
 
@@ -77,6 +106,9 @@ public class UploadService extends IntentService {
 				if (info.statusCode == 200) {
 					LogUtil.d(TAG, "Upload Result: key [%s]", key);
 					UploadEvent event = new UploadEvent(UploadEvent.RESULT_SUCCESS, localRecordId, key, token);
+					EventBus.getDefault().post(event);
+				} else {
+					UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
 					EventBus.getDefault().post(event);
 				}
 			}

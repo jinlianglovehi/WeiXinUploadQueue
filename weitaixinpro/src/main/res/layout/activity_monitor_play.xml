@@ -139,33 +139,69 @@
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/rl_function"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="120dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            >
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_business"
+            <RelativeLayout
+                android:id="@+id/rl_function"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:text=""
-                android:textColor="@color/green0"
-                android:textSize="12sp"/>
 
-            <ImageView
-                android:id="@+id/btn_business"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
-                android:layout_above="@id/tv_business"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                />
-        </RelativeLayout>
+                >
+
+                <TextView
+                    android:id="@+id/tv_business"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="上传全部"
+                    android:textColor="@color/green0"
+                    android:textSize="12sp"/>
+
+                <ImageView
+                    android:id="@+id/btn_business"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:layout_above="@id/tv_business"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/button_upload"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_data"
+                android:layout_width="wrap_content"
+                android:layout_height="120dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/tv_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="上传曲线"
+                    android:textColor="@color/green0"
+                    android:textSize="12sp"/>
+
+                <ImageView
+                    android:id="@+id/btn_data"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:layout_above="@id/tv_data"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/btn_upload_data"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

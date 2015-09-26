@@ -26,13 +26,25 @@ import de.greenrobot.event.EventBus;
  * Created by liuhongjian on 15/9/20 13:13.
  */
 public class LocalRecordPlayActivity extends RecordPlayActivity {
+	private final static int UPLOADTYPE_DATA = 0;
+	private final static int UPLOADTYPE_ALL = 1;
 	private String key;
-	private int uploadType = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		EventBus.getDefault().register(this);
+	}
+
+	@Override
+	protected void uploadData() {
+		ApiManager.getInstance().hClientAccountApi.uploadData(UPLOADTYPE_DATA, getUploadData(record, null), new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
+			@Override
+			public void handleData(AdviceItem data) {
+				ToastUtil.show(getApplicationContext(), "上传曲线成功");
+				updateUloadState(Record.UPLOAD_STATE_CLOUD);
+			}
+		}), getRequestTag());
 	}
 
 	@Override
@@ -104,10 +116,10 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		LogUtil.d(TAG, event.toString());
 		switch (event.getResult()) {
 			case UploadEvent.RESULT_SUCCESS:
-				ApiManager.getInstance().hClientAccountApi.uploadData(uploadType, getUploadData(record, event.getKey()), new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
+				ApiManager.getInstance().hClientAccountApi.uploadData(UPLOADTYPE_ALL, getUploadData(record, event.getKey()), new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
 					@Override
 					public void handleData(AdviceItem data) {
-						ToastUtil.show(getApplicationContext(), "上传成功");
+						ToastUtil.show(getApplicationContext(), "全部上传成功");
 						updateUloadState(Record.UPLOAD_STATE_CLOUD);
 					}
 				}), getRequestTag());
