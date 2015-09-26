@@ -225,6 +225,11 @@ public class MonitorFragment extends BaseFragment {
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_NOT_START));
 	}
 
+	@OnClick(R.id.back)
+	public void back() {
+		getActivity().finish();
+	}
+
 	@OnClick(R.id.btn_start)
 	public void startMonitor(View view) {
 		view.setClickable(false);
@@ -265,7 +270,7 @@ public class MonitorFragment extends BaseFragment {
 		try {
 			Record queryExist = recordBusinessDao.queryByLocalRecordId(record.getLocalRecordId());
 			if (queryExist != null) {
-				record.setLocalRecordId(getLocalRecordId());
+				record.setLocalRecordId(generateUUID());
 			}
 		} catch (Exception e) {
 			LogUtil.d(TAG, "查询发生异常" + e);
@@ -324,7 +329,6 @@ public class MonitorFragment extends BaseFragment {
 		loadSrc(roundBackground, R.drawable.round_background_1);
 		loadSrc(roundFrontground, R.drawable.round_frontground_1);
 		loadSrc(roundScale, R.drawable.round_scale);
-		back.setVisibility(View.GONE);
 		titleText.setText("胎心监测");
 		function.setVisibility(View.GONE);
 		getAdviceSetting();
@@ -538,9 +542,14 @@ public class MonitorFragment extends BaseFragment {
 	private String getLocalRecordId() {
 		String uuid = SPUtil.getUUID(getActivity().getApplicationContext());
 		if (TextUtils.isEmpty(uuid)) {
-			uuid = UUID.randomUUID().toString().replace("-", "");
-			SPUtil.setUUID(getActivity().getApplicationContext(), uuid);
+			uuid = generateUUID();
 		}
+		return uuid;
+	}
+
+	private String generateUUID() {
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		SPUtil.setUUID(getActivity().getApplicationContext(), uuid);
 		return uuid;
 	}
 
@@ -653,6 +662,7 @@ public class MonitorFragment extends BaseFragment {
 		Data data = new Data();
 		data.setInterval(500);
 		data.setHeartRate(DataStorage.fhrs);
+		data.setDoctor(Util.position2Time(DataStorage.doctors));
 		data.setFm(Util.position2Time(DataStorage.fms));
 		data.setTime(recordStartTime.getTime());
 		recordData.setData(data);
@@ -682,6 +692,7 @@ public class MonitorFragment extends BaseFragment {
 		SPUtil.clearUUID(getActivity().getApplicationContext());
 		DataStorage.fhrs.clear();
 		DataStorage.fms.clear();
+		DataStorage.doctors.clear();
 		DataStorage.fhrPackage.recycle();
 	}
 

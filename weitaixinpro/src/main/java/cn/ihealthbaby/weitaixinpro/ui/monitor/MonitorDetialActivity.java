@@ -82,7 +82,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		long consumedTime = countDownTimer.getConsumedTime();
 		int position = (int) (consumedTime / countDownTimer.getInterval());
 		if (lastFMTime == 0 || consumedTime - lastFMTime >= 3 * 1000) {
-			savePosition(position);
+			saveFetalMovementPosition(position);
 			lastFMTime = consumedTime;
 		}
 	}
@@ -93,8 +93,15 @@ public class MonitorDetialActivity extends BaseActivity {
 		tvSumTime.setText("共" + countDownTimer.getDuration() / 1000 / 60 + "分钟");
 	}
 
-	@OnClick(R.id.btn_extra_time)
+	@OnClick(R.id.btn_doctor_interrupt)
 	public void doctor() {
+		long consumedTime = countDownTimer.getConsumedTime();
+		int position = (int) (consumedTime / countDownTimer.getInterval());
+		saveDoctorPosition(position);
+	}
+
+	private void saveDoctorPosition(int position) {
+		curve.getDoctors().add(position);
 	}
 
 	@OnClick(R.id.function)
@@ -104,7 +111,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		finish();
 	}
 
-	private void savePosition(int position) {
+	private void saveFetalMovementPosition(int position) {
 		curve.getHearts().add(position);
 	}
 
@@ -191,6 +198,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		curve.setFhrs(DataStorage.fhrs);
 		curve.setCellWidth(Util.dip2px(getApplicationContext(), 10));
 		curve.setHearts(DataStorage.fms);
+		curve.setDoctors(DataStorage.doctors);
 		curve.setCurveStrokeWidth(Util.dip2px(getApplicationContext(), 2));
 		curve.setSafeMax(safemax);
 		curve.setSafeMin(safemin);

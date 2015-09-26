@@ -30,5 +30,6 @@ public class CurveMonitorDetialView extends CurveBasicView {
 		drawScaleX(canvas);
 		drawRedPoints(canvas);
 		drawRedHeart(canvas, 10);
+		drawDoctor(canvas, 10);
 	}
 }

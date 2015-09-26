@@ -244,7 +244,7 @@ public class RecordBusinessDao {
 	 * @throws Exception 查询出错会抛出异常
 	 */
 	public Record queryByLocalRecordId(String localRecordId) throws Exception {
-		return recordDao.queryBuilder().where(RecordDao.Properties.LocalRecordId.eq(localRecordId)).uniqueOrThrow();
+		return recordDao.queryBuilder().where(RecordDao.Properties.LocalRecordId.eq(localRecordId)).unique();
 	}
 
 	/**

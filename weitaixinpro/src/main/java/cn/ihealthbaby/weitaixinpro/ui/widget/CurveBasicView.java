@@ -30,11 +30,13 @@ public class CurveBasicView extends CoordinateView {
 	protected int redPointColor = Color.parseColor("#01CF97");
 	protected int gridColor = Color.parseColor("#B2DEDEDE");
 	protected int shadowColor = Color.parseColor("#E8F6EF");
-	private Bitmap scaledBitmap;
+	private Bitmap doctorScaledBitmap;
+	private Bitmap heartScaledBitmap;
 	/**
 	 * 保存的是发生胎动的点的位置
 	 */
 	private List<Integer> hearts = new ArrayList<>();
+	private List<Integer> doctors = new ArrayList<>();
 	private Path path = new Path();
 	/**
 	 * 保存胎心数值
@@ -59,7 +61,8 @@ public class CurveBasicView extends CoordinateView {
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.STROKE);
 		heartWidth = Util.dip2px(context, 6);
-		scaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.red_heart_small)).getBitmap(), heartWidth, heartWidth, true);
+		heartScaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.red_heart_small)).getBitmap(), heartWidth, heartWidth, true);
+		doctorScaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.doctor_small)).getBitmap(), heartWidth, heartWidth, true);
 	}
 
 	public float getCurveStrokeWidth() {
@@ -202,12 +205,23 @@ public class CurveBasicView extends CoordinateView {
 			return;
 		}
 		for (int i = 0; i < size; i++) {
-			canvas.drawBitmap(scaledBitmap, convertX(positionToX(hearts.get(i))) - heartWidth / 2, convertY(y) - heartWidth / 2, paint);
+			canvas.drawBitmap(heartScaledBitmap, convertX(positionToX(hearts.get(i))) - heartWidth / 2, convertY(y) - heartWidth / 2, paint);
 		}
 	}
 
 	public void addRedHeart(int position) {
 		hearts.add(position);
+	}
+
+	public void drawDoctor(Canvas canvas, int y) {
+		resetPaint();
+		int size = doctors.size();
+		if (size <= 0) {
+			return;
+		}
+		for (int i = 0; i < size; i++) {
+			canvas.drawBitmap(doctorScaledBitmap, convertX(positionToX(doctors.get(i))) - heartWidth / 2, convertY(y) - heartWidth / 2, paint);
+		}
 	}
 
 	protected void drawScaleX(Canvas canvas) {
@@ -273,5 +287,13 @@ public class CurveBasicView extends CoordinateView {
 
 	public float getCurrentPositionX() {
 		return convertX(positionToX(fhrs.size() - 1));
+	}
+
+	public List<Integer> getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(List<Integer> doctors) {
+		this.doctors = doctors;
 	}
 }
