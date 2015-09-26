@@ -37,9 +37,45 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
             android:layout_marginTop="26dp">
 
+            <ImageView
+                android:id="@+id/btn_extra_time"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/btn_extra_time"
+                />
+
+            <TextView
+                android:id="@+id/tv_sum_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_extra_time"
+                android:text="共20分钟"
+                />
+
+            <ImageView
+                android:id="@+id/btn_doctor_interrupt"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/btn_doctor_interrupt"
+                />
+
+            <TextView
+                android:id="@+id/tv_doctor_interrupt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/btn_doctor_interrupt"
+                android:text="干预点击"
+                />
 
             <TextView
                 android:id="@+id/tv_start_time"

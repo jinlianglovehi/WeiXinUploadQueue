@@ -28,6 +28,10 @@ public class Record {
 	 * 用户id
 	 */
     private long userId;
+     /**
+	 * 服务id
+	 */
+    private Long serviceId;
     /** Not-null value. */
      /**
 	 * 用户名
@@ -125,10 +129,11 @@ public class Record {
         this.id = id;
     }
 
-    public Record(Long id, String localRecordId, long userId, String userName, String serialNumber, int uploadState, java.util.Date recordStartTime, String gestationalWeeks, Integer duration, String recordData, String soundPath, Integer feelingId, String feelingString, Integer purposeId, String purposeString) {
+    public Record(Long id, String localRecordId, long userId, Long serviceId, String userName, String serialNumber, int uploadState, java.util.Date recordStartTime, String gestationalWeeks, Integer duration, String recordData, String soundPath, Integer feelingId, String feelingString, Integer purposeId, String purposeString) {
         this.id = id;
         this.localRecordId = localRecordId;
         this.userId = userId;
+        this.serviceId = serviceId;
         this.userName = userName;
         this.serialNumber = serialNumber;
         this.uploadState = uploadState;
@@ -173,6 +178,14 @@ public class Record {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public Long getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
     }
 
     /** Not-null value. */
@@ -279,7 +292,7 @@ public class Record {
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.delete(this);
     }
 
@@ -287,7 +300,7 @@ public class Record {
     public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.update(this);
     }
 
@@ -295,15 +308,13 @@ public class Record {
     public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.refresh(this);
     }
 
     // KEEP METHODS - put your custom methods here
 
-	public boolean hasSound(Context context) {
-        return new File(soundPath).exists();
-    }
+
 
     @Override
     public String toString() {
@@ -311,6 +322,7 @@ public class Record {
         sb.append("id=").append(id);
         sb.append(", localRecordId='").append(localRecordId).append('\'');
         sb.append(", userId=").append(userId);
+        sb.append(", serviceId=").append(serviceId);
         sb.append(", userName='").append(userName).append('\'');
         sb.append(", serialNumber='").append(serialNumber).append('\'');
         sb.append(", recordStartTime=").append(recordStartTime);

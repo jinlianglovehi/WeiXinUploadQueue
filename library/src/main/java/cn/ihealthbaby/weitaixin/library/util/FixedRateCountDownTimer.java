@@ -7,8 +7,6 @@ import android.os.SystemClock;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-
 /**
  * Created by liuhongjian on 15/9/22 15:23.
  */
@@ -110,7 +108,7 @@ public abstract class FixedRateCountDownTimer {
 				if (left < interval * (count - counter)) {
 					handler.sendEmptyMessage(0);
 					counter++;
-					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
+//					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
 				}
 			}
 		};

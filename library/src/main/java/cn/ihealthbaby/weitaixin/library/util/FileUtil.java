@@ -20,6 +20,10 @@ public class FileUtil {
 		return context.getCacheDir();
 	}
 
+	public static File getVoiceFile(Context context, String localRecordId) {
+		return new File(getVoiceDir(context), localRecordId);
+	}
+
 	/**
 	 * 生成文件并支持追加数据。
 	 *

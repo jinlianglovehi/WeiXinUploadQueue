@@ -65,6 +65,7 @@ public class UnmonitorRecyclerViewAdapter extends RecyclerView.Adapter<Unmonitor
 						user.putLong(Constants.INTENT_USER_ID, serviceInside.getUserId());
 						user.putString(Constants.INTENT_USER_NAME, serviceInside.getName());
 						user.putLong(Constants.INTENT_DELIVERY_TIME, serviceInside.getDeliveryTime().getTime());
+						user.putLong(Constants.INTENT_SERVICE_ID, serviceInside.getId());
 						intent.putExtra(Constants.BUNDLE_USER, user);
 						context.startActivity(intent);
 					}

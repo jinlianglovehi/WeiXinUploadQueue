@@ -250,10 +250,12 @@ public class MonitorFragment extends BaseFragment {
 		long userId = user.getLong(Constants.INTENT_USER_ID, -1);
 		String userName = user.getString(Constants.INTENT_USER_NAME);
 		Long deliveryTime = user.getLong(Constants.INTENT_DELIVERY_TIME);
+		Long serviceId = user.getLong(Constants.INTENT_SERVICE_ID);
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
 		Record record = new Record();
 		//必填内容:userId,userName,serialNumber,localRecordId
 		record.setUserId(userId);
+		record.setServiceId(serviceId);
 		record.setSerialNumber(getDeviceName());
 		record.setUploadState(Record.UPLOAD_STATE_LOCAL);
 		record.setUserName(userName);
@@ -266,6 +268,7 @@ public class MonitorFragment extends BaseFragment {
 				record.setLocalRecordId(getLocalRecordId());
 			}
 		} catch (Exception e) {
+			LogUtil.d(TAG, "查询发生异常" + e);
 		}
 		try {
 			recordBusinessDao.insert(record);
@@ -683,8 +686,8 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
+	public void onDestroy() {
+		super.onDestroy();
 		pseudoBluetoothService.stop();
 	}
 }

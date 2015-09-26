@@ -1,8 +1,8 @@
 package cn.ihealthbaby.weitaixin.library.util;
 
-import java.util.UUID;
+import android.support.v4.BuildConfig;
 
-import cn.ihealthbaby.weitaixin.library.BuildConfig;
+import java.util.UUID;
 
 /**
  * Created by Think on 2015/6/16.
@@ -25,7 +25,6 @@ public class Constants {
 //	public static final String SERVER_URL = "http://192.168.1.3:8080/ihealthbaby-port/v1/";
 	//@jinliqiang
 //	public static final String SERVER_URL = "http://192.168.1.2:8080/port/v1/";
-
 	public static final String MOCK_SERVER_URL = "http://localhost:9800/";
 	public static final String MIME_TYPE_WAV = "audio/x-wav";
 	public static final String MIME_TYPE_JPEG = "image/jpeg";
@@ -60,4 +59,5 @@ public class Constants {
 	public static final String INTENT_DELIVERY_TIME = "DELIVERY_TIME";
 	public static final String INTENT_HID = "HID";
 	public static final String INTENT_SERVICE_TYPE = "SERVICE_TYPE";
+	public static final String INTENT_SERVICE_ID = "SERVICE_ID";
 }

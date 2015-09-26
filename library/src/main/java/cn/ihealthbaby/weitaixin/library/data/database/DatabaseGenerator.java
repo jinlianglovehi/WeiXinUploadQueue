@@ -27,6 +27,7 @@ public class DatabaseGenerator {
 		record.addIdProperty().codeBeforeField("/**\n" + "\t * 自增id\n" + "\t */");
 		record.addStringProperty("localRecordId").unique().notNull().codeBeforeField("/**\n" + "\t * 本地记录id,由UUID生成,不带- 对应AdviceItem的jianceId\n" + "\t */");
 		record.addLongProperty("userId").notNull().codeBeforeField("/**\n" + "\t * 用户id\n" + "\t */");
+		record.addLongProperty("serviceId").codeBeforeField("/**\n" + "\t * 服务id\n" + "\t */");
 		record.addStringProperty("userName").notNull().codeBeforeField("/**\n" + "\t * 用户名\n" + "\t */");
 		record.addStringProperty("serialNumber").notNull().codeBeforeField("/**\n" + "\t * 对应AdviceItem的serialNum\n" + "\t */");
 		record.addIntProperty("uploadState").notNull().codeBeforeField("/**\n" + "\t * 上传状态\n" + "\t */");

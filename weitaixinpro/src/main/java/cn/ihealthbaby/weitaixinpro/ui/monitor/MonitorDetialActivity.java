@@ -13,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.model.AdviceSetting;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -20,6 +21,7 @@ import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
@@ -52,6 +54,14 @@ public class MonitorDetialActivity extends BaseActivity {
 	TextView tvConsumTime;
 	@Bind(R.id.tv_start_time)
 	TextView tvStartTime;
+	@Bind(R.id.btn_extra_time)
+	ImageView btnExtraTime;
+	@Bind(R.id.tv_sum_time)
+	TextView tvSumTime;
+	@Bind(R.id.btn_doctor_interrupt)
+	ImageView btnDoctorInterrupt;
+	@Bind(R.id.tv_doctor_interrupt)
+	TextView tvDoctorInterrupt;
 	private long consumedtime;
 	private long duration;
 	private long interval;
@@ -64,6 +74,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	private int safemax = 160;
 	private int limitMax = 200;
 	private int limitMin = 60;
+	private boolean alert;
+	private int alertInterval;
 
 	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
@@ -73,6 +85,16 @@ public class MonitorDetialActivity extends BaseActivity {
 			savePosition(position);
 			lastFMTime = consumedTime;
 		}
+	}
+
+	@OnClick(R.id.btn_extra_time)
+	public void extra() {
+		countDownTimer.extra(5 * 60 * 1000);
+		tvSumTime.setText("共" + countDownTimer.getDuration() / 1000 / 60 + "分钟");
+	}
+
+	@OnClick(R.id.btn_extra_time)
+	public void doctor() {
 	}
 
 	@OnClick(R.id.function)
@@ -97,12 +119,10 @@ public class MonitorDetialActivity extends BaseActivity {
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;
-//		consumedtime = getIntent().getLongExtra(Constants.INTENT_CONSUMED_TIME, 0);
-//		duration = getIntent().getLongExtra(Constants.INTENT_DURATION, 0);
-//		interval = getIntent().getLongExtra(Constants.INTENT_INTERVAL, 0);
 		getAdviceSetting();
 		configCurve();
-		countDownTimer = new FixedRateCountDownTimer(duration, 1000) {
+		countDownTimer = new FixedRateCountDownTimer(duration, 500) {
+			public long lastTime;
 			public boolean reset;
 			public long lastStart;
 
@@ -110,33 +130,16 @@ public class MonitorDetialActivity extends BaseActivity {
 			public void onStart(long startTime) {
 				terminate = false;
 				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
+				tvSumTime.setText("共" + duration / 1000 / 60 + "分钟");
 			}
 
 			@Override
 			public void onExtra(long duration, long extraTime, long stopTime) {
+				curve.setxMax(curve.getxMax() + ((int) ((getDuration() + extraTime) / 1000 / 60)));
 			}
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-//				long start = System.currentTimeMillis();
-//				if (DataStorage.fhrs.size() > 0 || !terminate) {
-//					int fhr = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
-//					curve.addPoint(fhr);
-//					curve.postInvalidate();
-//					tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
-//					if (fhr >= safemin && fhr <= safemax) {
-//						bpm.setTextColor(Color.parseColor("#49DCB8"));
-//					} else {
-//						bpm.setTextColor(Color.parseColor("#FE0058"));
-//					}
-//					bpm.setText(fhr + "");
-//				}
-//				if (!chs.isTouching()) {
-//					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
-//				}
-//				long stop = System.currentTimeMillis();
-//				LogUtil.d("MonitorDetialActivity", "duration:[%s] , interval:[%s] ,consumedTime:[%s]s ,listSize:[%s]", (stop - start), start - lastStart, getConsumedTime() / 1000, curve.getFhrs().size());
-//				lastStart = start;
 				tick();
 			}
 
@@ -150,7 +153,14 @@ public class MonitorDetialActivity extends BaseActivity {
 
 			private void tick() {
 				//获取当前心率值
-				int fhr = DataStorage.fhrPackage.getFHR1();
+				FHRPackage fhrPackage = DataStorage.fhrPackage;
+				int fhr = fhrPackage.getFHR1();
+				long time = fhrPackage.getTime();
+				//防止重复
+				if (lastTime == time) {
+					fhr = 0;
+				}
+				lastTime = time;
 				//如果越界,则值设置为0
 				if ((fhr > limitMax || fhr < limitMin)) {
 					fhr = 0;
@@ -200,7 +210,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	}
 
 	/**
-	 * 获取监测的配置
+	 * 获取监测的配置  AdviceSetting [autoBeginAdvice=20,autoAdviceTimeLong=20,fetalMoveTime=5,autoBeginAdviceMax=3,askMinTime=20,alarmHeartrateLimit=100-160,hospitalId=3,
+	 * ]
 	 */
 	private void getAdviceSetting() {
 		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
@@ -209,18 +220,19 @@ public class MonitorDetialActivity extends BaseActivity {
 		String[] split = alarmHeartrateLimit.split("-");
 		try {
 			if (split != null && split.length == 2) {
-				int safemin = Integer.parseInt(split[0]);
-				if (safemin > 0) {
-					this.safemin = safemin;
-				}
-				int safemax = Integer.parseInt(split[1]);
-				if (safemax > 0) {
-					this.safemax = safemax;
-				}
+				safemin = Integer.parseInt(split[0]);
+				safemax = Integer.parseInt(split[1]);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			ToastUtil.show(getApplicationContext(), "解析错误");
 		}
-		LogUtil.d(TAG, "safemin:%s,safemax:%s", safemin, safemax);
+		int autoAdviceTimeLong = adviceSetting.getAutoAdviceTimeLong();
+		if (autoAdviceTimeLong > 0) {
+			duration = autoAdviceTimeLong * 60 * 1000;
+		}
+		alert = localSetting.isAlert();
+		alertInterval = localSetting.getAlertInterval();
+		LogUtil.d(TAG, "safemin:%s,safemax:%s,alertSound:%s,alertInterval:%s,duration:%s", safemin, safemax, alert, alertInterval, duration);
 	}
 }

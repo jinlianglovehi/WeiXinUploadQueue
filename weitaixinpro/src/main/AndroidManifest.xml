@@ -23,8 +23,11 @@
         <activity android:name=".ui.MainActivity"/>
         <activity android:name=".ui.monitor.MonitorActivity"/>
         <activity android:name=".ui.monitor.MonitorDetialActivity"/>
+        <activity android:name=".ui.monitor.GuardianStateActivity"/>
+        <activity android:name=".ui.monitor.LocalRecordPlayActivity"/>
 
         <service android:name=".service.ConfigService"/>
+        <service android:name=".service.UploadService"/>
     </application>
 
 </manifest>

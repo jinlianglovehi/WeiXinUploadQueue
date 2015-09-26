@@ -33,7 +33,6 @@ import cn.ihealthbaby.weitaixinpro.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixinpro.ui.widget.CurveMonitorDetialView;
 
 public abstract class RecordPlayActivity extends BaseActivity {
-	private final static String TAG = "LocalRecordPlayActivity";
 	public String path;
 	public Record record;
 	public String uuid;
