@@ -27,6 +27,7 @@
         tools:replace="android:icon">
         <activity
             android:name=".ui.WelcomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,12 +35,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.login.RegistActivity" />
         <activity
+            android:screenOrientation="portrait"
+            android:name=".ui.login.RegistActivity" />
+        <activity
+            android:screenOrientation="portrait"
             android:name=".ui.MeMainFragmentActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.login.LoginActivity" />
-        <activity android:name=".ui.mine.SetSystemActivity" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ui.login.LoginActivity" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ui.mine.SetSystemActivity" />
         <activity android:name=".ui.mine.WoInformationActivity" />
         <activity android:name=".ui.login.InfoEditActivity" />
         <activity android:name=".ui.mine.GradedActivity" />

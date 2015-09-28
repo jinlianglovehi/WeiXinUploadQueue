@@ -2,9 +2,11 @@ package cn.ihealthbaby.weitaixin.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.android.volley.RequestQueue;
@@ -23,6 +25,8 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+
         requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
         manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
