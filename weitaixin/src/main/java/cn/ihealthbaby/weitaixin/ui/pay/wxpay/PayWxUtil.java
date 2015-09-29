@@ -43,16 +43,67 @@ public class PayWxUtil {
     public Context context;
     public PayWxUtil(Context context, WXPrePay data){
         this.context=context;
-        msgApi = WXAPIFactory.createWXAPI(context, null);
+
+        msgApi = WXAPIFactory.createWXAPI(context, data.getAppId());
 
         req = new PayReq();
 
         sb = new StringBuffer();
 
-        msgApi.registerApp(data.getAppId()+"");
+        msgApi.registerApp(data.getAppId());
+
+        LogUtil.d("WXPrePay","WXPrePay==>"+data);
 
         genPayReq(data);
     }
+
+
+
+    private void genPayReq(WXPrePay data) {
+        req.appId = data.getAppId();
+        req.partnerId = data.getPartnerId();
+        req.prepayId = data.getPrePayId();
+//        req.packageValue = "Sign=WXPay";
+        req.packageValue = data.getPackageField();
+        req.nonceStr =data.getNoncestr();
+        req.timeStamp =data.getTimestamp();
+
+        List<NameValuePair> signParams = new LinkedList<NameValuePair>();
+        signParams.add(new BasicNameValuePair("appid", req.appId));
+        signParams.add(new BasicNameValuePair("noncestr", req.nonceStr));
+        signParams.add(new BasicNameValuePair("package", req.packageValue));
+        signParams.add(new BasicNameValuePair("partnerid", req.partnerId));
+        signParams.add(new BasicNameValuePair("prepayid", req.prepayId));
+        signParams.add(new BasicNameValuePair("timestamp", req.timeStamp));
+
+
+        req.sign=data.getSign();
+//        req.sign = genAppSign(signParams);
+
+//        sb.append("sign\n" + req.sign + "\n\n");
+
+//        show.setText(sb.toString());
+
+        Log.e("orion", signParams.toString()+" req.sign==>"+req.sign);
+
+    }
+
+
+
+    private void sendPayReq() {
+        msgApi.registerApp(Constants.APP_ID);
+        msgApi.sendReq(req);
+    }
+
+
+    public void sendPayReq(WXPrePay data) {
+        msgApi.registerApp(data.getAppId());
+        msgApi.sendReq(req);
+    }
+
+
+    /////////////////////////////////////////////////
+
 
 
     public void s(){
@@ -194,6 +245,7 @@ public class PayWxUtil {
 
             return xml;
         }
+
     }
 
 
@@ -287,45 +339,8 @@ public class PayWxUtil {
 
 
 
-    private void genPayReq(WXPrePay data) {
-        req.appId = data.getAppId();
-        req.partnerId = data.getPartnerId();
-        req.prepayId = data.getPrePayId();
-        req.packageValue = "Sign=WXPay";
-        req.nonceStr =data.getNoncestr();
-        req.timeStamp =data.getTimestamp();
-
-        List<NameValuePair> signParams = new LinkedList<NameValuePair>();
-        signParams.add(new BasicNameValuePair("appid", req.appId));
-        signParams.add(new BasicNameValuePair("noncestr", req.nonceStr));
-        signParams.add(new BasicNameValuePair("package", req.packageValue));
-        signParams.add(new BasicNameValuePair("partnerid", req.partnerId));
-        signParams.add(new BasicNameValuePair("prepayid", req.prepayId));
-        signParams.add(new BasicNameValuePair("timestamp", req.timeStamp));
-
-        req.sign = genAppSign(signParams);
-
-        sb.append("sign\n" + req.sign + "\n\n");
-
-//        show.setText(sb.toString());
-
-        Log.e("orion", signParams.toString());
-
-    }
-
-
-
-    private void sendPayReq() {
-        msgApi.registerApp(Constants.APP_ID);
-        msgApi.sendReq(req);
-    }
-
-
-    public void sendPayReq(WXPrePay data) {
-        msgApi.registerApp(data.getAppId());
-        msgApi.sendReq(req);
-    }
-
-
 }
+
+
+
 

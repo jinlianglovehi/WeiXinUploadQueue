@@ -47,7 +47,8 @@ public class PayAccountActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         title_text.setText("我的账户");
-//        tvPayAccountRentDay.setText("租用设备");
+
+        tvPayAccountRentDay.setText("租用设备");
 
         orderId = -1;
 
@@ -73,15 +74,13 @@ public class PayAccountActivity extends BaseActivity {
                         new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
                     @Override
                     public void handleData(Service data) {
-                        if (data != null) {
-                            //0 开通未绑定设备,1绑定未激活服务,2服务已激活,3服务结束,4服务已取消
-                            if (data.getServiceStatus() == ACTIVATE_SERVICE) {
-                                tvPayAccountRentDay.setText("已租用设备" + data.getRentedDays() + "天");
-                                orderId = data.getOrderId();
-                            } else {
-                                tvPayAccountRentDay.setText("租用设备");
-                                orderId = data.getOrderId();
-                            }
+                        //0 开通未绑定设备,1绑定未激活服务,2服务已激活,3服务结束,4服务已取消
+                        if (data.getServiceStatus() == ACTIVATE_SERVICE) {
+                            tvPayAccountRentDay.setText("已租用设备" + data.getRentedDays() + "天");
+                            orderId = data.getOrderId();
+                        } else {
+                            tvPayAccountRentDay.setText("租用设备");
+                            orderId = data.getOrderId();
                         }
                         isRentEquipment=true;
                     }

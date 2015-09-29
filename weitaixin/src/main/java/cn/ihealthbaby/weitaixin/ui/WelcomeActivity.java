@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
@@ -41,10 +42,9 @@ import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
  */
 public class WelcomeActivity extends BaseActivity {
 
-    @Bind(R.id.viewPagerWelcome)
-    ViewPager viewPagerWelcome;
-    @Bind(R.id.ivWelcomeStart)
-    ImageView ivWelcomeStart;
+    @Bind(R.id.viewPagerWelcome) ViewPager viewPagerWelcome;
+    @Bind(R.id.ivWelcomeStart) ImageView ivWelcomeStart;
+    @Bind(R.id.llDot) LinearLayout llDot;
 
 
     private ArrayList<View> mListViews;
@@ -119,7 +119,7 @@ public class WelcomeActivity extends BaseActivity {
 
                         if (SPUtil.isLogin(WelcomeActivity.this)) {
                             if (SPUtil.getUser(WelcomeActivity.this).getIsInit()) {
-                                ivWelcomeStart.setVisibility(View.GONE);
+//                                ivWelcomeStart.setVisibility(View.GONE);
                                 Intent intentIsInit = new Intent(WelcomeActivity.this, InfoEditActivity.class);
                                 startActivity(intentIsInit);
                                 return;
@@ -127,7 +127,7 @@ public class WelcomeActivity extends BaseActivity {
 
                             if (!SPUtil.getUser(WelcomeActivity.this).getHasRiskscore()) {
                                 if (SPUtil.getHospitalId(WelcomeActivity.this) != -1) {
-                                    ivWelcomeStart.setVisibility(View.GONE);
+//                                    ivWelcomeStart.setVisibility(View.GONE);
                                     Intent intentHasRiskscore = new Intent(WelcomeActivity.this, GradedActivity.class);
                                     startActivity(intentHasRiskscore);
                                     return;
@@ -136,12 +136,12 @@ public class WelcomeActivity extends BaseActivity {
 
                             Intent intent = new Intent(WelcomeActivity.this, MeMainFragmentActivity.class);
                             startActivity(intent);
-                            ivWelcomeStart.setVisibility(View.GONE);
+//                            ivWelcomeStart.setVisibility(View.GONE);
                             finish();
                             return;
                         }
                     } else {
-                        ivWelcomeStart.setVisibility(View.GONE);
+//                        ivWelcomeStart.setVisibility(View.GONE);
                         Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
@@ -194,7 +194,7 @@ public class WelcomeActivity extends BaseActivity {
 //        view03.setImageBitmap(bitmap03);
 //        view04.setImageBitmap(bitmap04);
 //        ivWelcome05.setImageBitmap(bitmap05);
-
+//
         view01.setImageResource(R.drawable.welcome_01);
         view02.setImageResource(R.drawable.welcome_02);
         view03.setImageResource(R.drawable.welcome_03);
@@ -215,6 +215,35 @@ public class WelcomeActivity extends BaseActivity {
         mListViews.add(view04);
         mListViews.add(view05);
 
+        tvArrs = new TextView[mListViews.size()];
+        for (int i = 0; i < mListViews.size(); i++) {
+            TextView textView = new TextView(this);
+            textView.setBackgroundResource(R.drawable.welcom_dot_unchecked);
+            if (i == 0) {
+                textView.setBackgroundResource(R.drawable.welcom_dot);
+            }
+            textView.setWidth(10);
+            textView.setHeight(10);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(10, 0, 0, 0);
+            textView.setLayoutParams(lp);
+            tvArrs[i] = textView;
+            llDot.addView(textView);
+        }
+
+    }
+
+    public TextView[] tvArrs=null;
+
+    public void checkDot(int position){
+        for (int i = 0; i < tvArrs.length; i++) {
+            tvArrs[i].setBackgroundResource(R.drawable.welcom_dot_unchecked);
+            if (i == position) {
+                tvArrs[i].setBackgroundResource(R.drawable.welcom_dot);
+            }
+        }
     }
 
 
@@ -225,8 +254,8 @@ public class WelcomeActivity extends BaseActivity {
 
         viewPagerWelcome.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageSelected(int arg0) {
-
+            public void onPageSelected(int position) {
+                checkDot(position);
             }
 
             @Override
@@ -268,59 +297,6 @@ public class WelcomeActivity extends BaseActivity {
 
     }
 
-
-    public void tv_enter() {
-        if (SPUtil.getUser(this) != null) {
-            final CustomDialog customDialog = new CustomDialog();
-            Dialog dialog = customDialog.createDialog1(this, "刷新用户数据...");
-            dialog.show();
-
-            Intent intentAdvice = new Intent(getApplicationContext(), AdviceSettingService.class);
-            startService(intentAdvice);
-
-            ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
-                @Override
-                public void handleData(User data) {
-                    SPUtil.saveUser(WelcomeActivity.this, data);
-                    customDialog.dismiss();
-                }
-
-                @Override
-                public void handleException(Exception e) {
-                    customDialog.dismiss();
-                    Intent intentHasRiskscore = new Intent(WelcomeActivity.this, LoginActivity.class);
-                    startActivity(intentHasRiskscore);
-                    finish();
-                }
-            }), getRequestTag());
-
-            if (SPUtil.isLogin(this)) {
-                if (SPUtil.getUser(this).getIsInit()) {
-                    Intent intentIsInit = new Intent(this, InfoEditActivity.class);
-                    startActivity(intentIsInit);
-                    return;
-                }
-
-                if (!SPUtil.getUser(this).getHasRiskscore()) {
-                    if (SPUtil.getHospitalId(this) != -1) {
-                        Intent intentHasRiskscore = new Intent(this, GradedActivity.class);
-                        startActivity(intentHasRiskscore);
-                        return;
-                    }
-                }
-
-                Intent intent = new Intent(this, MeMainFragmentActivity.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        } else {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
-    }
 
     public void nextAction() {
         if (SPUtil.isNoFirstStartApp(this)) {

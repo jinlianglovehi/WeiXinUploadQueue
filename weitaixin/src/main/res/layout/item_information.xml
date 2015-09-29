@@ -1,82 +1,111 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="67dp"
-                android:background="@color/white0">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="67dp"
+    android:background="@color/white0">
 
-    <RelativeLayout
-        android:id="@+id/rl_avatar"
-        android:layout_width="@dimen/dimen_dp_38"
-        android:layout_height="@dimen/dimen_dp_38"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="@dimen/dimen_dp_18"
-        android:layout_marginLeft="@dimen/dimen_dp_14"
-        android:layout_marginTop="@dimen/dimen_dp_18">
-
-        <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
-            android:id="@+id/iv_head_icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_monitor_helper"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp">
 
         <TextView
-            android:id="@+id/tv_notification"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/notification_count"
+            android:id="@+id/tvRecordDelete"
+            android:layout_width="100dp"
+            android:layout_height="72dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginBottom="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/red0"
             android:gravity="center"
-            android:textColor="@color/white0"
-            android:textSize="10sp"
-            android:visibility="gone"/>
+            android:text="删 除"
+            android:textColor="@drawable/text_color_remove_selector"
+            android:textSize="@dimen/font16" />
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rlRecordItem"
+            android:layout_width="match_parent"
+            android:background="@color/white0"
+            android:layout_height="68dp">
 
-    <LinearLayout
-        android:id="@+id/ll_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="13dp"
-        android:layout_toRightOf="@id/rl_avatar"
-        android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/rl_avatar"
+                android:layout_width="@dimen/dimen_dp_38"
+                android:layout_height="@dimen/dimen_dp_38"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/dimen_dp_18"
+                android:layout_marginLeft="@dimen/dimen_dp_14"
+                android:layout_marginTop="@dimen/dimen_dp_18">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="张删"
-            android:textColor="@color/font_color"
-            android:textSize="@dimen/font_normal"/>
+                <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
+                    android:id="@+id/iv_head_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/button_monitor_helper" />
 
-        <TextView
-            android:id="@+id/tv_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_title"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:paddingRight="24dp"
-            android:singleLine="true"
-            android:text="登dsaddadad录"
-            android:textColor="@color/gray12"
-            android:textSize="@dimen/font_normal"/>
+                <TextView
+                    android:id="@+id/tv_notification"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/notification_count"
+                    android:gravity="center"
+                    android:textColor="@color/white0"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
-    </LinearLayout>
+            </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_create_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="16dp"
-        android:paddingRight="13dp"
-        android:singleLine="true"
-        android:text="20分钟"
-        android:textColor="@color/text_subtitle_color"
-        android:textSize="14sp"/>
+            <LinearLayout
+                android:id="@+id/ll_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="13dp"
+                android:layout_toRightOf="@id/rl_avatar"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/font_normal" />
+
+                <TextView
+                    android:id="@+id/tv_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_title"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:paddingRight="24dp"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@color/gray12"
+                    android:textSize="@dimen/font_normal" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_create_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:paddingRight="13dp"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/text_subtitle_color"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
+
 </RelativeLayout>

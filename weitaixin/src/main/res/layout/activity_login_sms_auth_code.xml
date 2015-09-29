@@ -12,7 +12,7 @@
     <EditText
         android:id="@+id/et_phone_number_smsauthcode"
         android:layout_width="match_parent"
-        android:layout_height="53dp"
+        android:layout_height="54dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="30dp"
@@ -20,7 +20,7 @@
         android:hint="请输入手机号码"
         android:maxLength="11"
         android:numeric="integer"
-        android:padding="14dp"
+        android:paddingLeft="14dp"
         android:phoneNumber="true"
         android:singleLine="true"
         android:text=""
@@ -39,14 +39,14 @@
         <EditText
             android:id="@+id/et_mark_number_smsauthcode"
             android:layout_width="0dp"
-            android:layout_height="53dp"
+            android:layout_height="54dp"
             android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:background="@drawable/frame_selector"
             android:hint="请输入短信验证码"
             android:maxLength="6"
             android:numeric="integer"
-            android:padding="14dp"
+            android:paddingLeft="14dp"
             android:singleLine="true"
             android:text=""
             android:textColor="@color/black1"
@@ -76,8 +76,8 @@
 
         <ImageView
             android:id="@+id/iv_agree_register"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/pitch"
             android:scaleType="fitXY"/>

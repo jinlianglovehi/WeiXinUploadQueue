@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,6 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Information;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -53,6 +55,8 @@ public class WoMessageActivity extends BaseActivity {
 
     int pageIndex = 1, pageSize = 5;
     private ReceiveBroadCast receiveBroadCast;
+    private boolean isMove = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,46 +148,128 @@ public class WoMessageActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final Information item = (Information) adapter.getItem(position - 1);
+                if (!isMove) {
+                    final Information item = (Information) adapter.getItem(position - 1);
 
-                LogUtil.d("Information", "Information==> " + item);
+                    LogUtil.d("Information", "Information==> " + item);
 
+                    ApiManager.getInstance().informationApi.readInformation(item.getId(), new DefaultCallback<Void>(WoMessageActivity.this, new AbstractBusiness<Void>() {
+                        @Override
+                        public void handleData(Void data) {
+                            item.setReadNums(item.getReadNums() + 1);
+                            adapter.notifyDataSetChanged();
 
-                ApiManager.getInstance().informationApi.readInformation(item.getId(), new DefaultCallback<Void>(WoMessageActivity.this, new AbstractBusiness<Void>() {
-                    @Override
-                    public void handleData(Void data) {
-                        item.setReadNums(item.getReadNums() + 1);
-                        adapter.notifyDataSetChanged();
+                            // 0 系统消息, 1 医生回复消息  2支付消息
+                            int type = item.getType();
+                            if (type == 0) {
+                                Intent intent = new Intent(getApplicationContext(), WoMessagOfSystemMessageActivity.class);
+                                intent.putExtra("SysMsg", item.getRelatedId());
+                                startActivity(intent);
+                            } else if (type == 1) {
+                                Intent intent = new Intent(getApplicationContext(), WoMessagOfReplyMessageActivity.class);
+                                intent.putExtra("AdviceReply", item.getRelatedId());
+                                intent.putExtra("informationId", item.getId());
+                                startActivity(intent);
+                            } else if (type == 2) {
+                                Intent intent = new Intent(getApplicationContext(), PayOrderDetailsActivity.class);
+                                intent.putExtra(PayConstant.ORDERID, item.getRelatedId());
+                                startActivity(intent);
+                            }
 
-                        // 0 系统消息, 1 医生回复消息  2支付消息
-                        int type = item.getType();
-                        if (type == 0) {
-                            Intent intent = new Intent(getApplicationContext(), WoMessagOfSystemMessageActivity.class);
-                            intent.putExtra("SysMsg", item.getRelatedId());
-                            startActivity(intent);
-                        } else if (type == 1) {
-                            Intent intent = new Intent(getApplicationContext(), WoMessagOfReplyMessageActivity.class);
-                            intent.putExtra("AdviceReply", item.getRelatedId());
-                            intent.putExtra("informationId", item.getId());
-                            startActivity(intent);
-                        } else if (type == 2) {
-                            Intent intent = new Intent(getApplicationContext(), PayOrderDetailsActivity.class);
-                            intent.putExtra(PayConstant.ORDERID, item.getRelatedId());
-                            startActivity(intent);
                         }
+                    }), getRequestTag());
 
-                    }
-                }), getRequestTag());
-
+                }
             }
         });
 
-        pullDatas();
+
+
+
+        pullToRefresh.getRefreshableView().setOnTouchListener(new View.OnTouchListener() {
+            private View selectedView;
+            private View tvAdviceStatused;
+            private float oldXDis;
+            private float oldX;
+            private float oldY;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (adapter.getSelectedView() == null) {
+                    return false;
+                }
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (adapter.selectedViewOld != null && adapter.selectedViewOld != adapter.selectedView) {
+                            adapter.cancel(adapter.selectedViewOld);
+                        }
+                        selectedView = adapter.getSelectedView();
+//                        tvAdviceStatused = adapter.getAdviceStatused();
+                        oldXDis = event.getX();
+                        oldX = event.getX();
+                        oldY = event.getY();
+                        isMove = false;
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        isMove = true;
+                        float distanceX = event.getX() - oldX;
+                        if (distanceX < 0) {
+                            float distanceY = event.getY() - oldY;
+                            if (Math.abs(distanceX) > Math.abs(distanceY)) {
+                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
+                                    selectedView.setX(-adapter.recordDelete.getWidth());
+                                } else {
+                                    if (selectedView != null && selectedView.getX() >= -adapter.recordDelete.getWidth()) {
+                                        selectedView.setX(selectedView.getX() + distanceX);
+                                    }
+                                }
+                            }
+                        } else {
+//                            float distanceY = event.getY() - oldY;
+//                            if (Math.abs(distanceX) > Math.abs(distanceY)&&selectedView.getX()<=0) {
+//                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
+//                                    selectedView.setX(0);
+//                                } else {
+//                                    if (selectedView != null) {
+//                                        selectedView.setX(selectedView.getX() + distanceX);
+//                                    }
+//                                }
+//                            }
+
+                            adapter.cancel();
+                        }
+                        oldX = event.getX();
+                        oldY = event.getY();
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        float distanceX2 = event.getX() - oldXDis;
+                        if (distanceX2 < 0) {
+                            if (Math.abs(distanceX2) >= adapter.recordDelete.getWidth() / 2 && selectedView != null) {
+                                selectedView.setX(-adapter.recordDelete.getWidth());
+                            } else {
+                                if (selectedView != null) {
+                                    selectedView.setX(0);
+                                }
+                            }
+                        } else {
+                            adapter.cancel();
+                        }
+                        adapter.selectedViewOld = selectedView;
+//                        adapter.tvAdviceStatusedOld = tvAdviceStatused;
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        pullDatas();
+
         if (receiveBroadCast == null) {
             receiveBroadCast = new ReceiveBroadCast();
             IntentFilter filter = new IntentFilter();
@@ -250,6 +336,12 @@ public class WoMessageActivity extends BaseActivity {
                         if (pullToRefresh!=null) {
                             pullToRefresh.onRefreshComplete();
                         }
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<PageData<Information>> result) {
+                        super.handleResult(result);
                         customDialog.dismiss();
                     }
                 }), getRequestTag());

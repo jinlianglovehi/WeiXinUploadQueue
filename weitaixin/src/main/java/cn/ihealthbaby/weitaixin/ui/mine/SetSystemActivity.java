@@ -13,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
@@ -156,7 +157,11 @@ public class SetSystemActivity extends BaseActivity {
                 customDialog.dismiss();
             }
 
-
+            @Override
+            public void handleResult(Result<Void> result) {
+                super.handleResult(result);
+                customDialog.dismiss();
+            }
         }), getRequestTag());
 
 

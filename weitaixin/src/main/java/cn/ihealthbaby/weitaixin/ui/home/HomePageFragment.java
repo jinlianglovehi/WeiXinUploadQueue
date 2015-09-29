@@ -102,44 +102,10 @@ public class HomePageFragment extends BaseFragment {
             flShowMessageCount.setVisibility(View.INVISIBLE);
         }
 
-        pullHeadDatas();
+//        pullHeadDatas();
 
         meMainFragmentActivity = (MeMainFragmentActivity) getActivity();
         recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
-        ApiManager.getInstance().adviceApi.getStatistics(new DefaultCallback<AdviceStatistics>(getActivity(), new AbstractBusiness<AdviceStatistics>() {
-            @Override
-            public void handleData(AdviceStatistics data) {
-                if (data != null) {
-                    messageCount += data.getAdviceUnReadReplyCount();
-                    if (messageCount != 0) {
-                        flShowMessageCount.setVisibility(View.VISIBLE);
-                        tvMessageNumberCount.setText(messageCount + "");
-                    }
-
-                    monitorCount += data.getAdviceUploadCount();
-                    monitorCount += getLocalDB();
-                    tvMonitorDayNumber.setText(monitorCount + "");
-                } else {
-                    ToastUtil.show(getActivity(), "没有获取到数据");
-                }
-            }
-
-            @Override
-            public void handleException(Exception e) {
-                super.handleException(e);
-                if (messageCount == 0) {
-                    flShowMessageCount.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void handleClientError(Context context,Exception e) {
-                super.handleClientError(context,e);
-                if (messageCount == 0) {
-                    flShowMessageCount.setVisibility(View.INVISIBLE);
-                }
-            }
-        }), getRequestTag());
 
         return view;
     }
@@ -186,6 +152,44 @@ public class HomePageFragment extends BaseFragment {
             ImageLoader.getInstance().displayImage(user.getHeadPic(), ivHomeHeadImg, setDisplayImageOptions());
             tvHomeHeadName.setText(user.getName());
         }
+
+
+        ApiManager.getInstance().adviceApi.getStatistics(
+                new DefaultCallback<AdviceStatistics>(getActivity(), new AbstractBusiness<AdviceStatistics>() {
+                    @Override
+                    public void handleData(AdviceStatistics data) {
+                        if (data != null) {
+                            messageCount += data.getAdviceUnReadReplyCount();
+                            if (messageCount != 0) {
+                                flShowMessageCount.setVisibility(View.VISIBLE);
+                                tvMessageNumberCount.setText(messageCount + "");
+                            }
+
+                            monitorCount += data.getAdviceUploadCount();
+                            monitorCount += getLocalDB();
+                            tvMonitorDayNumber.setText(monitorCount + "");
+                        } else {
+                            ToastUtil.show(getActivity(), "没有获取到数据");
+                        }
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        if (messageCount == 0) {
+                            flShowMessageCount.setVisibility(View.INVISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
+                        if (messageCount == 0) {
+                            flShowMessageCount.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                }), getRequestTag());
+
     }
 
     @OnClick(R.id.ivHomeHeadImg)
@@ -209,7 +213,7 @@ public class HomePageFragment extends BaseFragment {
         if (SPUtil.isLogin(getActivity())) {
             Intent intent = new Intent(getActivity().getApplicationContext(), WoMessageActivity.class);
             startActivity(intent);
-        }else{
+        } else {
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }
@@ -225,7 +229,7 @@ public class HomePageFragment extends BaseFragment {
         if (SPUtil.isLogin(getActivity())) {
             Intent intent = new Intent(getActivity().getApplicationContext(), PayAccountActivity.class);
             startActivity(intent);
-        }else{
+        } else {
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }

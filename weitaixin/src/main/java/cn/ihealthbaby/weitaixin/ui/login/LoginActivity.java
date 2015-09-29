@@ -17,6 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.LoginByPasswordForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -164,6 +165,12 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void handleClientError(Context context, Exception e) {
                 super.handleClientError(context, e);
+                customDialog.dismiss();
+            }
+
+            @Override
+            public void handleResult(Result<User> result) {
+                super.handleResult(result);
                 customDialog.dismiss();
             }
 

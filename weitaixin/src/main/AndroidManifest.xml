@@ -34,6 +34,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="wx8da8b08e973e9305"/>
+            </intent-filter>
         </activity>
         <activity
             android:screenOrientation="portrait"

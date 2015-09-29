@@ -24,14 +24,10 @@ import cn.ihealthbaby.weitaixin.CustomDialog;
  */
 public class WelcomeActiviy extends BaseActivity {
 
-    @Bind(R.id.back)
-    RelativeLayout mBack;
-    @Bind(R.id.title_text)
-    TextView mTitleText;
-    @Bind(R.id.function)
-    TextView mFunction;
-    @Bind(R.id.wv_welcome)
-    WebView mWvWelcome;
+    @Bind(R.id.back) RelativeLayout mBack;
+    @Bind(R.id.title_text) TextView mTitleText;
+    @Bind(R.id.function) TextView mFunction;
+    @Bind(R.id.wv_welcome) WebView mWvWelcome;
 
     private WebSettings mWebSettings;
     private CustomDialog customDialog;

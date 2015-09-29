@@ -33,6 +33,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
@@ -344,6 +345,14 @@ public class RecordFragment extends BaseFragment {
                             }
 
                             @Override
+                            public void handleResult(Result<PageData<AdviceItem>> result) {
+                                super.handleResult(result);
+                                if (pullToRefresh != null) {
+                                    pullToRefresh.onRefreshComplete();
+                                }
+                            }
+
+                            @Override
                             public void handleException(Exception e) {
                                 super.handleException(e);
                                 pageIndex--;
@@ -459,6 +468,17 @@ public class RecordFragment extends BaseFragment {
                     public void handleException(Exception e) {
                         super.handleException(e);
                         getCache(customDialogTwo);
+                    }
+
+                    @Override
+                    public void handleResult(Result<PageData<AdviceItem>> result) {
+                        super.handleResult(result);
+                        if (pullToRefresh != null) {
+                            pullToRefresh.onRefreshComplete();
+                        }
+                        if (customDialogTwo != null) {
+                            customDialogTwo.dismiss();
+                        }
                     }
 
                     @Override

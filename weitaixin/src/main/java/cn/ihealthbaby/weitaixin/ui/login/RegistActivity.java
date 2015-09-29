@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.LoginByPasswordForm;
 import cn.ihealthbaby.client.form.RegForm;
 import cn.ihealthbaby.client.model.User;
@@ -185,6 +186,12 @@ public class RegistActivity extends BaseActivity {
                     }
 
                     @Override
+                    public void handleResult(Result<Boolean> result) {
+                        super.handleResult(result);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
                         isHasAuthCode = false;
@@ -273,6 +280,12 @@ public class RegistActivity extends BaseActivity {
                     }
 
                     @Override
+                    public void handleResult(Result<User> result) {
+                        super.handleResult(result);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
                         customDialog.dismiss();
@@ -321,6 +334,7 @@ public class RegistActivity extends BaseActivity {
                             RegistActivity.this.finish();
                         }
                     }
+
 
                     @Override
                     public void handleClientError(Context context, Exception e) {

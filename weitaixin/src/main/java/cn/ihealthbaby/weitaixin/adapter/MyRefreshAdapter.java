@@ -1,11 +1,15 @@
 package cn.ihealthbaby.weitaixin.adapter;
 
+import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -17,20 +21,60 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Information;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.RelativeDateFormat;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.ui.mine.WoMessageActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
 public class MyRefreshAdapter extends BaseAdapter {
 
-    private Context context;
+    private WoMessageActivity context;
     private ArrayList<Information> datas;
 
     private LayoutInflater mInflater;
 
-    public MyRefreshAdapter(Context context, ArrayList<Information> datas) {
+    public View selectedView;
+    public View selectedViewOld;
+    public TextView recordDelete;
+    private int selectedItem;
+
+
+    public View getSelectedView() {
+        return selectedView;
+    }
+
+    public void cancel() {
+//        if (tvAdviceStatused != null) {
+//            tvAdviceStatused.setVisibility(View.VISIBLE);
+//        }
+        if (selectedView == null) {
+            return;
+        }
+        ObjectAnimator.ofFloat(selectedView, "x", 0f).start();
+        selectedView = null;
+//        tvAdviceStatused=null;
+    }
+
+    public void cancel(View selectedViewOld) {
+        if (selectedViewOld == null) {
+            return;
+        }
+        ObjectAnimator.ofFloat(selectedViewOld, "x", 0f).start();
+        selectedViewOld = null;
+    }
+
+
+
+    public MyRefreshAdapter(WoMessageActivity context, ArrayList<Information> datas) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
         setDatas(datas);
@@ -67,7 +111,7 @@ public class MyRefreshAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_information, null);
@@ -76,6 +120,21 @@ public class MyRefreshAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
+        recordDelete = viewHolder.tvRecordDelete;
+        viewHolder.rlRecordItem.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        selectedView = v;
+                        selectedItem = position;
+                        break;
+                }
+                return false;
+            }
+        });
+
 
         Information data = datas.get(position);
         ImageLoader.getInstance().displayImage(data.getPicPath(), viewHolder.mIvHeadIcon, setDisplayImageOptions());
@@ -88,7 +147,59 @@ public class MyRefreshAdapter extends BaseAdapter {
             viewHolder.tv_notification.setVisibility(View.GONE);
         }
 
+
+        viewHolder.tvRecordDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteRecordItem(position);
+            }
+        });
+        cancel();
+
+
         return convertView;
+    }
+
+
+    private void deleteRecordItem(final int position) {
+        final CustomDialog customDialog = new CustomDialog();
+        Dialog dialog1 = customDialog.createDialog1(context, "正在删除...");
+        dialog1.show();
+        Information information = this.datas.get(position);
+        long inforId = information.getId();
+        LogUtil.d("inforId","inforId==> "+inforId);
+        ApiManager.getInstance().informationApi.deleteInformation(inforId,
+                new DefaultCallback<Void>(context, new AbstractBusiness<Void>() {
+                    @Override
+                    public void handleData(Void data) {
+                        ToastUtil.show(context,"删除成功");
+                        datas.remove(position);
+                        notifyDataSetChanged();
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleClientError(Context context, Exception e) {
+                        super.handleClientError(context, e);
+                        ToastUtil.show(context, "删除失败");
+                        cancel();
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        super.handleException(e);
+                        ToastUtil.show(context, "删除失败");
+                        cancel();
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<Void> result) {
+                        super.handleResult(result);
+                        customDialog.dismiss();
+                    }
+                }),context);
     }
 
 
@@ -121,6 +232,10 @@ public class MyRefreshAdapter extends BaseAdapter {
         TextView tv_create_time;
         @Bind(R.id.tv_notification)
         TextView tv_notification;
+        @Bind(R.id.tvRecordDelete)
+        TextView tvRecordDelete;
+        @Bind(R.id.rlRecordItem)
+        RelativeLayout rlRecordItem;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

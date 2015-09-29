@@ -67,7 +67,7 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
             ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
             tv_wo_head_name.setText(user.getName()+"");
             tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
-            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(user.getDeliveryTime(),"MM月dd日"));
+            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(user.getDeliveryTime(),"yyyy年MM月dd日"));
             tv_phone_number.setText(user.getMobile()+"");
             tv_birthday.setText(DateTimeTool.date2Str(user.getBirthday(),"MM月dd日")+"");
             if(user.getServiceInfo()!=null){

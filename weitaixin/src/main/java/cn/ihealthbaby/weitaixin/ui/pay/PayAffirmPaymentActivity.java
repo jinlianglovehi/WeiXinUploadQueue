@@ -12,6 +12,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.WXPayForm;
 import cn.ihealthbaby.client.model.WXPrePay;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -100,7 +101,8 @@ public class PayAffirmPaymentActivity extends BaseActivity {
                 new DefaultCallback<WXPrePay>(this, new AbstractBusiness<WXPrePay>() {
                     @Override
                     public void handleData(WXPrePay data) {
-                        LogUtil.d("WXPrehandleDataPay",orderId+"WXPrehandleDataPay==>"+data);
+                        LogUtil.d("WXPrehandleDataPay",orderId+" <==orderId === WXPrehandleDataPay==> "+data);
+                        PayConstant.WXPAY_APPID = data.getAppId();
                         PayWxUtil payWxUtil=new PayWxUtil(PayAffirmPaymentActivity.this, data);
                         payWxUtil.sendPayReq(data);
                         customDialog.dismiss();
@@ -115,6 +117,12 @@ public class PayAffirmPaymentActivity extends BaseActivity {
                     @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<WXPrePay> result) {
+                        super.handleResult(result);
                         customDialog.dismiss();
                     }
                 }),getRequestTag());

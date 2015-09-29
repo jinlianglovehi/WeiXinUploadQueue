@@ -16,6 +16,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
 import cn.ihealthbaby.weitaixin.ui.pay.wxpay.Constants;
 
 
@@ -30,7 +31,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pay_result);
 
-		api = WXAPIFactory.createWXAPI(this, Constants.APP_ID);
+		api = WXAPIFactory.createWXAPI(this, PayConstant.WXPAY_APPID);
 
 		api.handleIntent(getIntent(), this);
 	}
@@ -49,8 +50,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 
 	@Override
 	public void onResp(BaseResp resp) {
-		LogUtil.d(TAG, "onPayFinish, errCode = " + resp.errCode);
-//		LogUtil.d(TAG, "onPayFinish, errCode = " + resp.);
+		LogUtil.d(TAG, "onPayFinish, errCode = " + resp.toString());
 
 		if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
