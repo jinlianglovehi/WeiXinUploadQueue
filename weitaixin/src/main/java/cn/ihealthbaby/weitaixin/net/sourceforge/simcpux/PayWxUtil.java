@@ -1,12 +1,10 @@
-package cn.ihealthbaby.weitaixin.ui.pay.wxpay;
+package cn.ihealthbaby.weitaixin.net.sourceforge.simcpux;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.tencent.mm.sdk.modelpay.PayReq;
@@ -25,7 +23,6 @@ import java.util.Map;
 import java.util.Random;
 
 import cn.ihealthbaby.client.model.WXPrePay;
-import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 

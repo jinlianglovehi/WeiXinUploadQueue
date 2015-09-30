@@ -17,7 +17,6 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
-import cn.ihealthbaby.weitaixin.ui.pay.wxpay.Constants;
 
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{

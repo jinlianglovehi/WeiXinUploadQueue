@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.ui.pay.wxpay;
+package cn.ihealthbaby.weitaixin.net.sourceforge.simcpux;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;

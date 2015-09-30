@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixin.ui.pay.wxpay;
+package cn.ihealthbaby.weitaixin.net.sourceforge.simcpux;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

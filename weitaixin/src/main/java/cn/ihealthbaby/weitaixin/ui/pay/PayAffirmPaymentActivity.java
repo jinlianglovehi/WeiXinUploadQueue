@@ -25,7 +25,7 @@ import cn.ihealthbaby.weitaixin.LocalProductData;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.ui.pay.alipay.PayAlipayUtil;
 import cn.ihealthbaby.weitaixin.ui.pay.event.PayEvent;
-import cn.ihealthbaby.weitaixin.ui.pay.wxpay.PayWxUtil;
+import cn.ihealthbaby.weitaixin.net.sourceforge.simcpux.PayWxUtil;
 import de.greenrobot.event.EventBus;
 
 public class PayAffirmPaymentActivity extends BaseActivity {
