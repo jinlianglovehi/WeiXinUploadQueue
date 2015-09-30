@@ -56,12 +56,13 @@ public class GuardianStateActivity extends BaseActivity {
 	private String purposeText;
 	private String moodText;
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guardian_state);
 		ButterKnife.bind(this);
-		title_text.setText("监护状态");
+		title_text.setText("监测状态");
 		final CustomDialog customDialog = new CustomDialog();
 		Dialog dialog = customDialog.createDialog1(this, "加载中...");
 		dialog.show();

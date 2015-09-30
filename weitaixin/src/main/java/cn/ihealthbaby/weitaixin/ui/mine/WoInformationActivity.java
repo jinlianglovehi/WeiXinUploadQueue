@@ -61,7 +61,9 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
 
         ButterKnife.bind(this);
         title_text.setText("我的信息");
+    }
 
+    public void initInformation(){
         User user = SPUtil.getUser(this);
         if (SPUtil.isLogin(this)&& user!=null) {
             ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
@@ -82,6 +84,7 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
     @Override
     protected void onResume() {
         super.onResume();
+        initInformation();
     }
 
 

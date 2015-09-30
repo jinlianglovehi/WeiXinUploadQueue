@@ -6,27 +6,36 @@
 
     <FrameLayout
         android:layout_width="match_parent"
+
         android:layout_height="68dp">
 
-        <TextView
-            android:id="@+id/tvRecordDelete"
+        <RelativeLayout
             android:layout_width="100dp"
-            android:layout_height="72dp"
+            android:layout_height="64dp"
             android:layout_gravity="right|center_vertical"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginTop="1dp"
-            android:background="@color/red0"
-            android:gravity="center"
-            android:text="删 除"
-            android:textColor="@drawable/text_color_remove_selector"
-            android:textSize="@dimen/font16" />
+            android:background="@color/red0">
+
+            <TextView
+                android:id="@+id/tvRecordDelete"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="6dp"
+                android:background="@color/red0"
+                android:gravity="center"
+                android:text="删 除"
+                android:textColor="@drawable/text_color_remove_selector"
+                android:textSize="@dimen/font16" />
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/rlRecordItem"
             android:layout_width="match_parent"
-            android:background="@color/white0"
-            android:layout_height="68dp">
+            android:layout_height="68dp"
+            android:background="@color/white0">
 
             <RelativeLayout
                 android:id="@+id/rl_avatar"

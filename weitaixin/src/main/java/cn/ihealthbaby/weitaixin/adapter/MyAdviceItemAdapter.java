@@ -328,7 +328,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		if (datas.size() > 0) {
 			final AdviceItem adviceItem = datas.get(position);
 			final int status = adviceItem.getStatus();
-			if (status != 1) { //  等待回复1    的记录不能删除
+			if (status != 1 || status != 2) { //  等待回复1    的记录不能删除
 				final CustomDialog customDialog = new CustomDialog();
 				Dialog dialog = customDialog.createDialog1(context, "正在删除...");
 				dialog.show();

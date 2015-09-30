@@ -65,7 +65,7 @@
                     android:background="@null"
                     android:padding="18dp"
                     android:singleLine="true"
-                    android:text="监护目的  其他(感觉不适或用药等)"
+                    android:text="监护目的"
                     android:textColor="@drawable/text_color_hei_selector"
                     android:textSize="@dimen/font12" />
 

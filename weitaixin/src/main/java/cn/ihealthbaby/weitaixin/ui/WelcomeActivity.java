@@ -69,15 +69,12 @@ public class WelcomeActivity extends BaseActivity {
         ButterKnife.bind(this);
 
 
-
         ivWelcomeStart.setVisibility(View.VISIBLE);
 
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
-
                 if (SPUtil.isNoFirstStartApp(WelcomeActivity.this)) {
                     if (SPUtil.getUser(WelcomeActivity.this) != null) {
 //                        CustomDialog customDialog = null;
