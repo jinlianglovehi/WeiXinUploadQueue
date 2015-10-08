@@ -70,8 +70,6 @@ public class LoginActivity extends BaseActivity {
         title_text.setText("登录");
         back.setVisibility(View.INVISIBLE);
 
-
-
         ivShowPassword.setTag("0");
     }
 

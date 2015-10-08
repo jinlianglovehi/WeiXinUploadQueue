@@ -26,6 +26,7 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -230,11 +231,11 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
 		if (adviceItem.getStatus() == 1) {
 			viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle_un);
-			viewHolder.iv_circle.setVisibility(View.GONE);
+//			viewHolder.iv_circle.setVisibility(View.GONE);
 		} else {
-//			viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.bg_ask_doctor);
-			viewHolder.tvAdviceStatus.setBackgroundColor(context.getResources().getColor(R.color.green0));
-			viewHolder.iv_circle.setVisibility(View.VISIBLE);
+			viewHolder.tvAdviceStatus.setBackgroundResource(R.drawable.recode_half_circle);
+//			viewHolder.tvAdviceStatus.setBackgroundColor(context.getResources().getColor(R.color.green0));
+//			viewHolder.iv_circle.setVisibility(View.VISIBLE);
 		}
 		viewHolder.tvAdviceStatus.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -332,37 +333,57 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 				final CustomDialog customDialog = new CustomDialog();
 				Dialog dialog = customDialog.createDialog1(context, "正在删除...");
 				dialog.show();
-				ApiManager.getInstance().adviceApi.delete(adviceItem.getId(),
-						new DefaultCallback<Void>(context, new AbstractBusiness<Void>() {
-							@Override
-							public void handleData(Void data) {
-								if (status == 4) {
+				if(status == 4) {
+					try {
+						recordBusinessDao.deleteByLocalRecordId(adviceItem.getClientId());
+						datas.remove(position);
+						notifyDataSetChanged();
+						ToastUtil.show(context, "删除成功");
+					} catch (Exception e) {
+						e.printStackTrace();
+						ToastUtil.show(context, "删除失败");
+					}
+					customDialog.dismiss();
+				} else {
+					ApiManager.getInstance().adviceApi.delete(adviceItem.getId(),
+							new DefaultCallback<Void>(context, new AbstractBusiness<Void>() {
+								@Override
+								public void handleData(Void data) {
 									try {
-										recordBusinessDao.deleteByLocalRecordId(adviceItem.getClientId());
-										ToastUtil.show(context, "删除成功");
+	//									if (status == 4) {
+	//										recordBusinessDao.deleteByLocalRecordId(adviceItem.getClientId());
+	//									}
 										datas.remove(position);
+										notifyDataSetChanged();
+										ToastUtil.show(context, "删除成功");
 									} catch (Exception e) {
 										e.printStackTrace();
 										ToastUtil.show(context, "删除失败");
 									}
+									customDialog.dismiss();
 								}
 
-								notifyDataSetChanged();
-								customDialog.dismiss();
-							}
+								@Override
+								public void handleException(Exception e) {
+									super.handleException(e);
+									ToastUtil.show(context, "删除失败");
+									customDialog.dismiss();
+								}
 
-							@Override
-							public void handleException(Exception e) {
-								super.handleException(e);
-								customDialog.dismiss();
-							}
+								@Override
+								public void handleClientError(Context context, Exception e) {
+									super.handleClientError(context, e);
+									ToastUtil.show(context, "删除失败");
+									customDialog.dismiss();
+								}
 
-							@Override
-							public void handleClientError(Context context, Exception e) {
-								super.handleClientError(context, e);
-								customDialog.dismiss();
-							}
-						}), context);
+								@Override
+								public void handleResult(Result<Void> result) {
+									super.handleResult(result);
+									customDialog.dismiss();
+								}
+							}), context);
+				}
 			} else {
 				ToastUtil.show(context, "问医生的记录不能删除");
 				cancel();

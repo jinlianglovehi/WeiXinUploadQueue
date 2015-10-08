@@ -15,14 +15,15 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInfoFragment;
 import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
+import cn.ihealthbaby.weitaixin.ui.mine.event.LogoutEvent;
 import cn.ihealthbaby.weitaixin.ui.record.RecordFragment;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Think on 2015/8/13
@@ -60,7 +61,20 @@ public class MeMainFragmentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_me_main_fragment);
         ButterKnife.bind(this);
+
+        EventBus.getDefault().register(this);
+
         showTabFirst();
+    }
+
+    public void onEventMainThread(LogoutEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

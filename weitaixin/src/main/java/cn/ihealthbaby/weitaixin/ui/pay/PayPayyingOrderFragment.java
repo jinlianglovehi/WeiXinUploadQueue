@@ -78,7 +78,7 @@ public class PayPayyingOrderFragment extends BaseFragment {
                     public void handleData(PageData<Order> data) {
                         ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
                         if (orders != null && orders.size() <= 0) {
-                            ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据");
+                            ToastUtil.show(getActivity().getApplicationContext(), "暂时没有数据");
                         }
                         adapter.setDatas(orders);
                         adapter.notifyDataSetChanged();
@@ -116,8 +116,19 @@ public class PayPayyingOrderFragment extends BaseFragment {
                             @Override
                             public void handleData(PageData<Order> data) {
                                 ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
-                                adapter.setDatas(orders);
-                                adapter.notifyDataSetChanged();
+
+                                if (orders!=null) {
+                                    if (orders.size()<=0) {
+                                        ToastUtil.show(getActivity(),"暂时没有最新数据");
+                                    }else{
+                                        adapter.setDatas(orders);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }else{
+                                    ToastUtil.show(getActivity(),"暂时没有最新数据");
+                                }
+
+
                                 pageIndex = 1;
                                 if (payPullToRefreshAllOrder != null) {
                                     payPullToRefreshAllOrder.onRefreshComplete();
@@ -153,7 +164,7 @@ public class PayPayyingOrderFragment extends BaseFragment {
                                 ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
                                 if (orders.size() <= 0) {
                                     --pageIndex;
-                                    ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据");
+                                    ToastUtil.show(getActivity().getApplicationContext(), "暂时没有数据");
                                 }
                                 adapter.addDatas(orders);
                                 adapter.notifyDataSetChanged();

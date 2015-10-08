@@ -151,10 +151,10 @@ public class WelcomeActivity extends BaseActivity {
 
 
                 if (!SPUtil.isNoFirstStartApp(WelcomeActivity.this)) {
-                    SPUtil.setNoFirstStartApp(WelcomeActivity.this);
+                    SPUtil.setNoFirstStartApp(WelcomeActivity.this, true);
                 }
             }
-        }, 3000);
+        }, 1500);
 
 
         initDataView();

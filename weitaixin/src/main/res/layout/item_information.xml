@@ -6,12 +6,11 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-
         android:layout_height="68dp">
 
         <RelativeLayout
             android:layout_width="100dp"
-            android:layout_height="64dp"
+            android:layout_height="60dp"
             android:layout_gravity="right|center_vertical"
             android:background="@color/red0">
 

@@ -13,6 +13,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.ui.WelcomeActivity;
+import cn.ihealthbaby.weitaixin.ui.mine.event.WelcomeEvent;
+import de.greenrobot.event.EventBus;
 
 /**
  * @author by kang on 2015/8/29.
@@ -65,8 +69,11 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.rl_welcome)
     public void welcomeOnclick() {
-        Intent intent = new Intent(this, WelcomeActiviy.class);
+        SPUtil.setNoFirstStartApp(this, false);
+        Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
+        finish();
+        EventBus.getDefault().post(new WelcomeEvent());
     }
 
     @OnClick(R.id.rl_function)

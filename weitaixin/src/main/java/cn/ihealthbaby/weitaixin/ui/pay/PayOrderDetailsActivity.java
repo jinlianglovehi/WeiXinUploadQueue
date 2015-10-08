@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -70,6 +71,8 @@ public class PayOrderDetailsActivity extends BaseActivity {
     @Bind(R.id.tvHospitalName)TextView tvHospitalName;
     @Bind(R.id.tvDoctorName)TextView tvDoctorName;
     @Bind(R.id.tvHospitalAddress)TextView tvHospitalAddress;
+    @Bind(R.id.llPalneWay)LinearLayout llPalneWay;
+    @Bind(R.id.rlPalneWay)RelativeLayout rlPalneWay;
 
 //    private int hospitalStatus=-1;
 
@@ -193,6 +196,7 @@ public class PayOrderDetailsActivity extends BaseActivity {
                             tvPayAffirmGoodsOrGoPay.setVisibility(View.VISIBLE);
                             tvPayAffirmGoodsOrGoPay.setText("去支付");
                             tvPayAffirmGoodsOrGoPay.setBackgroundColor(getResources().getColor(R.color.red0));
+                            rlPalneWay.setVisibility(View.GONE);
                         }
 
                         if (orderDetail.getOrderStatus() == PayConstant.gettingGoods) {

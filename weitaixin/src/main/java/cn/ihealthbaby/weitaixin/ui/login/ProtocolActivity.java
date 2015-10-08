@@ -16,6 +16,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
+import cn.ihealthbaby.client.model.Urls;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
@@ -82,29 +84,34 @@ public class ProtocolActivity extends BaseActivity {
         mWebView.setWebViewClient(new HelloWebViewClient());
 
         customDialog = new CustomDialog();
-        Dialog dialog=customDialog.createDialog1(this,"加载中...");
+        Dialog dialog=customDialog.createDialog1(this, "加载中...");
         dialog.show();
 
-        ApiManager.getInstance().urlApi.getPrivacyAgreementUrl(
-                new DefaultCallback<String>(this, new AbstractBusiness<String>() {
-                    @Override
-                    public void handleData(String data) {
-                        mWebView.loadUrl(data);
-                        customDialog.dismiss();
-                    }
+        ApiManager.getInstance().urlApi.getUrls(new DefaultCallback<Urls>(this, new AbstractBusiness<Urls>() {
+            @Override
+            public void handleData(Urls data) {
+                mWebView.loadUrl(data.getAgreement());
+                customDialog.dismiss();
+            }
 
-                    @Override
-                    public void handleClientError(Context context, Exception e) {
-                        super.handleClientError(context, e);
-                        customDialog.dismiss();
-                    }
+            @Override
+            public void handleClientError(Context context, Exception e) {
+                super.handleClientError(context, e);
+                customDialog.dismiss();
+            }
 
-                    @Override
-                    public void handleException(Exception e) {
-                        super.handleException(e);
-                        customDialog.dismiss();
-                    }
-                }), getRequestTag());
+            @Override
+            public void handleException(Exception e) {
+                super.handleException(e);
+                customDialog.dismiss();
+            }
+
+            @Override
+            public void handleResult(Result<Urls> result) {
+                super.handleResult(result);
+                customDialog.dismiss();
+            }
+        }),getRequestTag());
 
     }
 

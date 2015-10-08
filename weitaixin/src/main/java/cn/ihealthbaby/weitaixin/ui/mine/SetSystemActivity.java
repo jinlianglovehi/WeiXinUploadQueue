@@ -23,6 +23,9 @@ import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.ui.mine.event.LogoutEvent;
+import cn.ihealthbaby.weitaixin.ui.mine.event.WelcomeEvent;
+import de.greenrobot.event.EventBus;
 
 
 public class SetSystemActivity extends BaseActivity {
@@ -54,7 +57,19 @@ public class SetSystemActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
+        EventBus.getDefault().register(this);
+
         title_text.setText("系统设置");
+    }
+
+    public void onEventMainThread(WelcomeEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -109,22 +124,6 @@ public class SetSystemActivity extends BaseActivity {
         Dialog dialog = customDialog.createDialog1(this, "退出中...");
         dialog.show();
 
-//        ApiManager.getInstance().accountApi.logout(new HttpClientAdapter.Callback<Void>() {
-//            @Override
-//            public void call(Result<Void> t) {
-//                if (t.isSuccess()) {
-//                    SPUtil.clearUser(SetSystemActivity.this);
-//                    WeiTaiXinApplication.getInstance().mAdapter.setAccountToken(null);
-//                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                } else {
-//                    ToastUtil.show(getApplicationContext(), t.getMsg());
-//                }
-//                dialog.dismiss();
-//            }
-//        }, getRequestTag());
-
         ApiManager.getInstance().accountApi.logout(new DefaultCallback<Void>(this, new AbstractBusiness<Void>() {
             @Override
             public void handleData(Void data)   {
@@ -134,6 +133,7 @@ public class SetSystemActivity extends BaseActivity {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
+                EventBus.getDefault().post(new LogoutEvent());
             }
 
             @Override

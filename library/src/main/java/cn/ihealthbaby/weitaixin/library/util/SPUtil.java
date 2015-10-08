@@ -294,10 +294,10 @@ public class SPUtil {
 		return sp.getBoolean("FirstStartApp", false);
 	}
 
-	public static void setNoFirstStartApp(Context context) {
+	public static void setNoFirstStartApp(Context context, boolean isNoFirst) {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FIRST_START_APP, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
-		editor.putBoolean("FirstStartApp", true);
+		editor.putBoolean("FirstStartApp", isNoFirst);
 		editor.commit();
 	}
 }

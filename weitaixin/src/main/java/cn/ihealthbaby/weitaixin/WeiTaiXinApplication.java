@@ -62,8 +62,6 @@ public class WeiTaiXinApplication extends Application {
 
         initApiManager();
 
-
-
     }
 
     public boolean isMonitoring() {
@@ -115,10 +113,10 @@ public class WeiTaiXinApplication extends Application {
                 .discCacheExtraOptions(480, 800, Bitmap.CompressFormat.JPEG, 75, null)
                 .threadPoolSize(3)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
-                .discCacheSize(50 * 1024 * 1024)
+                .discCacheSize(5 * 1024 * 1024)
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .discCacheFileCount(100)
+                .tasksProcessingOrder(QueueProcessingType.FIFO)
+//                .discCacheFileCount(100)
                 .writeDebugLogs()
                 .build();
 

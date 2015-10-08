@@ -112,6 +112,7 @@ public class HomePageFragment extends BaseFragment {
 
     //获取本地记录
     public int getLocalDB() {
+
         ArrayList<Record> records = new ArrayList<Record>();
         try {
             records = (ArrayList<Record>) recordBusinessDao.queryUserRecord(SPUtil.getUserID(getActivity().getApplicationContext()), Record.UPLOAD_STATE_LOCAL, Record.UPLOAD_STATE_UPLOADING);
@@ -158,6 +159,8 @@ public class HomePageFragment extends BaseFragment {
                 new DefaultCallback<AdviceStatistics>(getActivity(), new AbstractBusiness<AdviceStatistics>() {
                     @Override
                     public void handleData(AdviceStatistics data) {
+                        messageCount = 0;
+                        monitorCount = 0;
                         if (data != null) {
                             messageCount += data.getAdviceUnReadReplyCount();
                             if (messageCount != 0) {

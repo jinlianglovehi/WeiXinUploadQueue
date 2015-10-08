@@ -2,11 +2,16 @@ package cn.ihealthbaby.weitaixin.ui.pay;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -84,6 +89,19 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     @OnClick(R.id.llPaymenyWeixin)
     public void PaymenyWeixin() {
+
+        if (!isWXAppInstalledAndSupported(this, WXAPIFactory.createWXAPI(this, null))) {
+            ToastUtil.show(this, "微信客户端未安装，请先下载安装");
+            // http://weixin.qq.com/m
+            Intent intent = new Intent();
+            intent.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse("http://weixin.qq.com/m");
+            intent.setData(content_url);
+            startActivity(intent);
+            return;
+        }
+
+
         LogUtil.d("WXPrehandleDataPay",orderId+"==orderIdorderIdorderId");
         if (orderId == -1) {
             ToastUtil.show(getApplicationContext(),"订单Id生成有误");
@@ -101,9 +119,9 @@ public class PayAffirmPaymentActivity extends BaseActivity {
                 new DefaultCallback<WXPrePay>(this, new AbstractBusiness<WXPrePay>() {
                     @Override
                     public void handleData(WXPrePay data) {
-                        LogUtil.d("WXPrehandleDataPay",orderId+" <==orderId === WXPrehandleDataPay==> "+data);
+                        LogUtil.d("WXPrehandleDataPay", orderId + " <==orderId === WXPrehandleDataPay==> " + data);
                         PayConstant.WXPAY_APPID = data.getAppId();
-                        PayWxUtil payWxUtil=new PayWxUtil(PayAffirmPaymentActivity.this, data);
+                        PayWxUtil payWxUtil = new PayWxUtil(PayAffirmPaymentActivity.this, data);
                         payWxUtil.sendPayReq(data);
                         customDialog.dismiss();
                     }
@@ -125,8 +143,14 @@ public class PayAffirmPaymentActivity extends BaseActivity {
                         super.handleResult(result);
                         customDialog.dismiss();
                     }
-                }),getRequestTag());
+                }), getRequestTag());
     }
+
+    private static boolean isWXAppInstalledAndSupported(Context context, IWXAPI api) {
+        boolean sIsWXAppInstalledAndSupported = api.isWXAppInstalled() && api.isWXAppSupportAPI();
+        return sIsWXAppInstalledAndSupported;
+    }
+
 
     @OnClick(R.id.llPaymenyAlipay)
     public void PaymenyAlipay() {

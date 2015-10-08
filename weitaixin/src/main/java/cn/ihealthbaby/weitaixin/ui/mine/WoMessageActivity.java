@@ -33,6 +33,7 @@ import cn.ihealthbaby.weitaixin.adapter.MyRefreshAdapter;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
 import cn.ihealthbaby.weitaixin.ui.pay.PayOrderDetailsActivity;
 
@@ -313,8 +314,12 @@ public class WoMessageActivity extends BaseActivity {
                     public void handleData(PageData<Information> data) {
                         dataList = null;
                         dataList = (ArrayList<Information>) data.getValue();
-                        adapter.setDatas(dataList);
-                        adapter.notifyDataSetChanged();
+                        if (dataList != null && dataList.size() == 0) {
+                            ToastUtil.show(WoMessageActivity.this, "暂时没有消息数据");
+                        } else {
+                            adapter.setDatas(dataList);
+                            adapter.notifyDataSetChanged();
+                        }
                         if (pullToRefresh!=null) {
                             pullToRefresh.onRefreshComplete();
                         }
@@ -342,6 +347,9 @@ public class WoMessageActivity extends BaseActivity {
                     @Override
                     public void handleResult(Result<PageData<Information>> result) {
                         super.handleResult(result);
+                        if (pullToRefresh!=null) {
+                            pullToRefresh.onRefreshComplete();
+                        }
                         customDialog.dismiss();
                     }
                 }), getRequestTag());
