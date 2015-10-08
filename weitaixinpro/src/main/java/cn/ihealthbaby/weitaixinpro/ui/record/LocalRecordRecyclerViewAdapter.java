@@ -1,7 +1,8 @@
 package cn.ihealthbaby.weitaixinpro.ui.record;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,12 +14,15 @@ import butterknife.Bind;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.ui.widget.ChooseUploadContentPopupWindow;
 
 /**
  * Created by liuhongjian on 15/9/24 13:48.
  */
 public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRecordRecyclerViewAdapter.ViewHolder> {
-	private final Context context;
+	private static final int UPLOAD_ALL = 1;
+	private static final int UPLOAD_DATA = 2;
+	private final Activity activity;
 	private final List<Record> list;
 	@Bind(R.id.tv_begin)
 	TextView tvBegin;
@@ -29,8 +33,8 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	@Bind(R.id.tv_time)
 	TextView tvTime;
 
-	public LocalRecordRecyclerViewAdapter(Context context, ArrayList<Record> list) {
-		this.context = context;
+	public LocalRecordRecyclerViewAdapter(Activity activity, ArrayList<Record> list) {
+		this.activity = activity;
 		this.list = list;
 	}
 
@@ -42,12 +46,12 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
+	public void onBindViewHolder(final ViewHolder holder, int position) {
 		final Record record = list.get(position);
 		holder.tvDate.setText(DateTimeTool.date2StrAndTime(record.getRecordStartTime()));
 		holder.tvName.setText(record.getUserName());
 		holder.tvDuration.setText(DateTimeTool.getTime2(record.getDuration()) + "");
-		int uploadState = record.getUploadState();
+		final int uploadState = record.getUploadState();
 		switch (uploadState) {
 			case Record.UPLOAD_STATE_LOCAL:
 			case Record.UPLOAD_STATE_UPLOADING:
@@ -62,15 +66,9 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 		holder.tvUploadStatus.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//开始监测
-//				ApiManager.getInstance().hClientAccountApi.beginServicesinside(record.getId(), new DefaultCallback<Integer>(context, new AbstractBusiness<Integer>() {
-//					@Override
-//					public void handleData(Integer data) {
-//						ToastUtil.show(context, "开始监测");
-//						Intent intent = new Intent(context, MonitorActivity.class);
-//						context.startActivity(intent);
-//					}
-//				}), this);
+				//显示对话框,用户选择上传曲线还是全部上传
+				ChooseUploadContentPopupWindow chooseUploadContentPopupWindow = new ChooseUploadContentPopupWindow(activity, record);
+				chooseUploadContentPopupWindow.showAtLocation(activity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
 			}
 		});
 	}

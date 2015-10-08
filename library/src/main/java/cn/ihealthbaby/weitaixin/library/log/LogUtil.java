@@ -16,7 +16,6 @@ public class LogUtil {
 
 	private static void println(String tag, int level, String msg, Object... object) {
 		if (!MODE_DEGUB && level >= LEVEL_THRESHOLD) {
-			System.err.println("errtlrLEVEL_THRESHOLDerr"+object);
 			String string = String.format(msg, object);
 			print(tag, level, string);
 		}

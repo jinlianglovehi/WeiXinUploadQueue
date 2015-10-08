@@ -27,18 +27,19 @@ public class RecordDao extends AbstractDao<Record, Long> {
         public final static Property LocalRecordId = new Property(1, String.class, "localRecordId", false, "LOCAL_RECORD_ID");
         public final static Property UserId = new Property(2, long.class, "userId", false, "USER_ID");
         public final static Property ServiceId = new Property(3, Long.class, "serviceId", false, "SERVICE_ID");
-        public final static Property UserName = new Property(4, String.class, "userName", false, "USER_NAME");
-        public final static Property SerialNumber = new Property(5, String.class, "serialNumber", false, "SERIAL_NUMBER");
-        public final static Property UploadState = new Property(6, int.class, "uploadState", false, "UPLOAD_STATE");
-        public final static Property RecordStartTime = new Property(7, java.util.Date.class, "recordStartTime", false, "RECORD_START_TIME");
-        public final static Property GestationalWeeks = new Property(8, String.class, "gestationalWeeks", false, "GESTATIONAL_WEEKS");
-        public final static Property Duration = new Property(9, Integer.class, "duration", false, "DURATION");
-        public final static Property RecordData = new Property(10, String.class, "recordData", false, "RECORD_DATA");
-        public final static Property SoundPath = new Property(11, String.class, "soundPath", false, "SOUND_PATH");
-        public final static Property FeelingId = new Property(12, Integer.class, "feelingId", false, "FEELING_ID");
-        public final static Property FeelingString = new Property(13, String.class, "feelingString", false, "FEELING_STRING");
-        public final static Property PurposeId = new Property(14, Integer.class, "purposeId", false, "PURPOSE_ID");
-        public final static Property PurposeString = new Property(15, String.class, "purposeString", false, "PURPOSE_STRING");
+        public final static Property SoundUrl = new Property(4, String.class, "soundUrl", false, "SOUND_URL");
+        public final static Property UserName = new Property(5, String.class, "userName", false, "USER_NAME");
+        public final static Property SerialNumber = new Property(6, String.class, "serialNumber", false, "SERIAL_NUMBER");
+        public final static Property UploadState = new Property(7, int.class, "uploadState", false, "UPLOAD_STATE");
+        public final static Property RecordStartTime = new Property(8, java.util.Date.class, "recordStartTime", false, "RECORD_START_TIME");
+        public final static Property GestationalWeeks = new Property(9, String.class, "gestationalWeeks", false, "GESTATIONAL_WEEKS");
+        public final static Property Duration = new Property(10, Integer.class, "duration", false, "DURATION");
+        public final static Property RecordData = new Property(11, String.class, "recordData", false, "RECORD_DATA");
+        public final static Property SoundPath = new Property(12, String.class, "soundPath", false, "SOUND_PATH");
+        public final static Property FeelingId = new Property(13, Integer.class, "feelingId", false, "FEELING_ID");
+        public final static Property FeelingString = new Property(14, String.class, "feelingString", false, "FEELING_STRING");
+        public final static Property PurposeId = new Property(15, Integer.class, "purposeId", false, "PURPOSE_ID");
+        public final static Property PurposeString = new Property(16, String.class, "purposeString", false, "PURPOSE_STRING");
     };
 
     private DaoSession daoSession;
@@ -61,18 +62,19 @@ public class RecordDao extends AbstractDao<Record, Long> {
                 "\"LOCAL_RECORD_ID\" TEXT NOT NULL UNIQUE ," + // 1: localRecordId
                 "\"USER_ID\" INTEGER NOT NULL ," + // 2: userId
                 "\"SERVICE_ID\" INTEGER," + // 3: serviceId
-                "\"USER_NAME\" TEXT NOT NULL ," + // 4: userName
-                "\"SERIAL_NUMBER\" TEXT NOT NULL ," + // 5: serialNumber
-                "\"UPLOAD_STATE\" INTEGER NOT NULL ," + // 6: uploadState
-                "\"RECORD_START_TIME\" INTEGER," + // 7: recordStartTime
-                "\"GESTATIONAL_WEEKS\" TEXT," + // 8: gestationalWeeks
-                "\"DURATION\" INTEGER," + // 9: duration
-                "\"RECORD_DATA\" TEXT," + // 10: recordData
-                "\"SOUND_PATH\" TEXT," + // 11: soundPath
-                "\"FEELING_ID\" INTEGER," + // 12: feelingId
-                "\"FEELING_STRING\" TEXT," + // 13: feelingString
-                "\"PURPOSE_ID\" INTEGER," + // 14: purposeId
-                "\"PURPOSE_STRING\" TEXT);"); // 15: purposeString
+                "\"SOUND_URL\" TEXT," + // 4: soundUrl
+                "\"USER_NAME\" TEXT NOT NULL ," + // 5: userName
+                "\"SERIAL_NUMBER\" TEXT NOT NULL ," + // 6: serialNumber
+                "\"UPLOAD_STATE\" INTEGER NOT NULL ," + // 7: uploadState
+                "\"RECORD_START_TIME\" INTEGER," + // 8: recordStartTime
+                "\"GESTATIONAL_WEEKS\" TEXT," + // 9: gestationalWeeks
+                "\"DURATION\" INTEGER," + // 10: duration
+                "\"RECORD_DATA\" TEXT," + // 11: recordData
+                "\"SOUND_PATH\" TEXT," + // 12: soundPath
+                "\"FEELING_ID\" INTEGER," + // 13: feelingId
+                "\"FEELING_STRING\" TEXT," + // 14: feelingString
+                "\"PURPOSE_ID\" INTEGER," + // 15: purposeId
+                "\"PURPOSE_STRING\" TEXT);"); // 16: purposeString
     }
 
     /** Drops the underlying database table. */
@@ -97,53 +99,58 @@ public class RecordDao extends AbstractDao<Record, Long> {
         if (serviceId != null) {
             stmt.bindLong(4, serviceId);
         }
-        stmt.bindString(5, entity.getUserName());
-        stmt.bindString(6, entity.getSerialNumber());
-        stmt.bindLong(7, entity.getUploadState());
+ 
+        String soundUrl = entity.getSoundUrl();
+        if (soundUrl != null) {
+            stmt.bindString(5, soundUrl);
+        }
+        stmt.bindString(6, entity.getUserName());
+        stmt.bindString(7, entity.getSerialNumber());
+        stmt.bindLong(8, entity.getUploadState());
  
         java.util.Date recordStartTime = entity.getRecordStartTime();
         if (recordStartTime != null) {
-            stmt.bindLong(8, recordStartTime.getTime());
+            stmt.bindLong(9, recordStartTime.getTime());
         }
  
         String gestationalWeeks = entity.getGestationalWeeks();
         if (gestationalWeeks != null) {
-            stmt.bindString(9, gestationalWeeks);
+            stmt.bindString(10, gestationalWeeks);
         }
  
         Integer duration = entity.getDuration();
         if (duration != null) {
-            stmt.bindLong(10, duration);
+            stmt.bindLong(11, duration);
         }
  
         String recordData = entity.getRecordData();
         if (recordData != null) {
-            stmt.bindString(11, recordData);
+            stmt.bindString(12, recordData);
         }
  
         String soundPath = entity.getSoundPath();
         if (soundPath != null) {
-            stmt.bindString(12, soundPath);
+            stmt.bindString(13, soundPath);
         }
  
         Integer feelingId = entity.getFeelingId();
         if (feelingId != null) {
-            stmt.bindLong(13, feelingId);
+            stmt.bindLong(14, feelingId);
         }
  
         String feelingString = entity.getFeelingString();
         if (feelingString != null) {
-            stmt.bindString(14, feelingString);
+            stmt.bindString(15, feelingString);
         }
  
         Integer purposeId = entity.getPurposeId();
         if (purposeId != null) {
-            stmt.bindLong(15, purposeId);
+            stmt.bindLong(16, purposeId);
         }
  
         String purposeString = entity.getPurposeString();
         if (purposeString != null) {
-            stmt.bindString(16, purposeString);
+            stmt.bindString(17, purposeString);
         }
     }
 
@@ -167,18 +174,19 @@ public class RecordDao extends AbstractDao<Record, Long> {
             cursor.getString(offset + 1), // localRecordId
             cursor.getLong(offset + 2), // userId
             cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // serviceId
-            cursor.getString(offset + 4), // userName
-            cursor.getString(offset + 5), // serialNumber
-            cursor.getInt(offset + 6), // uploadState
-            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // recordStartTime
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // gestationalWeeks
-            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // duration
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // recordData
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // soundPath
-            cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12), // feelingId
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // feelingString
-            cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14), // purposeId
-            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15) // purposeString
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // soundUrl
+            cursor.getString(offset + 5), // userName
+            cursor.getString(offset + 6), // serialNumber
+            cursor.getInt(offset + 7), // uploadState
+            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)), // recordStartTime
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // gestationalWeeks
+            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10), // duration
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // recordData
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // soundPath
+            cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13), // feelingId
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // feelingString
+            cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15), // purposeId
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // purposeString
         );
         return entity;
     }
@@ -190,18 +198,19 @@ public class RecordDao extends AbstractDao<Record, Long> {
         entity.setLocalRecordId(cursor.getString(offset + 1));
         entity.setUserId(cursor.getLong(offset + 2));
         entity.setServiceId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setUserName(cursor.getString(offset + 4));
-        entity.setSerialNumber(cursor.getString(offset + 5));
-        entity.setUploadState(cursor.getInt(offset + 6));
-        entity.setRecordStartTime(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
-        entity.setGestationalWeeks(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setDuration(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
-        entity.setRecordData(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setSoundPath(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setFeelingId(cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12));
-        entity.setFeelingString(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setPurposeId(cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14));
-        entity.setPurposeString(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setSoundUrl(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setUserName(cursor.getString(offset + 5));
+        entity.setSerialNumber(cursor.getString(offset + 6));
+        entity.setUploadState(cursor.getInt(offset + 7));
+        entity.setRecordStartTime(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
+        entity.setGestationalWeeks(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setDuration(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
+        entity.setRecordData(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setSoundPath(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setFeelingId(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
+        entity.setFeelingString(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setPurposeId(cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15));
+        entity.setPurposeString(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
      }
     
     /** @inheritdoc */

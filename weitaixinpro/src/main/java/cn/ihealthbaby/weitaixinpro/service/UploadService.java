@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixinpro.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCancellationSignal;
@@ -18,6 +19,8 @@ import java.util.Map;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.UploadModel;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
@@ -104,6 +107,22 @@ public class UploadService extends IntentService {
 			@Override
 			public void complete(String key, ResponseInfo info, JSONObject response) {
 				if (info.statusCode == 200) {
+					String path = info.path;
+					if (!TextUtils.isEmpty(path)) {
+						Record record = null;
+						RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
+						try {
+							record = recordBusinessDao.queryByLocalRecordId(localRecordId);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						record.setSoundUrl(path);
+						try {
+							recordBusinessDao.update(record);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 					LogUtil.d(TAG, "Upload Result: key [%s]", key);
 					UploadEvent event = new UploadEvent(UploadEvent.RESULT_SUCCESS, localRecordId, key, token);
 					EventBus.getDefault().post(event);
@@ -126,10 +145,5 @@ public class UploadService extends IntentService {
 			}
 		};
 		options = new UploadOptions(null, Constants.MIME_TYPE_WAV, true, upProgressHandler, UpCancellationSignal);
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
 	}
 }

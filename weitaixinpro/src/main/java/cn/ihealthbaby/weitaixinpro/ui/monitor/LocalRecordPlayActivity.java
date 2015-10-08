@@ -28,7 +28,6 @@ import de.greenrobot.event.EventBus;
 public class LocalRecordPlayActivity extends RecordPlayActivity {
 	private final static int UPLOADTYPE_DATA = 0;
 	private final static int UPLOADTYPE_ALL = 1;
-	private String key;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

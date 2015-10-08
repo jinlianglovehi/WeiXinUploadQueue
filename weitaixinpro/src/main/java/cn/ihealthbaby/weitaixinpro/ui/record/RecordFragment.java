@@ -63,7 +63,7 @@ public class RecordFragment extends BaseFragment {
 		layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 		recyclerView.setLayoutManager(layoutManager);
 		list = new ArrayList<Record>();
-		adapter = new LocalRecordRecyclerViewAdapter(getActivity().getApplicationContext(), list);
+		adapter = new LocalRecordRecyclerViewAdapter(getActivity(), list);
 		recyclerView.setAdapter(adapter);
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override

@@ -369,7 +369,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onFinish() {
-				if (!connected || bluetoothScanner.isDiscovering()) {
+				if (!connected || bluetoothScanner.isDiscovering() || getActivity() != null) {
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
 					reset();
 					pseudoBluetoothService.stop();
@@ -385,6 +385,18 @@ public class MonitorFragment extends BaseFragment {
 		bluetoothReceiver.setListener(new AbstractBluetoothListener() {
 			@Override
 			public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
+				if (!scanedDevices.contains(remoteDevice)) {
+					if (getDeviceName().equalsIgnoreCase(remoteName)) {
+						pseudoBluetoothService.connect(remoteDevice, false);
+					}
+					scanedDevices.add(remoteDevice);
+				}
+			}
+
+			//设备名称改变
+			@Override
+			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
+				super.onRemoteNameChanged(remoteDevice, remoteName);
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
 						pseudoBluetoothService.connect(remoteDevice, false);
@@ -513,7 +525,7 @@ public class MonitorFragment extends BaseFragment {
 
 	public void connectBondedDeviceOrSearch() {
 		bondedDevices = adapter.getBondedDevices();
-		LogUtil.e("bluetoothScanner", "" + bondedDevices.size());
+		LogUtil.e("bluetoothScanner", "bondedDevices number" + bondedDevices.size());
 		if (bondedDevices != null && bondedDevices.size() > 0) {
 			for (BluetoothDevice device : bondedDevices) {
 				LogUtil.e("bluetoothScanner", "devicegetName: " + device.getName());

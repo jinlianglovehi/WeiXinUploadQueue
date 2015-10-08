@@ -28,6 +28,7 @@ public class DatabaseGenerator {
 		record.addStringProperty("localRecordId").unique().notNull().codeBeforeField("/**\n" + "\t * 本地记录id,由UUID生成,不带- 对应AdviceItem的jianceId\n" + "\t */");
 		record.addLongProperty("userId").notNull().codeBeforeField("/**\n" + "\t * 用户id\n" + "\t */");
 		record.addLongProperty("serviceId").codeBeforeField("/**\n" + "\t * 服务id\n" + "\t */");
+		record.addStringProperty("soundUrl").codeBeforeField("/**\n" + "\t * 服务端音频文件路径对应AdviceItem的path\n" + "\t */");
 		record.addStringProperty("userName").notNull().codeBeforeField("/**\n" + "\t * 用户名\n" + "\t */");
 		record.addStringProperty("serialNumber").notNull().codeBeforeField("/**\n" + "\t * 对应AdviceItem的serialNum\n" + "\t */");
 		record.addIntProperty("uploadState").notNull().codeBeforeField("/**\n" + "\t * 上传状态\n" + "\t */");
@@ -41,7 +42,6 @@ public class DatabaseGenerator {
 		record.addIntProperty("purposeId").codeBeforeField("/**\n" + "\t * 监护目的,对应AdviceItem的puposeId\n" + "\t */");
 		record.addStringProperty("purposeString").codeBeforeField("/**\n" + "\t * 监护目的,对应AdviceItem的pupose\n" + "\t */");
 //		record.addLongProperty("cloudRecordId").codeBeforeField("/**\n" + "\t * 云端id,对应AdviceItem的id\n" + "\t */");
-//		record.addStringProperty("soundUrl").codeBeforeField("/**\n" + "\t * 服务端音频文件路径对应AdviceItem的path\n" + "\t */");
 //		record.addIntProperty("serviceStatus").codeBeforeField("/**\n" + "\t * 对应AdviceItem的status\n" + "\t */");
 		DaoGenerator daoGenerator = new DaoGenerator();
 		daoGenerator.generateAll(schema, "./library/src/main/java/");

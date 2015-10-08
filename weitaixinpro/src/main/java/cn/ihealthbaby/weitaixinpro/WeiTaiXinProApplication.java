@@ -1,16 +1,8 @@
 package cn.ihealthbaby.weitaixinpro;
 
 import android.app.Application;
-import android.graphics.Bitmap;
 
 import com.android.volley.RequestQueue;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapter;
@@ -27,7 +19,7 @@ public class WeiTaiXinProApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		initUniversalImageLoader();
+//		initUniversalImageLoader();
 		initApiManager();
 	}
 
@@ -41,37 +33,37 @@ public class WeiTaiXinProApplication extends Application {
 		return adapter;
 	}
 
-	public void initUniversalImageLoader() {
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-				                                  .memoryCacheExtraOptions(480, 800)
-				                                  .discCacheExtraOptions(480, 800, Bitmap.CompressFormat.JPEG, 75, null)
-				                                  .threadPoolSize(3)
-				                                  .threadPriority(Thread.NORM_PRIORITY - 2)
-				                                  .discCacheSize(50 * 1024 * 1024)
-				                                  .discCacheFileNameGenerator(new Md5FileNameGenerator())
-				                                  .tasksProcessingOrder(QueueProcessingType.LIFO)
-				                                  .discCacheFileCount(100)
-				                                  .writeDebugLogs()
-				                                  .build();
-		ImageLoader.getInstance().init(config);
-	}
-
-	public DisplayImageOptions setDisplayImageOptions() {
-		DisplayImageOptions options = null;
-		options = new DisplayImageOptions.Builder()
-				          .showImageOnLoading(R.drawable.button_monitor_helper)
-				          .showImageForEmptyUri(R.drawable.button_monitor_helper)
-				          .showImageOnFail(R.drawable.button_monitor_helper)
-				          .cacheInMemory(true)
-				          .cacheOnDisc(true)
-				          .considerExifParams(true)
-				          .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-				          .bitmapConfig(Bitmap.Config.RGB_565)
-				          .displayer(new SimpleBitmapDisplayer())
-//				.displayer(new RoundedBitmapDisplayer(20))
-//				.displayer(new FadeInBitmapDisplayer(100))
-				          .build();
-		return options;
-	}
+//	public void initUniversalImageLoader() {
+//		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+//				                                  .memoryCacheExtraOptions(480, 800)
+//				                                  .discCacheExtraOptions(480, 800, Bitmap.CompressFormat.JPEG, 75, null)
+//				                                  .threadPoolSize(3)
+//				                                  .threadPriority(Thread.NORM_PRIORITY - 2)
+//				                                  .discCacheSize(5 * 1024 * 1024)
+//				                                  .discCacheFileNameGenerator(new Md5FileNameGenerator())
+//				                                  .tasksProcessingOrder(QueueProcessingType.FIFO)
+////				                                  .discCacheFileCount(100)
+//				                                  .writeDebugLogs()
+//				                                  .build();
+//		ImageLoader.getInstance().init(config);
+//	}
+//
+//	public DisplayImageOptions setDisplayImageOptions() {
+//		DisplayImageOptions options = null;
+//		options = new DisplayImageOptions.Builder()
+//				          .showImageOnLoading(R.drawable.button_monitor_helper)
+//				          .showImageForEmptyUri(R.drawable.button_monitor_helper)
+//				          .showImageOnFail(R.drawable.button_monitor_helper)
+//				          .cacheInMemory(true)
+//				          .cacheOnDisc(true)
+//				          .considerExifParams(true)
+//				          .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+//				          .bitmapConfig(Bitmap.Config.RGB_565)
+//				          .displayer(new SimpleBitmapDisplayer())
+////				.displayer(new RoundedBitmapDisplayer(20))
+////				.displayer(new FadeInBitmapDisplayer(100))
+//				          .build();
+//		return options;
+//	}
 }
 
