@@ -1,2 +1,9 @@
-include ':library', ':refreshlib', ':uilibrary','umengupgradelibrary'/*, 'weitaixinpro'*/, 'weitaixin'
+
+include ':library'
+include ':refreshlib'
+include ':uilibrary'
+include 'weitaixin'
+include 'weitaixinpro'
+include 'umengupgradelibrary'
+
 
