@@ -129,6 +129,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		countDownTimer = new FixedRateCountDownTimer(duration, 500) {
+			public long startTestTime;
 			public long lastTime;
 			public boolean reset;
 			public long lastStart;
@@ -136,7 +137,8 @@ public class MonitorDetialActivity extends BaseActivity {
 			@Override
 			public void onStart(long startTime) {
 				terminate = false;
-				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
+				startTestTime = System.currentTimeMillis();
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(startTestTime));
 				tvSumTime.setText("共" + duration / 1000 / 60 + "分钟");
 			}
 
@@ -146,8 +148,8 @@ public class MonitorDetialActivity extends BaseActivity {
 			}
 
 			@Override
-			public void onTick(long millisUntilFinished) {
-				tick();
+			public void onTick(long millisUntilFinished, FHRPackage fhrPackage) {
+				tick(fhrPackage);
 			}
 
 			@Override
@@ -158,9 +160,9 @@ public class MonitorDetialActivity extends BaseActivity {
 			public void onRestart() {
 			}
 
-			private void tick() {
+			private void tick(FHRPackage fhrPackage) {
+				LogUtil.d(TAG, "当前第时间差" + (System.currentTimeMillis() - startTestTime));
 				//获取当前心率值
-				FHRPackage fhrPackage = DataStorage.fhrPackage;
 				int fhr = fhrPackage.getFHR1();
 				long time = fhrPackage.getTime();
 				//防止重复

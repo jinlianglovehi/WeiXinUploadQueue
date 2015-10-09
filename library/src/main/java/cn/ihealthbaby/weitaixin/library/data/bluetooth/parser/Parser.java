@@ -14,7 +14,6 @@ import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ByteUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
-import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 
 /**
  * Created by liuhongjian on 15/7/17 12:52.
@@ -115,9 +114,7 @@ public class Parser {
 	}
 
 	private FHRPackage parseFHBV1(byte[] buffer) {
-		//实际解析出来的都是同一个对象,只是每次都会更新内容
-		//避免new 对象
-		FHRPackage FHRPackage1 = DataStorage.fhrPackagePool;
+		FHRPackage FHRPackage1 = new FHRPackage();
 		FHRPackage1.setTime(System.currentTimeMillis());
 		FHRPackage1.setVersion("1");
 		FHRPackage1.setFHR1(buffer[0] & LAST2BYTE);
@@ -127,9 +124,7 @@ public class Parser {
 	}
 
 	private FHRPackage parseFHBV2(byte[] buffer) {
-		//实际解析出来的都是同一个对象,只是每次都会更新内容
-		//避免new 对象
-		FHRPackage FHRPackage2 = DataStorage.fhrPackagePool;
+		FHRPackage FHRPackage2 = new FHRPackage();
 		FHRPackage2.setTime(System.currentTimeMillis());
 		FHRPackage2.setVersion("2");
 		FHRPackage2.setFHR1(buffer[0] & LAST2BYTE);

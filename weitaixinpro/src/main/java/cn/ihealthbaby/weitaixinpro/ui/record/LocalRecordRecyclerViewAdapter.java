@@ -15,6 +15,8 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.ui.widget.ChooseUploadContentPopupWindow;
+import cn.ihealthbaby.weitaixinpro.ui.widget.UploadedEvent;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by liuhongjian on 15/9/24 13:48.
@@ -36,6 +38,7 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	public LocalRecordRecyclerViewAdapter(Activity activity, ArrayList<Record> list) {
 		this.activity = activity;
 		this.list = list;
+		EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -46,11 +49,11 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	}
 
 	@Override
-	public void onBindViewHolder(final ViewHolder holder, int position) {
+	public void onBindViewHolder(final ViewHolder holder, final int position) {
 		final Record record = list.get(position);
 		holder.tvDate.setText(DateTimeTool.date2StrAndTime(record.getRecordStartTime()));
 		holder.tvName.setText(record.getUserName());
-		holder.tvDuration.setText(DateTimeTool.getTime2(record.getDuration()) + "");
+		holder.tvDuration.setText(DateTimeTool.getTime2(record.getDuration() * 1000) + "");
 		final int uploadState = record.getUploadState();
 		switch (uploadState) {
 			case Record.UPLOAD_STATE_LOCAL:
@@ -67,7 +70,7 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 			@Override
 			public void onClick(View v) {
 				//显示对话框,用户选择上传曲线还是全部上传
-				ChooseUploadContentPopupWindow chooseUploadContentPopupWindow = new ChooseUploadContentPopupWindow(activity, record);
+				ChooseUploadContentPopupWindow chooseUploadContentPopupWindow = new ChooseUploadContentPopupWindow(activity, record, position);
 				chooseUploadContentPopupWindow.showAtLocation(activity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
 			}
 		});
@@ -76,6 +79,11 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	@Override
 	public int getItemCount() {
 		return list.size();
+	}
+
+	public void onEventMainThread(UploadedEvent event) {
+		int position = event.getPosition();
+		notifyItemChanged(position);
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {

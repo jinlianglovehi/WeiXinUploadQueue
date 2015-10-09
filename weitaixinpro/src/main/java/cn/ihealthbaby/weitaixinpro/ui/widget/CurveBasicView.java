@@ -150,6 +150,7 @@ public class CurveBasicView extends CoordinateView {
 	public void reset() {
 		fhrs.clear();
 		hearts.clear();
+		doctors.clear();
 		path.reset();
 		position = 0;
 		moved = true;
@@ -211,6 +212,10 @@ public class CurveBasicView extends CoordinateView {
 
 	public void addRedHeart(int position) {
 		hearts.add(position);
+	}
+
+	public void addDoctor(int position) {
+		doctors.add(position);
 	}
 
 	public void drawDoctor(Canvas canvas, int y) {

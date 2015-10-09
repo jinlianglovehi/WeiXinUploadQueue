@@ -7,10 +7,14 @@ import android.os.SystemClock;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+
 /**
  * Created by liuhongjian on 15/9/22 15:23.
  */
 public abstract class FixedRateCountDownTimer {
+	private final static String TAG = "FixedRateCountDownTimer";
 	private static final int END = 1;
 	public final Timer timer;
 	private final long interval;
@@ -25,15 +29,16 @@ public abstract class FixedRateCountDownTimer {
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			synchronized (FixedRateCountDownTimer.this) {
-				if (!cancled || !paused) {
-					long time = SystemClock.elapsedRealtime();
-					if (time >= stop) {
-						onFinish();
-						cancel();
-					} else {
-						onTick(stop - time);
-					}
+			if (!cancled || !paused) {
+				long time = SystemClock.elapsedRealtime();
+				if (time >= stop) {
+					onFinish();
+					cancel();
+				} else {
+					LogUtil.d(TAG, "beforetick" + SystemClock.elapsedRealtime());
+					FHRPackage fhrPackage = (FHRPackage) msg.obj;
+					onTick(stop - time, fhrPackage);
+					LogUtil.d(TAG, "aftertick" + SystemClock.elapsedRealtime());
 				}
 			}
 		}
@@ -102,13 +107,17 @@ public abstract class FixedRateCountDownTimer {
 		start = SystemClock.elapsedRealtime();
 		stop = start + duration - offset;
 		timerTask = new TimerTask() {
+			long prevTime = 0;
+
 			@Override
 			public void run() {
 				long left = stop - SystemClock.elapsedRealtime();
 				if (left < interval * (count - counter)) {
-					handler.sendEmptyMessage(0);
+					Message message = handler.obtainMessage();
+					message.obj = DataStorage.fhrPackage;
+					handler.sendMessage(message);
 					counter++;
-//					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
+					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
 				}
 			}
 		};
@@ -120,7 +129,7 @@ public abstract class FixedRateCountDownTimer {
 
 	public abstract void onRestart();
 
-	public abstract void onTick(long millisUntilFinished);
+	public abstract void onTick(long millisUntilFinished, FHRPackage fhrPackage);
 
 	public abstract void onFinish();
 

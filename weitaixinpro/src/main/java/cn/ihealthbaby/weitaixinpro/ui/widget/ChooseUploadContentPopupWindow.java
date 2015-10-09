@@ -30,12 +30,14 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 	private final static int UPLOADTYPE_ALL = 1;
 	private final Context context;
 	private Record record;
+	private int position;
 	private Dialog dialog;
 	private String key;
 
-	public ChooseUploadContentPopupWindow(Context context, Record record) {
+	public ChooseUploadContentPopupWindow(Context context, Record record, int position) {
 		this.context = context;
 		this.record = record;
+		this.position = position;
 		EventBus.getDefault().register(this);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View popupWindows = inflater.inflate(R.layout.popupwindow_choose_upload_content, null);
@@ -101,6 +103,7 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 					public void handleData(AdviceItem data) {
 						ToastUtil.show(context, "全部上传成功");
 						updateUloadState(Record.UPLOAD_STATE_CLOUD);
+						EventBus.getDefault().post(new UploadedEvent(position));
 					}
 				}), ChooseUploadContentPopupWindow.this);
 				break;

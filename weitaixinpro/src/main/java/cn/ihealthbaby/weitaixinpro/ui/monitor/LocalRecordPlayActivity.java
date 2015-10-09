@@ -101,6 +101,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			RecordData recordData = gson.fromJson(rData, RecordData.class);
 			data = recordData.getData();
 			fhrs = data.getHeartRate();
+			doctors = Util.time2Position(data.getDoctor());
 			fetalMove = Util.time2Position(data.getFm());
 		} catch (Exception e) {
 			e.printStackTrace();

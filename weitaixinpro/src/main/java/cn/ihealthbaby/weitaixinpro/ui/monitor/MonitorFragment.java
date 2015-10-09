@@ -151,6 +151,7 @@ public class MonitorFragment extends BaseFragment {
 						FHRPackage fhrPackage = (FHRPackage) msg.obj;
 						int fhr1 = fhrPackage.getFHR1();
 						DataStorage.fhrPackage.setFHRPackage(fhrPackage);
+//						DataStorage.fhrPackage = fhrPackage;
 						if (tvBluetooth != null) {
 							if (fhr1 >= safemin && fhr1 <= safemax) {
 								tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
@@ -172,12 +173,15 @@ public class MonitorFragment extends BaseFragment {
 						LogUtil.d(TAG, "connecting " + deviceName);
 						break;
 					case Constants.MESSAGE_CANNOT_CONNECT:
+						connected = false;
+						started = false;
 						LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
 						ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-						started = false;
 						reset();
 						break;
 					case Constants.MESSAGE_CONNECTION_LOST:
+						connected = false;
+						started = false;
 						LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
 						ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
 						reset();
@@ -369,7 +373,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onFinish() {
-				if (!connected || bluetoothScanner.isDiscovering() || getActivity() != null) {
+				if (!connected) {
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
 					reset();
 					pseudoBluetoothService.stop();

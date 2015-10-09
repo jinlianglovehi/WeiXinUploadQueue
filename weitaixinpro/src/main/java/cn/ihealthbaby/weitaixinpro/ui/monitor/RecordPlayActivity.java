@@ -39,6 +39,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 	protected Data data;
 	protected List<Integer> fhrs;
 	protected List<Integer> fetalMove;
+	protected List<Integer> doctors;
 	protected Dialog dialog;
 	@Bind(R.id.curve_play)
 	CurveMonitorDetialView curvePlay;
@@ -125,6 +126,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		btnBusiness.setImageResource(R.drawable.button_upload);
 		tvBusiness.setText("上传监测图");
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
+			public int doctorPosition;
 			public int fmposition;
 			public int position;
 
@@ -155,6 +157,10 @@ public abstract class RecordPlayActivity extends BaseActivity {
 					if (fmposition < fetalMove.size() && fetalMove.get(fmposition) == position) {
 						curvePlay.addRedHeart(position);
 						fmposition++;
+					}
+					if (doctorPosition < fetalMove.size() && fetalMove.get(doctorPosition) == position) {
+						curvePlay.addDoctor(position);
+						doctorPosition++;
 					}
 					curvePlay.postInvalidate();
 					if (bpm != null) {
