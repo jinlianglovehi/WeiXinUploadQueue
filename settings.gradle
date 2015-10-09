@@ -3,7 +3,7 @@ include ':library'
 include ':refreshlib'
 include ':uilibrary'
 include 'weitaixin'
-include 'weitaixinpro'
-include 'umengupgradelibrary'
+//include 'weitaixinpro'
+//include 'umengupgradelibrary'
 
 
