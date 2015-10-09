@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -63,6 +65,9 @@ public class GuardianStateActivity extends BaseActivity {
 		setContentView(R.layout.activity_guardian_state);
 		ButterKnife.bind(this);
 		title_text.setText("监测状态");
+
+		back.setVisibility(View.INVISIBLE);
+
 		final CustomDialog customDialog = new CustomDialog();
 		Dialog dialog = customDialog.createDialog1(this, "加载中...");
 		dialog.show();
@@ -89,10 +94,10 @@ public class GuardianStateActivity extends BaseActivity {
 				}), getRequestTag());
 	}
 
-	@OnClick(R.id.back)
-	public void onBack() {
-		this.finish();
-	}
+//	@OnClick(R.id.back)
+//	public void onBack() {
+//		this.finish();
+//	}
 
 
 	private int guardianPurposeIndexPosition=0;
@@ -182,10 +187,18 @@ public class GuardianStateActivity extends BaseActivity {
 		startActivity(intent);
 		finish();
 	}
+
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+
 }
-
-
-
 
 
 

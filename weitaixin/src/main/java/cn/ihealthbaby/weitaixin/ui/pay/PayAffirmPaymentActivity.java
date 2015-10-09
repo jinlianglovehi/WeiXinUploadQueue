@@ -48,6 +48,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     public long orderId = -1;
     public int totalfee = -1;
+    public boolean nexttap=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
         orderId=getIntent().getLongExtra(PayConstant.ORDERID, -1);
         totalfee=getIntent().getIntExtra(PayConstant.TOTALFEE, -1);
+        nexttap=getIntent().getBooleanExtra(PayConstant.NEXTTAP, false);
         LogUtil.d(this.getClass().getSimpleName(), orderId+":orderId  totalfee:"+totalfee);
 
 //        tvTotalPrice.setText("￥"+((Integer.parseInt(LocalProductData.getLocal().get(LocalProductData.PriceCount)+""))/100)+"");
@@ -83,6 +85,14 @@ public class PayAffirmPaymentActivity extends BaseActivity {
 
     @OnClick(R.id.back)
     public void onBack() {
+        if (nexttap) {
+            nexttap = false;
+            LocalProductData.getLocal().localProductDataMap.clear();
+            EventBus.getDefault().post(new PayEvent());
+            Intent intent = new Intent(this, PayMimeOrderActivity.class);
+            startActivity(intent);
+        }
+
         this.finish();
     }
 

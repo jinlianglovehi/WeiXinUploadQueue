@@ -22,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.OrderItemForm;
 import cn.ihealthbaby.client.form.ServiceOrderForm;
 import cn.ihealthbaby.client.model.Address;
@@ -273,6 +274,7 @@ public class PayConfirmOrderActivity extends BaseActivity {
                             long orderId = data.getId();
                             Intent intent = new Intent(getApplicationContext(), PayAffirmPaymentActivity.class);
                             intent.putExtra(PayConstant.ORDERID, orderId);
+                            intent.putExtra(PayConstant.NEXTTAP, true);
                             startActivity(intent);
                         } else {
                             ToastUtil.show(getApplicationContext(), "尚有未结束的服务");
@@ -289,6 +291,12 @@ public class PayConfirmOrderActivity extends BaseActivity {
                     @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<Order> result) {
+                        super.handleResult(result);
                         customDialog.dismiss();
                     }
                 }), getRequestTag());

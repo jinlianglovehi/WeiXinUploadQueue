@@ -26,6 +26,7 @@ public class PayConstant {
     public static final String RightCityList = "rightCityList";
     public static final String ORDERID = "orderId";
     public static final String TOTALFEE = "totalfee";
+    public static final String NEXTTAP = "nexttap";
     public static String WXPAY_APPID = "wx8da8b08e973e9305";
 
 
