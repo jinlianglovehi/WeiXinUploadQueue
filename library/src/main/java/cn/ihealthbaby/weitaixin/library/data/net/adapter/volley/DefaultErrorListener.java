@@ -12,7 +12,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.util.DialogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 /**
@@ -29,7 +28,7 @@ public class DefaultErrorListener implements Response.ErrorListener {
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
-		DialogUtil.dismissDialog();
+//		DialogUtil.dismissDialog();
 		if (error instanceof NoConnectionError) {
 			ToastUtil.warn(context, "网络连接失败，请检查网络状态");
 			LogUtil.e(tag, "no connection" + error.getMessage());

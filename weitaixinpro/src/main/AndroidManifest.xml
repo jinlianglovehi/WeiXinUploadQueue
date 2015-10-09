@@ -9,7 +9,7 @@
         android:name=".WeiTaiXinProApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:theme="@android:style/Theme.Light.NoTitleBar">
         <activity
             android:name=".ui.login.BindActivity"
