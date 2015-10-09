@@ -18,6 +18,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
@@ -153,7 +154,7 @@ public class MonitorActivity extends BaseActivity {
 			}
 
 			@Override
-			public void onTick(long millisUntilFinished) {
+			public void onTick(long millisUntilFinished,FHRPackage fhrPackage) {
 				tick();
 			}
 

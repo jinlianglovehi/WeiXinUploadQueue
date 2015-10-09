@@ -15,7 +15,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-import com.umeng.analytics.MobclickAgent;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.AdviceForm;
@@ -36,7 +35,7 @@ public class WeiTaiXinApplication extends Application {
     public static AdviceSetting adviceSetting;
     public static AdviceForm adviceForm = new AdviceForm();
 
-    public LocalProductData localProductData=new LocalProductData(); //保存商品
+    public LocalProductData localProductData = new LocalProductData(); //保存商品
     public VolleyAdapter mAdapter;
     private AbstractHttpClientAdapter adapter;
 
@@ -44,6 +43,7 @@ public class WeiTaiXinApplication extends Application {
 
 
     public static WeiTaiXinApplication app;
+
     public static WeiTaiXinApplication getInstance() {
         return app;
     }
@@ -55,7 +55,7 @@ public class WeiTaiXinApplication extends Application {
 
         app = this;
 
-        MobclickAgent.updateOnlineConfig(this);
+//        MobclickAgent.updateOnlineConfig(this);
 
 
         initUniversalImageLoader();
@@ -80,14 +80,14 @@ public class WeiTaiXinApplication extends Application {
         RequestQueue requestQueue = ConnectionManager.getInstance().getRequestQueue(getApplicationContext());
         mAdapter = new VolleyAdapter(getApplicationContext(), Constants.SERVER_URL, requestQueue);
         User user = SPUtil.getUser(this);
-        if(user!=null){
+        if (user != null) {
             String accountToken = user.getAccountToken();
             if (!TextUtils.isEmpty(accountToken)) {
-                mAdapter.setAccountToken(accountToken+"");
+                mAdapter.setAccountToken(accountToken + "");
             }
-            LogUtil.d("mAdapter.setAccountToken","mAdapter.setAccountToken==> "+accountToken);
+            LogUtil.d("mAdapter.setAccountToken", "mAdapter.setAccountToken==> " + accountToken);
         }
-        LogUtil.d("UserAccountToken","UserAccountToken==> "+user);
+        LogUtil.d("UserAccountToken", "UserAccountToken==> " + user);
         ApiManager.init(mAdapter);
     }
 
@@ -141,7 +141,6 @@ public class WeiTaiXinApplication extends Application {
                 .build();
         return options;
     }
-
 
 
 }

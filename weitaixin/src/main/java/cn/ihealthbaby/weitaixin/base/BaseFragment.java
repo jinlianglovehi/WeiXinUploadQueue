@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
-import com.umeng.analytics.MobclickAgent;
 
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;

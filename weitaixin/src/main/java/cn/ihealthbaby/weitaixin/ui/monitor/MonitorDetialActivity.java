@@ -16,6 +16,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.event.FetalMovementEvent;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
@@ -126,7 +127,7 @@ public class MonitorDetialActivity extends BaseActivity {
 			}
 
 			@Override
-			public void onTick(long millisUntilFinished) {
+			public void onTick(long millisUntilFinished,FHRPackage fhrPackage) {
 				long start = System.currentTimeMillis();
 				if (DataStorage.fhrs.size() > 0 || !terminate) {
 					curve.resetPoints();
