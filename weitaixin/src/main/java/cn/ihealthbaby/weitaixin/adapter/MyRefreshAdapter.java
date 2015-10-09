@@ -121,6 +121,7 @@ public class MyRefreshAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+
         recordDelete = viewHolder.tvRecordDelete;
         viewHolder.rlRecordItem.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -154,6 +155,13 @@ public class MyRefreshAdapter extends BaseAdapter {
                 deleteRecordItem(position);
             }
         });
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
         cancel();
 
 

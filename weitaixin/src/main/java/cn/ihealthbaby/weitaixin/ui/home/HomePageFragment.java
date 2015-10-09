@@ -155,6 +155,12 @@ public class HomePageFragment extends BaseFragment {
         }
 
 
+        getNumber();
+
+    }
+
+
+    public void getNumber() {
         ApiManager.getInstance().adviceApi.getStatistics(
                 new DefaultCallback<AdviceStatistics>(getActivity(), new AbstractBusiness<AdviceStatistics>() {
                     @Override
@@ -166,6 +172,8 @@ public class HomePageFragment extends BaseFragment {
                             if (messageCount != 0) {
                                 flShowMessageCount.setVisibility(View.VISIBLE);
                                 tvMessageNumberCount.setText(messageCount + "");
+                            }else{
+                                flShowMessageCount.setVisibility(View.INVISIBLE);
                             }
 
                             monitorCount += data.getAdviceUploadCount();
@@ -195,6 +203,7 @@ public class HomePageFragment extends BaseFragment {
 
     }
 
+
     @OnClick(R.id.ivHomeHeadImg)
     public void ivHomeHeadImg() {
         if (SPUtil.isLogin(getActivity())) {
@@ -215,6 +224,7 @@ public class HomePageFragment extends BaseFragment {
     public void llHomeFunctionTwoAction() {
         if (SPUtil.isLogin(getActivity())) {
             Intent intent = new Intent(getActivity().getApplicationContext(), WoMessageActivity.class);
+            intent.putExtra("MessageType", 1);
             startActivity(intent);
         } else {
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);

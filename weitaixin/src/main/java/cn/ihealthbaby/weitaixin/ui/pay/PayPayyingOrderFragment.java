@@ -164,7 +164,7 @@ public class PayPayyingOrderFragment extends BaseFragment {
                                 ArrayList<Order> orders = (ArrayList<Order>) data.getValue();
                                 if (orders.size() <= 0) {
                                     --pageIndex;
-                                    ToastUtil.show(getActivity().getApplicationContext(), "暂时没有数据");
+                                    ToastUtil.show(getActivity().getApplicationContext(), "暂时没有更多数据");
                                 }
                                 adapter.addDatas(orders);
                                 adapter.notifyDataSetChanged();

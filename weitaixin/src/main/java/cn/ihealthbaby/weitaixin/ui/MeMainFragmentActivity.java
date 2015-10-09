@@ -96,6 +96,7 @@ public class MeMainFragmentActivity extends BaseActivity {
         if (showTab(iv_tab_01)) {
             if (SPUtil.isLogin(this)) {
                 homePageFragment = HomePageFragment.getInstance();
+                homePageFragment.getNumber();
                 showFragment(R.id.container, homePageFragment);
             }
         }

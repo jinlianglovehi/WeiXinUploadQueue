@@ -22,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
@@ -100,6 +101,8 @@ public class WoInfoFragment extends BaseFragment {
 
 //        pullData();
 
+        mTvMessageCount.setVisibility(View.GONE);
+
         return view;
     }
 
@@ -113,7 +116,6 @@ public class WoInfoFragment extends BaseFragment {
 
 
     private void pullData() {
-
         ApiManager.getInstance().informationApi.getUnReadCount(
                 new DefaultCallback<Integer>(getActivity(), new AbstractBusiness<Integer>() {
                     @Override
@@ -137,6 +139,12 @@ public class WoInfoFragment extends BaseFragment {
                         super.handleException(e);
                         mTvMessageCount.setVisibility(View.GONE);
                     }
+
+                    @Override
+                    public void handleResult(Result<Integer> result) {
+                        super.handleResult(result);
+                        mTvMessageCount.setVisibility(View.GONE);
+                    }
                 }), getRequestTag());
 
 
@@ -152,6 +160,7 @@ public class WoInfoFragment extends BaseFragment {
     @OnClick(R.id.ll_1)
     public void ll_1() {
         Intent intent = new Intent(getActivity().getApplicationContext(), WoMessageActivity.class);
+        intent.putExtra("MessageType", 3);
         startActivity(intent);
     }
 

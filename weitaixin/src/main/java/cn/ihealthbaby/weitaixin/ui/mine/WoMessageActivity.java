@@ -58,6 +58,9 @@ public class WoMessageActivity extends BaseActivity {
     private ReceiveBroadCast receiveBroadCast;
     private boolean isMove = false;
 
+    //0 系统消息, 1 医生回复消息, 2支付消息, 3 全部
+    public int type=3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,9 @@ public class WoMessageActivity extends BaseActivity {
         ButterKnife.bind(this);
         title_text.setText("我的消息");
 
+        type=getIntent().getIntExtra("MessageType",3);
+
+
         adapter = new MyRefreshAdapter(this, null);
         pullToRefresh.setAdapter(adapter);
         pullToRefresh.setMode(PullToRefreshBase.Mode.BOTH);
@@ -75,7 +81,7 @@ public class WoMessageActivity extends BaseActivity {
         pullToRefresh.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) { //下拉刷新
-                ApiManager.getInstance().informationApi.getInformations(1, 10,
+                ApiManager.getInstance().informationApi.getInformations(type,1, 10,
                         new DefaultCallback<PageData<Information>>(WoMessageActivity.this, new AbstractBusiness<PageData<Information>>() {
                             @Override
                             public void handleData(PageData<Information> data) {
@@ -111,7 +117,7 @@ public class WoMessageActivity extends BaseActivity {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) { //上拉加载更多
-                ApiManager.getInstance().informationApi.getInformations((++pageIndex), pageSize,
+                ApiManager.getInstance().informationApi.getInformations(type,(++pageIndex), pageSize,
                         new DefaultCallback<PageData<Information>>(WoMessageActivity.this, new AbstractBusiness<PageData<Information>>() {
                             @Override
                             public void handleData(PageData<Information> data) {
@@ -302,13 +308,15 @@ public class WoMessageActivity extends BaseActivity {
         pullToRefresh.getLoadingLayoutProxy(true, false).setRefreshingLabel("正在加载...");
     }
 
+
+
     private void pullDatas() {
 
         final CustomDialog customDialog = new CustomDialog();
         dialog = customDialog.createDialog1(this, "数据加载中...");
         dialog.show();
 
-        ApiManager.getInstance().informationApi.getInformations(1, 10,
+        ApiManager.getInstance().informationApi.getInformations(type,1, 10,
                 new DefaultCallback<PageData<Information>>(this, new AbstractBusiness<PageData<Information>>() {
                     @Override
                     public void handleData(PageData<Information> data) {
@@ -320,7 +328,7 @@ public class WoMessageActivity extends BaseActivity {
                             adapter.setDatas(dataList);
                             adapter.notifyDataSetChanged();
                         }
-                        if (pullToRefresh!=null) {
+                        if (pullToRefresh != null) {
                             pullToRefresh.onRefreshComplete();
                         }
                         customDialog.dismiss();
@@ -329,7 +337,7 @@ public class WoMessageActivity extends BaseActivity {
                     @Override
                     public void handleClientError(Context context, Exception e) {
                         super.handleClientError(context, e);
-                        if (pullToRefresh!=null) {
+                        if (pullToRefresh != null) {
                             pullToRefresh.onRefreshComplete();
                         }
                         customDialog.dismiss();
@@ -338,7 +346,7 @@ public class WoMessageActivity extends BaseActivity {
                     @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
-                        if (pullToRefresh!=null) {
+                        if (pullToRefresh != null) {
                             pullToRefresh.onRefreshComplete();
                         }
                         customDialog.dismiss();
@@ -347,7 +355,7 @@ public class WoMessageActivity extends BaseActivity {
                     @Override
                     public void handleResult(Result<PageData<Information>> result) {
                         super.handleResult(result);
-                        if (pullToRefresh!=null) {
+                        if (pullToRefresh != null) {
                             pullToRefresh.onRefreshComplete();
                         }
                         customDialog.dismiss();
