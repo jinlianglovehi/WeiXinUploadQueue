@@ -35,6 +35,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceItem;
+import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -140,6 +141,9 @@ public class RecordFragment extends BaseFragment {
         context = (MeMainFragmentActivity) getActivity();
         initView();
 //
+
+        getAskMinTime();
+
         pullDatas();
 
 //      registerForContextMenu(pullToRefresh.getRefreshableView());
@@ -225,6 +229,22 @@ public class RecordFragment extends BaseFragment {
     }
 
 
+    private void pullDatas() {
+        CustomDialog customDialog = new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(context, "数据加载中...");
+        dialog.show();
+
+        //从缓存数据库中展示数据列表
+        pullFirstData(customDialog);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        pullHeadDatas();
+    }
+
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 1, Menu.NONE, "删除");
@@ -290,11 +310,6 @@ public class RecordFragment extends BaseFragment {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        pullHeadDatas();
-    }
 
 
     private void initView() {
@@ -398,14 +413,6 @@ public class RecordFragment extends BaseFragment {
 
     }
 
-    private void pullDatas() {
-        CustomDialog customDialog = new CustomDialog();
-        Dialog dialog = customDialog.createDialog1(context, "数据加载中...");
-        dialog.show();
-
-        //从缓存数据库中展示数据列表
-        pullFirstData(customDialog);
-    }
 
 
     //获取本地记录
@@ -423,12 +430,27 @@ public class RecordFragment extends BaseFragment {
     }
 
 
+    public static int askMinTime = -1;
+    public void getAskMinTime(){
+        User user = SPUtil.getUser(getActivity().getApplicationContext());
+        if (user != null) {
+            ApiManager.getInstance().adviceApi.getAdviceSetting(user.getHospitalId(), new DefaultCallback<AdviceSetting>(getActivity(), new AbstractBusiness<AdviceSetting>() {
+                @Override
+                public void handleData(AdviceSetting data) {
+                    askMinTime = data.getAskMinTime();
+                }
+            }), getRequestTag());
+        }
+    }
+
+
     public void pullFirstData(final CustomDialog customDialogTwo) {
         ApiManager.getInstance().adviceApi.getAdviceItems(1, pageSize,
                 new DefaultCallback<PageData<AdviceItem>>(getActivity(), new AbstractBusiness<PageData<AdviceItem>>() {
                     @Override
                     public void handleData(PageData<AdviceItem> data) {
                         final ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
+
 
                         ArrayList<Record> records = getLocalDB();
 
@@ -452,6 +474,7 @@ public class RecordFragment extends BaseFragment {
                                 ToastUtil.show(getActivity().getApplicationContext(), "没有数据");
                                 countNumber = 0;
                             }
+                            ToastUtil.show(getActivity().getApplicationContext(), "暂时没有最新数据");
                         }
                         if (tvUsedCount != null) {
                             tvUsedCount.setText(countNumber + "");

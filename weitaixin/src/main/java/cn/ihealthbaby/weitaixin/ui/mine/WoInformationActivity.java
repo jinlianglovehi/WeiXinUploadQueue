@@ -19,7 +19,11 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.widget.MyPoPoWin;
@@ -48,6 +52,8 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
     @Bind(R.id.tv_place_name) TextView tv_place_name;
     @Bind(R.id.tv_hospital_name) TextView tv_hospital_name;
     @Bind(R.id.tv_doctor_name) TextView tv_doctor_name;
+    @Bind(R.id.tv_doctor_advisory_number) TextView tv_doctor_advisory_number;
+    @Bind(R.id.tv_doctor_surplus_advisory_number) TextView tv_doctor_surplus_advisory_number;
     @Bind(R.id.iv_wo_head_icon) RoundImageView iv_wo_head_icon;
 
     public Bitmap photo;
@@ -77,6 +83,15 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
                 tv_place_name.setText(user.getServiceInfo().getAreaInfo()+ "");
                 tv_hospital_name.setText(user.getServiceInfo().getHospitalName()+ "");
                 tv_doctor_name.setText(user.getServiceInfo().getDoctorName()+ "");
+
+
+                ApiManager.getInstance().serviceApi.getByUser(new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
+                    @Override
+                    public void handleData(Service data) {
+//                        tv_doctor_advisory_number.setText(user.get+ "");
+//                        tv_doctor_surplus_advisory_number.setText(user.getServiceInfo().getDoctorName()+ "");
+                    }
+                }),getRequestTag());
             }
         }
     }

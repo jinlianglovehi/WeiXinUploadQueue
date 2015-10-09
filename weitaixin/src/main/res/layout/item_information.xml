@@ -2,10 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="67dp"
+    android:clickable="true"
     android:background="@color/white0">
 
     <FrameLayout
         android:layout_width="match_parent"
+        android:clickable="true"
         android:layout_height="68dp">
 
         <RelativeLayout
@@ -33,23 +35,22 @@
         <RelativeLayout
             android:id="@+id/rlRecordItem"
             android:layout_width="match_parent"
+            android:clickable="true"
             android:layout_height="68dp"
             android:background="@color/white0">
 
             <RelativeLayout
                 android:id="@+id/rl_avatar"
-                android:layout_width="@dimen/dimen_dp_38"
-                android:layout_height="@dimen/dimen_dp_38"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/dimen_dp_18"
-                android:layout_marginLeft="@dimen/dimen_dp_14"
-                android:layout_marginTop="@dimen/dimen_dp_18">
+                android:layout_marginLeft="@dimen/dimen_dp_14">
 
                 <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
                     android:id="@+id/iv_head_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/button_monitor_helper" />
 

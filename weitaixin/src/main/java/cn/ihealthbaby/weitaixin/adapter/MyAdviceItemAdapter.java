@@ -42,6 +42,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
 import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
+import cn.ihealthbaby.weitaixin.ui.record.RecordFragment;
 import cn.ihealthbaby.weitaixin.ui.record.ReplyedActivity;
 
 public class MyAdviceItemAdapter extends BaseAdapter {
@@ -260,13 +261,20 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		//1提交但为咨询  2咨询未回复  3咨询已回复  4咨询已删除
 		int status = adviceItem.getStatus();
 		if (status == 0) {
-			Intent intent = new Intent(context, AskDoctorActivity.class);
 			LogUtil.d("AskDocgetId", "AskDocgetId = " + adviceItem.getId());
-			intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
-			intent.putExtra(Constants.INTENT_PURPOSE, adviceItem.getAskPurpose());
-			intent.putExtra(Constants.INTENT_FEELING, adviceItem.getFeeling());
-			intent.putExtra(Constants.INTENT_POSITION, position);
-			context.startActivityForResult(intent, requestCode);
+			int askMinTime=RecordFragment.askMinTime;
+			if (askMinTime != -1) {
+				if (adviceItem.getTestTimeLong() >= askMinTime) {
+					Intent intent = new Intent(context, AskDoctorActivity.class);
+					intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
+					intent.putExtra(Constants.INTENT_PURPOSE, adviceItem.getAskPurpose());
+					intent.putExtra(Constants.INTENT_FEELING, adviceItem.getFeeling());
+					intent.putExtra(Constants.INTENT_POSITION, position);
+					context.startActivityForResult(intent, requestCode);
+				} else {
+					ToastUtil.show(context, "不满" + askMinTime + "分钟，不能问医生");
+				}
+			}
 		} else if (status == 1) {
 			Intent intent = new Intent(context, WaitReplyingActivity.class);
 			intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
