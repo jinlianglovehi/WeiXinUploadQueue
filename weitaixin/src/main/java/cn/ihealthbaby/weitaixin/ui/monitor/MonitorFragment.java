@@ -126,18 +126,22 @@ public class MonitorFragment extends BaseFragment {
 				switch (msg.what) {
 					case Constants.MESSAGE_STATE_CHANGE:
 						switch (msg.arg1) {
+							//已连接
 							case PseudoBluetoothService.STATE_CONNECTED:
 								LogUtil.d(TAG, "STATE_CONNECTED");
 								connected = true;
 								bluetoothScanner.cancleDiscovery();
 								onConnectedUI();
 								break;
+							//正在连接
 							case PseudoBluetoothService.STATE_CONNECTING:
 								LogUtil.d(TAG, "STATE_CONNECTING");
 								break;
+							//监听
 							case PseudoBluetoothService.STATE_LISTEN:
 								LogUtil.d(TAG, "STATE_LISTEN");
 								break;
+							//未连接,初始状态
 							case PseudoBluetoothService.STATE_NONE:
 								LogUtil.d(TAG, "STATE_NONE");
 								reset();
@@ -359,7 +363,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onFinish() {
-				if (!connected || bluetoothScanner.isDiscovering()) {
+				if (!connected ) {
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
 					reset();
 					pseudoBluetoothService.stop();
