@@ -59,7 +59,6 @@ repositories {
 dependencies {
     compile project(':refreshlib')
     compile project(':library')
-    compile project(':uilibrary')
     compile fileTree(include: ['*.jar'], dir: 'libs')
 //    compile project(':umengupgradelibrary')
 }
