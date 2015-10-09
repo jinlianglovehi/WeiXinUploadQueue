@@ -326,10 +326,11 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 	}
 
 	private void deleteRecordItem(final int position) {
-		if (datas.size() > 0) {
+		if (datas != null && datas.size() > 0) {
 			final AdviceItem adviceItem = datas.get(position);
 			final int status = adviceItem.getStatus();
-			if (status != 1 || status != 2) { //  等待回复1    的记录不能删除
+			LogUtil.d("status","status==> "+status);
+			if (status != 1 && status != 2) { //  等待回复1   已回复2   的记录不能删除
 				final CustomDialog customDialog = new CustomDialog();
 				Dialog dialog = customDialog.createDialog1(context, "正在删除...");
 				dialog.show();
