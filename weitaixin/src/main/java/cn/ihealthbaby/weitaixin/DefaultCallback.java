@@ -55,6 +55,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			 * 参数验证失败
 			 */
 			case Result.VALIDATOR:
+				business.handleAllFailure(context);
 				String msgMapString = map2String(result.getMsgMap());
 				if (msgMapString != null) {
 					ToastUtil.show(context, msgMapString);
@@ -73,6 +74,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			 * 账号授权错误
 			 */
 			case Result.ACCOUNT_ERROR:
+				business.handleAllFailure(context);
 				String map2String = map2String(result.getMsgMap());
 				if (map2String != null) {
 					ToastUtil.show(context, map2String);
@@ -89,6 +91,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			 *
 			 */
 			case Result.CLIENT_ERROR:
+				business.handleAllFailure(context);
 				Exception exception = result.getException();
 				LogUtil.e(TAG, "CLIENT_ERROR" + exception);
 				business.handleClientError(context, exception);
@@ -97,6 +100,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			 * 服务器错误
 			 */
 			case Result.ERROR:
+				business.handleAllFailure(context);
 				String map2String1 = map2String(result.getMsgMap());
 				if (map2String1 != null) {
 					ToastUtil.show(context, "Result.ERROR" + map2String1);

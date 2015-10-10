@@ -60,4 +60,11 @@ public interface Business<T> {
 	 * @param result
 	 */
 	void handleResult(Result<T> result);
+
+	/**
+	 * 所有不成功的情况
+	 *
+	 * @param context
+	 */
+	void handleAllFailure(Context context);
 }
