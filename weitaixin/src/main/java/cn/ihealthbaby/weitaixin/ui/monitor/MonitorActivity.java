@@ -154,28 +154,12 @@ public class MonitorActivity extends BaseActivity {
 			}
 
 			@Override
-			public void onTick(long millisUntilFinished,FHRPackage fhrPackage) {
-				tick();
-			}
-
-			@Override
-			public void onFinish() {
-				tick();
-				//
-				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_AUTO));
-				//
-			}
-
-			@Override
-			public void onRestart() {
-			}
-
-			private void tick() {
+			public void onTick(long millisUntilFinished, FHRPackage fhrPackage) {
 				//绘制圆形进度
 				roundProgressMask.setAngel((float) (360 * getConsumedTime() / getDuration()));
 				roundProgressMask.postInvalidate();
 				//获取当前心率值
-				int fhr = DataStorage.fhrPackage.getFHR1();
+				int fhr = fhrPackage.getFHR1();
 				//如果越界,则值设置为0
 				if ((fhr > limitMax || fhr < limitMin)) {
 					fhr = 0;
@@ -199,6 +183,17 @@ public class MonitorActivity extends BaseActivity {
 				if (!hs.isTouching()) {
 					hs.smoothScrollTo((int) (curveSimple.getCurrentPositionX() - width / 2), 0);
 				}
+			}
+
+			@Override
+			public void onFinish() {
+				//
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_AUTO));
+				//
+			}
+
+			@Override
+			public void onRestart() {
 			}
 		};
 		reset();

@@ -127,7 +127,7 @@ public class MonitorDetialActivity extends BaseActivity {
 			}
 
 			@Override
-			public void onTick(long millisUntilFinished,FHRPackage fhrPackage) {
+			public void onTick(long millisUntilFinished, FHRPackage fhrPackage) {
 				long start = System.currentTimeMillis();
 				if (DataStorage.fhrs.size() > 0 || !terminate) {
 					curve.resetPoints();
@@ -145,7 +145,7 @@ public class MonitorDetialActivity extends BaseActivity {
 					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
 				}
 				long stop = System.currentTimeMillis();
-				LogUtil.d("MonitorDetialActivity", "duration:[%s] , interval:[%s] ,consumedTime:[%s]s ,listSize:[%s]", (stop - start), start - lastStart, getConsumedTime() / 1000, curve.getFhrs().size());
+//				LogUtil.d(TAG, "duration:[%s] , interval:[%s] ,consumedTime:[%s]s ,listSize:[%s]", (stop - start), start - lastStart, getConsumedTime() / 1000, curve.getFhrs().size());
 				lastStart = start;
 			}
 
