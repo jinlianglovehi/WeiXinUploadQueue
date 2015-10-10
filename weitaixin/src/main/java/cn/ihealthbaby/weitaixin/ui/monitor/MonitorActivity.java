@@ -34,6 +34,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorSimpleView;
+import cn.ihealthbaby.weitaixin.ui.widget.MonitorDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundMaskView;
 import de.greenrobot.event.EventBus;
 
@@ -85,7 +86,20 @@ public class MonitorActivity extends BaseActivity {
 
 	@OnClick(R.id.back)
 	public void back() {
-		finish();
+		final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"满20分钟的监测才能问医生\n是否继续监测", "继续监测", "立即完成"});
+		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+			@Override
+			public void left(Object... obj) {
+				monitorDialog.dismiss();
+			}
+
+			@Override
+			public void right(Object... obj) {
+				monitorDialog.dismiss();
+				finish();
+			}
+		});
+		monitorDialog.show();
 	}
 
 	@OnClick(R.id.function)
@@ -290,5 +304,11 @@ public class MonitorActivity extends BaseActivity {
 			duration = autoAdviceTimeLong * 60 * 1000;
 		}
 		LogUtil.d(TAG, "safemin:%s,safemax:%s,alertSound:%s,alertInterval:%s,duration:%s", safemin, safemax, alert, alertInterval, duration);
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		back.performClick();
 	}
 }
