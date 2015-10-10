@@ -47,6 +47,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 					public void handleData(final AdviceItem data) {
 						ToastUtil.show(getApplicationContext(), "上传成功");
 						btnBusiness.setImageResource(R.drawable.button_ask_doctor);
+						tvBusiness.setText("问医生");
 						btnBusiness.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
