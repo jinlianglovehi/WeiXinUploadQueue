@@ -32,6 +32,7 @@ import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.pay.PayAffirmPaymentActivity;
 import cn.ihealthbaby.weitaixin.ui.pay.PayConstant;
 import cn.ihealthbaby.weitaixin.ui.pay.PayUtils;
+import cn.ihealthbaby.weitaixin.ui.widget.MonitorDialog;
 import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 
 
@@ -107,9 +108,9 @@ public class PayAllOrderAdapter extends BaseAdapter {
             viewHolder.tvPayDelect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PayDialog payDialog=new PayDialog(context,new String[]{"取消订单","不取消","确定取消"});
+                    MonitorDialog payDialog=new MonitorDialog(context,new String[]{"取消订单","不取消","确定取消"});
                     payDialog.show();
-                    payDialog.operationAction=new PayDialog.OperationAction() {
+                    payDialog.operationAction=new MonitorDialog.OperationAction() {
                         @Override
                         public void payYes(Object... obj) {
                             final CustomDialog customDialog=new CustomDialog();

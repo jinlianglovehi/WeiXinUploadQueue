@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Order;
 import cn.ihealthbaby.client.model.PageData;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -94,6 +95,12 @@ public class PayPayyingOrderFragment extends BaseFragment {
                     @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<PageData<Order>> result) {
+                        super.handleResult(result);
                         customDialog.dismiss();
                     }
                 }), getRequestTag());

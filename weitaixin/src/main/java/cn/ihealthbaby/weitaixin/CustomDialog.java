@@ -15,8 +15,8 @@ public class CustomDialog {
     public Dialog dialog;
 
     public CustomDialog() {
-    }
 
+    }
 
     public Dialog createDialog1(Context context, String infor) {
         Dialog dialog = new Dialog(context, R.style.myDialogTheme);
@@ -37,6 +37,12 @@ public class CustomDialog {
         if (dialog != null) {
             dialog.dismiss();
             dialog = null;
+        }
+    }
+
+    public void show() {
+        if (dialog != null) {
+            dialog.show();
         }
     }
 
