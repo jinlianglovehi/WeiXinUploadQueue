@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white0">
+    android:background="@android:color/transparent">
 
 
     <RelativeLayout
@@ -11,7 +11,7 @@
         android:layout_centerInParent="true"
         android:layout_marginRight="30dp"
         android:background="@drawable/corner_background_white"
-        android:paddingBottom="30dp"
+        android:paddingBottom="24dp"
         android:paddingTop="30dp">
 
         <TextView

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:paddingTop="30dp"
-        android:paddingBottom="30dp"
+        android:paddingBottom="24dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/corner_background_white">
 
