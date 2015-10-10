@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 
+import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.AdviceForm;
+import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
@@ -13,6 +15,8 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
+import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
+import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.service.UploadEvent;
 import cn.ihealthbaby.weitaixinpro.service.UploadService;
 import cn.ihealthbaby.weitaixinpro.tools.CustomDialog;
@@ -33,13 +37,13 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 
 	@Override
 	protected void uploadData() {
-//		ApiManager.getInstance().hClientAccountApi.uploadData(UPLOADTYPE_DATA, getUploadData(record, null), new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
-//			@Override
-//			public void handleData(AdviceItem data) {
-//				ToastUtil.show(getApplicationContext(), "上传曲线成功");
-//				updateUloadState(Record.UPLOAD_STATE_CLOUD);
-//			}
-//		}), getRequestTag());
+		ApiManager.getInstance().hClientAccountApi.uploadData(getUploadData(record, null), new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
+			@Override
+			public void handleData(AdviceItem data) {
+				ToastUtil.show(getApplicationContext(), "上传曲线成功");
+				updateUloadState(Record.UPLOAD_STATE_CLOUD);
+			}
+		}), getRequestTag());
 	}
 
 	@Override
@@ -112,13 +116,13 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		LogUtil.d(TAG, event.toString());
 		switch (event.getResult()) {
 			case UploadEvent.RESULT_SUCCESS:
-//				ApiManager.getInstance().hClientAccountApi.uploadData(UPLOADTYPE_ALL, getUploadData(record, event.getKey()), new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
-//					@Override
-//					public void handleData(AdviceItem data) {
-//						ToastUtil.show(getApplicationContext(), "全部上传成功");
-//						updateUloadState(Record.UPLOAD_STATE_CLOUD);
-//					}
-//				}), getRequestTag());
+				ApiManager.getInstance().hClientAccountApi.uploadData(getUploadData(record, event.getKey()), new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
+					@Override
+					public void handleData(AdviceItem data) {
+						ToastUtil.show(getApplicationContext(), "全部上传成功");
+						updateUloadState(Record.UPLOAD_STATE_CLOUD);
+					}
+				}), getRequestTag());
 				break;
 			case UploadEvent.RESULT_FAIL:
 				ToastUtil.show(getApplicationContext(), "上传失败");
