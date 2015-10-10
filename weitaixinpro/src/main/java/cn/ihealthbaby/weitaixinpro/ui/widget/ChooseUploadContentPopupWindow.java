@@ -8,16 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
-import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.AdviceForm;
-import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
-import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.service.UploadEvent;
 import cn.ihealthbaby.weitaixinpro.service.UploadService;
@@ -98,14 +94,14 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 		LogUtil.d(TAG, event.toString());
 		switch (event.getResult()) {
 			case UploadEvent.RESULT_SUCCESS:
-				ApiManager.getInstance().hClientAccountApi.uploadData(UPLOADTYPE_ALL, getUploadData(record, event.getKey()), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
-					@Override
-					public void handleData(AdviceItem data) {
-						ToastUtil.show(context, "全部上传成功");
-						updateUloadState(Record.UPLOAD_STATE_CLOUD);
-						EventBus.getDefault().post(new UploadedEvent(position));
-					}
-				}), ChooseUploadContentPopupWindow.this);
+//				ApiManager.getInstance().hClientAccountApi.uploadData(UPLOADTYPE_ALL, getUploadData(record, event.getKey()), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
+//					@Override
+//					public void handleData(AdviceItem data) {
+//						ToastUtil.show(context, "全部上传成功");
+//						updateUloadState(Record.UPLOAD_STATE_CLOUD);
+//						EventBus.getDefault().post(new UploadedEvent(position));
+//					}
+//				}), ChooseUploadContentPopupWindow.this);
 				break;
 			case UploadEvent.RESULT_FAIL:
 				ToastUtil.show(context, "上传失败");
@@ -145,13 +141,13 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 	}
 
 	protected void uploadData() {
-		ApiManager.getInstance().hClientAccountApi.uploadData(UPLOADTYPE_DATA, getUploadData(record, null), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
-			@Override
-			public void handleData(AdviceItem data) {
-				ToastUtil.show(context, "上传曲线成功");
-				updateUloadState(Record.UPLOAD_STATE_CLOUD);
-			}
-		}), ChooseUploadContentPopupWindow.this);
+//		ApiManager.getInstance().hClientAccountApi.uploadData(UPLOADTYPE_DATA, getUploadData(record, null), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
+//			@Override
+//			public void handleData(AdviceItem data) {
+//				ToastUtil.show(context, "上传曲线成功");
+//				updateUloadState(Record.UPLOAD_STATE_CLOUD);
+//			}
+//		}), ChooseUploadContentPopupWindow.this);
 	}
 }
 

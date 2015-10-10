@@ -70,4 +70,8 @@ public abstract class AbstractBusiness<T> implements Business<T> {
 			LogUtil.e(tag, "authfailure error" + error.getMessage());
 		}
 	}
+
+	@Override
+	public void handleAllFailure(Context context) {
+	}
 }
