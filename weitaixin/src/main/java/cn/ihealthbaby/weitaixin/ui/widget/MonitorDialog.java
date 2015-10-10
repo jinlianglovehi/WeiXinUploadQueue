@@ -11,86 +11,79 @@ import android.widget.TextView;
 
 import cn.ihealthbaby.weitaixin.R;
 
-public class MonitorDialog extends Dialog implements View.OnClickListener{
+public class MonitorDialog extends Dialog implements View.OnClickListener {
+	private TextView title;
+	private TextView left;
+	private TextView right;
+	private OperationAction operationAction;
+	private StringBuffer sb = new StringBuffer();
+	private String[] tipStrArr = new String[3];
 
+	public MonitorDialog(Context context, int theme, String[] tipStrArr) {
+		super(context, theme);
+		this.tipStrArr = tipStrArr;
+		setTheme();
+	}
 
-    public TextView tvPayTitle;
-    public TextView tvPayNO;
-    public TextView tvPayYES;
-    public OperationAction operationAction;
+	public MonitorDialog(Context context, String[] tipStrArr) {
+		super(context);
+		this.tipStrArr = tipStrArr;
+		setTheme();
+	}
 
-    public StringBuffer sb=new StringBuffer();
-    public String[] tipStrArr=new String[3];
+	protected MonitorDialog(Context context, boolean cancelable, OnCancelListener cancelListener, String[] tipStrArr) {
+		super(context, cancelable, cancelListener);
+		this.tipStrArr = tipStrArr;
+		setTheme();
+	}
 
+	public void setTheme() {
+		setCanceledOnTouchOutside(true);
+		getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+	}
 
-    public MonitorDialog(Context context, int theme, String[] tipStrArr) {
-        super(context, theme);
-        this.tipStrArr=tipStrArr;
-        setTheme();
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.monitor_dialog);
+		title = (TextView) findViewById(R.id.title);
+		left = (TextView) findViewById(R.id.left);
+		right = (TextView) findViewById(R.id.right);
+		left.setOnClickListener(this);
+		right.setOnClickListener(this);
+		title.setText(tipStrArr[0] + "");
+		left.setText(tipStrArr[1] + "");
+		right.setText(tipStrArr[2] + "");
+	}
 
-    public MonitorDialog(Context context, String[] tipStrArr) {
-        super(context);
-        this.tipStrArr=tipStrArr;
-        setTheme();
-    }
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.right:
+				if (operationAction != null) {
+					operationAction.right();
+				}
+				break;
+			case R.id.left:
+				if (operationAction != null) {
+					operationAction.left();
+				}
+				break;
+		}
+	}
 
-    protected MonitorDialog(Context context, boolean cancelable, OnCancelListener cancelListener, String[] tipStrArr) {
-        super(context, cancelable, cancelListener);
-        this.tipStrArr=tipStrArr;
-        setTheme();
-    }
+	public void setOperationAction(OperationAction operationAction) {
+		this.operationAction = operationAction;
+	}
 
+	public interface OperationAction {
+		void left(Object... obj);
 
-    public void setTheme(){
-        setCanceledOnTouchOutside(true);
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-    }
+		void right(Object... obj);
+	}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.monitor_dialog);
-
-        tvPayTitle = (TextView) findViewById(R.id.tvPayTitle);
-        tvPayNO = (TextView) findViewById(R.id.tvPayNO);
-        tvPayYES = (TextView) findViewById(R.id.tvPayYES);
-        tvPayNO.setOnClickListener(this);
-        tvPayYES.setOnClickListener(this);
-        tvPayTitle.setText(tipStrArr[0] + "");
-        tvPayNO.setText(tipStrArr[1] + "");
-        tvPayYES.setText(tipStrArr[2] + "");
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.tvPayYES:
-                if (operationAction!=null) {
-                    dismiss();
-                    operationAction.payYes();
-                }
-                break;
-
-            case R.id.tvPayNO:
-                if (operationAction!=null) {
-                    dismiss();
-                    operationAction.payNo();
-                }
-                break;
-        }
-    }
-
-
-    public interface OperationAction{
-        void payYes(Object... obj);
-        void payNo(Object... obj);
-    }
-
-    ;
+	;
 }
 
 
