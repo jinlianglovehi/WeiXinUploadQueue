@@ -74,6 +74,11 @@ public class MonitorDetialActivity extends BaseActivity {
 	private int safemin;
 	private int safemax;
 
+	@OnClick(R.id.back)
+	void back() {
+		finish();
+	}
+
 	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
 //		long consumedTime = countDownTimer.getConsumedTime();
