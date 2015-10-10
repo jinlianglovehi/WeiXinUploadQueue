@@ -1,8 +1,10 @@
 package cn.ihealthbaby.weitaixin.ui.monitor;
 
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -37,9 +39,13 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
@@ -130,7 +136,11 @@ public class MonitorFragment extends BaseFragment {
 							case PseudoBluetoothService.STATE_CONNECTED:
 								LogUtil.d(TAG, "STATE_CONNECTED");
 								connected = true;
-								bluetoothScanner.cancleDiscovery();
+								countDownTimer.start();
+								LogUtil.d(TAG, "开始倒计时,准备自动开始");
+								if (bluetoothScanner.isDiscovering()) {
+									bluetoothScanner.cancleDiscovery();
+								}
 								onConnectedUI();
 								break;
 							//正在连接
@@ -154,7 +164,8 @@ public class MonitorFragment extends BaseFragment {
 					case Constants.MESSAGE_READ_FETAL_DATA:
 						FHRPackage fhrPackage = (FHRPackage) msg.obj;
 						int fhr1 = fhrPackage.getFHR1();
-						DataStorage.fhrPackage.setFHRPackage(fhrPackage);
+//						DataStorage.fhrPackage.setFHRPackage(fhrPackage);
+						DataStorage.fhrPackage = fhrPackage;
 						if (tvBluetooth != null) {
 							if (fhr1 >= safemin && fhr1 <= safemax) {
 								tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
@@ -206,32 +217,9 @@ public class MonitorFragment extends BaseFragment {
 		}
 	};
 
-	private String getTempFileName() {
-		return Constants.TEMP_FILE_NAME;
-	}
-
-	private File getTempFile() {
-		return new File(FileUtil.getVoiceDir(getActivity()), getTempFileName());
-	}
-
-	private File getRecordFile() {
-		return new File(FileUtil.getVoiceDir(getActivity()), getLocalRecordId());
-	}
-
-	@OnClick(R.id.helper)
-	public void help() {
-		Intent intent = new Intent(getActivity(), MonitorCommonSense.class);
-		startActivity(intent);
-	}
-
-	@OnClick(R.id.function)
-	public void ternimateMonitor() {
-		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_NOT_START));
-	}
-
 	@OnClick(R.id.btn_start)
-	public void startMonitor(View view) {
-		view.setClickable(false);
+	public void startMonitor() {
+		btnStart.setClickable(false);
 		getAdviceSetting();
 		autoStartTimer.cancel();
 		started = true;
@@ -275,7 +263,7 @@ public class MonitorFragment extends BaseFragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LogUtil.d(TAG, "数据插入失败");
-			view.setClickable(true);
+			btnStart.setClickable(true);
 			started = false;
 			needRecord = false;
 			needPlay = false;
@@ -288,19 +276,96 @@ public class MonitorFragment extends BaseFragment {
 		startActivity(intent);
 	}
 
+	private String getTempFileName() {
+		return Constants.TEMP_FILE_NAME;
+	}
+
+	private File getTempFile() {
+		return new File(FileUtil.getVoiceDir(getActivity()), getTempFileName());
+	}
+
+	private File getRecordFile() {
+		return new File(FileUtil.getVoiceDir(getActivity()), getLocalRecordId());
+	}
+
+	@OnClick(R.id.helper)
+	public void help() {
+		Intent intent = new Intent(getActivity(), MonitorCommonSense.class);
+		startActivity(intent);
+	}
+
+	@OnClick(R.id.function)
+	public void ternimateMonitor() {
+		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_NOT_START));
+	}
+
 	/**
-	 * 1.开启蓝牙  2.匹配绑定的设备,连接设备  3.扫描 4.匹配扫描到的设备
-	 *
-	 * @param view
+	 * 0.检查服务状态,如果服务开启,检查配置 1.开启蓝牙  2.匹配绑定的设备,连接设备  3.扫描 4.匹配扫描到的设备
 	 */
 	@OnClick({R.id.round_frontground, R.id.tv_bluetooth})
-	void startSearch(View view) {
+	void checkConfig() {
+		//确认有hid
+		//确认获取到配置
+		LogUtil.d(TAG, "检查服务状态");
+		final ApiManager apiManager = ApiManager.getInstance();
+		final CustomDialog customDialog = new CustomDialog();
+		final Dialog dialog = customDialog.createDialog1(getActivity(), "正在查询配置信息");
+		dialog.show();
+		apiManager.userApi.refreshInfo(new DefaultCallback<User>(getActivity().getApplicationContext(), new AbstractBusiness<User>() {
+			@Override
+			public void handleData(User user) {
+				if (user != null) {
+					LogUtil.d(TAG, "获取到用户信息并保存");
+					SPUtil.saveUser(getActivity().getApplicationContext(), user);
+					//如果开通服务,请求配置
+					if (user.getHasService()) {
+						LogUtil.d(TAG, "已开通服务");
+						apiManager.adviceApi.getAdviceSetting(user.getHospitalId(), new DefaultCallback<AdviceSetting>(getActivity(), new AbstractBusiness<AdviceSetting>() {
+							@Override
+							public void handleData(AdviceSetting adviceSetting) {
+								customDialog.dismiss();
+								//保存用户信息
+								SPUtil.saveAdviceSetting(getActivity().getApplicationContext(), adviceSetting);
+								LogUtil.d(TAG, "获取服务信息,并保存");
+								//开始开启蓝牙,搜索设备
+								startSearch();
+							}
+
+							@Override
+							public void handleAllFailure(Context context) {
+								super.handleAllFailure(context);
+								customDialog.dismiss();
+								ToastUtil.show(getActivity().getApplicationContext(), "获取用户配置失败");
+								reset();
+							}
+						}), getRequestTag());
+					} else {
+						customDialog.dismiss();
+						LogUtil.d(TAG, "未开通服务");
+						ToastUtil.show(getActivity().getApplicationContext(), "请先开通服务");
+					}
+				}
+			}
+
+			@Override
+			public void handleAllFailure(Context context) {
+				super.handleAllFailure(context);
+				customDialog.dismiss();
+				ToastUtil.show(getActivity().getApplicationContext(), "获取用户信息失败");
+				reset();
+			}
+		}), getRequestTag());
+	}
+
+	private void startSearch() {
+		LogUtil.d(TAG, "开始搜索");
 		if (!connected) {
 			onConnectingUI();
 			if (!bluetoothScanner.isEnable()) {
+				LogUtil.d(TAG, "蓝牙处于未开启状态,正在打开");
 				bluetoothScanner.enable();
 			} else {
-				LogUtil.d("bluetoothScanner", "bluetoothScanner");
+				LogUtil.d(TAG, "蓝牙处于已开启状态");
 				connectBondedDeviceOrSearch();
 			}
 		}
@@ -363,12 +428,13 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onFinish() {
-				if (!connected ) {
+				if (!connected) {
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
 					reset();
 					pseudoBluetoothService.stop();
 				}
 				if (bluetoothScanner.isDiscovering()) {
+					LogUtil.d(TAG, "搜索状态:正在搜索. 开始停止搜索设备");
 					bluetoothScanner.cancleDiscovery();
 				}
 			}
@@ -379,6 +445,17 @@ public class MonitorFragment extends BaseFragment {
 		bluetoothReceiver.setListener(new AbstractBluetoothListener() {
 			@Override
 			public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
+				if (!scanedDevices.contains(remoteDevice)) {
+					if (getDeviceName().equalsIgnoreCase(remoteName)) {
+						pseudoBluetoothService.connect(remoteDevice, false);
+					}
+					scanedDevices.add(remoteDevice);
+				}
+			}
+
+			@Override
+			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
+				super.onRemoteNameChanged(remoteDevice, remoteName);
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
 						pseudoBluetoothService.connect(remoteDevice, false);
@@ -460,6 +537,7 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	public void reset() {
+		LogUtil.d(TAG, "重置配置");
 		tvBluetooth.setTextColor(getResources().getColor(R.color.green0));
 		tvBluetooth.setText("start");
 		tvBluetooth.setClickable(true);
@@ -507,12 +585,12 @@ public class MonitorFragment extends BaseFragment {
 
 	public void connectBondedDeviceOrSearch() {
 		bondedDevices = adapter.getBondedDevices();
-		LogUtil.e("bluetoothScanner", "" + bondedDevices.size());
+		LogUtil.d(TAG, "已绑定的设备数量" + bondedDevices.size());
 		if (bondedDevices != null && bondedDevices.size() > 0) {
 			for (BluetoothDevice device : bondedDevices) {
-				LogUtil.e("bluetoothScanner", "devicegetName: " + device.getName());
+				LogUtil.d(TAG, "设备名称: " + device.getName());
 				if (getDeviceName().equalsIgnoreCase(device.getName())) {
-					LogUtil.e("bluetoothScanner", "" + "pseudoBluetoothService.connect()");
+					LogUtil.d(TAG, "找到匹配的设备,开始连接");
 					pseudoBluetoothService.connect(device, false);
 					return;
 				}
@@ -521,7 +599,6 @@ public class MonitorFragment extends BaseFragment {
 		if (!bluetoothScanner.isDiscovering()) {
 			bluetoothScanner.discovery();
 		}
-		countDownTimer.start();
 	}
 
 	@Override
