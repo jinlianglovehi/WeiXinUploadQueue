@@ -219,11 +219,12 @@ public class MonitorFragment extends BaseFragment {
 
 	@OnClick(R.id.btn_start)
 	public void startMonitor() {
+		//防止重复点击
 		btnStart.setClickable(false);
+		//获取配置信息
 		getAdviceSetting();
-		autoStartTimer.cancel();
-		started = true;
-		String localRecordId = getLocalRecordId();
+		//生成最新的本地id
+		String localRecordId = generateAndSaveLocalRecordId();
 		LogUtil.d(TAG, "localRecordId:%s", localRecordId);
 		File file = getTempFile();
 		try {
@@ -250,16 +251,11 @@ public class MonitorFragment extends BaseFragment {
 		record.setRecordStartTime(recordStartTime);
 		record.setGestationalWeeks(DateTimeTool.getGestationalWeeks(user.getDeliveryTime(), recordStartTime));
 		try {
-			Record queryExist = recordBusinessDao.queryByLocalRecordId(record.getLocalRecordId());
-			if (queryExist != null) {
-				record.setLocalRecordId(getLocalRecordId());
-			}
-		} catch (Exception e) {
-		}
-		try {
 			recordBusinessDao.insert(record);
-			Record query = recordBusinessDao.query(record);
-			LogUtil.d(TAG, query.toString());
+			if (Constants.MODE_DEBUG) {
+				Record query = recordBusinessDao.query(record);
+				LogUtil.d(TAG, query.toString());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			LogUtil.d(TAG, "数据插入失败");
@@ -271,6 +267,8 @@ public class MonitorFragment extends BaseFragment {
 			SPUtil.clearUUID(getActivity().getApplicationContext());
 			return;
 		}
+		autoStartTimer.cancel();
+		started = true;
 		Intent intent = new Intent(getActivity(), MonitorActivity.class);
 		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
 		startActivity(intent);
@@ -445,8 +443,13 @@ public class MonitorFragment extends BaseFragment {
 		bluetoothReceiver.setListener(new AbstractBluetoothListener() {
 			@Override
 			public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
+				connectDevice(remoteDevice, remoteName);
+			}
+
+			private void connectDevice(BluetoothDevice remoteDevice, String remoteName) {
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
+						LogUtil.d(TAG, "正在连接设备:" + remoteName);
 						pseudoBluetoothService.connect(remoteDevice, false);
 					}
 					scanedDevices.add(remoteDevice);
@@ -456,12 +459,7 @@ public class MonitorFragment extends BaseFragment {
 			@Override
 			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
 				super.onRemoteNameChanged(remoteDevice, remoteName);
-				if (!scanedDevices.contains(remoteDevice)) {
-					if (getDeviceName().equalsIgnoreCase(remoteName)) {
-						pseudoBluetoothService.connect(remoteDevice, false);
-					}
-					scanedDevices.add(remoteDevice);
-				}
+				connectDevice(remoteDevice, remoteName);
 			}
 
 			@Override
@@ -610,12 +608,28 @@ public class MonitorFragment extends BaseFragment {
 		EventBus.getDefault().unregister(this);
 	}
 
+	/**
+	 * 查询是否在sp中保存localRecordId,如果保存就返回,未保存则生成新的
+	 *
+	 * @return
+	 */
 	private String getLocalRecordId() {
 		String uuid = SPUtil.getUUID(getActivity().getApplicationContext());
 		if (TextUtils.isEmpty(uuid)) {
-			uuid = UUID.randomUUID().toString().replace("-", "");
+			uuid = generateLocalRecordId();
 			SPUtil.setUUID(getActivity().getApplicationContext(), uuid);
 		}
+		return uuid;
+	}
+
+	private String generateLocalRecordId() {
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		return uuid;
+	}
+
+	private String generateAndSaveLocalRecordId() {
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		SPUtil.setUUID(getActivity().getApplicationContext(), uuid);
 		return uuid;
 	}
 
