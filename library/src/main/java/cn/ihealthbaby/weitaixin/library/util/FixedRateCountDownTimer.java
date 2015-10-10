@@ -8,7 +8,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * Created by liuhongjian on 15/9/22 15:23.
@@ -35,10 +34,10 @@ public abstract class FixedRateCountDownTimer {
 					onFinish();
 					cancel();
 				} else {
-					LogUtil.d(TAG, "beforetick" + SystemClock.elapsedRealtime());
+//					LogUtil.d(TAG, "beforetick" + SystemClock.elapsedRealtime());
 					FHRPackage fhrPackage = (FHRPackage) msg.obj;
 					onTick(stop - time, fhrPackage);
-					LogUtil.d(TAG, "aftertick" + SystemClock.elapsedRealtime());
+//					LogUtil.d(TAG, "aftertick" + SystemClock.elapsedRealtime());
 				}
 			}
 		}
@@ -117,7 +116,7 @@ public abstract class FixedRateCountDownTimer {
 					message.obj = DataStorage.fhrPackage;
 					handler.sendMessage(message);
 					counter++;
-					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
+//					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
 				}
 			}
 		};
