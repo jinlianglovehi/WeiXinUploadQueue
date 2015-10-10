@@ -247,7 +247,10 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		viewHolder.tvRecordDelete.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				deleteRecordItem(position);
+				LogUtil.d("tvRecordDelete","tvRecordDelete==> "+selectedView.getX()+" : "+(viewHolder.tvRecordDelete.getWidth() - 40));
+				if (selectedView.getX() < -(viewHolder.tvRecordDelete.getWidth() - 40)) {
+					deleteRecordItem(position);
+				}
 			}
 		});
 		cancel();
@@ -312,9 +315,9 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							ToastUtil.show(context, "上传成功");
 							adviceItem.setStatus(0);
 							notifyDataSetChanged();
+							ToastUtil.show(context, "上传成功");
 							customDialog.dismiss();
 						}
 
@@ -327,6 +330,12 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 						@Override
 						public void handleException(Exception e) {
 							super.handleException(e);
+							customDialog.dismiss();
+						}
+
+						@Override
+						public void handleResult(Result<AdviceItem> result) {
+							super.handleResult(result);
 							customDialog.dismiss();
 						}
 					}), context);

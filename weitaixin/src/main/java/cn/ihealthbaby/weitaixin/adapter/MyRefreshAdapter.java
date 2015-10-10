@@ -9,12 +9,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
@@ -110,9 +112,10 @@ public class MyRefreshAdapter extends BaseAdapter {
         return position;
     }
 
+    ViewHolder viewHolder = null;
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
+//        ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_information, null);
             viewHolder = new ViewHolder(convertView);
@@ -123,7 +126,7 @@ public class MyRefreshAdapter extends BaseAdapter {
 
 
         recordDelete = viewHolder.tvRecordDelete;
-        viewHolder.rlRecordItem.setOnTouchListener(new View.OnTouchListener() {
+        viewHolder.rlMessageItem.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -152,13 +155,9 @@ public class MyRefreshAdapter extends BaseAdapter {
         viewHolder.tvRecordDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteRecordItem(position);
-            }
-        });
-
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                if (selectedView.getX() < -(viewHolder.tvRecordDelete.getWidth() - 40)) {
+                    deleteRecordItem(position);
+                }
             }
         });
 
@@ -219,11 +218,11 @@ public class MyRefreshAdapter extends BaseAdapter {
                 .showImageOnFail(R.drawable.button_monitor_helper)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
-                .considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .displayer(new SimpleBitmapDisplayer())
-//				.displayer(new RoundedBitmapDisplayer(5))
+                .considerExifParams(false) // default
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED) // default
+                .bitmapConfig(Bitmap.Config.ARGB_8888) // default
+//                .displayer(new SimpleBitmapDisplayer())
+                .displayer(new RoundedBitmapDisplayer(80))
                 .build();
         return options;
     }
@@ -231,7 +230,7 @@ public class MyRefreshAdapter extends BaseAdapter {
 
     static class ViewHolder {
         @Bind(R.id.iv_head_icon)
-        RoundImageView mIvHeadIcon;
+        ImageView mIvHeadIcon;
         @Bind(R.id.tv_title)
         TextView mTvTitle;
         @Bind(R.id.tv_message)
@@ -242,8 +241,8 @@ public class MyRefreshAdapter extends BaseAdapter {
         TextView tv_notification;
         @Bind(R.id.tvRecordDelete)
         TextView tvRecordDelete;
-        @Bind(R.id.rlRecordItem)
-        RelativeLayout rlRecordItem;
+        @Bind(R.id.rlMessageItem)
+        RelativeLayout rlMessageItem;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

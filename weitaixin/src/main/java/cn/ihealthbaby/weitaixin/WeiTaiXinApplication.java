@@ -110,7 +110,7 @@ public class WeiTaiXinApplication extends Application {
     public void initUniversalImageLoader() {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .memoryCacheExtraOptions(480, 800)
-                .discCacheExtraOptions(480, 800, Bitmap.CompressFormat.JPEG, 75, null)
+                .discCacheExtraOptions(480, 800, Bitmap.CompressFormat.PNG, 100, null)
                 .threadPoolSize(3)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .discCacheSize(5 * 1024 * 1024)

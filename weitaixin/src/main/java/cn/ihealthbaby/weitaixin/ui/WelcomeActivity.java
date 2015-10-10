@@ -192,7 +192,7 @@ public class WelcomeActivity extends BaseActivity {
         view02.setImageResource(R.drawable.welcome_02);
         view03.setImageResource(R.drawable.welcome_03);
         view04.setImageResource(R.drawable.welcome_04);
-        ivWelcome05.setImageResource(R.drawable.welcome);
+        ivWelcome05.setImageResource(R.drawable.welcome_05);
 
         tvNextAction.setOnClickListener(new View.OnClickListener() {
             @Override

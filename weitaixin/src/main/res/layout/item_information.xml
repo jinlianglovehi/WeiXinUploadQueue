@@ -1,14 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="67dp"
-    android:clickable="true"
+    android:layout_height="70dp"
     android:background="@color/white0">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:clickable="true"
-        android:layout_height="68dp">
+        android:layout_height="70dp">
 
         <RelativeLayout
             android:layout_width="100dp"
@@ -33,25 +31,25 @@
 
 
         <RelativeLayout
-            android:id="@+id/rlRecordItem"
+            android:id="@+id/rlMessageItem"
             android:layout_width="match_parent"
-            android:clickable="true"
-            android:layout_height="68dp"
+            android:layout_height="70dp"
             android:background="@color/white0">
 
             <RelativeLayout
                 android:id="@+id/rl_avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dimen_dp_14">
 
-                <cn.ihealthbaby.weitaixin.ui.widget.RoundImageView
+                <ImageView
                     android:id="@+id/iv_head_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:scaleType="fitXY"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/button_monitor_helper" />
 
                 <TextView

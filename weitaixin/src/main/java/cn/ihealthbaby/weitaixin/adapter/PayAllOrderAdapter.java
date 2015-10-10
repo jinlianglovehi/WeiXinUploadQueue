@@ -108,9 +108,9 @@ public class PayAllOrderAdapter extends BaseAdapter {
             viewHolder.tvPayDelect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MonitorDialog payDialog=new MonitorDialog(context,new String[]{"取消订单","不取消","确定取消"});
+                    PayDialog payDialog=new PayDialog(context,new String[]{"取消订单","不取消","确定取消"});
                     payDialog.show();
-                    payDialog.operationAction=new MonitorDialog.OperationAction() {
+                    payDialog.operationAction=new PayDialog.OperationAction() {
                         @Override
                         public void payYes(Object... obj) {
                             final CustomDialog customDialog=new CustomDialog();
