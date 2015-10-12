@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -137,6 +139,18 @@ public class Util {
 		PackageManager packageManager = context.getPackageManager();
 		PackageInfo packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
 		return packInfo;
+	}
+
+	public static boolean isWifi(Context context) {
+		ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connManager == null) {
+			return false;
+		}
+		NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+		if (networkInfo == null) {
+			return false;
+		}
+		return networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
 	}
 
 	public static String getDeviceInfo(Context context) {
