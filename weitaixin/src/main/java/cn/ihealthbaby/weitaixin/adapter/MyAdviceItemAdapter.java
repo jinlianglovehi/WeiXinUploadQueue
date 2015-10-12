@@ -255,7 +255,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		});
 		cancel();
 		if (tvUsedCount != null) {
-			tvUsedCount.setText(this.datas.size() + "");
+//			tvUsedCount.setText(this.datas.size() + "");
 		}
 		return convertView;
 	}

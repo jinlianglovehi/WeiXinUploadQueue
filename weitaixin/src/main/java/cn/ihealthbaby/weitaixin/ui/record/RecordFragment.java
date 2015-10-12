@@ -308,8 +308,8 @@ public class RecordFragment extends BaseFragment {
 							                                                 public void handleData(PageData<AdviceItem> data) {
 								                                                 ArrayList<AdviceItem> dataList = (ArrayList<AdviceItem>) data.getValue();
 								                                                 if (dataList.size() > 0) {
-									                                                 countNumber = data.getCount();
-									                                                 tvUsedCount.setText(countNumber + "");
+//									                                                 countNumber = data.getCount();
+//									                                                 tvUsedCount.setText(countNumber + "");
 									                                                 adapter.addDatas(dataList);
 									                                                 adapter.notifyDataSetChanged();
 									                                                 mAdviceItems = adapter.datas;
@@ -423,7 +423,7 @@ public class RecordFragment extends BaseFragment {
 							                                                 adapter.setDatas(dataList);
 							                                                 adapter.notifyDataSetChanged();
 							                                                 mAdviceItems = adapter.datas;
-							                                                 countNumber = adapter.datas.size();
+							                                                 countNumber = data.getCount()+records.size();
 						                                                 } else {
 							                                                 if (records != null && records.size() > 0) {
 								                                                 adapter.setDatas(switchList(records));
