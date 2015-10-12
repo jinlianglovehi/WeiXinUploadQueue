@@ -297,29 +297,34 @@ public class CloudRecordPlayActivity extends BaseActivity {
 			}
 			return;
 		}
-		AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-		asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(file) {
-			public String path;
+		//获取胎音数据
+		if (url != null) {
+			AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+			asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(file) {
+				public String path;
 
-			@Override
-			public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-				ToastUtil.show(getApplicationContext(), "未获取到音频数据");
-			}
+				@Override
+				public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+					ToastUtil.show(getApplicationContext(), "未获取到音频数据");
+				}
 
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, File file) {
-				if (statusCode == Constants.CODE_200_OK) {
-					try {
-						path = file.getPath();
-						if (path != null) {
-							mediaPlayer.setDataSource(path);
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, File file) {
+					if (statusCode == Constants.CODE_200_OK) {
+						try {
+							path = file.getPath();
+							if (path != null) {
+								mediaPlayer.setDataSource(path);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
 				}
-			}
-		});
+			});
+		} else {
+			ToastUtil.show(getApplicationContext(), "暂无胎音数据");
+		}
 	}
 
 	private void configCurve() {
