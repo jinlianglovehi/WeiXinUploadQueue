@@ -247,7 +247,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		viewHolder.tvRecordDelete.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LogUtil.d("tvRecordDelete","tvRecordDelete==> "+selectedView.getX()+" : "+(viewHolder.tvRecordDelete.getWidth() - 40));
+				LogUtil.d("tvRecordDelete", "tvRecordDelete==> " + selectedView.getX() + " : " + (viewHolder.tvRecordDelete.getWidth() - 40));
 				if (selectedView.getX() < -(viewHolder.tvRecordDelete.getWidth() - 40)) {
 					deleteRecordItem(position);
 				}
@@ -291,7 +291,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			Dialog dialog = customDialog.createDialog1(context, "上传中...");
 			dialog.show();
 
-			AdviceForm adviceForm = new AdviceForm();
+			final AdviceForm adviceForm = new AdviceForm();
 			adviceForm.setClientId(adviceItem.getClientId());
 			adviceForm.setTestTime(adviceItem.getTestTime());
 			adviceForm.setTestTimeLong(adviceItem.getTestTimeLong());
@@ -309,13 +309,19 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 					new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
 						@Override
 						public void handleData(AdviceItem data) {
+							//更新状态
 							oneRecord.setUploadState(Record.UPLOAD_STATE_CLOUD);
+							//更新云端路径
+							oneRecord.setSoundUrl(data.getFetalTonePath());
 							try {
 								recordBusinessDao.update(oneRecord);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+							//更新状态
 							adviceItem.setStatus(0);
+							//更新云端路径
+							adviceItem.setFetalTonePath(data.getFetalTonePath());
 							notifyDataSetChanged();
 							ToastUtil.show(context, "上传成功");
 							customDialog.dismiss();
