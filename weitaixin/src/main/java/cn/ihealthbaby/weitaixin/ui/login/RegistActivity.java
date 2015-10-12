@@ -76,6 +76,9 @@ public class RegistActivity extends BaseActivity {
 
 //      tv_regist_action.setEnabled(false);
         ivShowPassword.setTag("0");
+
+        ivAgreeRegister.setImageResource(R.drawable.pitch_un);
+        tv_regist_action.setEnabled(false);
     }
 
     @Override
@@ -354,8 +357,10 @@ public class RegistActivity extends BaseActivity {
         mChecked = !mChecked;
         if (mChecked) {
             ivAgreeRegister.setImageResource(R.drawable.pitch);
+            tv_regist_action.setEnabled(true);
         } else {
             ivAgreeRegister.setImageResource(R.drawable.pitch_un);
+            tv_regist_action.setEnabled(false);
         }
     }
 

@@ -20,11 +20,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Service;
+import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.widget.MyPoPoWin;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
@@ -67,31 +70,64 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
 
         ButterKnife.bind(this);
         title_text.setText("我的信息");
+
+
     }
 
-    public void initInformation(){
-        User user = SPUtil.getUser(this);
-        if (SPUtil.isLogin(this)&& user!=null) {
+
+    private void pullData(){
+        final CustomDialog customDialog = new CustomDialog();
+        customDialog.createDialog1(this, "获取数据中...");
+        customDialog.show();
+        ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
+            @Override
+            public void handleData(User data) {
+                SPUtil.saveUser(WoInformationActivity.this, data);
+                initInformation(data);
+                LogUtil.d("User==>", "User==> " + data.toString());
+                customDialog.dismiss();
+            }
+
+            @Override
+            public void handleException(Exception e) {
+                customDialog.dismiss();
+            }
+
+            @Override
+            public void handleResult(Result<User> result) {
+                super.handleResult(result);
+                customDialog.dismiss();
+            }
+        }), getRequestTag());
+    }
+
+
+    public void initInformation(User user){
+//        User user = SPUtil.getUser(this);
+        if (SPUtil.isLogin(this) && user != null) {
+            LogUtil.d("User2==>", "User2==> " + user.toString());
             ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
-            tv_wo_head_name.setText(user.getName()+"");
+            tv_wo_head_name.setText(user.getName() + "");
             tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
-            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(user.getDeliveryTime(),"yyyy年MM月dd日"));
+            tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(user.getDeliveryTime(), "yyyy年MM月dd日"));
             tv_phone_number.setText(user.getMobile()+"");
-            tv_birthday.setText(DateTimeTool.date2Str(user.getBirthday(),"MM月dd日")+"");
-            if(user.getServiceInfo()!=null){
-                tv_sn_number.setText(user.getServiceInfo().getSerialnum()+ "");
-                tv_place_name.setText(user.getServiceInfo().getAreaInfo()+ "");
-                tv_hospital_name.setText(user.getServiceInfo().getHospitalName()+ "");
-                tv_doctor_name.setText(user.getServiceInfo().getDoctorName()+ "");
+            tv_birthday.setText(DateTimeTool.date2Str(user.getBirthday(), "MM月dd日")+"");
 
+            ServiceInfo serviceInfo = user.getServiceInfo();
+            if(serviceInfo!=null){
+                tv_sn_number.setText(serviceInfo.getSerialnum()+ "");
+                tv_place_name.setText(serviceInfo.getAreaInfo()+ "");
+                tv_hospital_name.setText(serviceInfo.getHospitalName()+ "");
+                tv_doctor_name.setText(serviceInfo.getDoctorName()+ "");
 
-                ApiManager.getInstance().serviceApi.getByUser(new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
-                    @Override
-                    public void handleData(Service data) {
-//                        tv_doctor_advisory_number.setText(user.get+ "");
-//                        tv_doctor_surplus_advisory_number.setText(user.getServiceInfo().getDoctorName()+ "");
-                    }
-                }),getRequestTag());
+                tv_doctor_advisory_number.setText(serviceInfo.getTotalCount()+ "");
+                tv_doctor_surplus_advisory_number.setText(serviceInfo.getTotalCount()-serviceInfo.getUsedCount()+ "");
+
+                if (serviceInfo.getTotalCount() == -1) {
+                    tv_doctor_advisory_number.setText("无限次");
+                    tv_doctor_surplus_advisory_number.setText(serviceInfo.getUsedCount() + "");
+                }
+
             }
         }
     }
@@ -99,7 +135,8 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
     @Override
     protected void onResume() {
         super.onResume();
-        initInformation();
+        pullData();
+
     }
 
 

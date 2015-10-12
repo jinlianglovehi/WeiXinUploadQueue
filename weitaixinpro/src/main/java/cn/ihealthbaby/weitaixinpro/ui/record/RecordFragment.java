@@ -10,10 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
+import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
@@ -25,6 +30,13 @@ import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
 /**
  */
 public class RecordFragment extends BaseFragment {
+
+	private TextView tvCancel;
+	private TextView title_text;
+	private TextView function;
+	private boolean isDeleteState=false;
+	//
+
 	private static final int PAGE_SIZE = 6;
 	private final static String TAG = "RecordFragment";
 	/**
@@ -37,6 +49,7 @@ public class RecordFragment extends BaseFragment {
 	private ArrayList<Record> list;
 	private boolean loading;
 	private LocalRecordRecyclerViewAdapter adapter;
+	private View viewLayout;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private RecyclerView recyclerView;
 	private LinearLayoutManager layoutManager;
@@ -52,10 +65,70 @@ public class RecordFragment extends BaseFragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		swipeRefreshLayout = ((SwipeRefreshLayout) inflater.inflate(R.layout.fragment_swipe_refresh_recycler, null));
-		recyclerView = (RecyclerView) swipeRefreshLayout.findViewById(R.id.recycler_view);
-		return swipeRefreshLayout;
+		viewLayout = ((View) inflater.inflate(R.layout.fragment_swipe_refresh_recycler2, null));
+		swipeRefreshLayout = (SwipeRefreshLayout) viewLayout.findViewById(R.id.swipe_refresh_layout);
+		recyclerView = (RecyclerView) viewLayout.findViewById(R.id.recycler_view);
+
+		tvCancel = (TextView) viewLayout.findViewById(R.id.tvCancel);
+		title_text = (TextView) viewLayout.findViewById(R.id.title_text);
+		function = (TextView) viewLayout.findViewById(R.id.function);
+		title_text.setText("监测记录");
+		function.setVisibility(View.VISIBLE);
+		function.setText("批量删除");
+		function.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				if(isDeleteState){
+					adapter.doDeleteAction();
+				}
+
+				if (!isDeleteState) {
+					function.setText("确定删除");
+					isDeleteState=true;
+					adapter.setIsDelFalg(true);
+					swipeRefreshLayout.setRefreshing(false);
+					adapter.notifyDataSetChanged();
+					tvCancel.setVisibility(View.VISIBLE);
+					tvCancel.setText("取消");
+				}
+
+
+			}
+		});
+
+		tvCancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				isDeleteState=false;
+				adapter.setIsDelFalg(false);
+				swipeRefreshLayout.setRefreshing(false);
+				adapter.initMap(adapter.getItemCount());
+				adapter.notifyDataSetChanged();
+				function.setText("批量删除");
+				tvCancel.setVisibility(View.INVISIBLE);
+				tvCancel.setText("取消");
+
+			}
+		});
+
+		return viewLayout;
 	}
+
+
+	public ArrayList<Record> gg(){
+		ArrayList<Record> adviceItems = new ArrayList<Record>();
+		for (int i = 0; i < 20; i++) {
+			Record record = new Record();
+			record.setRecordStartTime(new Date());
+			record.setUserName("UserName:" + i);
+			record.setDuration(23);
+			record.setUploadState(Record.UPLOAD_STATE_UPLOADING);
+			adviceItems.add(record);
+		}
+		return adviceItems;
+	}
+
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {

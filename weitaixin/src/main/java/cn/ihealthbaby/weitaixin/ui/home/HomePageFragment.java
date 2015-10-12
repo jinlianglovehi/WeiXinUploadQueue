@@ -149,9 +149,9 @@ public class HomePageFragment extends BaseFragment {
 
 
         if (SPUtil.isLogin(getActivity().getApplicationContext()) && user != null) {
-            LogUtil.d(TAG, "getHeadPic==>" + user.getHeadPic());
+//            LogUtil.d(TAG, "getHeadPic==>" + user.getHeadPic());
             ImageLoader.getInstance().displayImage(user.getHeadPic(), ivHomeHeadImg, setDisplayImageOptions());
-            tvHomeHeadName.setText(user.getName());
+            tvHomeHeadName.setText(user.getName()+"");
         }
 
 
@@ -270,7 +270,7 @@ public class HomePageFragment extends BaseFragment {
                 .cacheOnDisc(true)
                 .considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565)
+                .bitmapConfig(Bitmap.Config.ARGB_8888)
 //                .displayer(new SimpleBitmapDisplayer())
                 .displayer(new RoundedBitmapDisplayer(350))
                 .build();

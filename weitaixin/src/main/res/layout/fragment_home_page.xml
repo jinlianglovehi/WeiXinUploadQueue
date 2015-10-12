@@ -170,7 +170,6 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/home_function_action_selector"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -190,7 +189,6 @@
                 android:id="@+id/llHomeFunctionTwoAction"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:background="@drawable/home_function_action_selector"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -248,7 +246,6 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/home_function_action_selector"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -268,7 +265,6 @@
                 android:id="@+id/llHomeFunctionFourAction"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:background="@drawable/home_function_action_selector"
                 android:gravity="center"
                 android:orientation="vertical">
 
