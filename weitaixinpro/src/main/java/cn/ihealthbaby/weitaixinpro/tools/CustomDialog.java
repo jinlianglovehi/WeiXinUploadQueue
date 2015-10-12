@@ -11,49 +11,55 @@ import android.widget.TextView;
 
 import cn.ihealthbaby.weitaixinpro.R;
 
-
 public class CustomDialog {
+	public boolean isNoCancel = true;
+	public Dialog dialog;
+	private TextView tv_dialog;
 
-	public CustomDialog(){
-
+	public CustomDialog() {
 	}
 
-	public boolean isNoCancel=true;
-	public Dialog dialog;
+	public CustomDialog(Context context, String info) {
+		createDialog1(context, info);
+	}
 
 	public Dialog createDialog1(Context context, String infor) {
 		Dialog dialog = new Dialog(context, R.style.myDialogTheme);
-		this.isNoCancel=true;
+		this.isNoCancel = true;
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		View view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null);
 //		view.setLayoutParams(new ViewGroup.LayoutParams(200, ViewGroup.LayoutParams.WRAP_CONTENT));
 		dialog.setContentView(view); //
-		TextView tv_dialog = (TextView) view.findViewById(R.id.tv_dialog);
+		tv_dialog = (TextView) view.findViewById(R.id.tv_dialog);
 		if (!TextUtils.isEmpty(infor)) {
 			tv_dialog.setText(infor);
 		}
 		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				CustomDialog.this.isNoCancel=false;
+				CustomDialog.this.isNoCancel = false;
 			}
 		});
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setCancelable(true);
-		this.dialog=dialog;
+		this.dialog = dialog;
 		return dialog;
 	}
 
-	public void dismiss(){
-		if (dialog!=null) {
-			dialog.dismiss();
-			dialog=null;
-		}
+	public void update(String info) {
+		tv_dialog.setText(info);
 	}
 
+	public void show() {
+		dialog.show();
+	}
 
-
-
+	public void dismiss() {
+		if (dialog != null && dialog.isShowing()) {
+			dialog.dismiss();
+			dialog = null;
+		}
+	}
 }
 
 
