@@ -3,10 +3,10 @@ package cn.ihealthbaby.weitaixinpro.ui.widget;
 /**
  * Created by liuhongjian on 15/10/8 20:53.
  */
-public class UploadedEvent {
+public class SoundUploadedEvent {
 	private int position;
 
-	UploadedEvent(int position) {
+	SoundUploadedEvent(int position) {
 		this.position = position;
 	}
 

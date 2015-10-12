@@ -103,7 +103,7 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 					public void handleData(AdviceItem data) {
 						ToastUtil.show(context, "全部上传成功");
 						updateUloadState(Record.UPLOAD_STATE_CLOUD);
-						EventBus.getDefault().post(new UploadedEvent(position));
+						EventBus.getDefault().post(new SoundUploadedEvent(position));
 					}
 				}), ChooseUploadContentPopupWindow.this);
 				break;

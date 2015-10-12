@@ -15,7 +15,7 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.ui.widget.ChooseUploadContentPopupWindow;
-import cn.ihealthbaby.weitaixinpro.ui.widget.UploadedEvent;
+import cn.ihealthbaby.weitaixinpro.ui.widget.SoundUploadedEvent;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -81,7 +81,7 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 		return list.size();
 	}
 
-	public void onEventMainThread(UploadedEvent event) {
+	public void onEventMainThread(SoundUploadedEvent event) {
 		int position = event.getPosition();
 		notifyItemChanged(position);
 	}
