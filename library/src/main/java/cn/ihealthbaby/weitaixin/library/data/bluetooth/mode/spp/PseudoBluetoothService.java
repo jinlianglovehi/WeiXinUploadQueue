@@ -356,7 +356,7 @@ public class PseudoBluetoothService {
 					tmp = device.createRfcommSocketToServiceRecord(Constants.COMMON_UUID);
 				} else {
 					tmp = device.createInsecureRfcommSocketToServiceRecord(Constants.COMMON_UUID);
-					LogUtil.e("bluetoothScanner", "" + "COMMON_UUID：" + Constants.COMMON_UUID);
+					LogUtil.d("bluetoothScanner", "" + "COMMON_UUID：" + Constants.COMMON_UUID);
 				}
 			} catch (IOException e) {
 				Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
