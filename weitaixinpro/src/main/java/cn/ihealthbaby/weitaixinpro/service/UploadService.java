@@ -15,7 +15,6 @@ import com.qiniu.android.storage.UploadOptions;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.Map;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.UploadModel;
@@ -47,7 +46,6 @@ public class UploadService extends IntentService {
 	public UploadService() {
 		super(TAG);
 		apiManager = ApiManager.getInstance();
-		uploadManager = new UploadManager(UploadUtil.config());
 		initHandler();
 	}
 
@@ -73,29 +71,8 @@ public class UploadService extends IntentService {
 			}
 
 			@Override
-			public void handleError(Map<String, Object> msgMap) {
-				super.handleError(msgMap);
-				UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
-				EventBus.getDefault().post(event);
-			}
-
-			@Override
-			public void handleClientError(Context context, Exception error) {
-				super.handleClientError(context, error);
-				UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
-				EventBus.getDefault().post(event);
-			}
-
-			@Override
-			public void handleAccountError(Context context, Map<String, Object> msgMap) {
-				super.handleAccountError(context, msgMap);
-				UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
-				EventBus.getDefault().post(event);
-			}
-
-			@Override
-			public void handleValidator(Context context) {
-				super.handleValidator(context);
+			public void handleAllFailure(Context context) {
+				super.handleAllFailure(context);
 				UploadEvent event = new UploadEvent(UploadEvent.RESULT_FAIL);
 				EventBus.getDefault().post(event);
 			}
