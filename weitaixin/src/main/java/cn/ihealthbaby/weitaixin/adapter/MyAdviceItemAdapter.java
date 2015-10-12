@@ -267,7 +267,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 			LogUtil.d("AskDocgetId", "AskDocgetId = " + adviceItem.getId());
 			int askMinTime=RecordFragment.askMinTime;
 			if (askMinTime != -1) {
-				if (adviceItem.getTestTimeLong() >= askMinTime) {
+				if (adviceItem.getTestTimeLong() >= askMinTime*60*1000) {
 					Intent intent = new Intent(context, AskDoctorActivity.class);
 					intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
 					intent.putExtra(Constants.INTENT_PURPOSE, adviceItem.getAskPurpose());
