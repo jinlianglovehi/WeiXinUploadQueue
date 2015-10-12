@@ -79,6 +79,7 @@ public class SPUtil {
 		if (user.getCreateTime() != null) {
 			editor.putLong("CreateTime", user.getCreateTime().getTime());
 		}
+		editor.putLong("HospitalId", user.getHospitalId());
 		editor.putBoolean("IsInit", user.getIsInit());
 		editor.commit();
 		saveServiceInfo(context, user);
@@ -159,6 +160,7 @@ public class SPUtil {
 			user.setAccountToken(sp.getString("AccountToken", ""));
 			user.setTelephone(sp.getString("Telephone", ""));
 			user.setId(sp.getLong("Id", -1));
+			user.setHospitalId(sp.getLong("HospitalId", -1));
 			user.setMobile(sp.getString("Mobile", ""));
 			user.setName(sp.getString("Name", ""));
 			user.setHeadPic(sp.getString("HeadPic", ""));
