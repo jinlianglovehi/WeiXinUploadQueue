@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -32,6 +33,7 @@ import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
  */
 public class LocalRecordPlayActivity extends RecordPlayActivity {
 	private String key;
+	public CustomDialog customDialog;
 
 	@Override
 	protected void function() {
@@ -43,8 +45,15 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			public void onFinishedWork(final String key, final ResponseInfo info, JSONObject response) {
 				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record, key),
 						new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
-					@Override
+							@Override
+							public void handleResult(Result<AdviceItem> result) {
+								super.handleResult(result);
+								customDialog.dismiss();
+							}
+
+							@Override
 					public void handleData(final AdviceItem data) {
+
 						ToastUtil.show(getApplicationContext(), "上传成功");
 						btnBusiness.setImageResource(R.drawable.button_ask_doctor);
 						tvBusiness.setText("问医生");
@@ -122,7 +131,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			ToastUtil.show(getApplicationContext(), "获取数据失败");
 		}
 		// TODO: 15/9/20  临时放置
-		CustomDialog customDialog = new CustomDialog();
+		customDialog = new CustomDialog();
 		dialog = customDialog.createDialog1(this, "正在上传胎音文件...");
 	}
 }
