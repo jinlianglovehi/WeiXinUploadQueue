@@ -273,9 +273,7 @@ public class CloudRecordPlayActivity extends BaseActivity {
 				List<Long> afm = data.getAfm();
 				fetalMove = Util.time2Position(afm);
 				config();
-				if (dialog != null && dialog.isShowing()) {
-					dialog.dismiss();
-				}
+				customDialog.dismiss();
 			}
 
 			@Override
