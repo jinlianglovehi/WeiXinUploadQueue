@@ -37,6 +37,7 @@ import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.PageData;
+import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -396,9 +397,9 @@ public class RecordFragment extends BaseFragment {
 	}
 
 	public void getAskMinTime() {
-		User user = SPUtil.getUser(getActivity().getApplicationContext());
-		if (user != null && user.getHospitalId() != -1) {
-			ApiManager.getInstance().adviceApi.getAdviceSetting(user.getHospitalId(), new DefaultCallback<AdviceSetting>(getActivity(), new AbstractBusiness<AdviceSetting>() {
+		final ServiceInfo serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
+		if (serviceInfo != null && serviceInfo.getHospitalId() != -1) {
+			ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(), new DefaultCallback<AdviceSetting>(getActivity(), new AbstractBusiness<AdviceSetting>() {
 				@Override
 				public void handleData(AdviceSetting data) {
 					askMinTime = data.getAskMinTime();
