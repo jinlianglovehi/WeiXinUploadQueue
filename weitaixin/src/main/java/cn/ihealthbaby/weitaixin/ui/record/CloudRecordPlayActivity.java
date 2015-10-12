@@ -195,7 +195,7 @@ public class CloudRecordPlayActivity extends BaseActivity {
 						e.printStackTrace();
 					}
 				}
-				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(record.getRecordStartTime().getTime()));
 			}
 
 			@Override

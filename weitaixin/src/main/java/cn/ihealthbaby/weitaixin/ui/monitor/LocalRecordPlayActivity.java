@@ -27,6 +27,7 @@ import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.record.AskDoctorActivity;
+import cn.ihealthbaby.weitaixin.ui.widget.MonitorDialog;
 
 /**
  * Created by liuhongjian on 15/9/20 13:13.
@@ -37,6 +38,27 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 
 	@Override
 	protected void function() {
+		if (!Util.isWifi(getApplicationContext())) {
+			final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"建议在wifi环境下上传", "立即上传", "取消上传"});
+			monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+				@Override
+				public void left(Object... obj) {
+					monitorDialog.dismiss();
+					upload();
+				}
+
+				@Override
+				public void right(Object... obj) {
+					monitorDialog.dismiss();
+				}
+			});
+			monitorDialog.show();
+		}
+
+
+	}
+
+	private void upload() {
 		AsynUploadEngine asynUploadEngine = new AsynUploadEngine(getApplicationContext());
 		dialog.show();
 		asynUploadEngine.init(new File(FileUtil.getVoiceDir(getApplicationContext()), uuid));
@@ -73,6 +95,20 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 								startActivity(intent);
 							}
 						});
+						final MonitorDialog monitorDialog = new MonitorDialog(LocalRecordPlayActivity.this, new String[]{"上传完成,问问医生吗", "去问医生", "暂不询问"});
+						monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+							@Override
+							public void left(Object... obj) {
+								monitorDialog.dismiss();
+								btnBusiness.performClick();
+							}
+
+							@Override
+							public void right(Object... obj) {
+								monitorDialog.dismiss();
+							}
+						});
+						monitorDialog.show();
 						saveDataToDatabase(data.getId());
 					}
 
