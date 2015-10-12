@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.record;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -29,6 +30,7 @@ import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.Advice;
 import cn.ihealthbaby.client.model.AdviceSetting;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
@@ -37,7 +39,6 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
-import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
@@ -258,12 +259,12 @@ public class CloudRecordPlayActivity extends BaseActivity {
 			ToastUtil.show(getApplicationContext(), "获取数据失败");
 			return;
 		}
-		CustomDialog customDialog = new CustomDialog();
+		final CustomDialog customDialog = new CustomDialog();
 		dialog = customDialog.createDialog1(this, "正在下载监测数据...");
 		dialog.show();
 		ApiManager.getInstance().adviceApi.getAdviceDetail(id, new DefaultCallback<Advice>(getApplicationContext(), new AbstractBusiness<Advice>() {
 			@Override
-			public void handleData(Advice advice)   {
+			public void handleData(Advice advice) {
 				CloudRecordPlayActivity.this.advice = advice;
 				Gson gson = new Gson();
 				RecordData recordData = gson.fromJson(advice.getData(), RecordData.class);
@@ -275,6 +276,13 @@ public class CloudRecordPlayActivity extends BaseActivity {
 				if (dialog != null && dialog.isShowing()) {
 					dialog.dismiss();
 				}
+			}
+
+			@Override
+			public void handleAllFailure(Context context) {
+				super.handleAllFailure(context);
+				customDialog.dismiss();
+				ToastUtil.show(getApplicationContext(), "下载胎音文件失败");
 			}
 		}), getRequestTag());
 		final File file = new File(FileUtil.getVoiceDir(getApplicationContext()), localRecordId);
