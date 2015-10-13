@@ -68,7 +68,7 @@ public class UploadUtil {
 	 */
 	public void uploadAll() {
 		customDialog.show();
-		uploadOnlyRecord();
+		uploadRecordFirst();
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class UploadUtil {
 	 */
 	public void uploadData() {
 		customDialog.show();
-		uploadRecordFirst();
+		uploadOnlyRecord();
 	}
 
 	/**
