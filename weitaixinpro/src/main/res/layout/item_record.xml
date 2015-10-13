@@ -1,46 +1,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/gray17"
-    android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/gray17"
+              android:orientation="horizontal">
 
     <CheckBox
         android:id="@+id/checkboxDelete"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:clickable="false"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:background="@drawable/record_del_checkbox_selector"
         android:button="@null"
+        android:clickable="false"
         android:focusable="false"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="74dp"
         android:layout_marginTop="10dp">
 
-        <TextView
-            android:id="@+id/tv_delete_item"
-            android:layout_width="100dp"
-            android:layout_height="72dp"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginTop="1dp"
-            android:background="@color/red0"
-            android:gravity="center"
-            android:text="删 除"
-            android:textColor="@drawable/text_color_remove_selector"
-            android:textSize="@dimen/font16" />
 
         <ImageView
             android:layout_width="74dp"
             android:layout_height="74dp"
             android:layout_marginLeft="9dp"
-            android:src="@drawable/bg_white_circle" />
+            android:src="@drawable/bg_white_circle"/>
 
         <RelativeLayout
             android:id="@+id/rl_item"
@@ -70,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:text="姓名"
                         android:textColor="@color/gray3"
-                        android:textSize="@dimen/font10" />
+                        android:textSize="@dimen/font10"/>
 
 
                 </LinearLayout>
@@ -83,7 +70,7 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginTop="18dp"
                     android:layout_toRightOf="@id/ll_Layout"
-                    android:src="@drawable/record_clock" />
+                    android:src="@drawable/record_clock"/>
 
 
                 <TextView
@@ -97,7 +84,7 @@
                     android:singleLine="true"
                     android:text="0秒"
                     android:textColor="@color/black0"
-                    android:textSize="@dimen/font16" />
+                    android:textSize="@dimen/font16"/>
 
 
                 <TextView
@@ -111,7 +98,7 @@
                     android:singleLine="true"
                     android:text="月日"
                     android:textColor="@color/gray3"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <ImageView
                     android:id="@+id/iv_circle"
@@ -120,7 +107,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="60dp"
-                    android:src="@drawable/shape_green_circle" />
+                    android:src="@drawable/shape_green_circle"/>
 
                 <TextView
                     android:id="@+id/tv_upload_status"
@@ -131,7 +118,7 @@
                     android:background="@drawable/bg_ask_doctor"
                     android:gravity="center"
                     android:text="需上传"
-                    android:textColor="@drawable/text_color_selector" />
+                    android:textColor="@drawable/text_color_selector"/>
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>
