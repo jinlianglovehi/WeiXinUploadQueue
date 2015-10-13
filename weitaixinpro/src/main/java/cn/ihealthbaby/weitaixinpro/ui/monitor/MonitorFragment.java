@@ -26,9 +26,6 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -54,12 +51,14 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
+import cn.ihealthbaby.weitaixin.library.event.StartMonitorEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
+import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
@@ -107,11 +106,8 @@ public class MonitorFragment extends BaseFragment {
 	private PseudoBluetoothService pseudoBluetoothService;
 	private ArrayList<BluetoothDevice> scanedDevices = new ArrayList<>();
 	private boolean connected;
-	private boolean needPlay;
-	private boolean needRecord;
 	private CountDownTimer countDownTimer;
 	private boolean started;
-	private FileOutputStream fileOutputStream;
 	private AudioTrack audioTrack = AudioPlayer.getInstance().getmAudioTrack();
 	private int autoStartTime = 2 * 60 * 1000;
 	private ExpendableCountDownTimer autoStartTimer;
@@ -132,20 +128,11 @@ public class MonitorFragment extends BaseFragment {
 								bluetoothScanner.cancleDiscovery();
 								onConnectedUI();
 								break;
-							case PseudoBluetoothService.STATE_CONNECTING:
-								LogUtil.d(TAG, "STATE_CONNECTING");
-								break;
-							case PseudoBluetoothService.STATE_LISTEN:
-								LogUtil.d(TAG, "STATE_LISTEN");
-								break;
 							case PseudoBluetoothService.STATE_NONE:
 								LogUtil.d(TAG, "STATE_NONE");
 								reset();
 								break;
 						}
-						break;
-					case Constants.MESSAGE_WRITE:
-						byte[] writeBuf = (byte[]) msg.obj;
 						break;
 					case Constants.MESSAGE_READ_FETAL_DATA:
 						FHRPackage fhrPackage = (FHRPackage) msg.obj;
@@ -167,11 +154,6 @@ public class MonitorFragment extends BaseFragment {
 							tvBluetooth.setText(fhr1 + "");
 						}
 						break;
-					case Constants.MESSAGE_DEVICE_NAME:
-						// save the connected device's name
-						String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
-						LogUtil.d(TAG, "connecting " + deviceName);
-						break;
 					case Constants.MESSAGE_CANNOT_CONNECT:
 						connected = false;
 						started = false;
@@ -186,25 +168,13 @@ public class MonitorFragment extends BaseFragment {
 						ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
 						reset();
 						break;
-					case Constants.MESSAGE_VOICE:
-						byte[] sound = (byte[]) msg.obj;
-						audioTrack.write(sound, 0, sound.length);
-						if (needRecord) {
-							if (fileOutputStream != null) {
-								try {
-									fileOutputStream.write(sound);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-						break;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	};
+	private FixedRateCountDownTimer readDataTimer;
 
 	private String getTempFileName() {
 		return Constants.TEMP_FILE_NAME;
@@ -238,23 +208,11 @@ public class MonitorFragment extends BaseFragment {
 	public void startMonitor(View view) {
 		view.setClickable(false);
 		getAdviceSetting();
-		autoStartTimer.cancel();
 		started = true;
 		String localRecordId = getLocalRecordId();
 		LogUtil.d(TAG, "localRecordId:%s", localRecordId);
 		File file = getTempFile();
-		try {
-			if (file.createNewFile()) {
-				fileOutputStream = new FileOutputStream(file);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		Date recordStartTime = new Date();
-		needRecord = true;
-		needPlay = true;
 		Bundle user = getActivity().getIntent().getBundleExtra(Constants.BUNDLE_USER);
 		long userId = user.getLong(Constants.INTENT_USER_ID, -1);
 		String userName = user.getString(Constants.INTENT_USER_NAME);
@@ -288,12 +246,15 @@ public class MonitorFragment extends BaseFragment {
 			LogUtil.d(TAG, "数据插入失败");
 			view.setClickable(true);
 			started = false;
-			needRecord = false;
-			needPlay = false;
 			autoStartTimer.cancel();
 			SPUtil.clearUUID(getActivity().getApplicationContext());
 			return;
 		}
+		autoStartTimer.cancel();
+		readDataTimer.cancel();
+		final StartMonitorEvent event = new StartMonitorEvent();
+		event.setFile(file);
+		EventBus.getDefault().post(event);
 		Intent intent = new Intent(getActivity(), MonitorDetialActivity.class);
 		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
 		startActivity(intent);
@@ -381,6 +342,42 @@ public class MonitorFragment extends BaseFragment {
 				if (bluetoothScanner.isDiscovering()) {
 					bluetoothScanner.cancleDiscovery();
 				}
+			}
+		};
+		readDataTimer = new FixedRateCountDownTimer(100000, 500) {
+			@Override
+			protected void onExtra(long duration, long extraTime, long stopTime) {
+			}
+
+			@Override
+			public void onStart(long startTime) {
+			}
+
+			@Override
+			public void onRestart() {
+			}
+
+			@Override
+			public void onTick(long millisUntilFinished, FHRPackage fhrPackage) {
+				final int fhr = fhrPackage.getFHR1();
+				if (tvBluetooth != null) {
+					if (fhr >= safemin && fhr <= safemax) {
+						tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
+					} else {
+						tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
+						if (alert && connected && started) {
+							long currentTimeMillis = System.currentTimeMillis();
+							if (currentTimeMillis - lastAlert >= alertInterval * 1000)
+								alertSound.play(1, 1, 1, 0, 0, 1);
+							lastAlert = currentTimeMillis;
+						}
+					}
+					tvBluetooth.setText(fhr + "");
+				}
+			}
+
+			@Override
+			public void onFinish() {
 			}
 		};
 		bluetoothScanner = new DefaultBluetoothScanner(adapter);
@@ -494,8 +491,6 @@ public class MonitorFragment extends BaseFragment {
 		rlStart.setVisibility(View.GONE);
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
-		needRecord = false;
-		needPlay = true;
 		getAdviceSetting();
 		if (audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
 			audioTrack.flush();
@@ -596,17 +591,9 @@ public class MonitorFragment extends BaseFragment {
 				pseudoBluetoothService.stop();
 			}
 		}.start();
-		needPlay = false;
 		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
 			audioTrack.pause();
 			audioTrack.flush();
-		}
-		if (fileOutputStream != null) {
-			try {
-				fileOutputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		reset();
 		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);

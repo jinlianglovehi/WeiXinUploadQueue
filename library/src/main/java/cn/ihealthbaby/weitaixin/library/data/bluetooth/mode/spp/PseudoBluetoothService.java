@@ -20,7 +20,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -180,12 +179,6 @@ public class PseudoBluetoothService {
 		mConnectedThread = new ConnectedThread(socket, socketType);
 		mConnectedThread.setName("ConnectedThread");
 		mConnectedThread.start();
-		// Send the name of the connected device back to the UI Activity
-		Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
-		Bundle bundle = new Bundle();
-		bundle.putString(Constants.DEVICE_NAME, device.getName());
-		msg.setData(bundle);
-		mHandler.sendMessage(msg);
 		setState(STATE_CONNECTED);
 	}
 

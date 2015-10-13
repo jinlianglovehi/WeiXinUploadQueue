@@ -28,9 +28,6 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -61,12 +58,14 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
+import cn.ihealthbaby.weitaixin.library.event.StartMonitorEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
+import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
@@ -113,11 +112,8 @@ public class MonitorFragment extends BaseFragment {
 	private PseudoBluetoothService pseudoBluetoothService;
 	private ArrayList<BluetoothDevice> scanedDevices = new ArrayList<>();
 	private boolean connected;
-	private boolean needPlay;
-	private boolean needRecord;
 	private CountDownTimer countDownTimer;
 	private boolean started;
-	private FileOutputStream fileOutputStream;
 	private AudioTrack audioTrack = AudioPlayer.getInstance().getmAudioTrack();
 	private int autoStartTime = 2 * 60 * 1000;
 	private ExpendableCountDownTimer autoStartTimer;
@@ -126,6 +122,7 @@ public class MonitorFragment extends BaseFragment {
 	private long lastAlert;
 	private boolean alert;
 	private int alertInterval;
+	private FixedRateCountDownTimer readDataTimer;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			try {
@@ -136,6 +133,7 @@ public class MonitorFragment extends BaseFragment {
 							case PseudoBluetoothService.STATE_CONNECTED:
 								LogUtil.d(TAG, "STATE_CONNECTED");
 								connected = true;
+								readDataTimer.start();
 								countDownTimer.start();
 								LogUtil.d(TAG, "开始倒计时,准备自动开始");
 								if (bluetoothScanner.isDiscovering()) {
@@ -143,48 +141,12 @@ public class MonitorFragment extends BaseFragment {
 								}
 								onConnectedUI();
 								break;
-							//正在连接
-							case PseudoBluetoothService.STATE_CONNECTING:
-								LogUtil.d(TAG, "STATE_CONNECTING");
-								break;
-							//监听
-							case PseudoBluetoothService.STATE_LISTEN:
-								LogUtil.d(TAG, "STATE_LISTEN");
-								break;
 							//未连接,初始状态
 							case PseudoBluetoothService.STATE_NONE:
 								LogUtil.d(TAG, "STATE_NONE");
 								reset();
 								break;
 						}
-						break;
-					case Constants.MESSAGE_WRITE:
-						byte[] writeBuf = (byte[]) msg.obj;
-						break;
-					case Constants.MESSAGE_READ_FETAL_DATA:
-						FHRPackage fhrPackage = (FHRPackage) msg.obj;
-						int fhr1 = fhrPackage.getFHR1();
-//						DataStorage.fhrPackage.setFHRPackage(fhrPackage);
-						DataStorage.fhrPackage = fhrPackage;
-						if (tvBluetooth != null) {
-							if (fhr1 >= safemin && fhr1 <= safemax) {
-								tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
-							} else {
-								tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
-								if (alert && connected && started) {
-									long currentTimeMillis = System.currentTimeMillis();
-									if (currentTimeMillis - lastAlert >= alertInterval * 1000)
-										alertSound.play(1, 1, 1, 0, 0, 1);
-									lastAlert = currentTimeMillis;
-								}
-							}
-							tvBluetooth.setText(fhr1 + "");
-						}
-						break;
-					case Constants.MESSAGE_DEVICE_NAME:
-						// save the connected device's name
-						String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
-						LogUtil.d(TAG, "connecting " + deviceName);
 						break;
 					case Constants.MESSAGE_CANNOT_CONNECT:
 						LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
@@ -196,19 +158,6 @@ public class MonitorFragment extends BaseFragment {
 						LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
 						ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
 						reset();
-						break;
-					case Constants.MESSAGE_VOICE:
-						byte[] sound = (byte[]) msg.obj;
-						audioTrack.write(sound, 0, sound.length);
-						if (needRecord) {
-							if (fileOutputStream != null) {
-								try {
-									fileOutputStream.write(sound);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
 						break;
 				}
 			} catch (Exception e) {
@@ -227,18 +176,7 @@ public class MonitorFragment extends BaseFragment {
 		String localRecordId = generateAndSaveLocalRecordId();
 		LogUtil.d(TAG, "localRecordId:%s", localRecordId);
 		File file = getTempFile();
-		try {
-			if (file.createNewFile()) {
-				fileOutputStream = new FileOutputStream(file);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		Date recordStartTime = new Date();
-		needRecord = true;
-		needPlay = true;
 		User user = getUser();
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
 		Record record = new Record();
@@ -261,14 +199,16 @@ public class MonitorFragment extends BaseFragment {
 			LogUtil.d(TAG, "数据插入失败");
 			btnStart.setClickable(true);
 			started = false;
-			needRecord = false;
-			needPlay = false;
 			autoStartTimer.cancel();
 			SPUtil.clearUUID(getActivity().getApplicationContext());
 			return;
 		}
 		autoStartTimer.cancel();
+		readDataTimer.cancel();
 		started = true;
+		final StartMonitorEvent event = new StartMonitorEvent();
+		event.setFile(file);
+		EventBus.getDefault().post(event);
 		Intent intent = new Intent(getActivity(), MonitorActivity.class);
 		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
 		startActivity(intent);
@@ -391,6 +331,42 @@ public class MonitorFragment extends BaseFragment {
 		getAdviceSetting();
 		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
 		alertSound.load(getActivity().getApplicationContext(), R.raw.didi, 1);
+		readDataTimer = new FixedRateCountDownTimer(100000, 500) {
+			@Override
+			protected void onExtra(long duration, long extraTime, long stopTime) {
+			}
+
+			@Override
+			public void onStart(long startTime) {
+			}
+
+			@Override
+			public void onRestart() {
+			}
+
+			@Override
+			public void onTick(long millisUntilFinished, FHRPackage fhrPackage) {
+				final int fhr = fhrPackage.getFHR1();
+				if (tvBluetooth != null) {
+					if (fhr >= safemin && fhr <= safemax) {
+						tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
+					} else {
+						tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
+						if (alert && connected && started) {
+							long currentTimeMillis = System.currentTimeMillis();
+							if (currentTimeMillis - lastAlert >= alertInterval * 1000)
+								alertSound.play(1, 1, 1, 0, 0, 1);
+							lastAlert = currentTimeMillis;
+						}
+					}
+					tvBluetooth.setText(fhr + "");
+				}
+			}
+
+			@Override
+			public void onFinish() {
+			}
+		};
 		autoStartTimer = new ExpendableCountDownTimer(autoStartTime, 1000) {
 			@Override
 			public void onStart(long startTime) {
@@ -548,8 +524,6 @@ public class MonitorFragment extends BaseFragment {
 		rlStart.setVisibility(View.GONE);
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
-		needRecord = false;
-		needPlay = true;
 		getAdviceSetting();
 		if (audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
 			audioTrack.flush();
@@ -664,17 +638,9 @@ public class MonitorFragment extends BaseFragment {
 				pseudoBluetoothService.stop();
 			}
 		}.start();
-		needPlay = false;
 		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
 			audioTrack.pause();
 			audioTrack.flush();
-		}
-		if (fileOutputStream != null) {
-			try {
-				fileOutputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		reset();
 		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
@@ -782,6 +748,11 @@ public class MonitorFragment extends BaseFragment {
 		DataStorage.fhrs.clear();
 		DataStorage.fms.clear();
 		DataStorage.fhrPackage.recycle();
+	}
+
+	public void stopMonitor() {
+		pseudoBluetoothService.stop();
+		reset();
 	}
 }
 

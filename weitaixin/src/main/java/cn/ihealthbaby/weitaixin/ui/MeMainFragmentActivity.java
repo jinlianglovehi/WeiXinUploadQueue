@@ -13,15 +13,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
-import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInfoFragment;
-import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
 import cn.ihealthbaby.weitaixin.ui.mine.event.LogoutEvent;
+import cn.ihealthbaby.weitaixin.ui.monitor.MonitorFragment;
 import cn.ihealthbaby.weitaixin.ui.record.RecordFragment;
 import de.greenrobot.event.EventBus;
 
@@ -109,14 +108,10 @@ public class MeMainFragmentActivity extends BaseActivity {
     @OnClick(R.id.ll_tab_monitor)
     public void iv_tab_02() {
         if (showTab(iv_tab_02)) {
-            if (SPUtil.isLogin(this)) {
-                if (SPUtil.getUser(this).getServiceInfo() != null && !WeiTaiXinApplication.getInstance().isMonitoring()) {
-                    if (monitorFragment == null) {
-                        monitorFragment = new MonitorFragment();
-                    }
-                    showFragment(R.id.container, monitorFragment);
-                }
+            if (monitorFragment == null) {
+                monitorFragment = new MonitorFragment();
             }
+            showFragment(R.id.container, monitorFragment);
         }
     }
 
@@ -179,6 +174,10 @@ public class MeMainFragmentActivity extends BaseActivity {
         if (!fragment.isAdded()) {
             if (oldFragment != null) {
                 fragmentTransaction.hide(oldFragment);
+	            if (oldFragment instanceof MonitorFragment) {
+		            final MonitorFragment monitorFragment = (MonitorFragment) this.oldFragment;
+		            monitorFragment.stopMonitor();
+	            }
             }
             fragmentTransaction.add(container, fragment);
         } else if (oldFragment != fragment) {
