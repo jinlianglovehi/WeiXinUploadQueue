@@ -33,7 +33,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 
 	private IWXAPI api;
 
-	@Bind(R.id.tvWxErr) TextView tvWxErr;
+//	@Bind(R.id.tvWxErr) TextView tvWxErr;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,20 +70,25 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 
 			if (resp.errCode == BaseResp.ErrCode.ERR_OK) {
 				ToastUtil.show(this, "支付成功");
-				tvWxErr.setText(resp.errStr+"支付成功");
+//				tvWxErr.setText(resp.errStr+"支付成功");
 
 				LocalProductData.getLocal().localProductDataMap.clear();
 
 				EventBus.getDefault().post(new PayEvent());
 				Intent intent = new Intent(this, PayAccountActivity.class);
 				this.startActivity(intent);
+//				finish();
 			}else{
 				ToastUtil.show(this, "支付失败");
-				tvWxErr.setText(resp.errStr + "支付失败");
+//				tvWxErr.setText(resp.errStr + "支付失败");
+//				finish();
 			}
 		}else {
-			Toast.makeText(this, "错误", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "支付错误", Toast.LENGTH_SHORT).show();
 		}
+		finish();
+
+		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 	}
 
 

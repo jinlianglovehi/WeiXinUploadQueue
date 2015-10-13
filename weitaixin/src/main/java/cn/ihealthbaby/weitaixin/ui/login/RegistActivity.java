@@ -81,6 +81,7 @@ public class RegistActivity extends BaseActivity {
 
         ivAgreeRegister.setImageResource(R.drawable.pitch_un);
         tv_regist_action.setEnabled(false);
+        tv_regist_action.setTextColor(getResources().getColor(R.color.gray1));
     }
 
     @Override
@@ -369,9 +370,11 @@ public class RegistActivity extends BaseActivity {
         if (mChecked) {
             ivAgreeRegister.setImageResource(R.drawable.pitch);
             tv_regist_action.setEnabled(true);
+            tv_regist_action.setTextColor(getResources().getColor(R.color.white0));
         } else {
             ivAgreeRegister.setImageResource(R.drawable.pitch_un);
             tv_regist_action.setEnabled(false);
+            tv_regist_action.setTextColor(getResources().getColor(R.color.gray1));
         }
     }
 

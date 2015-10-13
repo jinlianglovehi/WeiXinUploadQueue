@@ -204,6 +204,13 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
                         cancel(customDialog);
                         customDialog.dismiss();
                     }
+
+                    @Override
+                    public void handleValidator(Context context) {
+                        super.handleValidator(context);
+                        isHasAuthCode = false;
+                        cancel(customDialog);
+                    }
                 }), getRequestTag());
     }
 

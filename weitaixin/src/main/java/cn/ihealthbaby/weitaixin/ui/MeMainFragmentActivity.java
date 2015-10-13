@@ -74,6 +74,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
     }
 

@@ -1,5 +1,5 @@
 include ':library'
 include ':refreshlib'
 include ':weitaixin'
+include ':umengupgradelibrary'
 include ':weitaixinpro'
-//include ':umengupgradelibrary'
