@@ -97,8 +97,6 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 
 			@Override
 			public void handleData(AdviceItem adviceItem) {
-				//// TODO: 15/10/12 接口调整,等小顾更新
-
 				UploadUtil uploadUtil = new UploadUtil(context, record);
 				if (adviceItem == null) {
 					LogUtil.d(TAG, "未上传过,可以上传");
