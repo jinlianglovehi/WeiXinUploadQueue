@@ -87,7 +87,7 @@ public class RecordBusinessDao {
 					                       @Override
 					                       public void appendValuesTo(List<Object> values) {
 					                       }
-				                       })
+				                       }).where(RecordDao.Properties.Duration.notEq(0))
 				                       .where(RecordDao.Properties.UserId.eq(userId))
 				                       .orderDesc(RecordDao.Properties.RecordStartTime)
 				                       .build()
