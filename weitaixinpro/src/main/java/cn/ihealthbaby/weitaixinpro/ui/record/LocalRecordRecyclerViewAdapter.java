@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixinpro.ui.record;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
@@ -17,7 +18,9 @@ import java.util.Set;
 import butterknife.Bind;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixinpro.ui.monitor.LocalRecordPlayActivity;
 import cn.ihealthbaby.weitaixinpro.ui.widget.ChooseUploadContentPopupWindow;
 import cn.ihealthbaby.weitaixinpro.ui.widget.SoundUploadedEvent;
 import de.greenrobot.event.EventBus;
@@ -111,7 +114,14 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 			});
 		} else {
 			holder.checkboxDelete.setVisibility(View.GONE);
-			holder.itemView.setOnClickListener(null);
+			holder.itemView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(activity, LocalRecordPlayActivity.class);
+					intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, record.getLocalRecordId());
+					activity.startActivity(intent);
+				}
+			});
 		}
 		if (deleteMap.get(position)) {
 			holder.checkboxDelete.setSelected(true);
