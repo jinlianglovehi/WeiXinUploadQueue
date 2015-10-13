@@ -51,7 +51,7 @@ public abstract class AbstractBusiness<T> implements Business<T> {
 	public void handleClientError(Context context, Exception error) {
 		String tag = "handleClientError";
 		if (error instanceof NoConnectionError) {
-			ToastUtil.show(context, "网络连接失败，请检查网络状态");
+			ToastUtil.show(context, "网络连接失败");
 			LogUtil.e(tag, "no connection" + error.getMessage());
 		} else if (error instanceof NetworkError) {
 			ToastUtil.show(context, "网络连接异常");
