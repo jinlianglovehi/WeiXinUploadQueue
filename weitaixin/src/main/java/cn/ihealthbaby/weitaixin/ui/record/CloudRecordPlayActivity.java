@@ -159,18 +159,95 @@ public class CloudRecordPlayActivity extends BaseActivity {
 			//0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除(弃用) 4 本地数据 -1未获取到数据
 			case 0:
 				btnBusiness.setImageResource(R.drawable.button_ask_doctor);
+				tvBusiness.setText("问医生");
 				break;
 			case 1:
 				btnBusiness.setImageResource(R.drawable.button_wait_reply);
+				tvBusiness.setText("等待回复");
 				break;
 			case 2:
 				btnBusiness.setImageResource(R.drawable.button_check);
+				tvBusiness.setText("查看回复");
 				break;
 			case 4:
 			case -1:
 			default:
 				ToastUtil.show(getApplicationContext(), "数据格式错误,status");
 				break;
+		}
+	}
+
+	/**
+	 * 从网络获取数据
+	 */
+	protected void getData() {
+		long id = getIntent().getLongExtra(Constants.INTENT_ID, 0);
+		String url = getIntent().getStringExtra(Constants.INTENT_URL);
+		String localRecordId = getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID);
+		if (id == 0) {
+			ToastUtil.show(getApplicationContext(), "获取数据失败");
+			return;
+		}
+		final CustomDialog customDialog = new CustomDialog(this, "正在下载监测数据...");
+		customDialog.show();
+		ApiManager.getInstance().adviceApi.getAdviceDetail(id, new DefaultCallback<Advice>(getApplicationContext(), new AbstractBusiness<Advice>() {
+			@Override
+			public void handleData(Advice advice) {
+				CloudRecordPlayActivity.this.advice = advice;
+				Gson gson = new Gson();
+				RecordData recordData = gson.fromJson(advice.getData(), RecordData.class);
+				data = recordData.getData();
+				fhrs = data.getHeartRate();
+				List<Long> afm = data.getAfm();
+				fetalMove = Util.time2Position(afm);
+				config();
+				customDialog.dismiss();
+			}
+
+			@Override
+			public void handleAllFailure(Context context) {
+				super.handleAllFailure(context);
+				customDialog.dismiss();
+				ToastUtil.show(getApplicationContext(), "下载胎音文件失败");
+			}
+		}), getRequestTag());
+		final File file = new File(FileUtil.getVoiceDir(getApplicationContext()), localRecordId);
+		if (file.exists()) {
+			try {
+				path = file.getPath();
+				if (path != null) {
+					mediaPlayer.setDataSource(path);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		//获取胎音数据
+		if (url != null) {
+			AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+			asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(file) {
+				@Override
+				public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+					ToastUtil.show(getApplicationContext(), "未获取到音频数据");
+				}
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, File file) {
+					if (statusCode == Constants.CODE_200_OK) {
+						try {
+							path = file.getPath();
+							if (path != null) {
+								mediaPlayer.setDataSource(path);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+		} else {
+			ToastUtil.show(getApplicationContext(), "暂无胎音数据");
 		}
 	}
 
@@ -244,82 +321,6 @@ public class CloudRecordPlayActivity extends BaseActivity {
 				chs.smoothScrollTo(0, 0);
 			}
 		};
-	}
-
-	/**
-	 * 从网络获取数据
-	 */
-	protected void getData() {
-		long id = getIntent().getLongExtra(Constants.INTENT_ID, 0);
-		String url = getIntent().getStringExtra(Constants.INTENT_URL);
-		String localRecordId = getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID);
-		if (id == 0) {
-			ToastUtil.show(getApplicationContext(), "获取数据失败");
-			return;
-		}
-		final CustomDialog customDialog = new CustomDialog(this, "正在下载监测数据...");
-		customDialog.show();
-		ApiManager.getInstance().adviceApi.getAdviceDetail(id, new DefaultCallback<Advice>(getApplicationContext(), new AbstractBusiness<Advice>() {
-			@Override
-			public void handleData(Advice advice) {
-				CloudRecordPlayActivity.this.advice = advice;
-				Gson gson = new Gson();
-				RecordData recordData = gson.fromJson(advice.getData(), RecordData.class);
-				data = recordData.getData();
-				fhrs = data.getHeartRate();
-				List<Long> afm = data.getAfm();
-				fetalMove = Util.time2Position(afm);
-				config();
-				customDialog.dismiss();
-			}
-
-			@Override
-			public void handleAllFailure(Context context) {
-				super.handleAllFailure(context);
-				customDialog.dismiss();
-				ToastUtil.show(getApplicationContext(), "下载胎音文件失败");
-			}
-		}), getRequestTag());
-		final File file = new File(FileUtil.getVoiceDir(getApplicationContext()), localRecordId);
-		if (file.exists()) {
-			try {
-				path = file.getPath();
-				if (path != null) {
-					mediaPlayer.setDataSource(path);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		//获取胎音数据
-		if (url != null) {
-			AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-			asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(file) {
-				public String path;
-
-				@Override
-				public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-					ToastUtil.show(getApplicationContext(), "未获取到音频数据");
-				}
-
-				@Override
-				public void onSuccess(int statusCode, Header[] headers, File file) {
-					if (statusCode == Constants.CODE_200_OK) {
-						try {
-							path = file.getPath();
-							if (path != null) {
-								mediaPlayer.setDataSource(path);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			});
-		} else {
-			ToastUtil.show(getApplicationContext(), "暂无胎音数据");
-		}
 	}
 
 	private void configCurve() {

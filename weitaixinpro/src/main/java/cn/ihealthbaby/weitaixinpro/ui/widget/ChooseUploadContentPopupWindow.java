@@ -16,7 +16,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
-import cn.ihealthbaby.weitaixinpro.service.UploadUtil;
+import cn.ihealthbaby.weitaixinpro.service.UploadDataUtil;
 import de.greenrobot.event.EventBus;
 
 public class ChooseUploadContentPopupWindow extends PopupWindow {
@@ -97,20 +97,24 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 
 			@Override
 			public void handleData(AdviceItem adviceItem) {
-				UploadUtil uploadUtil = new UploadUtil(context, record);
+				UploadDataUtil uploadDataUtil = new UploadDataUtil(context, record);
 				if (adviceItem == null) {
 					LogUtil.d(TAG, "未上传过,可以上传");
 					if (button == BUTTON_ALL) {
-						uploadUtil.uploadAll();
+						uploadDataUtil.uploadAll();
 					} else if (button == BUTTON_DATA) {
-						uploadUtil.uploadData();
+						uploadDataUtil.uploadData();
 					}
 				} else {
 					final String fetalTonePath = adviceItem.getFetalTonePath();
 					if (TextUtils.isEmpty(fetalTonePath)) {
-						uploadUtil.updateTone(adviceItem);
+						if (button == BUTTON_ALL) {
+							uploadDataUtil.updateTone(adviceItem);
+						}
+						ToastUtil.show(context, "已上传曲线");
 						LogUtil.d(TAG, "已上传过,无胎音");
 					} else {
+						ToastUtil.show(context, "已上传全部数据");
 						LogUtil.d(TAG, "已上传过,有胎音");
 					}
 				}

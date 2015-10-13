@@ -33,8 +33,8 @@ import cn.ihealthbaby.weitaixin.ui.widget.MonitorDialog;
  * Created by liuhongjian on 15/9/20 13:13.
  */
 public class LocalRecordPlayActivity extends RecordPlayActivity {
-	private String key;
 	public CustomDialog customDialog;
+	private String key;
 
 	@Override
 	protected void function() {
@@ -53,9 +53,9 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 				}
 			});
 			monitorDialog.show();
+		} else {
+			upload();
 		}
-
-
 	}
 
 	private void upload() {
@@ -66,54 +66,51 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			@Override
 			public void onFinishedWork(final String key, final ResponseInfo info, JSONObject response) {
 				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record, key),
-						new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
-							@Override
-							public void handleResult(Result<AdviceItem> result) {
-								super.handleResult(result);
-								customDialog.dismiss();
-							}
+						                                             new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
+							                                             @Override
+							                                             public void handleResult(Result<AdviceItem> result) {
+								                                             super.handleResult(result);
+								                                             customDialog.dismiss();
+							                                             }
 
-							@Override
-					public void handleData(final AdviceItem data) {
+							                                             @Override
+							                                             public void handleData(final AdviceItem data) {
+								                                             ToastUtil.show(getApplicationContext(), "上传成功");
+								                                             btnBusiness.setImageResource(R.drawable.button_ask_doctor);
+								                                             tvBusiness.setText("问医生");
+								                                             btnBusiness.setOnClickListener(new View.OnClickListener() {
+									                                             @Override
+									                                             public void onClick(View v) {
+										                                             Intent intent = new Intent(getApplicationContext(), AskDoctorActivity.class);
+										                                             intent.putExtra(Constants.INTENT_ID, data);
+										                                             if (record != null) {
+											                                             if (record.getPurposeString() != null) {
+												                                             intent.putExtra(Constants.INTENT_FEELING, record.getPurposeString());
+											                                             }
+											                                             if (record.getFeelingString() != null) {
+												                                             intent.putExtra(Constants.INTENT_PURPOSE, record.getFeelingString());
+											                                             }
+										                                             }
+										                                             startActivity(intent);
+									                                             }
+								                                             });
+								                                             final MonitorDialog monitorDialog = new MonitorDialog(LocalRecordPlayActivity.this, new String[]{"上传完成,问问医生吗", "去问医生", "暂不询问"});
+								                                             monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+									                                             @Override
+									                                             public void left(Object... obj) {
+										                                             monitorDialog.dismiss();
+										                                             btnBusiness.performClick();
+									                                             }
 
-						ToastUtil.show(getApplicationContext(), "上传成功");
-						btnBusiness.setImageResource(R.drawable.button_ask_doctor);
-						tvBusiness.setText("问医生");
-						btnBusiness.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								Intent intent = new Intent(getApplicationContext(), AskDoctorActivity.class);
-								intent.putExtra(Constants.INTENT_ID, data);
-								if (record != null) {
-									if (record.getPurposeString() != null) {
-										intent.putExtra(Constants.INTENT_FEELING, record.getPurposeString());
-									}
-									if (record.getFeelingString() != null) {
-										intent.putExtra(Constants.INTENT_PURPOSE, record.getFeelingString());
-									}
-								}
-								startActivity(intent);
-							}
-						});
-						final MonitorDialog monitorDialog = new MonitorDialog(LocalRecordPlayActivity.this, new String[]{"上传完成,问问医生吗", "去问医生", "暂不询问"});
-						monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
-							@Override
-							public void left(Object... obj) {
-								monitorDialog.dismiss();
-								btnBusiness.performClick();
-							}
-
-							@Override
-							public void right(Object... obj) {
-								monitorDialog.dismiss();
-							}
-						});
-						monitorDialog.show();
-						saveDataToDatabase(data.getId());
-					}
-
-
-				}), getRequestTag());
+									                                             @Override
+									                                             public void right(Object... obj) {
+										                                             monitorDialog.dismiss();
+									                                             }
+								                                             });
+								                                             monitorDialog.show();
+								                                             saveDataToDatabase(data.getId());
+							                                             }
+						                                             }), getRequestTag());
 			}
 		});
 	}

@@ -34,8 +34,8 @@ import cn.ihealthbaby.weitaixinpro.tools.CustomDialog;
 /**
  * Created by liuhongjian on 15/10/12 19:56.
  */
-public class UploadUtil {
-	private final static String TAG = "UploadUtil";
+public class UploadDataUtil {
+	private final static String TAG = "UploadDataUtil";
 	private static final String TONE_FORMAT = Constants.MIME_TYPE_WAV;
 	private static final int TONE_VERSION = 1;
 	public final String localRecordId;
@@ -53,7 +53,7 @@ public class UploadUtil {
 	private UpCompletionHandler upCompletionHandler;
 	private AdviceItem adviceItem;
 
-	public UploadUtil(Context context, Record record) {
+	public UploadDataUtil(Context context, Record record) {
 		this.context = context;
 		this.record = record;
 		userId = record.getUserId();
@@ -238,7 +238,7 @@ public class UploadUtil {
 		ApiManager.getInstance().hClientAccountApi.uploadData(getUploadData(record, null), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
 			@Override
 			public void handleData(AdviceItem adviceItem) {
-				UploadUtil.this.adviceItem = adviceItem;
+				UploadDataUtil.this.adviceItem = adviceItem;
 				customDialog.dismiss();
 				ToastUtil.show(context, "上传曲线成功");
 			}
@@ -256,7 +256,7 @@ public class UploadUtil {
 		ApiManager.getInstance().hClientAccountApi.uploadData(getUploadData(record, null), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
 			@Override
 			public void handleData(AdviceItem adviceItem) {
-				UploadUtil.this.adviceItem = adviceItem;
+				UploadDataUtil.this.adviceItem = adviceItem;
 				requestForKeyAndToken();
 			}
 
