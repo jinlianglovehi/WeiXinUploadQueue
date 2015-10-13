@@ -127,7 +127,9 @@ public class LoginSmsAuthCodeActivity extends BaseActivity {
     public void cancel(CustomDialog customDialog) {
         tv_mark_number_text_smsauthcode.setText("发送验证码");
         isSend = true;
-        countDownTimer.cancel();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         customDialog.dismiss();
     }
 

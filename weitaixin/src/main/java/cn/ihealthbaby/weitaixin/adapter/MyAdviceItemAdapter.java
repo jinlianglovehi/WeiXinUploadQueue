@@ -265,18 +265,17 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		int status = adviceItem.getStatus();
 		if (status == 0) {
 			LogUtil.d("AskDocgetId", "AskDocgetId = " + adviceItem.getId());
-			int askMinTime=RecordFragment.askMinTime;
-			if (askMinTime != -1) {
-				if (adviceItem.getTestTimeLong() >= askMinTime*60*1000) {
-					Intent intent = new Intent(context, AskDoctorActivity.class);
-					intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
-					intent.putExtra(Constants.INTENT_PURPOSE, adviceItem.getAskPurpose());
-					intent.putExtra(Constants.INTENT_FEELING, adviceItem.getFeeling());
-					intent.putExtra(Constants.INTENT_POSITION, position);
-					context.startActivityForResult(intent, requestCode);
-				} else {
-					ToastUtil.show(context, "不满" + askMinTime + "分钟，不能问医生");
-				}
+			int askMinTime = RecordFragment.askMinTime;
+			LogUtil.d("TestTimeLon==>", adviceItem.getTestTimeLong() + " 秒: " + askMinTime * 60 + "");
+			if (true) { //adviceItem.getTestTimeLong() >= askMinTime * 60
+				Intent intent = new Intent(context, AskDoctorActivity.class);
+				intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
+				intent.putExtra(Constants.INTENT_PURPOSE, adviceItem.getAskPurpose());
+				intent.putExtra(Constants.INTENT_FEELING, adviceItem.getFeeling());
+				intent.putExtra(Constants.INTENT_POSITION, position);
+				context.startActivityForResult(intent, requestCode);
+			} else {
+				ToastUtil.show(context, "不满" + askMinTime + "分钟，不能问医生");
 			}
 		} else if (status == 1) {
 			Intent intent = new Intent(context, WaitReplyingActivity.class);

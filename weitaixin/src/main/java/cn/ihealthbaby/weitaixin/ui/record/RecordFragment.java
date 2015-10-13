@@ -399,9 +399,11 @@ public class RecordFragment extends BaseFragment {
 	public void getAskMinTime() {
 		final ServiceInfo serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
 		if (serviceInfo != null && serviceInfo.getHospitalId() != -1) {
-			ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(), new DefaultCallback<AdviceSetting>(getActivity(), new AbstractBusiness<AdviceSetting>() {
+			ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(),
+					new DefaultCallback<AdviceSetting>(getActivity(), new AbstractBusiness<AdviceSetting>() {
 				@Override
 				public void handleData(AdviceSetting data) {
+					LogUtil.d(TAG,"askMinTime==> "+askMinTime);
 					askMinTime = data.getAskMinTime();
 				}
 			}), getRequestTag());

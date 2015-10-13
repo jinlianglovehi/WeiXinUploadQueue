@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Map;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -201,13 +203,22 @@ public class RegistActivity extends BaseActivity {
                         cancel(customDialog);
                         customDialog.dismiss();
                     }
+
+                    @Override
+                    public void handleValidator(Context context) {
+                        super.handleValidator(context);
+                        isHasAuthCode = false;
+                        cancel(customDialog);
+                    }
                 }), getRequestTag());
     }
 
     public void cancel(CustomDialog customDialog) {
         tv_mark_num_text.setText("发送验证码");
         isSend = true;
-        countDownTimer.cancel();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         customDialog.dismiss();
     }
 

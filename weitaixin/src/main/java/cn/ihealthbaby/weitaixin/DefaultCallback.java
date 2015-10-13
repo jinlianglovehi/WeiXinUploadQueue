@@ -30,6 +30,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 			return;
 		}
 		int status = result.getStatus();
+		LogUtil.d(TAG,"status==> "+status);
 		switch (status) {
 			/**
 			 * 正常响应业务数据
@@ -126,6 +127,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 				stringBuilder.append(o.toString());
 				stringBuilder.append("\r\n");
 			}
+			stringBuilder.delete(stringBuilder.length()-2, stringBuilder.length());
 			return stringBuilder.toString();
 		} else {
 			return null;
