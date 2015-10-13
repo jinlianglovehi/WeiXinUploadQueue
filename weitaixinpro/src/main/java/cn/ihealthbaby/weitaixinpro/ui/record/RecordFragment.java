@@ -10,15 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
-import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
@@ -58,7 +55,7 @@ public class RecordFragment extends BaseFragment {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			swipeRefreshLayout.setRefreshing(false);
-			adapter.notifyDataSetChanged();
+			adapter.notifyAllDataSetChanged();
 		}
 	};
 

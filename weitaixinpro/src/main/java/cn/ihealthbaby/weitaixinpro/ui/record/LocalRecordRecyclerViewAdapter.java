@@ -1,13 +1,11 @@
 package cn.ihealthbaby.weitaixinpro.ui.record;
 
 import android.app.Activity;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,10 +16,8 @@ import java.util.Set;
 
 import butterknife.Bind;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixinpro.R;
-import cn.ihealthbaby.weitaixinpro.tools.CustomDialog;
 import cn.ihealthbaby.weitaixinpro.ui.widget.ChooseUploadContentPopupWindow;
 import cn.ihealthbaby.weitaixinpro.ui.widget.SoundUploadedEvent;
 import de.greenrobot.event.EventBus;
@@ -34,6 +30,7 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	private static final int UPLOAD_DATA = 2;
 	private final Activity activity;
 	private final List<Record> list;
+	public HashMap<Integer, Boolean> deleteMap = new HashMap<Integer, Boolean>();
 	@Bind(R.id.tv_begin)
 	TextView tvBegin;
 	@Bind(R.id.tv_name)
@@ -42,7 +39,14 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	TextView tvDate;
 	@Bind(R.id.tv_time)
 	TextView tvTime;
-	private boolean isDelFalg=false;
+	private boolean isDelFalg = false;
+
+	public LocalRecordRecyclerViewAdapter(Activity activity, ArrayList<Record> list) {
+		this.activity = activity;
+		this.list = list;
+		initMap(this.list.size());
+		EventBus.getDefault().register(this);
+	}
 
 	public boolean isDelFalg() {
 		return isDelFalg;
@@ -50,15 +54,6 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 
 	public void setIsDelFalg(boolean isDelFalg) {
 		this.isDelFalg = isDelFalg;
-	}
-
-	public HashMap<Integer,Boolean> deleteMap=new HashMap<Integer,Boolean>();
-
-	public LocalRecordRecyclerViewAdapter(Activity activity, ArrayList<Record> list) {
-		this.activity = activity;
-		this.list = list;
-		initMap(this.list.size());
-		EventBus.getDefault().register(this);
 	}
 
 	public void initMap(int size) {
@@ -101,7 +96,6 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 				chooseUploadContentPopupWindow.showAtLocation(activity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
 			}
 		});
-
 		if (isDelFalg()) {
 			holder.checkboxDelete.setVisibility(View.VISIBLE);
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -124,10 +118,7 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 		} else {
 			holder.checkboxDelete.setSelected(false);
 		}
-
-
 	}
-
 
 	@Override
 	public int getItemCount() {
@@ -136,9 +127,9 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 
 	public void doDeleteAction() {
 		Set<Map.Entry<Integer, Boolean>> entries = deleteMap.entrySet();
-		ArrayList<Record> delRecord=new ArrayList<Record>();
+		ArrayList<Record> delRecord = new ArrayList<Record>();
 		delRecord.clear();
-		for (Map.Entry<Integer, Boolean> entry:entries) {
+		for (Map.Entry<Integer, Boolean> entry : entries) {
 			if (entry.getValue()) {
 				//删除
 				delRecord.add(this.list.get(entry.getKey()));
@@ -149,10 +140,14 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 		notifyDataSetChanged();
 	}
 
-
 	public void onEventMainThread(SoundUploadedEvent event) {
 		int position = event.getPosition();
 		notifyItemChanged(position);
+	}
+
+	public void notifyAllDataSetChanged() {
+		notifyDataSetChanged();
+		initMap(list.size());
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
