@@ -2,43 +2,49 @@ package cn.ihealthbaby.weitaixinpro.ui.widget;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
-import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
 import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
-import cn.ihealthbaby.weitaixinpro.service.UploadEvent;
-import cn.ihealthbaby.weitaixinpro.service.UploadService;
-import cn.ihealthbaby.weitaixinpro.tools.CustomDialog;
+import cn.ihealthbaby.weitaixinpro.service.UploadUtil;
 import de.greenrobot.event.EventBus;
 
 public class ChooseUploadContentPopupWindow extends PopupWindow {
 	private final static String TAG = "ChooseUploadContentPopupWindow";
-	private final static int UPLOADTYPE_DATA = 0;
-	private final static int UPLOADTYPE_ALL = 1;
+	private final static int UPLOADED_STATE_NONE = 1;
+	private final static int UPLOADED_STATE_DATA = 2;
+	private final static int UPLOADED_STATE_ALL = 3;
+	private static final int BUTTON_ALL = 1;
+	private static final int BUTTON_DATA = 2;
+	private static final String TONE_FORMAT = "audio/x-wav";
+	private static final int TONE_VERSION = 1;
 	private final Context context;
 	private Record record;
 	private int position;
 	private Dialog dialog;
-	private String key;
+	private int uploadedState;
 
+	/**
+	 * 点击按钮,先检查资源状态,根据状态提示用户,
+	 *
+	 * @param context
+	 * @param record
+	 * @param position
+	 */
 	public ChooseUploadContentPopupWindow(Context context, Record record, int position) {
 		this.context = context;
 		this.record = record;
 		this.position = position;
-		EventBus.getDefault().register(this);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View popupWindows = inflater.inflate(R.layout.popupwindow_choose_upload_content, null);
 		setContentView(popupWindows);
@@ -55,14 +61,14 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 		uploadAll.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				upload();
+				checkUploadStatus(BUTTON_ALL);
 			}
 		});
 		//上传曲线
 		uploadData.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				uploadData();
+				checkUploadStatus(BUTTON_DATA);
 			}
 		});
 		//取消
@@ -81,77 +87,37 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 		});
 	}
 
-	protected void upload() {
-		Intent uploadService = new Intent(context, UploadService.class);
-		uploadService.putExtra(Constants.INTENT_USER_ID, record.getUserId());
-		uploadService.putExtra(Constants.INTENT_LOCAL_RECORD_ID, record.getLocalRecordId());
-		CustomDialog customDialog = new CustomDialog();
-		dialog = customDialog.createDialog1(context, "正在上传胎音文件...");
-		dialog.show();
-		context.startService(uploadService);
-	}
-
-	public void onEventMainThread(UploadEvent event) {
-		if (dialog != null && dialog.isShowing()) {
-			dialog.dismiss();
-		}
-		LogUtil.d(TAG, event.toString());
-		switch (event.getResult()) {
-			case UploadEvent.RESULT_SUCCESS:
-				ApiManager.getInstance().hClientAccountApi.uploadData(getUploadData(record, event.getKey()), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
-					@Override
-					public void handleData(AdviceItem data) {
-						ToastUtil.show(context, "全部上传成功");
-						updateUloadState(Record.UPLOAD_STATE_CLOUD);
-						EventBus.getDefault().post(new SoundUploadedEvent(position));
-					}
-				}), ChooseUploadContentPopupWindow.this);
-				break;
-			case UploadEvent.RESULT_FAIL:
-				ToastUtil.show(context, "上传失败");
-				updateUloadState(Record.UPLOAD_STATE_LOCAL);
-				break;
-			default:
-				break;
-		}
-	}
-
-	/**
-	 * 记录保存到数据库
-	 */
-	private void updateUloadState(int result) {
-		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(context);
-		try {
-			record.setUploadState(result);
-			recordBusinessDao.update(record);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private AdviceForm getUploadData(Record record, String key) {
-		AdviceForm adviceForm = new AdviceForm();
-		adviceForm.setClientId(record.getLocalRecordId());
-		adviceForm.setServiceId(record.getServiceId());
-		adviceForm.setDataType(1);
-		adviceForm.setDeviceType(1);
-		adviceForm.setFeeling(record.getFeelingString());
-		adviceForm.setAskPurpose(record.getPurposeString());
-		adviceForm.setData(record.getRecordData());
-		adviceForm.setTestTime(record.getRecordStartTime());
-		adviceForm.setTestTimeLong(record.getDuration());
-		adviceForm.setFetalTonePath(key);
-		return adviceForm;
-	}
-
-	protected void uploadData() {
-		ApiManager.getInstance().hClientAccountApi.uploadData(getUploadData(record, null), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
+	private void checkUploadStatus(final int button) {
+		ApiManager.getInstance().hClientAccountApi.checkUpload(record.getLocalRecordId(), new DefaultCallback<Boolean>(context, new AbstractBusiness<Boolean>() {
 			@Override
-			public void handleData(AdviceItem data) {
-				ToastUtil.show(context, "上传曲线成功");
-				updateUloadState(Record.UPLOAD_STATE_CLOUD);
+			public void handleAllFailure(Context context) {
+				super.handleAllFailure(context);
+				ToastUtil.show(context, "查询上传状态失败");
 			}
-		}), ChooseUploadContentPopupWindow.this);
+
+			@Override
+			public void handleData(Boolean data) {
+				//// TODO: 15/10/12 接口调整,等小顾更新
+				AdviceItem adviceItem = null;
+				UploadUtil uploadUtil = new UploadUtil(context, record);
+				if (adviceItem == null) {
+					LogUtil.d(TAG, "未上传过,可以上传");
+					if (button == BUTTON_ALL) {
+						uploadUtil.uploadAll();
+					} else if (button == BUTTON_DATA) {
+						uploadUtil.uploadData();
+					}
+				} else {
+					final String fetalTonePath = adviceItem.getFetalTonePath();
+					if (TextUtils.isEmpty(fetalTonePath)) {
+						uploadUtil.updateTone(adviceItem);
+						LogUtil.d(TAG, "已上传过,无胎音");
+					} else {
+						LogUtil.d(TAG, "已上传过,有胎音");
+					}
+				}
+			}
+		}), this);
 	}
 }
 

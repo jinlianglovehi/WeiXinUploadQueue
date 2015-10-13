@@ -2,7 +2,6 @@ package cn.ihealthbaby.weitaixin;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,8 @@ public class CustomDialog {
 
     public CustomDialog() {
 
+    } public CustomDialog(Context context,String info) {
+        createDialog1(context, info);
     }
 
     public Dialog createDialog1(Context context, String infor) {
@@ -34,7 +35,7 @@ public class CustomDialog {
     }
 
     public void dismiss() {
-        if (dialog != null) {
+        if (dialog != null&& dialog.isShowing()) {
             dialog.dismiss();
             dialog = null;
         }

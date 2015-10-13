@@ -15,12 +15,12 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 public abstract class FixedRateCountDownTimer {
 	private final static String TAG = "FixedRateCountDownTimer";
 	private static final int END = 1;
-	public final Timer timer;
+	protected final Timer timer;
 	private final long interval;
-	public TimerTask timerTask;
-	public long start;
-	public long resume;
-	public long period;
+	protected TimerTask timerTask;
+	protected long start;
+	protected long resume;
+	protected long period;
 	private long duration;
 	private long stop;
 	private boolean paused;

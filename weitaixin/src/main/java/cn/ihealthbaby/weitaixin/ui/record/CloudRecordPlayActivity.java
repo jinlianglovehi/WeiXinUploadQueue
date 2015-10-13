@@ -35,7 +35,6 @@ import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
@@ -54,7 +53,6 @@ import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
 public class CloudRecordPlayActivity extends BaseActivity {
 	private final static String TAG = "LocalRecordPlayActivity";
 	public String path;
-	public Record record;
 	protected Data data;
 	protected List<Integer> fhrs;
 	protected List<Integer> fetalMove;
@@ -195,7 +193,7 @@ public class CloudRecordPlayActivity extends BaseActivity {
 						e.printStackTrace();
 					}
 				}
-				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(record.getRecordStartTime().getTime()));
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(advice.getTestTimeLong() * 1000));
 			}
 
 			@Override
@@ -259,9 +257,8 @@ public class CloudRecordPlayActivity extends BaseActivity {
 			ToastUtil.show(getApplicationContext(), "获取数据失败");
 			return;
 		}
-		final CustomDialog customDialog = new CustomDialog();
-		dialog = customDialog.createDialog1(this, "正在下载监测数据...");
-		dialog.show();
+		final CustomDialog customDialog = new CustomDialog(this, "正在下载监测数据...");
+		customDialog.show();
 		ApiManager.getInstance().adviceApi.getAdviceDetail(id, new DefaultCallback<Advice>(getApplicationContext(), new AbstractBusiness<Advice>() {
 			@Override
 			public void handleData(Advice advice) {
