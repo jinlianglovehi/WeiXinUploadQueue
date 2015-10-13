@@ -51,7 +51,9 @@ public class CustomDialog {
 	}
 
 	public void show() {
-		dialog.show();
+		if (dialog != null) {
+			dialog.show();
+		}
 	}
 
 	public void dismiss() {
