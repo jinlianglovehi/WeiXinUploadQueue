@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixinpro.ui.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.form.HClientForm;
 import cn.ihealthbaby.client.model.FetalHeart;
 import cn.ihealthbaby.client.model.HClientUser;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
@@ -67,10 +69,15 @@ public class BindActivity extends BaseActivity {
 		try {
 			TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			deviceId = tm.getDeviceId() == null ? deviceId : tm.getDeviceId();
+			LogUtil.d(TAG, "deviceId:" + deviceId);
 		} catch (Exception e) {
 		}
+		// TODO: 15/10/13  打包发布时务必去掉
+//		if (BuildConfig.DEBUG) {
+//			deviceId = "353490069872709";
+//		}
 		mTvDeviceId.setText(deviceId);
-		login();
+		login(deviceId);
 		initView();
 	}
 
@@ -78,7 +85,7 @@ public class BindActivity extends BaseActivity {
 		return SPUtil.isLogin(getApplicationContext());
 	}
 
-	private void login() {
+	private void login(@NonNull String deviceId) {
 		ApiManager.getInstance().hClientAccountApi.login(deviceId, new DefaultCallback<HClientUser>(getApplicationContext(), new AbstractBusiness<HClientUser>() {
 			@Override
 			public void handleData(HClientUser data) {
