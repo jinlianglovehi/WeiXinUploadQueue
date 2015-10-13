@@ -51,22 +51,22 @@ public abstract class AbstractBusiness<T> implements Business<T> {
 	public void handleClientError(Context context, Exception error) {
 		String tag = "handleClientError";
 		if (error instanceof NoConnectionError) {
-			ToastUtil.warn(context, "网络连接失败，请检查网络状态");
+			ToastUtil.show(context, "网络连接失败，请检查网络状态");
 			LogUtil.e(tag, "no connection" + error.getMessage());
 		} else if (error instanceof NetworkError) {
-			ToastUtil.warn(context, "网络连接异常");
+			ToastUtil.show(context, "网络连接异常");
 			LogUtil.e(tag, "network error" + error.getMessage());
 		} else if (error instanceof ParseError) {
-			ToastUtil.warn(context, "解析错误");
+			ToastUtil.show(context, "解析错误");
 			LogUtil.e(tag, "parse error" + error.getMessage());
 		} else if (error instanceof ServerError) {
-			ToastUtil.warn(context, "服务器错误");
+			ToastUtil.show(context, "服务器错误");
 			LogUtil.e(tag, "server error" + error.getMessage());
 		} else if (error instanceof TimeoutError) {
 			ToastUtil.show(context, "网络连接超时");
 			LogUtil.e(tag, "timeout" + error.getMessage());
 		} else if (error instanceof AuthFailureError) {
-			ToastUtil.warn(context, "授权错误");
+			ToastUtil.show(context, "授权错误");
 			LogUtil.e(tag, "authfailure error" + error.getMessage());
 		}
 	}
