@@ -88,7 +88,7 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 	}
 
 	private void checkUploadStatus(final int button) {
-		ApiManager.getInstance().hClientAccountApi.checkUpload(record.getLocalRecordId(), new DefaultCallback<Boolean>(context, new AbstractBusiness<Boolean>() {
+		ApiManager.getInstance().hClientAccountApi.checkUpload(record.getLocalRecordId(), new DefaultCallback<AdviceItem>(context, new AbstractBusiness<AdviceItem>() {
 			@Override
 			public void handleAllFailure(Context context) {
 				super.handleAllFailure(context);
@@ -96,9 +96,9 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 			}
 
 			@Override
-			public void handleData(Boolean data) {
+			public void handleData(AdviceItem adviceItem) {
 				//// TODO: 15/10/12 接口调整,等小顾更新
-				AdviceItem adviceItem = null;
+
 				UploadUtil uploadUtil = new UploadUtil(context, record);
 				if (adviceItem == null) {
 					LogUtil.d(TAG, "未上传过,可以上传");
