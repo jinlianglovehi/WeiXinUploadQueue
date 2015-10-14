@@ -503,6 +503,10 @@ public class MonitorFragment extends BaseFragment {
 		}
 		// TODO: 15/9/13
 		scanedDevices.clear();
+		DataStorage.fhrs.clear();
+		DataStorage.doctors.clear();
+		DataStorage.fms.clear();
+		DataStorage.fhrPackage.recycle();
 	}
 
 	private void onConnectingUI() {
@@ -708,10 +712,6 @@ public class MonitorFragment extends BaseFragment {
 			return;
 		}
 		SPUtil.clearUUID(getActivity().getApplicationContext());
-		DataStorage.fhrs.clear();
-		DataStorage.fms.clear();
-		DataStorage.doctors.clear();
-		DataStorage.fhrPackage.recycle();
 	}
 
 	@Override

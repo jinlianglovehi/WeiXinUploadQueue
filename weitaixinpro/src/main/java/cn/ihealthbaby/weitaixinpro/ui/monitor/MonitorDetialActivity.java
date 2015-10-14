@@ -27,6 +27,7 @@ import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
 import cn.ihealthbaby.weitaixinpro.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixinpro.ui.widget.CurveMonitorDetialView;
+import cn.ihealthbaby.weitaixinpro.ui.widget.MonitorDialog;
 import de.greenrobot.event.EventBus;
 
 public class MonitorDetialActivity extends BaseActivity {
@@ -76,6 +77,25 @@ public class MonitorDetialActivity extends BaseActivity {
 	private int limitMin = 60;
 	private boolean alert;
 	private int alertInterval;
+
+	@OnClick(R.id.back)
+	public void back() {
+		final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"希望结束监测么", "继续监测", "立即完成"});
+		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+			@Override
+			public void left(Object... obj) {
+				monitorDialog.dismiss();
+			}
+
+			@Override
+			public void right(Object... obj) {
+				monitorDialog.dismiss();
+				EventBus.getDefault().post(new MonitorTerminateEvent());
+				finish();
+			}
+		});
+		monitorDialog.show();
+	}
 
 	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
@@ -161,7 +181,7 @@ public class MonitorDetialActivity extends BaseActivity {
 			}
 
 			private void tick(FHRPackage fhrPackage) {
-				LogUtil.d(TAG, "当前第时间差" + (System.currentTimeMillis() - startTestTime));
+//				LogUtil.d(TAG, "当前第时间差" + (System.currentTimeMillis() - startTestTime));
 				//获取当前心率值
 				int fhr = fhrPackage.getFHR1();
 				long time = fhrPackage.getTime();
@@ -244,5 +264,10 @@ public class MonitorDetialActivity extends BaseActivity {
 		alert = localSetting.isAlert();
 		alertInterval = localSetting.getAlertInterval();
 		LogUtil.d(TAG, "safemin:%s,safemax:%s,alertSound:%s,alertInterval:%s,duration:%s", safemin, safemax, alert, alertInterval, duration);
+	}
+
+	@Override
+	public void onBackPressed() {
+		back.performClick();
 	}
 }
