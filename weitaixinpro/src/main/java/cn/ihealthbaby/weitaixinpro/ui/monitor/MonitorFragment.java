@@ -51,7 +51,7 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
-import cn.ihealthbaby.weitaixin.library.event.StartMonitorEvent;
+import cn.ihealthbaby.weitaixin.library.event.MonitorStartEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
@@ -252,7 +252,7 @@ public class MonitorFragment extends BaseFragment {
 		}
 		autoStartTimer.cancel();
 		readDataTimer.cancel();
-		final StartMonitorEvent event = new StartMonitorEvent();
+		final MonitorStartEvent event = new MonitorStartEvent();
 		event.setFile(file);
 		EventBus.getDefault().post(event);
 		Intent intent = new Intent(getActivity(), MonitorDetialActivity.class);

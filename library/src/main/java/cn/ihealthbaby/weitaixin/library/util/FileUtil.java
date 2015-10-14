@@ -12,6 +12,8 @@ import java.io.RandomAccessFile;
  * Created by liuhongjian on 15/9/10 10:28.
  */
 public class FileUtil {
+	private static File tempFile;
+
 	/**
 	 * @param context
 	 * @return
@@ -66,8 +68,6 @@ public class FileUtil {
 	/**
 	 * 添加文件头。
 	 *
-	 * @param path
-	 * @param name
 	 * @return
 	 */
 	public static boolean addFileHead(File file) {
@@ -112,5 +112,13 @@ public class FileUtil {
 			result = false;
 		}
 		return result;
+	}
+
+	public static File getTempFile(Context context) {
+		return new File(getVoiceDir(context), getTempFileName());
+	}
+
+	public static String getTempFileName() {
+		return Constants.TEMP_FILE_NAME;
 	}
 }

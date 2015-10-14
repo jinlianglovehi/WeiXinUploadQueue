@@ -8,14 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +25,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
-import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,11 +37,11 @@ import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.BuildConfig;
 import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseFragment;
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceiver;
@@ -57,8 +53,8 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
+import cn.ihealthbaby.weitaixin.library.event.MonitorStartEvent;
 import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
-import cn.ihealthbaby.weitaixin.library.event.StartMonitorEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
@@ -66,6 +62,7 @@ import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
+import cn.ihealthbaby.weitaixin.library.util.LocalRecordIdUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
@@ -114,7 +111,6 @@ public class MonitorFragment extends BaseFragment {
 	private boolean connected;
 	private CountDownTimer countDownTimer;
 	private boolean started;
-	private AudioTrack audioTrack = AudioPlayer.getInstance().getmAudioTrack();
 	private int autoStartTime = 2 * 60 * 1000;
 	private ExpendableCountDownTimer autoStartTimer;
 	private int safemin;
@@ -123,45 +119,52 @@ public class MonitorFragment extends BaseFragment {
 	private boolean alert;
 	private int alertInterval;
 	private FixedRateCountDownTimer readDataTimer;
+	/**
+	 * 处理连接状态以及连接失败
+	 */
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			try {
-				switch (msg.what) {
-					case Constants.MESSAGE_STATE_CHANGE:
-						switch (msg.arg1) {
-							//已连接
-							case PseudoBluetoothService.STATE_CONNECTED:
-								LogUtil.d(TAG, "STATE_CONNECTED");
-								connected = true;
-								readDataTimer.start();
-								countDownTimer.start();
-								LogUtil.d(TAG, "开始倒计时,准备自动开始");
-								if (bluetoothScanner.isDiscovering()) {
-									bluetoothScanner.cancleDiscovery();
-								}
-								onConnectedUI();
-								break;
+			switch (msg.what) {
+				case Constants.MESSAGE_STATE_CHANGE:
+					switch (msg.arg1) {
+						//已连接
+						case PseudoBluetoothService.STATE_CONNECTED:
+							LogUtil.d(TAG, "STATE_CONNECTED");
+							connected = true;
+							readDataTimer.start();
+							countDownTimer.start();
+							LogUtil.d(TAG, "开始倒计时,准备自动开始");
+							if (bluetoothScanner.isDiscovering()) {
+								bluetoothScanner.cancleDiscovery();
+							}
+							onConnectedUI();
+							break;
+						case PseudoBluetoothService.STATE_CONNECTING:
+							LogUtil.d(TAG, "STATE_CONNECTING");
 							//未连接,初始状态
-							case PseudoBluetoothService.STATE_NONE:
-								LogUtil.d(TAG, "STATE_NONE");
-								reset();
-								break;
-						}
-						break;
-					case Constants.MESSAGE_CANNOT_CONNECT:
-						LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
-						ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-						started = false;
-						reset();
-						break;
-					case Constants.MESSAGE_CONNECTION_LOST:
-						LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
-						ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
-						reset();
-						break;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+						case PseudoBluetoothService.STATE_NONE:
+							LogUtil.d(TAG, "STATE_NONE");
+							reset();
+							break;
+					}
+					break;
+				case Constants.MESSAGE_STATE_FAIL:
+					reset();
+					switch (msg.arg1) {
+						case Constants.MESSAGE_CANNOT_CONNECT:
+							LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
+							ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
+							break;
+						case Constants.MESSAGE_CONNECTION_LOST:
+							LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
+							ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 	};
@@ -173,9 +176,21 @@ public class MonitorFragment extends BaseFragment {
 		//获取配置信息
 		getAdviceSetting();
 		//生成最新的本地id
-		String localRecordId = generateAndSaveLocalRecordId();
+		String localRecordId = LocalRecordIdUtil.generateAndSaveId(getActivity());
+		initRecord(localRecordId);
+		autoStartTimer.cancel();
+		readDataTimer.cancel();
+		started = true;
+		final MonitorStartEvent event = new MonitorStartEvent();
+		event.setLocalRecordId(localRecordId);
+		EventBus.getDefault().post(event);
+		Intent intent = new Intent(getActivity(), MonitorActivity.class);
+		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
+		startActivity(intent);
+	}
+
+	private void initRecord(String localRecordId) {
 		LogUtil.d(TAG, "localRecordId:%s", localRecordId);
-		File file = getTempFile();
 		Date recordStartTime = new Date();
 		User user = getUser();
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
@@ -203,27 +218,6 @@ public class MonitorFragment extends BaseFragment {
 			SPUtil.clearUUID(getActivity().getApplicationContext());
 			return;
 		}
-		autoStartTimer.cancel();
-		readDataTimer.cancel();
-		started = true;
-		final StartMonitorEvent event = new StartMonitorEvent();
-		event.setFile(file);
-		EventBus.getDefault().post(event);
-		Intent intent = new Intent(getActivity(), MonitorActivity.class);
-		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
-		startActivity(intent);
-	}
-
-	private String getTempFileName() {
-		return Constants.TEMP_FILE_NAME;
-	}
-
-	private File getTempFile() {
-		return new File(FileUtil.getVoiceDir(getActivity()), getTempFileName());
-	}
-
-	private File getRecordFile() {
-		return new File(FileUtil.getVoiceDir(getActivity()), getLocalRecordId());
 	}
 
 	@OnClick(R.id.helper)
@@ -318,17 +312,18 @@ public class MonitorFragment extends BaseFragment {
 		return view;
 	}
 
+	/**
+	 * 初始化数据 主要有三个计时器, 自动开始,搜索倒计时,
+	 *
+	 * @param view
+	 * @param savedInstanceState
+	 */
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		ButterKnife.bind(this, view);
-		loadSrc(roundBackground, R.drawable.round_background_1);
-		loadSrc(roundFrontground, R.drawable.round_frontground_1);
-		loadSrc(roundScale, R.drawable.round_scale);
-		back.setVisibility(View.GONE);
-		titleText.setText("胎心监测");
-		function.setVisibility(View.GONE);
-		getAdviceSetting();
+		initView();
+		reset();
 		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
 		alertSound.load(getActivity().getApplicationContext(), R.raw.didi, 1);
 		readDataTimer = new FixedRateCountDownTimer(100000, 500) {
@@ -365,6 +360,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onFinish() {
+				start();
 			}
 		};
 		autoStartTimer = new ExpendableCountDownTimer(autoStartTime, 1000) {
@@ -394,7 +390,6 @@ public class MonitorFragment extends BaseFragment {
 			public void onRestart() {
 			}
 		};
-		reset();
 		countDownTimer = new CountDownTimer(10000, 10000) {
 			@Override
 			public void onTick(long millisUntilFinished) {
@@ -455,7 +450,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onStateOFF() {
-				ToastUtil.warn(getActivity().getApplicationContext(), "蓝牙被关闭");
+				ToastUtil.show(getActivity().getApplicationContext(), "蓝牙被关闭");
 			}
 
 			@Override
@@ -475,6 +470,21 @@ public class MonitorFragment extends BaseFragment {
 		});
 	}
 
+	private void initView() {
+		loadSrc(roundBackground, R.drawable.round_background_1);
+		loadSrc(roundFrontground, R.drawable.round_frontground_1);
+		loadSrc(roundScale, R.drawable.round_scale);
+		back.setVisibility(View.GONE);
+		titleText.setText("胎心监测");
+		function.setVisibility(View.GONE);
+	}
+
+	/**
+	 * 后续去掉
+	 *
+	 * @param imageView
+	 * @param drawableId
+	 */
 	private void loadSrc(ImageView imageView, int drawableId) {
 		ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
 		Picasso.with(getActivity().getApplicationContext()).load(drawableId).resize(layoutParams.width, layoutParams.height).into(imageView);
@@ -511,7 +521,7 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	public void reset() {
-		LogUtil.d(TAG, "重置配置");
+		LogUtil.d(TAG, "重置状态");
 		tvBluetooth.setTextColor(getResources().getColor(R.color.green0));
 		tvBluetooth.setText("start");
 		tvBluetooth.setClickable(true);
@@ -524,12 +534,8 @@ public class MonitorFragment extends BaseFragment {
 		rlStart.setVisibility(View.GONE);
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
+		started = false;
 		getAdviceSetting();
-		if (audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
-			audioTrack.flush();
-			audioTrack.play();
-		}
-		// TODO: 15/9/13
 		scanedDevices.clear();
 	}
 
@@ -568,9 +574,6 @@ public class MonitorFragment extends BaseFragment {
 				}
 			}
 		}
-		if (!bluetoothScanner.isDiscovering()) {
-			bluetoothScanner.discovery();
-		}
 	}
 
 	@Override
@@ -580,31 +583,6 @@ public class MonitorFragment extends BaseFragment {
 		bluetoothReceiver.unRegister(getActivity().getApplicationContext());
 		ButterKnife.unbind(this);
 		EventBus.getDefault().unregister(this);
-	}
-
-	/**
-	 * 查询是否在sp中保存localRecordId,如果保存就返回,未保存则生成新的
-	 *
-	 * @return
-	 */
-	private String getLocalRecordId() {
-		String uuid = SPUtil.getUUID(getActivity().getApplicationContext());
-		if (TextUtils.isEmpty(uuid)) {
-			uuid = generateLocalRecordId();
-			SPUtil.setUUID(getActivity().getApplicationContext(), uuid);
-		}
-		return uuid;
-	}
-
-	private String generateLocalRecordId() {
-		String uuid = UUID.randomUUID().toString().replace("-", "");
-		return uuid;
-	}
-
-	private String generateAndSaveLocalRecordId() {
-		String uuid = UUID.randomUUID().toString().replace("-", "");
-		SPUtil.setUUID(getActivity().getApplicationContext(), uuid);
-		return uuid;
 	}
 
 	private String getDeviceName() {
@@ -625,26 +603,11 @@ public class MonitorFragment extends BaseFragment {
 		return SPUtil.getUser(getActivity().getApplicationContext());
 	}
 
-	private File getPath() {
-		return new File(getTempFileName());
-	}
-
 	public void onEventMainThread(MonitorTerminateEvent event) {
 		int reason = event.getEvent();
-		new Thread() {
-			@Override
-			public void run() {
-				super.run();
-				pseudoBluetoothService.stop();
-			}
-		}.start();
-		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-			audioTrack.pause();
-			audioTrack.flush();
-		}
-		reset();
+		pseudoBluetoothService.stop();
 		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
-		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, getLocalRecordId());
+		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, LocalRecordIdUtil.getSavedId(getActivity()));
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
@@ -692,20 +655,11 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	private void save() throws Exception {
-		File tempFile = getTempFile();
-		File file = getRecordFile();
-		if (tempFile.renameTo(file)) {
-			tempFile.delete();
-		} else {
-			ToastUtil.show(getActivity().getApplicationContext(), "胎音文件错误");
-			return;
-		}
-		FileUtil.addFileHead(file);
-		//
+		final String localRecordId = LocalRecordIdUtil.getSavedId(getActivity());
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
 		Record record = null;
 		try {
-			record = recordBusinessDao.queryByLocalRecordId(getLocalRecordId());
+			record = recordBusinessDao.queryByLocalRecordId(localRecordId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
@@ -728,7 +682,7 @@ public class MonitorFragment extends BaseFragment {
 		record.setFeelingId(Record.FEELING_NORMAL);
 		record.setFeelingString("一般");
 		record.setDuration((DataStorage.fhrs.size() / 2));
-		record.setSoundPath(getRecordFile().getPath());
+		record.setSoundPath(FileUtil.getVoiceFile(getActivity(), localRecordId).getPath());
 		try {
 			recordBusinessDao.update(record);
 		} catch (Exception e) {
@@ -736,13 +690,16 @@ public class MonitorFragment extends BaseFragment {
 			ToastUtil.show(getActivity().getApplicationContext(), "数据保存异常");
 			return;
 		}
-		try {
-			Record query = recordBusinessDao.query(record);
-			LogUtil.d(TAG, query.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
-			return;
+		//调试用 打印数据库里的该条数据
+		if (BuildConfig.DEBUG) {
+			try {
+				Record query = recordBusinessDao.query(record);
+				LogUtil.d(TAG, query.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+				ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
+				return;
+			}
 		}
 		SPUtil.clearUUID(getActivity().getApplicationContext());
 		DataStorage.fhrs.clear();

@@ -1,5 +1,7 @@
 package cn.ihealthbaby.weitaixin.library.data.bluetooth.parser;
 
+import android.content.Context;
+import android.media.AudioTrack;
 import android.os.Handler;
 
 import java.io.File;
@@ -13,10 +15,14 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.FHRParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ValidationParseException;
-import cn.ihealthbaby.weitaixin.library.event.StartMonitorEvent;
+import cn.ihealthbaby.weitaixin.library.event.MonitorStartEvent;
+import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ByteUtil;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
+import cn.ihealthbaby.weitaixin.library.util.FileUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by liuhongjian on 15/7/17 12:52.
@@ -48,6 +54,8 @@ public class Parser {
 	public byte[] oneByte;
 	public FileOutputStream fileOutputStream;
 	public boolean needPlay;
+	private AudioTrack audioTrack;
+	private Context context;
 	private Handler handler;
 	//
 	private byte[] fetalDataBufferV1 = new byte[4];
@@ -57,9 +65,16 @@ public class Parser {
 	private int[] soundDataBufferV1 = new int[321];
 	private int[] soundDataBufferV2 = new int[101];
 	private boolean startMonitor;
+	private File tempFile;
+	private File recordFile;
+	private String localRecordId;
 
-	public Parser(Handler handler) {
+	public Parser(Context context, Handler handler) {
+		this.context = context;
 		this.handler = handler;
+		EventBus.getDefault().register(this);
+		audioTrack = AudioPlayer.getInstance().getmAudioTrack();
+		audioTrack.play();
 	}
 
 	/**
@@ -117,7 +132,7 @@ public class Parser {
 		return FHRPackage2;
 	}
 
-	public void parsePackageData(InputStream mmInStream) throws IOException, ParseException, Exception {
+	public void parsePackageData(InputStream mmInStream) throws IOException, ParseException {
 		oneByte = new byte[1];
 		mmInStream.read(oneByte);
 		if (translate(oneByte[0]) == 0x55) {
@@ -142,7 +157,7 @@ public class Parser {
 					case CONTROLLER_SOUND_V1:
 						int[] voice = getVoice(mmInStream);
 						byte[] v = intForByte(ByteUtil.analysePackage(voice));
-						AudioPlayer.getInstance().getmAudioTrack().write(v, 0, v.length);
+						audioTrack.write(v, 0, v.length);
 						if (startMonitor) {
 							if (fileOutputStream != null) {
 								try {
@@ -157,7 +172,7 @@ public class Parser {
 					case CONTROLLER_SOUND_V2:
 						int[] voiceAd = getVoiceAd(mmInStream);
 						byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
-						AudioPlayer.getInstance().getmAudioTrack().write(adv, 0, adv.length);
+						audioTrack.write(adv, 0, adv.length);
 						if (startMonitor) {
 							if (fileOutputStream != null) {
 								try {
@@ -260,13 +275,38 @@ public class Parser {
 		return bytes;
 	}
 
-	public void onEventMainThread(StartMonitorEvent event) {
-		File file = event.getFile();
+	public void onEventMainThread(MonitorStartEvent event) {
+		startMonitor = true;
+		localRecordId = event.getLocalRecordId();
+		//先将数据写入临时文件
 		try {
-			fileOutputStream = new FileOutputStream(file);
+			fileOutputStream = new FileOutputStream(FileUtil.getTempFile(context));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		startMonitor = true;
+	}
+
+	public void onEventMainThread(MonitorTerminateEvent event) {
+		handleFileOnTerminate();
+//		stopPlay();
+	}
+
+//	private void stopPlay() {
+//		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+//			audioTrack.pause();
+//			audioTrack.flush();
+//			audioTrack.play();
+//		}
+//	}
+
+	private void handleFileOnTerminate() {
+		File tempFile = FileUtil.getTempFile(context);
+		File file = FileUtil.getVoiceFile(context, localRecordId);
+		if (tempFile.renameTo(file)) {
+			tempFile.delete();
+		} else {
+			ToastUtil.show(context, "胎音文件错误");
+		}
+		FileUtil.addFileHead(file);
 	}
 }

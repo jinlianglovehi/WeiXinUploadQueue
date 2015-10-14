@@ -69,7 +69,7 @@ public class PseudoBluetoothService {
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
 		mState = STATE_NONE;
 		mHandler = handler;
-		parser = new Parser(mHandler);
+		parser = new Parser(context, mHandler);
 	}
 
 	/**
@@ -242,8 +242,7 @@ public class PseudoBluetoothService {
 	 */
 	private void connectionLost() {
 		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(Constants.MESSAGE_CONNECTION_LOST);
-		mHandler.sendMessage(msg);
+		mHandler.obtainMessage(Constants.MESSAGE_STATE_FAIL, Constants.MESSAGE_CONNECTION_LOST, -1).sendToTarget();
 		// Start the service over to restart listening mode
 		// TODO: 15/9/7 失败重连
 //		PseudoBluetoothService.this.start();
@@ -442,8 +441,6 @@ public class PseudoBluetoothService {
 					break;
 				} catch (ParseException e) {
 					e.printStackTrace();
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
 			}
 		}
@@ -466,13 +463,16 @@ public class PseudoBluetoothService {
 
 		public void cancel() {
 			try {
+				//更改run内循环的标记
 				start = false;
+				//中断
 				this.interrupt();
+				//等待
 				this.join();
 				mmSocket.close();
 			} catch (IOException e) {
 				Log.e(TAG, "close() of connect socket failed", e);
-			} catch (Exception e) {
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

@@ -15,12 +15,13 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 public abstract class FixedRateCountDownTimer {
 	private final static String TAG = "FixedRateCountDownTimer";
 	private static final int END = 1;
-	protected final Timer timer;
 	private final long interval;
+	protected Timer timer;
 	protected TimerTask timerTask;
 	protected long start;
 	protected long resume;
 	protected long period;
+	boolean stopFlag = false;
 	private long duration;
 	private long stop;
 	private boolean paused;
@@ -58,7 +59,6 @@ public abstract class FixedRateCountDownTimer {
 		this.interval = interval;
 		count = (int) (duration / interval);
 		period = interval / 100;
-		timer = new Timer();
 	}
 
 	// TODO: 15/9/22 需实现
@@ -105,9 +105,24 @@ public abstract class FixedRateCountDownTimer {
 	public void startAt(long offset) {
 		start = SystemClock.elapsedRealtime();
 		stop = start + duration - offset;
+		timer = new Timer();
+//		final Runnable runnable = new Runnable() {
+//			@Override
+//			public void run() {
+//				long left = stop - SystemClock.elapsedRealtime();
+//				if (left < interval * (count - counter)) {
+//					Message message = handler.obtainMessage();
+//					message.obj = DataStorage.fhrPackage;
+//					handler.sendMessage(message);
+//					counter++;
+////					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
+//				}
+//			}
+//		};
+		//		while (!stopFlag) {
+//			handler.postDelayed(runnable, period);
+//		}
 		timerTask = new TimerTask() {
-			long prevTime = 0;
-
 			@Override
 			public void run() {
 				long left = stop - SystemClock.elapsedRealtime();
@@ -134,7 +149,9 @@ public abstract class FixedRateCountDownTimer {
 
 	public void cancel() {
 		cancled = true;
-		timer.cancel();
+		if (timer != null) {
+			timer.cancel();
+		}
 		handler.removeMessages(0);
 	}
 

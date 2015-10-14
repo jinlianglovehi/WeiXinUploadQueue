@@ -30,12 +30,12 @@ public class Constants {
 	public static final String MIME_TYPE_JPEG = "image/jpeg";
 	// Message types sent from the BluetoothChatService Handler
 	public static final int MESSAGE_STATE_CHANGE = 1;
+	public static final int MESSAGE_STATE_FAIL = 7;
 	public static final int MESSAGE_READ_FETAL_DATA = 2;
 	public static final int MESSAGE_WRITE = 3;
 	public static final int MESSAGE_DEVICE_NAME = 4;
 	public static final int MESSAGE_CANNOT_CONNECT = 5;
 	public static final int MESSAGE_CONNECTION_LOST = 6;
-	public static final int MESSAGE_VOICE = 7;
 	// Key names received from the BluetoothChatService Handler
 	public static final String DEVICE_NAME = "device_name";
 	public static final UUID COMMON_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
