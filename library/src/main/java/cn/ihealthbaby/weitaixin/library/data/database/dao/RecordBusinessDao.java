@@ -87,7 +87,8 @@ public class RecordBusinessDao {
 					                       @Override
 					                       public void appendValuesTo(List<Object> values) {
 					                       }
-				                       }).where(RecordDao.Properties.Duration.notEq(0))
+				                       })
+				                       .where(RecordDao.Properties.Duration.notEq(0))
 				                       .where(RecordDao.Properties.UserId.eq(userId))
 				                       .orderDesc(RecordDao.Properties.RecordStartTime)
 				                       .build()
@@ -124,6 +125,7 @@ public class RecordBusinessDao {
 					                    public void appendValuesTo(List<Object> values) {
 					                    }
 				                    })
+				                    .where(RecordDao.Properties.Duration.notEq(0))
 				                    .orderDesc(RecordDao.Properties.RecordStartTime)
 				                    .build()
 				                    .list();
@@ -136,7 +138,7 @@ public class RecordBusinessDao {
 	 * @return
 	 */
 	public long allCount() throws Exception {
-		return recordDao.queryBuilder().buildCount().count();
+		return recordDao.queryBuilder().where(RecordDao.Properties.Duration.notEq(0)).buildCount().count();
 	}
 
 	/**
@@ -164,6 +166,7 @@ public class RecordBusinessDao {
 					             public void appendValuesTo(List<Object> values) {
 					             }
 				             })
+				             .where(RecordDao.Properties.Duration.notEq(0))
 				             .count();
 		return count;
 	}
@@ -277,6 +280,18 @@ public class RecordBusinessDao {
 	 */
 	public void delete(Record record) throws Exception {
 		deleteById(record.getId());
+	}
+
+	/**
+	 * 批量删除
+	 *
+	 * @param records
+	 * @throws Exception
+	 */
+	public void deleteRecords(List<Record> records) throws Exception {
+		for (Record record : records) {
+			delete(record);
+		}
 	}
 
 	/**
