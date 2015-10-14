@@ -25,8 +25,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import butterknife.Bind;
@@ -107,7 +107,7 @@ public class MonitorFragment extends BaseFragment {
 	private BluetoothScanner bluetoothScanner;
 	private Set<BluetoothDevice> bondedDevices;
 	private PseudoBluetoothService pseudoBluetoothService;
-	private ArrayList<BluetoothDevice> scanedDevices = new ArrayList<>();
+	private Set<BluetoothDevice> scanedDevices = new HashSet<>();
 	private boolean connected;
 	private CountDownTimer countDownTimer;
 	private boolean started;
