@@ -26,8 +26,8 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -104,7 +104,7 @@ public class MonitorFragment extends BaseFragment {
 	private BluetoothScanner bluetoothScanner;
 	private Set<BluetoothDevice> bondedDevices;
 	private PseudoBluetoothService pseudoBluetoothService;
-	private ArrayList<BluetoothDevice> scanedDevices = new ArrayList<>();
+	private HashSet<BluetoothDevice> scanedDevices = new HashSet<>();
 	private boolean connected;
 	private CountDownTimer countDownTimer;
 	private boolean started;
@@ -272,7 +272,7 @@ public class MonitorFragment extends BaseFragment {
 			if (!bluetoothScanner.isEnable()) {
 				bluetoothScanner.enable();
 			} else {
-				LogUtil.d("bluetoothScanner", "bluetoothScanner");
+				LogUtil.d("bluetoothScanner", "startSearch");
 				connectBondedDeviceOrSearch();
 			}
 		}
@@ -388,6 +388,7 @@ public class MonitorFragment extends BaseFragment {
 			public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
+						LogUtil.d(TAG, "connecting " + remoteName);
 						pseudoBluetoothService.connect(remoteDevice, false);
 					}
 					scanedDevices.add(remoteDevice);
@@ -400,6 +401,7 @@ public class MonitorFragment extends BaseFragment {
 				super.onRemoteNameChanged(remoteDevice, remoteName);
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
+						LogUtil.d(TAG, "connecting " + remoteName);
 						pseudoBluetoothService.connect(remoteDevice, false);
 					}
 					scanedDevices.add(remoteDevice);
@@ -423,7 +425,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onStateOFF() {
-				ToastUtil.warn(getActivity().getApplicationContext(), "蓝牙被关闭");
+				ToastUtil.show(getActivity().getApplicationContext(), "蓝牙被关闭");
 			}
 
 			@Override
