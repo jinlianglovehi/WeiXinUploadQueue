@@ -10,6 +10,7 @@
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
+        android:label="微胎心pro"
         android:theme="@android:style/Theme.Light.NoTitleBar">
         <activity
             android:name=".ui.login.BindActivity"
