@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * Created by liuhongjian on 15/9/22 15:23.
@@ -65,6 +66,7 @@ public abstract class FixedRateCountDownTimer {
 	public void extra(long extra) {
 		duration += extra;
 		stop += extra;
+		count = (int) (duration / interval);
 		onExtra(duration, extra, stop);
 	}
 
@@ -106,22 +108,6 @@ public abstract class FixedRateCountDownTimer {
 		start = SystemClock.elapsedRealtime();
 		stop = start + duration - offset;
 		timer = new Timer();
-//		final Runnable runnable = new Runnable() {
-//			@Override
-//			public void run() {
-//				long left = stop - SystemClock.elapsedRealtime();
-//				if (left < interval * (count - counter)) {
-//					Message message = handler.obtainMessage();
-//					message.obj = DataStorage.fhrPackage;
-//					handler.sendMessage(message);
-//					counter++;
-////					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
-//				}
-//			}
-//		};
-		//		while (!stopFlag) {
-//			handler.postDelayed(runnable, period);
-//		}
 		timerTask = new TimerTask() {
 			@Override
 			public void run() {
@@ -131,7 +117,7 @@ public abstract class FixedRateCountDownTimer {
 					message.obj = DataStorage.fhrPackage;
 					handler.sendMessage(message);
 					counter++;
-//					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
+					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
 				}
 			}
 		};
