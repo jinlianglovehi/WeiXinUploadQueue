@@ -17,6 +17,7 @@ import java.util.Set;
 
 import butterknife.Bind;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixinpro.R;
@@ -47,7 +48,7 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 	public LocalRecordRecyclerViewAdapter(Activity activity, ArrayList<Record> list) {
 		this.activity = activity;
 		this.list = list;
-		initMap(this.list.size());
+		initMap(getItemCount());
 		EventBus.getDefault().register(this);
 	}
 
@@ -112,6 +113,13 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 					}
 				}
 			});
+			if (!deleteMap.isEmpty()) {
+				if (deleteMap.get(position)) {
+					holder.checkboxDelete.setSelected(true);
+				} else {
+					holder.checkboxDelete.setSelected(false);
+				}
+			}
 		} else {
 			holder.checkboxDelete.setVisibility(View.GONE);
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -123,11 +131,6 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 				}
 			});
 		}
-		if (deleteMap.get(position)) {
-			holder.checkboxDelete.setSelected(true);
-		} else {
-			holder.checkboxDelete.setSelected(false);
-		}
 	}
 
 	@Override
@@ -137,16 +140,20 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 
 	public void doDeleteAction() {
 		Set<Map.Entry<Integer, Boolean>> entries = deleteMap.entrySet();
-		ArrayList<Record> delRecord = new ArrayList<Record>();
-		delRecord.clear();
+		ArrayList<Record> delRecords = new ArrayList<Record>();
 		for (Map.Entry<Integer, Boolean> entry : entries) {
 			if (entry.getValue()) {
 				//删除
-				delRecord.add(this.list.get(entry.getKey()));
+				delRecords.add(this.list.get(entry.getKey()));
 			}
 		}
-		this.list.removeAll(delRecord);
-		initMap(this.list.size());
+		this.list.removeAll(delRecords);
+		try {
+			RecordBusinessDao.getInstance(activity).deleteRecords(delRecords);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		initMap(getItemCount());
 		notifyDataSetChanged();
 	}
 
