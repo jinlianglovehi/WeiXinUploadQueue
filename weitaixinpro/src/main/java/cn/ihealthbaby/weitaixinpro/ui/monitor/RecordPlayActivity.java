@@ -123,8 +123,6 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		mediaPlayer = new MediaPlayer();
-		btnBusiness.setImageResource(R.drawable.button_upload);
-		tvBusiness.setText("上传监测图");
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
 			public int doctorPosition;
 			public int fmposition;
