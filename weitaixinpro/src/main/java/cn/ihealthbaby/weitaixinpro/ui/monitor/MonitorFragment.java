@@ -6,14 +6,12 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +23,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,7 +34,6 @@ import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
-import cn.ihealthbaby.weitaixin.library.data.bluetooth.AudioPlayer;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceiver;
@@ -50,8 +45,8 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 import cn.ihealthbaby.weitaixin.library.data.model.data.Data;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
-import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.event.MonitorStartEvent;
+import cn.ihealthbaby.weitaixin.library.event.MonitorTerminateEvent;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
@@ -59,9 +54,11 @@ import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.ExpendableCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
+import cn.ihealthbaby.weitaixin.library.util.LocalRecordIdUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
+import cn.ihealthbaby.weitaixinpro.BuildConfig;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
 import de.greenrobot.event.EventBus;
@@ -70,6 +67,7 @@ import de.greenrobot.event.EventBus;
  * Created by liuhongjian on 15/8/12 17:52.
  */
 public class MonitorFragment extends BaseFragment {
+	private final static String TAG = "MonitorFragment";
 	public SoundPool alertSound;
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
@@ -104,11 +102,10 @@ public class MonitorFragment extends BaseFragment {
 	private BluetoothScanner bluetoothScanner;
 	private Set<BluetoothDevice> bondedDevices;
 	private PseudoBluetoothService pseudoBluetoothService;
-	private HashSet<BluetoothDevice> scanedDevices = new HashSet<>();
+	private Set<BluetoothDevice> scanedDevices = new HashSet<>();
 	private boolean connected;
 	private CountDownTimer countDownTimer;
 	private boolean started;
-	private AudioTrack audioTrack = AudioPlayer.getInstance().getmAudioTrack();
 	private int autoStartTime = 2 * 60 * 1000;
 	private ExpendableCountDownTimer autoStartTimer;
 	private int safemin;
@@ -116,76 +113,112 @@ public class MonitorFragment extends BaseFragment {
 	private long lastAlert;
 	private boolean alert;
 	private int alertInterval;
+	private FixedRateCountDownTimer readDataTimer;
+	/**
+	 * 处理连接状态以及连接失败
+	 */
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			try {
-				switch (msg.what) {
-					case Constants.MESSAGE_STATE_CHANGE:
-						switch (msg.arg1) {
-							case PseudoBluetoothService.STATE_CONNECTED:
-								LogUtil.d(TAG, "STATE_CONNECTED");
-								connected = true;
+			switch (msg.what) {
+				case Constants.MESSAGE_STATE_CHANGE:
+					switch (msg.arg1) {
+						//已连接
+						case PseudoBluetoothService.STATE_CONNECTED:
+							LogUtil.d(TAG, "STATE_CONNECTED");
+							connected = true;
+							readDataTimer.start();
+							countDownTimer.start();
+							LogUtil.d(TAG, "开始倒计时,准备自动开始");
+							if (bluetoothScanner.isDiscovering()) {
 								bluetoothScanner.cancleDiscovery();
-								onConnectedUI();
-								break;
-							case PseudoBluetoothService.STATE_NONE:
-								LogUtil.d(TAG, "STATE_NONE");
-								reset();
-								break;
-						}
-						break;
-					case Constants.MESSAGE_READ_FETAL_DATA:
-						FHRPackage fhrPackage = (FHRPackage) msg.obj;
-						int fhr1 = fhrPackage.getFHR1();
-						DataStorage.fhrPackage.setFHRPackage(fhrPackage);
-//						DataStorage.fhrPackage = fhrPackage;
-						if (tvBluetooth != null) {
-							if (fhr1 >= safemin && fhr1 <= safemax) {
-								tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
-							} else {
-								tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
-								if (alert && connected && started) {
-									long currentTimeMillis = System.currentTimeMillis();
-									if (currentTimeMillis - lastAlert >= alertInterval * 1000)
-										alertSound.play(1, 1, 1, 0, 0, 1);
-									lastAlert = currentTimeMillis;
-								}
 							}
-							tvBluetooth.setText(fhr1 + "");
-						}
-						break;
-					case Constants.MESSAGE_CANNOT_CONNECT:
-						connected = false;
-						started = false;
-						LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
-						ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-						reset();
-						break;
-					case Constants.MESSAGE_CONNECTION_LOST:
-						connected = false;
-						started = false;
-						LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
-						ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
-						reset();
-						break;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+							onConnectedUI();
+							break;
+						case PseudoBluetoothService.STATE_CONNECTING:
+							LogUtil.d(TAG, "STATE_CONNECTING");
+							//未连接,初始状态
+						case PseudoBluetoothService.STATE_NONE:
+							LogUtil.d(TAG, "STATE_NONE");
+							reset();
+							break;
+					}
+					break;
+				case Constants.MESSAGE_STATE_FAIL:
+					reset();
+					switch (msg.arg1) {
+						case Constants.MESSAGE_CANNOT_CONNECT:
+							LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
+							ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
+							break;
+						case Constants.MESSAGE_CONNECTION_LOST:
+							LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
+							ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 	};
-	private FixedRateCountDownTimer readDataTimer;
 
-	private String getTempFileName() {
-		return Constants.TEMP_FILE_NAME;
+	@OnClick(R.id.btn_start)
+	public void startMonitor() {
+		//防止重复点击
+		btnStart.setClickable(false);
+		//获取配置信息
+		getAdviceSetting();
+		//生成最新的本地id
+		String localRecordId = LocalRecordIdUtil.generateAndSaveId(getActivity());
+		initRecord(localRecordId);
+		autoStartTimer.cancel();
+		readDataTimer.cancel();
+		started = true;
+		final MonitorStartEvent event = new MonitorStartEvent();
+		event.setLocalRecordId(localRecordId);
+		EventBus.getDefault().post(event);
+		Intent intent = new Intent(getActivity(), MonitorDetialActivity.class);
+		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
+		startActivity(intent);
 	}
 
-	private File getTempFile() {
-		return new File(FileUtil.getVoiceDir(getActivity()), getTempFileName());
-	}
-
-	private File getRecordFile() {
-		return new File(FileUtil.getVoiceDir(getActivity()), getLocalRecordId());
+	private void initRecord(String localRecordId) {
+		LogUtil.d(TAG, "localRecordId:%s", localRecordId);
+		Date recordStartTime = new Date();
+		Bundle user = getActivity().getIntent().getBundleExtra(Constants.BUNDLE_USER);
+		long userId = user.getLong(Constants.INTENT_USER_ID, -1);
+		String userName = user.getString(Constants.INTENT_USER_NAME);
+		Long deliveryTime = user.getLong(Constants.INTENT_DELIVERY_TIME);
+		Long serviceId = user.getLong(Constants.INTENT_SERVICE_ID);
+		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
+		Record record = new Record();
+		//必填内容:userId,userName,serialNumber,localRecordId
+		record.setUserId(userId);
+		record.setUserName(userName);
+		record.setGestationalWeeks(DateTimeTool.getGestationalWeeks(new Date(deliveryTime), recordStartTime));
+		record.setServiceId(serviceId);
+		//
+		record.setSerialNumber(getDeviceName());
+		record.setUploadState(Record.UPLOAD_STATE_LOCAL);
+		record.setLocalRecordId(localRecordId);
+		record.setRecordStartTime(recordStartTime);
+		try {
+			recordBusinessDao.insert(record);
+			if (Constants.MODE_DEBUG) {
+				Record query = recordBusinessDao.query(record);
+				LogUtil.d(TAG, query.toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LogUtil.d(TAG, "数据插入失败");
+			btnStart.setClickable(true);
+			started = false;
+			autoStartTimer.cancel();
+			SPUtil.clearUUID(getActivity().getApplicationContext());
+			return;
+		}
 	}
 
 	@OnClick(R.id.helper)
@@ -199,80 +232,19 @@ public class MonitorFragment extends BaseFragment {
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_NOT_START));
 	}
 
-	@OnClick(R.id.back)
-	public void back() {
-		getActivity().finish();
-	}
-
-	@OnClick(R.id.btn_start)
-	public void startMonitor(View view) {
-		view.setClickable(false);
-		getAdviceSetting();
-		started = true;
-		String localRecordId = getLocalRecordId();
-		LogUtil.d(TAG, "localRecordId:%s", localRecordId);
-		File file = getTempFile();
-		Date recordStartTime = new Date();
-		Bundle user = getActivity().getIntent().getBundleExtra(Constants.BUNDLE_USER);
-		long userId = user.getLong(Constants.INTENT_USER_ID, -1);
-		String userName = user.getString(Constants.INTENT_USER_NAME);
-		Long deliveryTime = user.getLong(Constants.INTENT_DELIVERY_TIME);
-		Long serviceId = user.getLong(Constants.INTENT_SERVICE_ID);
-		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
-		Record record = new Record();
-		//必填内容:userId,userName,serialNumber,localRecordId
-		record.setUserId(userId);
-		record.setServiceId(serviceId);
-		record.setSerialNumber(getDeviceName());
-		record.setUploadState(Record.UPLOAD_STATE_LOCAL);
-		record.setUserName(userName);
-		record.setLocalRecordId(localRecordId);
-		record.setRecordStartTime(recordStartTime);
-		record.setGestationalWeeks(DateTimeTool.getGestationalWeeks(new Date(deliveryTime), recordStartTime));
-		try {
-			Record queryExist = recordBusinessDao.queryByLocalRecordId(record.getLocalRecordId());
-			if (queryExist != null) {
-				record.setLocalRecordId(generateUUID());
-			}
-		} catch (Exception e) {
-			LogUtil.d(TAG, "查询发生异常" + e);
-		}
-		try {
-			recordBusinessDao.insert(record);
-			Record query = recordBusinessDao.query(record);
-			LogUtil.d(TAG, query.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			LogUtil.d(TAG, "数据插入失败");
-			view.setClickable(true);
-			started = false;
-			autoStartTimer.cancel();
-			SPUtil.clearUUID(getActivity().getApplicationContext());
-			return;
-		}
-		autoStartTimer.cancel();
-		readDataTimer.cancel();
-		final MonitorStartEvent event = new MonitorStartEvent();
-		event.setFile(file);
-		EventBus.getDefault().post(event);
-		Intent intent = new Intent(getActivity(), MonitorDetialActivity.class);
-		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, localRecordId);
-		startActivity(intent);
-	}
-
 	/**
-	 * 1.开启蓝牙  2.匹配绑定的设备,连接设备  3.扫描 4.匹配扫描到的设备
-	 *
-	 * @param view
+	 * 0.检查服务状态,如果服务开启,检查配置 1.开启蓝牙  2.匹配绑定的设备,连接设备  3.扫描 4.匹配扫描到的设备
 	 */
 	@OnClick({R.id.round_frontground, R.id.tv_bluetooth})
-	void startSearch(View view) {
+	void startSearch() {
+		LogUtil.d(TAG, "开始搜索");
 		if (!connected) {
 			onConnectingUI();
 			if (!bluetoothScanner.isEnable()) {
+				LogUtil.d(TAG, "蓝牙处于未开启状态,正在打开");
 				bluetoothScanner.enable();
 			} else {
-				LogUtil.d("bluetoothScanner", "startSearch");
+				LogUtil.d(TAG, "蓝牙处于已开启状态");
 				connectBondedDeviceOrSearch();
 			}
 		}
@@ -287,63 +259,20 @@ public class MonitorFragment extends BaseFragment {
 		return view;
 	}
 
+	/**
+	 * 初始化数据 主要有三个计时器, 自动开始,搜索倒计时,
+	 *
+	 * @param view
+	 * @param savedInstanceState
+	 */
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		ButterKnife.bind(this, view);
-		loadSrc(roundBackground, R.drawable.round_background_1);
-		loadSrc(roundFrontground, R.drawable.round_frontground_1);
-		loadSrc(roundScale, R.drawable.round_scale);
-		titleText.setText("胎心监测");
-		function.setVisibility(View.GONE);
-		getAdviceSetting();
+		initView();
+		reset();
 		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
 		alertSound.load(getActivity().getApplicationContext(), R.raw.didi, 1);
-		autoStartTimer = new ExpendableCountDownTimer(autoStartTime, 1000) {
-			@Override
-			public void onStart(long startTime) {
-				hint.setText("");
-				hint.setVisibility(View.VISIBLE);
-			}
-
-			@Override
-			public void onExtra(long duration, long extraTime, long stopTime) {
-			}
-
-			@Override
-			public void onTick(long millisUntilFinished) {
-				hint.setText(millisUntilFinished / 1000 + "秒后倾听宝宝心跳");
-			}
-
-			@Override
-			public void onFinish() {
-				hint.setText("");
-				hint.setVisibility(View.GONE);
-				btnStart.performClick();
-			}
-
-			@Override
-			public void onRestart() {
-			}
-		};
-		reset();
-		countDownTimer = new CountDownTimer(20000, 20000) {
-			@Override
-			public void onTick(long millisUntilFinished) {
-			}
-
-			@Override
-			public void onFinish() {
-				if (!connected) {
-					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-					reset();
-					pseudoBluetoothService.stop();
-				}
-				if (bluetoothScanner.isDiscovering()) {
-					bluetoothScanner.cancleDiscovery();
-				}
-			}
-		};
 		readDataTimer = new FixedRateCountDownTimer(100000, 500) {
 			@Override
 			protected void onExtra(long duration, long extraTime, long stopTime) {
@@ -378,6 +307,52 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onFinish() {
+				start();
+			}
+		};
+		autoStartTimer = new ExpendableCountDownTimer(autoStartTime, 1000) {
+			@Override
+			public void onStart(long startTime) {
+				hint.setText("");
+				hint.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onExtra(long duration, long extraTime, long stopTime) {
+			}
+
+			@Override
+			public void onTick(long millisUntilFinished) {
+				hint.setText(millisUntilFinished / 1000 + "秒后倾听宝宝心跳");
+			}
+
+			@Override
+			public void onFinish() {
+				hint.setText("");
+				hint.setVisibility(View.GONE);
+				btnStart.performClick();
+			}
+
+			@Override
+			public void onRestart() {
+			}
+		};
+		countDownTimer = new CountDownTimer(10000, 10000) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+			}
+
+			@Override
+			public void onFinish() {
+				if (!connected) {
+					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
+					reset();
+					pseudoBluetoothService.stop();
+				}
+				if (bluetoothScanner.isDiscovering()) {
+					LogUtil.d(TAG, "搜索状态:正在搜索. 开始停止搜索设备");
+					bluetoothScanner.cancleDiscovery();
+				}
 			}
 		};
 		bluetoothScanner = new DefaultBluetoothScanner(adapter);
@@ -386,26 +361,23 @@ public class MonitorFragment extends BaseFragment {
 		bluetoothReceiver.setListener(new AbstractBluetoothListener() {
 			@Override
 			public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
+				connectDevice(remoteDevice, remoteName);
+			}
+
+			private void connectDevice(BluetoothDevice remoteDevice, String remoteName) {
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
-						LogUtil.d(TAG, "connecting " + remoteName);
+						LogUtil.d(TAG, "正在连接设备:" + remoteName);
 						pseudoBluetoothService.connect(remoteDevice, false);
 					}
 					scanedDevices.add(remoteDevice);
 				}
 			}
 
-			//设备名称改变
 			@Override
 			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
 				super.onRemoteNameChanged(remoteDevice, remoteName);
-				if (!scanedDevices.contains(remoteDevice)) {
-					if (getDeviceName().equalsIgnoreCase(remoteName)) {
-						LogUtil.d(TAG, "connecting " + remoteName);
-						pseudoBluetoothService.connect(remoteDevice, false);
-					}
-					scanedDevices.add(remoteDevice);
-				}
+				connectDevice(remoteDevice, remoteName);
 			}
 
 			@Override
@@ -445,6 +417,21 @@ public class MonitorFragment extends BaseFragment {
 		});
 	}
 
+	private void initView() {
+		loadSrc(roundBackground, R.drawable.round_background_1);
+		loadSrc(roundFrontground, R.drawable.round_frontground_1);
+		loadSrc(roundScale, R.drawable.round_scale);
+		back.setVisibility(View.GONE);
+		titleText.setText("胎心监测");
+		function.setVisibility(View.GONE);
+	}
+
+	/**
+	 * 后续去掉
+	 *
+	 * @param imageView
+	 * @param drawableId
+	 */
 	private void loadSrc(ImageView imageView, int drawableId) {
 		ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
 		Picasso.with(getActivity().getApplicationContext()).load(drawableId).resize(layoutParams.width, layoutParams.height).into(imageView);
@@ -481,6 +468,7 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	public void reset() {
+		LogUtil.d(TAG, "重置状态");
 		tvBluetooth.setTextColor(getResources().getColor(R.color.green0));
 		tvBluetooth.setText("start");
 		tvBluetooth.setClickable(true);
@@ -493,12 +481,8 @@ public class MonitorFragment extends BaseFragment {
 		rlStart.setVisibility(View.GONE);
 		roundBackground.setImageResource(R.drawable.round_background_1);
 		connected = false;
+		started = false;
 		getAdviceSetting();
-		if (audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
-			audioTrack.flush();
-			audioTrack.play();
-		}
-		// TODO: 15/9/13
 		scanedDevices.clear();
 	}
 
@@ -526,21 +510,17 @@ public class MonitorFragment extends BaseFragment {
 
 	public void connectBondedDeviceOrSearch() {
 		bondedDevices = adapter.getBondedDevices();
-		LogUtil.e("bluetoothScanner", "bondedDevices number" + bondedDevices.size());
+		LogUtil.d(TAG, "已绑定的设备数量" + bondedDevices.size());
 		if (bondedDevices != null && bondedDevices.size() > 0) {
 			for (BluetoothDevice device : bondedDevices) {
-				LogUtil.e("bluetoothScanner", "devicegetName: " + device.getName());
+				LogUtil.d(TAG, "设备名称: " + device.getName());
 				if (getDeviceName().equalsIgnoreCase(device.getName())) {
-					LogUtil.e("bluetoothScanner", "" + "pseudoBluetoothService.connect()");
+					LogUtil.d(TAG, "找到匹配的设备,开始连接");
 					pseudoBluetoothService.connect(device, false);
 					return;
 				}
 			}
 		}
-		if (!bluetoothScanner.isDiscovering()) {
-			bluetoothScanner.discovery();
-		}
-		countDownTimer.start();
 	}
 
 	@Override
@@ -552,20 +532,11 @@ public class MonitorFragment extends BaseFragment {
 		EventBus.getDefault().unregister(this);
 	}
 
-	private String getLocalRecordId() {
-		String uuid = SPUtil.getUUID(getActivity().getApplicationContext());
-		if (TextUtils.isEmpty(uuid)) {
-			uuid = generateUUID();
-		}
-		return uuid;
-	}
-
-	private String generateUUID() {
-		String uuid = UUID.randomUUID().toString().replace("-", "");
-		SPUtil.setUUID(getActivity().getApplicationContext(), uuid);
-		return uuid;
-	}
-
+	/**
+	 * 有变更
+	 *
+	 * @return
+	 */
 	private String getDeviceName() {
 		HClientUser hClientUser = SPUtil.getHClientUser(getActivity().getApplicationContext());
 		String serialnum = hClientUser.getSerialnum();
@@ -573,33 +544,11 @@ public class MonitorFragment extends BaseFragment {
 		return serialnum == null ? "" : serialnum;
 	}
 
-	private ServiceInfo getServiceInfo() {
-		return SPUtil.getServiceInfo(getActivity().getApplicationContext());
-	}
-//	private User getUser() {
-//		return SPUtil.getUser(getActivity().getApplicationContext());
-//	}
-
-	private File getPath() {
-		return new File(getTempFileName());
-	}
-
 	public void onEventMainThread(MonitorTerminateEvent event) {
 		int reason = event.getEvent();
-		new Thread() {
-			@Override
-			public void run() {
-				super.run();
-				pseudoBluetoothService.stop();
-			}
-		}.start();
-		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-			audioTrack.pause();
-			audioTrack.flush();
-		}
-		reset();
+		pseudoBluetoothService.stop();
 		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
-		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, getLocalRecordId());
+		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, LocalRecordIdUtil.getSavedId(getActivity()));
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
@@ -647,20 +596,11 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	private void save() throws Exception {
-		File tempFile = getTempFile();
-		File file = getRecordFile();
-		if (tempFile.renameTo(file)) {
-			tempFile.delete();
-		} else {
-			ToastUtil.show(getActivity().getApplicationContext(), "胎音文件错误");
-			return;
-		}
-		FileUtil.addFileHead(file);
-		//
+		final String localRecordId = LocalRecordIdUtil.getSavedId(getActivity());
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
 		Record record = null;
 		try {
-			record = recordBusinessDao.queryByLocalRecordId(getLocalRecordId());
+			record = recordBusinessDao.queryByLocalRecordId(localRecordId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
@@ -673,8 +613,8 @@ public class MonitorFragment extends BaseFragment {
 		Data data = new Data();
 		data.setInterval(500);
 		data.setHeartRate(DataStorage.fhrs);
-		data.setDoctor(Util.position2Time(DataStorage.doctors));
 		data.setFm(Util.position2Time(DataStorage.fms));
+		data.setFm(Util.position2Time(DataStorage.doctors));
 		data.setTime(recordStartTime.getTime());
 		recordData.setData(data);
 		String dataString = gson.toJson(recordData);
@@ -684,7 +624,7 @@ public class MonitorFragment extends BaseFragment {
 		record.setFeelingId(Record.FEELING_NORMAL);
 		record.setFeelingString("一般");
 		record.setDuration((DataStorage.fhrs.size() / 2));
-		record.setSoundPath(getRecordFile().getPath());
+		record.setSoundPath(FileUtil.getVoiceFile(getActivity(), localRecordId).getPath());
 		try {
 			recordBusinessDao.update(record);
 		} catch (Exception e) {
@@ -692,21 +632,27 @@ public class MonitorFragment extends BaseFragment {
 			ToastUtil.show(getActivity().getApplicationContext(), "数据保存异常");
 			return;
 		}
-		try {
-			Record query = recordBusinessDao.query(record);
-			LogUtil.d(TAG, query.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
-			return;
+		//调试用 打印数据库里的该条数据
+		if (BuildConfig.DEBUG) {
+			try {
+				Record query = recordBusinessDao.query(record);
+				LogUtil.d(TAG, query.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+				ToastUtil.show(getActivity().getApplicationContext(), "数据查询异常");
+				return;
+			}
 		}
 		SPUtil.clearUUID(getActivity().getApplicationContext());
+		DataStorage.fhrs.clear();
+		DataStorage.fms.clear();
+		DataStorage.doctors.clear();
+		DataStorage.fhrPackage.recycle();
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void stopMonitor() {
 		pseudoBluetoothService.stop();
+		reset();
 	}
 }
 
