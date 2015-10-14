@@ -700,6 +700,12 @@ public class MonitorFragment extends BaseFragment {
 					autoStartTimer.cancel();
 				}
 				break;
+			case MonitorTerminateEvent.EVENT_MANUAL_CANCEL:
+				DataStorage.fhrs.clear();
+				DataStorage.fms.clear();
+				DataStorage.doctors.clear();
+				DataStorage.fhrPackage.recycle();
+				break;
 			default:
 				break;
 		}

@@ -90,7 +90,7 @@ public class MonitorDetialActivity extends BaseActivity {
 			@Override
 			public void right(Object... obj) {
 				monitorDialog.dismiss();
-				EventBus.getDefault().post(new MonitorTerminateEvent());
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_CANCEL));
 				finish();
 			}
 		});
@@ -160,6 +160,9 @@ public class MonitorDetialActivity extends BaseActivity {
 				startTestTime = System.currentTimeMillis();
 				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(startTestTime));
 				tvSumTime.setText("共" + duration / 1000 / 60 + "分钟");
+				DataStorage.fhrs.clear();
+				DataStorage.fms.clear();
+				DataStorage.doctors.clear();
 			}
 
 			@Override
@@ -174,6 +177,7 @@ public class MonitorDetialActivity extends BaseActivity {
 
 			@Override
 			public void onFinish() {
+				function.performClick();
 			}
 
 			@Override

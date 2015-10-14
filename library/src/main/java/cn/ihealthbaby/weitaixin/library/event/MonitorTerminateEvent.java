@@ -8,6 +8,7 @@ public class MonitorTerminateEvent {
 	public static final int EVENT_UNKNOWN = 2;
 	public static final int EVENT_MANUAL = 3;
 	public static final int EVENT_MANUAL_NOT_START = 4;
+	public static final int EVENT_MANUAL_CANCEL = 5;
 	private int event;
 
 	public MonitorTerminateEvent() {
