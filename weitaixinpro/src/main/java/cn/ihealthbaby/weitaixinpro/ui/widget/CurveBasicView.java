@@ -46,6 +46,7 @@ public class CurveBasicView extends CoordinateView {
 	private boolean moved = true;
 	private int heartWidth;
 	private float curveStrokeWidth = 2;
+	private int pureLineColor = Color.BLACK;
 
 	public CurveBasicView(Context context) {
 		this(context, null, 0);
@@ -63,6 +64,22 @@ public class CurveBasicView extends CoordinateView {
 		heartWidth = Util.dip2px(context, 6);
 		heartScaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.red_heart_small)).getBitmap(), heartWidth, heartWidth, true);
 		doctorScaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.doctor_small)).getBitmap(), heartWidth, heartWidth, true);
+	}
+
+	public int getSafeLineColor() {
+		return safeLineColor;
+	}
+
+	public void setSafeLineColor(int safeLineColor) {
+		this.safeLineColor = safeLineColor;
+	}
+
+	public int getLimitLineColor() {
+		return limitLineColor;
+	}
+
+	public void setLimitLineColor(int limitLineColor) {
+		this.limitLineColor = limitLineColor;
 	}
 
 	public float getCurveStrokeWidth() {
@@ -179,6 +196,20 @@ public class CurveBasicView extends CoordinateView {
 		resetPaint();
 		paint.setStrokeWidth(curveStrokeWidth);
 		paint.setStyle(Paint.Style.STROKE);
+		paint.setStrokeCap(Paint.Cap.ROUND);
+		paint.setStrokeJoin(Paint.Join.ROUND);
+		paint.setColor(pureLineColor);
+		canvas.save();
+		canvas.clipRect(convertX(0), convertY(limitMax), convertX(xMax), convertY(limitMin));
+		canvas.drawPath(path, paint);
+		canvas.restore();
+	}
+
+	protected void drawCurveWithColor(Canvas canvas) {
+		resetPaint();
+		paint.setStrokeWidth(curveStrokeWidth);
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setStrokeCap(Paint.Cap.ROUND);
 		canvas.save();
 		paint.setColor(safeLineColor);
 		canvas.clipRect(convertX(0), convertY(safeMin), convertX(xMax), convertY(limitMin));

@@ -223,7 +223,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		curve.setCellWidth(Util.dip2px(getApplicationContext(), 10));
 		curve.setHearts(DataStorage.fms);
 		curve.setDoctors(DataStorage.doctors);
-		curve.setCurveStrokeWidth(Util.dip2px(getApplicationContext(), 2));
+		curve.setCurveStrokeWidth(2);
 		curve.setSafeMax(safemax);
 		curve.setSafeMin(safemin);
 		ViewGroup.LayoutParams layoutParams = curve.getLayoutParams();
