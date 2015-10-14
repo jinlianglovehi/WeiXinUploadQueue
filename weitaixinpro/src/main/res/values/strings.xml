@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">微胎心院内版</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">微胎心pro</string>
     <string name="device_id">本机decice ID：</string>
     <string name="already_monitor">已监测</string>
     <string name="no_monitor">未监测</string>
