@@ -80,7 +80,7 @@ public class MonitorDetialActivity extends BaseActivity {
 
 	@OnClick(R.id.back)
 	public void back() {
-		final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"希望结束监测么", "继续监测", "立即完成"});
+		final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"希望取消监测么", "继续监测", "取消监测"});
 		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
 			@Override
 			public void left(Object... obj) {
@@ -149,7 +149,6 @@ public class MonitorDetialActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		countDownTimer = new FixedRateCountDownTimer(duration, 500) {
-			public long startTestTime;
 			public long lastTime;
 			public boolean reset;
 			public long lastStart;
@@ -157,8 +156,7 @@ public class MonitorDetialActivity extends BaseActivity {
 			@Override
 			public void onStart(long startTime) {
 				terminate = false;
-				startTestTime = System.currentTimeMillis();
-				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(startTestTime));
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(startTime));
 				tvSumTime.setText("共" + duration / 1000 / 60 + "分钟");
 				DataStorage.fhrs.clear();
 				DataStorage.fms.clear();
