@@ -79,9 +79,9 @@ public class RegistActivity extends BaseActivity {
 //      tv_regist_action.setEnabled(false);
         ivShowPassword.setTag("0");
 
-        ivAgreeRegister.setImageResource(R.drawable.pitch_un);
-        tv_regist_action.setEnabled(false);
-        tv_regist_action.setTextColor(getResources().getColor(R.color.gray1));
+//        ivAgreeRegister.setImageResource(R.drawable.pitch_un);
+//        tv_regist_action.setEnabled(false);
+//        tv_regist_action.setTextColor(getResources().getColor(R.color.gray1));
     }
 
     @Override

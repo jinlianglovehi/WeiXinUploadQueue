@@ -86,10 +86,14 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 		}else {
 			Toast.makeText(this, "支付错误", Toast.LENGTH_SHORT).show();
 		}
-		finish();
+
 
 		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+		finish();
+
 	}
+
 
 
 }

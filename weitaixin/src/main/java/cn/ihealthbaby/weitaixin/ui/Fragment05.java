@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,17 +30,18 @@ import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
  */
 public class Fragment05 extends Fragment {
 
-    private TextView ivWelcome05;
-    private TextView tvNextAction;
+    private ImageView ivWelcome05;
+    private ImageView tvNextAction;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout view05 = (LinearLayout) inflater.inflate(R.layout.viewpager_item_last, null);
 
-        ivWelcome05 = (TextView) view05.findViewById(R.id.ivWelcome05);
-        tvNextAction = (TextView) view05.findViewById(R.id.tvNextAction);
-        ivWelcome05.setBackgroundResource(R.drawable.welcome_05);
+        ivWelcome05 = (ImageView) view05.findViewById(R.id.ivWelcome05);
+        tvNextAction = (ImageView) view05.findViewById(R.id.tvNextAction);
+        ivWelcome05.setImageResource(R.drawable.welcome_05);
+        tvNextAction.setImageResource(R.drawable.welcome_05_btn);
 
         tvNextAction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,28 +59,28 @@ public class Fragment05 extends Fragment {
         public void nextAction() {
             if (SPUtil.isNoFirstStartApp(getActivity())) {
                 if (SPUtil.getUser(getActivity()) != null) {
-                    final CustomDialog customDialog = new CustomDialog();
-                    Dialog dialog = customDialog.createDialog1(getActivity(), "刷新用户数据...");
-                    dialog.show();
-
-                    Intent intentAdvice = new Intent(getActivity(), AdviceSettingService.class);
-                    getActivity().startService(intentAdvice);
-
-                    ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(getActivity(), new AbstractBusiness<User>() {
-                        @Override
-                        public void handleData(User data) {
-                            SPUtil.saveUser(getActivity(), data);
-                            customDialog.dismiss();
-                        }
-
-                        @Override
-                        public void handleException(Exception e) {
-                            customDialog.dismiss();
-                            Intent intentHasRiskscore = new Intent(getActivity(), LoginActivity.class);
-                            startActivity(intentHasRiskscore);
-                            getActivity().finish();
-                        }
-                    }), this);
+//                    final CustomDialog customDialog = new CustomDialog();
+//                    Dialog dialog = customDialog.createDialog1(getActivity(), "刷新用户数据...");
+//                    dialog.show();
+//
+//                    Intent intentAdvice = new Intent(getActivity(), AdviceSettingService.class);
+//                    getActivity().startService(intentAdvice);
+//
+//                    ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(getActivity(), new AbstractBusiness<User>() {
+//                        @Override
+//                        public void handleData(User data) {
+//                            SPUtil.saveUser(getActivity(), data);
+//                            customDialog.dismiss();
+//                        }
+//
+//                        @Override
+//                        public void handleException(Exception e) {
+//                            customDialog.dismiss();
+//                            Intent intentHasRiskscore = new Intent(getActivity(), LoginActivity.class);
+//                            startActivity(intentHasRiskscore);
+//                            getActivity().finish();
+//                        }
+//                    }), this);
 
                     if (SPUtil.isLogin(getActivity())) {
                         if (SPUtil.getUser(getActivity()).getIsInit()) {

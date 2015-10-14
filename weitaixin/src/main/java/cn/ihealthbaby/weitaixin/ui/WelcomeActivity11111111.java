@@ -23,6 +23,7 @@ import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.service.AdviceSettingService;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
@@ -32,14 +33,13 @@ import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 /**
  * Created by chenweihua on 2015/9/21.
  */
-public class WelcomeActivity2 extends BaseActivity {
+public class WelcomeActivity11111111 extends BaseActivity {
 
     private ViewPager viewPagerWelcome;
     private TextView ivWelcomeStart;
     private LinearLayout llDot;
 
 
-    private ArrayList<View> mListViews;
     private StartPagerAdapter startAdapter;
 
     private LayoutInflater mInflater;
@@ -55,6 +55,7 @@ public class WelcomeActivity2 extends BaseActivity {
     int screenWidth;
     int screenHeight;
 
+    ArrayList<Integer> mImgRegs = new ArrayList<Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class WelcomeActivity2 extends BaseActivity {
         llDot = (LinearLayout) this.findViewById(R.id.llDot);
 
 
-        mListViews = new ArrayList<View>();
         mInflater = this.getLayoutInflater();
 
 
@@ -75,33 +75,32 @@ public class WelcomeActivity2 extends BaseActivity {
         screenHeight = wm.getDefaultDisplay().getHeight();
 
 
-
         ivWelcomeStart.setVisibility(View.VISIBLE);
 
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (SPUtil.isNoFirstStartApp(WelcomeActivity2.this)) {
-                    if (SPUtil.getUser(WelcomeActivity2.this) != null) {
-                        if (SPUtil.isLogin(WelcomeActivity2.this)) {
-                            if (SPUtil.getUser(WelcomeActivity2.this).getIsInit()) {
+                if (SPUtil.isNoFirstStartApp(WelcomeActivity11111111.this)) {
+                    if (SPUtil.getUser(WelcomeActivity11111111.this) != null) {
+                        if (SPUtil.isLogin(WelcomeActivity11111111.this)) {
+                            if (SPUtil.getUser(WelcomeActivity11111111.this).getIsInit()) {
 //                                ivWelcomeStart.setVisibility(View.GONE);
-                                Intent intentIsInit = new Intent(WelcomeActivity2.this, InfoEditActivity.class);
+                                Intent intentIsInit = new Intent(WelcomeActivity11111111.this, InfoEditActivity.class);
                                 startActivity(intentIsInit);
                                 return;
                             }
 
-                            if (!SPUtil.getUser(WelcomeActivity2.this).getHasRiskscore()) {
-                                if (SPUtil.getHospitalId(WelcomeActivity2.this) != -1) {
+                            if (!SPUtil.getUser(WelcomeActivity11111111.this).getHasRiskscore()) {
+                                if (SPUtil.getHospitalId(WelcomeActivity11111111.this) != -1) {
 //                                    ivWelcomeStart.setVisibility(View.GONE);
-                                    Intent intentHasRiskscore = new Intent(WelcomeActivity2.this, GradedActivity.class);
+                                    Intent intentHasRiskscore = new Intent(WelcomeActivity11111111.this, GradedActivity.class);
                                     startActivity(intentHasRiskscore);
                                     return;
                                 }
                             }
 
-                            Intent intent = new Intent(WelcomeActivity2.this, MeMainFragmentActivity.class);
+                            Intent intent = new Intent(WelcomeActivity11111111.this, MeMainFragmentActivity.class);
                             startActivity(intent);
 //                            ivWelcomeStart.setVisibility(View.GONE);
                             finish();
@@ -109,7 +108,7 @@ public class WelcomeActivity2 extends BaseActivity {
                         }
                     } else {
 //                        ivWelcomeStart.setVisibility(View.GONE);
-                        Intent intent = new Intent(WelcomeActivity2.this, LoginActivity.class);
+                        Intent intent = new Intent(WelcomeActivity11111111.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                         return;
@@ -121,8 +120,8 @@ public class WelcomeActivity2 extends BaseActivity {
                 }
 
 
-                if (!SPUtil.isNoFirstStartApp(WelcomeActivity2.this)) {
-                    SPUtil.setNoFirstStartApp(WelcomeActivity2.this, false);
+                if (!SPUtil.isNoFirstStartApp(WelcomeActivity11111111.this)) {
+                    SPUtil.setNoFirstStartApp(WelcomeActivity11111111.this, true);
                 }
             }
         }, 2000);
@@ -131,53 +130,18 @@ public class WelcomeActivity2 extends BaseActivity {
     }
 
 
-
     public void initDataView() {
-        view01 = (TextView) mInflater.inflate(R.layout.viewpager_item, null);
-        view02 = (TextView) mInflater.inflate(R.layout.viewpager_item, null);
-        view03 = (TextView) mInflater.inflate(R.layout.viewpager_item, null);
-        view04 = (TextView) mInflater.inflate(R.layout.viewpager_item, null);
-        view05 = (LinearLayout) mInflater.inflate(R.layout.viewpager_item_last, null);
-        ivWelcome05 = (TextView) view05.findViewById(R.id.ivWelcome05);
-        tvNextAction = (TextView) view05.findViewById(R.id.tvNextAction);
 
+        mImgRegs.add(R.drawable.welcome_01);
+        mImgRegs.add(R.drawable.welcome_02);
+        mImgRegs.add(R.drawable.welcome_03);
+        mImgRegs.add(R.drawable.welcome_04);
+        mImgRegs.add(R.drawable.welcome_05);
+        mImgRegs.add(R.drawable.welcome_05_btn);
 
-
-
-//        Bitmap bitmap01 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_01, 108, 192);
-//        Bitmap bitmap02 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_02, 108, 192);
-//        Bitmap bitmap03 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_03, 108, 192);
-//        Bitmap bitmap04 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome_04, 108, 192);
-//        Bitmap bitmap05 = ImageTool.decodeSampledBitmapFromResource(getResources(), R.drawable.welcome, 108, 192);
-//
-//        view01.setImageBitmap(bitmap01);
-//        view02.setImageBitmap(bitmap02);
-//        view03.setImageBitmap(bitmap03);
-//        view04.setImageBitmap(bitmap04);
-//        ivWelcome05.setImageBitmap(bitmap05);
-//
-        view01.setBackgroundResource(R.drawable.welcome_01);
-        view02.setBackgroundResource(R.drawable.welcome_02);
-//        view03.setBackgroundResource(R.drawable.welcome_03);
-//        view04.setBackgroundResource(R.drawable.welcome_04);
-        ivWelcome05.setBackgroundResource(R.drawable.welcome_05);
-
-        tvNextAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextAction();
-                finish();
-            }
-        });
-
-        mListViews.add(view01);
-        mListViews.add(view02);
-        mListViews.add(view03);
-        mListViews.add(view04);
-        mListViews.add(view05);
 
         tvArrs = new TextView[5];
-        for (int i = 0; i < mListViews.size(); i++) {
+        for (int i = 0; i < 5; i++) {
             TextView textView = new TextView(this);
             textView.setBackgroundResource(R.drawable.welcom_dot_unchecked);
             if (i == 0) {
@@ -196,9 +160,9 @@ public class WelcomeActivity2 extends BaseActivity {
 
     }
 
-    public TextView[] tvArrs=null;
+    public TextView[] tvArrs = null;
 
-    public void checkDot(int position){
+    public void checkDot(int position) {
         for (int i = 0; i < tvArrs.length; i++) {
             tvArrs[i].setBackgroundResource(R.drawable.welcom_dot_unchecked);
             if (i == position) {
@@ -209,7 +173,7 @@ public class WelcomeActivity2 extends BaseActivity {
 
 
     private void initView() {
-        startAdapter = new StartPagerAdapter(mListViews);
+        startAdapter = new StartPagerAdapter(mImgRegs);
         viewPagerWelcome.setAdapter(startAdapter);
         viewPagerWelcome.setCurrentItem(0);
 
@@ -232,31 +196,70 @@ public class WelcomeActivity2 extends BaseActivity {
     }
 
 
-
     private class StartPagerAdapter extends PagerAdapter {
 
-        public ArrayList<View> mListViews;
+        public ArrayList<Integer> mImgRegs;
 
-        public StartPagerAdapter(ArrayList<View> mListViews){
-            this.mListViews=mListViews;
+        public StartPagerAdapter(ArrayList<Integer> mImgRegs) {
+            this.mImgRegs = mImgRegs;
         }
 
 
         @Override
         public int getCount() {
-            return mListViews.size();
+            return mImgRegs.size() - 1;
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(mListViews.get(position));
-//            ((ViewPager) container).addView(mListViews.get(position), 0);
-            return mListViews.get(position);
+            switch (position) {
+                case 0:
+                    TextView view01 = (TextView) mInflater.inflate(R.layout.viewpager_item, null);
+                    view01.setBackgroundResource(mImgRegs.get(0));
+                    container.addView(view01);
+
+                    return view01;
+                case 1:
+                    TextView view02 = (TextView) mInflater.inflate(R.layout.viewpager_item, null);
+                    view02.setBackgroundResource(mImgRegs.get(1));
+                    container.addView(view02);
+                    return view02;
+                case 2:
+                    TextView view03 = (TextView) mInflater.inflate(R.layout.viewpager_item, null);
+                    view03.setBackgroundResource(mImgRegs.get(2));
+                    container.addView(view03);
+                    return view03;
+                case 3:
+                    TextView view04 = (TextView) mInflater.inflate(R.layout.viewpager_item, null);
+                    view04.setBackgroundResource(mImgRegs.get(3));
+                    container.addView(view04);
+                    return view04;
+                case 4:
+                    LinearLayout view05 = (LinearLayout) mInflater.inflate(R.layout.viewpager_item_last, null);
+                    ivWelcome05 = (TextView) view05.findViewById(R.id.ivWelcome05);
+                    tvNextAction = (TextView) view05.findViewById(R.id.tvNextAction);
+                    ivWelcome05.setBackgroundResource(mImgRegs.get(4));
+                    tvNextAction.setBackgroundResource(mImgRegs.get(5));
+                    tvNextAction.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            nextAction();
+                            finish();
+                        }
+                    });
+                    container.addView(view05);
+                    return view05;
+            }
+
+            return null;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(mListViews.get(position));
+            LogUtil.d("destroyItem", "destroyItem============>" + position);
+            container.removeView(((View) object));
+            object = null;
+//            mImgRegs.remove(position);
         }
 
         @Override
@@ -280,14 +283,14 @@ public class WelcomeActivity2 extends BaseActivity {
                 ApiManager.getInstance().userApi.refreshInfo(new DefaultCallback<User>(this, new AbstractBusiness<User>() {
                     @Override
                     public void handleData(User data) {
-                        SPUtil.saveUser(WelcomeActivity2.this, data);
+                        SPUtil.saveUser(WelcomeActivity11111111.this, data);
                         customDialog.dismiss();
                     }
 
                     @Override
                     public void handleException(Exception e) {
                         customDialog.dismiss();
-                        Intent intentHasRiskscore = new Intent(WelcomeActivity2.this, LoginActivity.class);
+                        Intent intentHasRiskscore = new Intent(WelcomeActivity11111111.this, LoginActivity.class);
                         startActivity(intentHasRiskscore);
                         finish();
                     }
@@ -319,7 +322,7 @@ public class WelcomeActivity2 extends BaseActivity {
                 finish();
                 return;
             }
-        }else{
+        } else {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -329,19 +332,6 @@ public class WelcomeActivity2 extends BaseActivity {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //                        CustomDialog customDialog = null;

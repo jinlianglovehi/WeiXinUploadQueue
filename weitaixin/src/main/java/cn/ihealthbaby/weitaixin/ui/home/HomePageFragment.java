@@ -8,9 +8,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -74,8 +78,11 @@ public class HomePageFragment extends BaseFragment {
     TextView tvPregnancyDayNumber;
     @Bind(R.id.tvProduceDayNumber)
     TextView tvProduceDayNumber;
-    @Bind(R.id.tvMonitorDayNumber)
-    TextView tvMonitorDayNumber;
+    @Bind(R.id.tvMonitorDayNumber) TextView tvMonitorDayNumber;
+
+    @Bind(R.id.rlPregnancyDate) RelativeLayout rlPregnancyDate;
+    @Bind(R.id.rlProduceDate) RelativeLayout rlProduceDate;
+    @Bind(R.id.rltvMonitorDate) RelativeLayout rltvMonitorDate;
 
     private int monitorCount = 0;
     private int messageCount = 0;
@@ -88,11 +95,34 @@ public class HomePageFragment extends BaseFragment {
         return instance;
     }
 
+
+
+    public void startAnim( ){
+        AnimationSet animationSet = new AnimationSet(true);
+        TranslateAnimation translateAnimation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, -0.5f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f);
+        translateAnimation.setDuration(1000);
+        translateAnimation.setFillAfter(true);
+        animationSet.addAnimation(translateAnimation);
+        rlPregnancyDate.startAnimation(animationSet);
+    }
+
+
+
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_page, null);
         ButterKnife.bind(this, view);
+
+        startAnim();
+
 
 //        title_text.setText("首页");
 //        back.setVisibility(View.INVISIBLE);
