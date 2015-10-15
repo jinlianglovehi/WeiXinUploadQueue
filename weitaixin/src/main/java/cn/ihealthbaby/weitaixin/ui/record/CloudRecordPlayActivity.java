@@ -200,6 +200,7 @@ public class CloudRecordPlayActivity extends BaseActivity {
 				fhrs = data.getHeartRate();
 				List<Long> afm = data.getAfm();
 				fetalMove = Util.time2Position(afm);
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(advice.getTestTime().getTime()));
 				config();
 				customDialog.dismiss();
 			}
@@ -270,7 +271,6 @@ public class CloudRecordPlayActivity extends BaseActivity {
 						e.printStackTrace();
 					}
 				}
-				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(advice.getTestTimeLong() * 1000));
 			}
 
 			@Override
