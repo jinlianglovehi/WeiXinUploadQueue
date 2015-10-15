@@ -1,6 +1,7 @@
 package cn.ihealthbaby.weitaixin.library.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +23,7 @@ public class FileUtil {
 		return context.getCacheDir();
 	}
 
-	public static File getVoiceFile(Context context, String localRecordId) {
+	public static File getVoiceFile(Context context, @NonNull String localRecordId) {
 		return new File(getVoiceDir(context), localRecordId);
 	}
 
