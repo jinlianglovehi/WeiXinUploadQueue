@@ -9,6 +9,7 @@ import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapt
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import im.fir.sdk.FIR;
 
 /**
  * @author by kang on 2015/9/9.
@@ -18,6 +19,7 @@ public class WeiTaiXinProApplication extends Application {
 
 	@Override
 	public void onCreate() {
+		FIR.init(this);
 		super.onCreate();
 //		initUniversalImageLoader();
 		initApiManager();

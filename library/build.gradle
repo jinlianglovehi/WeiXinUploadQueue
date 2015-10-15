@@ -75,6 +75,8 @@ android {
             exclude module: 'android-async-http'
             exclude group: 'com.loopj.android'
         }
+        //统计 fir
+        compile 'im.fir:sdk:latest.integration'
         //测试
         //    testCompile "org.robolectric:robolectric:3.0"
         //Mock框架
