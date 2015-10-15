@@ -58,7 +58,7 @@ public class MonitoringRecyclerViewAdapter extends RecyclerView.Adapter<Monitori
 				ApiManager.getInstance().hClientAccountApi.beginServicesinside(serviceInside.getId(), new DefaultCallback<Integer>(context, new AbstractBusiness<Integer>() {
 					@Override
 					public void handleData(Integer data) {
-						ToastUtil.show(context, "继续监测");
+						ToastUtil.show(context, "再次监测");
 						Intent intent = new Intent(context, MonitorActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						Bundle user = new Bundle();
@@ -72,7 +72,7 @@ public class MonitoringRecyclerViewAdapter extends RecyclerView.Adapter<Monitori
 				}), this);
 			}
 		});
-		holder.tvBegin.setText("继续\n" + "监测");
+		holder.tvBegin.setText("再次\n" + "监测");
 		holder.tvGestationalWeeks.setText(serviceInside.getGestationalWeeks() + "天");
 		holder.tvName.setText(serviceInside.getName());
 		holder.tvTime.setText(DateTimeTool.date2StrAndTime(serviceInside.getCreatetime()));
