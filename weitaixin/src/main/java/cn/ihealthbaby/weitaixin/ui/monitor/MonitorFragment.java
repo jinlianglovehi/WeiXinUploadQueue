@@ -590,6 +590,15 @@ public class MonitorFragment extends BaseFragment {
 		bluetoothReceiver.unRegister(getActivity().getApplicationContext());
 		ButterKnife.unbind(this);
 		EventBus.getDefault().unregister(this);
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
+		if (readDataTimer != null) {
+			readDataTimer.cancel();
+		}
+		if (autoStartTimer != null) {
+			autoStartTimer.cancel();
+		}
 	}
 
 	private String getDeviceName() {
