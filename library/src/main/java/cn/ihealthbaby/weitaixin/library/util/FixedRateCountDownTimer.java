@@ -8,7 +8,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * Created by liuhongjian on 15/9/22 15:23.
@@ -117,7 +116,7 @@ public abstract class FixedRateCountDownTimer {
 					message.obj = DataStorage.fhrPackage;
 					handler.sendMessage(message);
 					counter++;
-					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
+//					LogUtil.d("FixedRateCountDownTimer", "counter:" + counter);
 				}
 			}
 		};
