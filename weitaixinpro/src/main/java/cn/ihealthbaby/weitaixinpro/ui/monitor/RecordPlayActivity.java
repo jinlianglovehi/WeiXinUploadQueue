@@ -202,9 +202,11 @@ public abstract class RecordPlayActivity extends BaseActivity {
 
 	private void configCurve() {
 		// TODO: 15/9/9  设置数据源
-		curvePlay.setxMax(20 * 60);
+		int duration = record.getDuration();
+		int xMax = duration / 60 * 60 + (duration % 60 == 0 ? 0 : 1) * 60;
+		curvePlay.setxMax(xMax);
 		curvePlay.setCellWidth(Util.dip2px(getApplicationContext(), 10));
-		curvePlay.setCurveStrokeWidth(Util.dip2px(getApplicationContext(), 2));
+		curvePlay.setCurveStrokeWidth(2);
 		ViewGroup.LayoutParams layoutParams = curvePlay.getLayoutParams();
 		layoutParams.width = curvePlay.getMinWidth();
 		layoutParams.height = curvePlay.getMinHeight() + Util.dip2px(getApplicationContext(), 16);
