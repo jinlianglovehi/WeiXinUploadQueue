@@ -201,7 +201,12 @@ public class UploadDataUtil {
 				/**
 				 * 向七牛上传文件
 				 */
-				uploadManager.put(file, key, token, upCompletionHandler, options);
+				if (file == null) {
+					customDialog.dismiss();
+					ToastUtil.show(context, "未找到胎音文件");
+				} else {
+					uploadManager.put(file, key, token, upCompletionHandler, options);
+				}
 			}
 
 			@Override
