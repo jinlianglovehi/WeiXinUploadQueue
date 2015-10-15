@@ -110,7 +110,6 @@ public class MonitorDetialActivity extends BaseActivity {
 	@OnClick(R.id.btn_extra_time)
 	public void extra() {
 		countDownTimer.extra(5 * 60 * 1000);
-		tvSumTime.setText("共" + countDownTimer.getDuration() / 1000 / 60 + "分钟");
 	}
 
 	@OnClick(R.id.btn_doctor_interrupt)
@@ -150,22 +149,21 @@ public class MonitorDetialActivity extends BaseActivity {
 		configCurve();
 		countDownTimer = new FixedRateCountDownTimer(duration, 500) {
 			public long lastTime;
-			public boolean reset;
-			public long lastStart;
 
 			@Override
 			public void onStart(long startTime) {
 				terminate = false;
-				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(startTime));
-				tvSumTime.setText("共" + duration / 1000 / 60 + "分钟");
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
+				tvSumTime.setText("共" + getDuration() / 1000 / 60 + "分钟");
 				DataStorage.fhrs.clear();
 				DataStorage.fms.clear();
 				DataStorage.doctors.clear();
 			}
 
 			@Override
-			public void onExtra(long duration, long extraTime, long stopTime) {
-				curve.setxMax(curve.getxMax() + ((int) ((getDuration() + extraTime) / 1000 / 60)));
+			public void onExtra(long newDuration, long extraTime, long stopTime) {
+				tvSumTime.setText("共" + newDuration / 1000 / 60 + "分钟");
+				curve.setxMax(((int) (newDuration / 1000)));
 			}
 
 			@Override
@@ -183,7 +181,6 @@ public class MonitorDetialActivity extends BaseActivity {
 			}
 
 			private void tick(FHRPackage fhrPackage) {
-//				LogUtil.d(TAG, "当前第时间差" + (System.currentTimeMillis() - startTestTime));
 				//获取当前心率值
 				int fhr = fhrPackage.getFHR1();
 				long time = fhrPackage.getTime();

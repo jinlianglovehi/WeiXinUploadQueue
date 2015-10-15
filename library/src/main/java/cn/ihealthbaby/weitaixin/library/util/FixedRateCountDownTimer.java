@@ -69,7 +69,7 @@ public abstract class FixedRateCountDownTimer {
 		onExtra(duration, extra, stop);
 	}
 
-	protected abstract void onExtra(long duration, long extraTime, long stopTime);
+	protected abstract void onExtra(long newDuration, long extraTime, long stopTime);
 
 	public void pause() {
 		pause = SystemClock.elapsedRealtime();
