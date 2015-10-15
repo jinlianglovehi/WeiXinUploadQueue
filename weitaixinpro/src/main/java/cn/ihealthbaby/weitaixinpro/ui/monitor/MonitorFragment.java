@@ -127,7 +127,6 @@ public class MonitorFragment extends BaseFragment {
 							LogUtil.d(TAG, "STATE_CONNECTED");
 							connected = true;
 							readDataTimer.start();
-							countDownTimer.start();
 							LogUtil.d(TAG, "开始倒计时,准备自动开始");
 							if (bluetoothScanner.isDiscovering()) {
 								bluetoothScanner.cancleDiscovery();
@@ -174,6 +173,7 @@ public class MonitorFragment extends BaseFragment {
 		String localRecordId = LocalRecordIdUtil.generateAndSaveId(getActivity());
 		initRecord(localRecordId);
 		autoStartTimer.cancel();
+		countDownTimer.cancel();
 		readDataTimer.cancel();
 		started = true;
 		final MonitorStartEvent event = new MonitorStartEvent();
@@ -240,6 +240,7 @@ public class MonitorFragment extends BaseFragment {
 		LogUtil.d(TAG, "开始搜索");
 		if (!connected) {
 			onConnectingUI();
+			countDownTimer.start();
 			if (!bluetoothScanner.isEnable()) {
 				LogUtil.d(TAG, "蓝牙处于未开启状态,正在打开");
 				bluetoothScanner.enable();
