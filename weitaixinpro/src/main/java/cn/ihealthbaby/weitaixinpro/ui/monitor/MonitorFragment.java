@@ -632,7 +632,7 @@ public class MonitorFragment extends BaseFragment {
 		data.setInterval(500);
 		data.setHeartRate(DataStorage.fhrs);
 		data.setFm(Util.position2Time(DataStorage.fms));
-		data.setFm(Util.position2Time(DataStorage.doctors));
+		data.setDoctor(Util.position2Time(DataStorage.doctors));
 		data.setTime(recordStartTime.getTime());
 		recordData.setData(data);
 		String dataString = gson.toJson(recordData);
