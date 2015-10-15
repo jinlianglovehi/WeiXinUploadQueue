@@ -57,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:text="姓名"
                         android:textColor="@color/gray3"
-                        android:textSize="@dimen/font10"/>
+                        android:textSize="@dimen/font20"/>
 
 
                 </LinearLayout>
@@ -94,6 +94,7 @@
                     android:layout_alignBottom="@id/ll_Layout"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
                     android:layout_toRightOf="@id/ll_Layout"
                     android:singleLine="true"
                     android:text="月日"
