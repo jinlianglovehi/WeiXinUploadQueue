@@ -12,7 +12,7 @@ import android.os.Bundle;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
- * @author  by liuhongjian on 15/7/16 11:20.
+ * @author by liuhongjian on 15/7/16 11:20.
  */
 public class BluetoothReceiver extends BroadcastReceiver {
 	private static final String TAG = "BluetoothReceiver";
@@ -32,6 +32,21 @@ public class BluetoothReceiver extends BroadcastReceiver {
 		Bundle extras = intent.getExtras();
 		printIntent(action, extras);
 		switch (action) {
+			/**
+			 * 发现配对请求
+			 * EXTRA_DEVICE
+			 * EXTRA_NAME
+			 * EXTRA_PAIRING_KEY
+			 * EXTRA_PAIRING_VARIANT
+			 */
+			case BluetoothDevice.ACTION_PAIRING_REQUEST:
+				LogUtil.d(TAG, "onReceive BluetoothDevice.ACTION_PAIRING_REQUEST");
+				BluetoothDevice remoteDevice4 = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+				String remoteName4 = intent.getStringExtra(BluetoothDevice.EXTRA_NAME);
+				String pairingKey = intent.getStringExtra(BluetoothDevice.EXTRA_PAIRING_KEY);
+				int pairingVariant = intent.getIntExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, -1);
+				listener.onPairingRequest(remoteDevice4, remoteName4, pairingKey, pairingVariant);
+				break;
 			/**
 			 * 发现设备
 			 * EXTRA_DEVICE
@@ -248,6 +263,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
 			case BluetoothDevice.ACTION_ACL_DISCONNECTED:
 				LogUtil.v(TAG, "onReceive BluetoothDevice.ACTION_ACL_DISCONNECTED");
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -265,6 +282,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 		intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
 		intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
 		intentFilter.addAction(BluetoothDevice.ACTION_CLASS_CHANGED);
+		intentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
 		intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
 		intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
 		intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);

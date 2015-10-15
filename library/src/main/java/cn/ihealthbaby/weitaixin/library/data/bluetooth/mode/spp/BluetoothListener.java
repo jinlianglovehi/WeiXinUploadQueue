@@ -78,4 +78,14 @@ public interface BluetoothListener {
 	 * @param bluetoothClass
 	 */
 	void remoteClassChanged(BluetoothDevice remoteDevice, BluetoothClass bluetoothClass);
+
+	/**
+	 * 手机显示配对请求,用于用户选择
+	 *
+	 * @param remoteDevice
+	 * @param remoteName
+	 * @param pairingKey
+	 * @param pairingVariant
+	 */
+	void onPairingRequest(BluetoothDevice remoteDevice, String remoteName, String pairingKey, int pairingVariant);
 }
