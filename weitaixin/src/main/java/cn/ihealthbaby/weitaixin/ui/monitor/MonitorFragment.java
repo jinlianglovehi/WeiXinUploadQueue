@@ -142,6 +142,7 @@ public class MonitorFragment extends BaseFragment {
 						case PseudoBluetoothService.STATE_CONNECTING:
 							LogUtil.d(TAG, "STATE_CONNECTING");
 							//未连接,初始状态
+							break;
 						case PseudoBluetoothService.STATE_NONE:
 							LogUtil.d(TAG, "STATE_NONE");
 							reset();
@@ -150,6 +151,7 @@ public class MonitorFragment extends BaseFragment {
 					break;
 				case Constants.MESSAGE_STATE_FAIL:
 					reset();
+					countDownTimer.cancel();
 					switch (msg.arg1) {
 						case Constants.MESSAGE_CANNOT_CONNECT:
 							LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
@@ -420,7 +422,7 @@ public class MonitorFragment extends BaseFragment {
 			private void connectDevice(BluetoothDevice remoteDevice, String remoteName) {
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
-						LogUtil.d(TAG, "正在连接设备:" + remoteName);
+						LogUtil.d(TAG, "发现匹配的设备,正在连接设备:" + remoteName);
 						pseudoBluetoothService.connect(remoteDevice, false);
 					}
 					scanedDevices.add(remoteDevice);
@@ -571,8 +573,15 @@ public class MonitorFragment extends BaseFragment {
 					LogUtil.d(TAG, "找到匹配的设备,开始连接");
 					pseudoBluetoothService.connect(device, false);
 					return;
+				} else {
+					LogUtil.d(TAG, "直接配对未发现设备");
 				}
 			}
+		}
+		LogUtil.d(TAG, "开始搜索设备");
+		//直接配对失败,开始搜索设备
+		if (!adapter.isDiscovering()) {
+			adapter.startDiscovery();
 		}
 	}
 
