@@ -122,6 +122,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		getData();
 		getAdviceSetting();
 		configCurve();
+		tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(record.getRecordStartTime().getTime()));
 		mediaPlayer = new MediaPlayer();
 		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
 			public int doctorPosition;
