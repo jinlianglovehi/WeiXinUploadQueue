@@ -70,10 +70,9 @@ public class AboutActivity extends BaseActivity {
     @OnClick(R.id.rl_welcome)
     public void welcomeOnclick() {
         SPUtil.setNoFirstStartApp(this, false);
-        Intent intent = new Intent(this, WelcomeActivity.class);
+        Intent intent = new Intent(this, Welcome2Activity.class);
         startActivity(intent);
-        finish();
-        EventBus.getDefault().post(new WelcomeEvent());
+//        EventBus.getDefault().post(new WelcomeEvent());
     }
 
     @OnClick(R.id.rl_function)

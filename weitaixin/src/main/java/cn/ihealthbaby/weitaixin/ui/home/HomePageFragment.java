@@ -62,24 +62,21 @@ public class HomePageFragment extends BaseFragment {
     LinearLayout llHomeFunctionTwoAction;
     @Bind(R.id.llHomeFunctionThreeAction)
     LinearLayout llHomeFunctionThreeAction;
-    @Bind(R.id.llHomeFunctionFourAction)
-    LinearLayout llHomeFunctionFourAction;
-    @Bind(R.id.ivHomeHeadImg)
-    ImageView ivHomeHeadImg;
-    @Bind(R.id.tvHomeHeadName)
-    TextView tvHomeHeadName;
-    @Bind(R.id.flShowMessageCount)
-    FrameLayout flShowMessageCount;
-    @Bind(R.id.tvMessageNumberCount)
-    TextView tvMessageNumberCount;
-    @Bind(R.id.tvGestationalWeeks)
-    TextView tvGestationalWeeks;
-    @Bind(R.id.tvPregnancyDayNumber)
-    TextView tvPregnancyDayNumber;
-    @Bind(R.id.tvProduceDayNumber)
-    TextView tvProduceDayNumber;
+    @Bind(R.id.llHomeFunctionFourAction) LinearLayout llHomeFunctionFourAction;
+    @Bind(R.id.ivHomeHeadImg) ImageView ivHomeHeadImg;
+    @Bind(R.id.tvHomeHeadName) TextView tvHomeHeadName;
+    @Bind(R.id.flShowMessageCount) FrameLayout flShowMessageCount;
+    @Bind(R.id.tvMessageNumberCount) TextView tvMessageNumberCount;
+    @Bind(R.id.tvGestationalWeeks) TextView tvGestationalWeeks;
+    //
+    @Bind(R.id.tvPregnancyDayNumber) TextView tvPregnancyDayNumber;
+    @Bind(R.id.tvProduceDayNumber) TextView tvProduceDayNumber;
     @Bind(R.id.tvMonitorDayNumber) TextView tvMonitorDayNumber;
-
+    //
+    @Bind(R.id.tvPregnancyDayText) TextView tvPregnancyDayText;
+    @Bind(R.id.tvProduceDayText) TextView tvProduceDayText;
+    @Bind(R.id.tvMonitorDayText) TextView tvMonitorDayText;
+    //
     @Bind(R.id.rlPregnancyDate) RelativeLayout rlPregnancyDate;
     @Bind(R.id.rlProduceDate) RelativeLayout rlProduceDate;
     @Bind(R.id.rltvMonitorDate) RelativeLayout rltvMonitorDate;
@@ -97,20 +94,96 @@ public class HomePageFragment extends BaseFragment {
 
 
 
-    public void startAnim( ){
+    public void startAnim(){
+        rlPregnancyDate.clearAnimation();
+        rlProduceDate.clearAnimation();
+        rltvMonitorDate.clearAnimation();
+
+        tvPregnancyDayText.setText("怀孕天数");
+        tvProduceDayText.setText("距预产期");
+        tvMonitorDayText.setText("已监测");
+
         AnimationSet animationSet = new AnimationSet(true);
         TranslateAnimation translateAnimation = new TranslateAnimation(
                 Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, -0.5f,
+                Animation.RELATIVE_TO_SELF, -0.4f,
                 Animation.RELATIVE_TO_SELF, 0f,
                 Animation.RELATIVE_TO_SELF, 0f);
-        translateAnimation.setDuration(1000);
-        translateAnimation.setFillAfter(true);
+        animationSet.setFillEnabled(true);
+        animationSet.setFillAfter(true);
+        animationSet.setDuration(700);
         animationSet.addAnimation(translateAnimation);
+        translateAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                tvPregnancyDayText.setText("");
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                AnimationSet animationSet2 = new AnimationSet(true);
+                TranslateAnimation translateAnimation2 = new TranslateAnimation(
+                        Animation.RELATIVE_TO_SELF, -0.4f,
+                        Animation.RELATIVE_TO_SELF, -0.2f,
+                        Animation.RELATIVE_TO_SELF, 0f,
+                        Animation.RELATIVE_TO_SELF, 0f);
+                animationSet2.setFillEnabled(true);
+                animationSet2.setFillAfter(true);
+                animationSet2.setDuration(600);
+                animationSet2.addAnimation(translateAnimation2);
+                translateAnimation2.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        AnimationSet animationSet3 = new AnimationSet(true);
+                        TranslateAnimation translateAnimation3 = new TranslateAnimation(
+                                Animation.RELATIVE_TO_SELF, -0.2f,
+                                Animation.RELATIVE_TO_SELF, -0.3f,
+                                Animation.RELATIVE_TO_SELF, 0f,
+                                Animation.RELATIVE_TO_SELF, 0f);
+                        animationSet3.setFillEnabled(true);
+                        animationSet3.setFillAfter(true);
+                        animationSet3.setDuration(600);
+                        animationSet3.addAnimation(translateAnimation3);
+                        animationSet3.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                AnimUntils.startAnim(rlProduceDate, tvProduceDayText, "距预产期", rltvMonitorDate, tvMonitorDayText, "已监测");
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        rlPregnancyDate.startAnimation(animationSet3);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                rlPregnancyDate.startAnimation(animationSet2);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         rlPregnancyDate.startAnimation(animationSet);
     }
-
-
 
 
 

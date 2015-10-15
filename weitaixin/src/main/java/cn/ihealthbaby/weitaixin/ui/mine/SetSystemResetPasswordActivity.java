@@ -219,12 +219,7 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
 
     @OnClick(R.id.tv_reset_password_action_reset)
     public void tvResetPasswordActionReset() {
-        if (isHasAuthCode) {
-            tvRegistAction2();
-        } else {
-            ToastUtil.show(getApplicationContext(), "请先获取验证码");
-        }
-
+        tvRegistAction2();
     }
 
 
@@ -238,10 +233,16 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
             ToastUtil.show(getApplicationContext(), "请输入密码");
             return;
         }
-        if (newPassword.length() < 6 && newPassword.length() > 20) {
-            ToastUtil.show(getApplicationContext(), "密码必须是6~20位的数字和字母");
+        if (newPassword.length() < 6 || newPassword.length() > 20) {
+            ToastUtil.show(getApplicationContext(), "密码必须是小于6位和大于20英文字符和数字");
             return;
         }
+
+        if (!isHasAuthCode) {
+            ToastUtil.show(getApplicationContext(), "请先获取验证码");
+            return;
+        }
+
         if (TextUtils.isEmpty(mark_number)) {
             ToastUtil.show(getApplicationContext(), "请输入验证码");
             return;

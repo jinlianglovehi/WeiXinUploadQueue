@@ -121,11 +121,11 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
                 tv_doctor_name.setText(serviceInfo.getDoctorName()+ "");
 
                 tv_doctor_advisory_number.setText(serviceInfo.getTotalCount()+ "");
-                tv_doctor_surplus_advisory_number.setText(serviceInfo.getTotalCount()-serviceInfo.getUsedCount()+ "");
+                tv_doctor_surplus_advisory_number.setText(serviceInfo.getTotalCount() - serviceInfo.getUsedCount() + "");
 
                 if (serviceInfo.getTotalCount() == -1) {
                     tv_doctor_advisory_number.setText("无限次");
-                    tv_doctor_surplus_advisory_number.setText(serviceInfo.getUsedCount() + "");
+                    tv_doctor_surplus_advisory_number.setText("无限次");
                 }
 
             }

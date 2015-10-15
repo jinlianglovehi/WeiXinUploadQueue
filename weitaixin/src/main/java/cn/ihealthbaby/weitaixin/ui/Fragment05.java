@@ -33,6 +33,16 @@ public class Fragment05 extends Fragment {
     private ImageView ivWelcome05;
     private ImageView tvNextAction;
 
+    public boolean isFlag=false;
+
+    public boolean isFlag() {
+        return isFlag;
+    }
+
+    public void setIsFlag(boolean isFlag) {
+        this.isFlag = isFlag;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,8 +56,11 @@ public class Fragment05 extends Fragment {
         tvNextAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtil.d("tvNextAction","tvNextAction======>");
-                nextAction();
+                if (isFlag()) {
+                    getActivity().finish();
+                }else{
+                    nextAction();
+                }
             }
         });
 

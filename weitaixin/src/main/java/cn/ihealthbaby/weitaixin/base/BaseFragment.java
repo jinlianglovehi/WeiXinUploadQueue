@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -23,11 +24,11 @@ public class BaseFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
-//        MobclickAgent.onPageStart("MainScreen"); //统计页面
+        MobclickAgent.onPageStart("MainScreen"); //统计页面
     }
     public void onPause() {
         super.onPause();
-//        MobclickAgent.onPageEnd("MainScreen");
+        MobclickAgent.onPageEnd("MainScreen");
     }
 
     @Override

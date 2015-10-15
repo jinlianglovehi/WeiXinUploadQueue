@@ -18,16 +18,17 @@
 
         <RelativeLayout
             android:id="@+id/rlPregnancyDate"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="20dp"
             android:layout_above="@+id/rlProduceDate"
             android:layout_centerVertical="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="-40dp"
+            android:layout_marginLeft="-25dp"
             android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:background="@drawable/home_head_one">
 
             <TextView
+                android:id="@+id/tvPregnancyDayText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -39,7 +40,7 @@
 
             <TextView
                 android:id="@+id/tvPregnancyDayNumber"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -51,14 +52,15 @@
 
         <RelativeLayout
             android:id="@+id/rlProduceDate"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="-36dp"
+            android:layout_marginLeft="-20dp"
             android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:background="@drawable/home_head_two">
 
             <TextView
+                android:id="@+id/tvProduceDayText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -70,7 +72,7 @@
 
             <TextView
                 android:id="@+id/tvProduceDayNumber"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:layout_alignParentRight="true"
@@ -83,16 +85,17 @@
 
         <RelativeLayout
             android:id="@+id/rltvMonitorDate"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="20dp"
             android:layout_below="@+id/rlProduceDate"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="-40dp"
+            android:layout_marginLeft="-20dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/ivHomeHeadImg"
             android:background="@drawable/home_head_three">
 
             <TextView
+                android:id="@+id/tvMonitorDayText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -104,7 +107,7 @@
 
             <TextView
                 android:id="@+id/tvMonitorDayNumber"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -193,8 +196,8 @@
                 android:orientation="vertical">
 
                 <FrameLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp">
+                    android:layout_width="60dp"
+                    android:layout_height="60dp">
 
                     <ImageView
                         android:layout_width="60dp"

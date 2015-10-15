@@ -15,6 +15,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.AdviceForm;
@@ -55,7 +56,7 @@ public class WeiTaiXinApplication extends Application {
 
         app = this;
 
-//        MobclickAgent.updateOnlineConfig(this);
+        MobclickAgent.updateOnlineConfig(this);
 
 
         initUniversalImageLoader();

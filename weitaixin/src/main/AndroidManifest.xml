@@ -95,7 +95,7 @@
             android:name=".ui.monitor.MonitorDetialActivity"
             android:label="@string/title_activity_curve_detial" />
         <activity android:name=".ui.mine.AboutActivity" />
-        <activity android:name=".ui.mine.WelcomeActiviy" />
+        <activity android:name=".ui.mine.Welcome2Activity" />
         <activity android:name=".ui.mine.FeatureActiviy" />
         <activity android:name=".ui.mine.UseProcessActiviy" />
         <activity android:name=".ui.mine.UseProtocolActiviy" />
