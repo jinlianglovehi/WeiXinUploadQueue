@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
+import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.ui.monitor.LocalRecordPlayActivity;
 import cn.ihealthbaby.weitaixinpro.ui.widget.ChooseUploadContentPopupWindow;
@@ -85,21 +87,22 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 			case Record.UPLOAD_STATE_LOCAL:
 			case Record.UPLOAD_STATE_UPLOADING:
 				holder.tvUploadStatus.setText("需上传");
+				holder.tvUploadStatus.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						//显示对话框,用户选择上传曲线还是全部上传
+						ChooseUploadContentPopupWindow chooseUploadContentPopupWindow = new ChooseUploadContentPopupWindow(activity, record, position);
+						chooseUploadContentPopupWindow.showAtLocation(activity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+					}
+				});
 				break;
 			case Record.UPLOAD_STATE_CLOUD:
 				holder.tvUploadStatus.setText("已上传");
+				holder.tvUploadStatus.setOnClickListener(null);
 				break;
 			default:
 				break;
 		}
-		holder.tvUploadStatus.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//显示对话框,用户选择上传曲线还是全部上传
-				ChooseUploadContentPopupWindow chooseUploadContentPopupWindow = new ChooseUploadContentPopupWindow(activity, record, position);
-				chooseUploadContentPopupWindow.showAtLocation(activity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
-			}
-		});
 		if (isDelFalg()) {
 			holder.checkboxDelete.setVisibility(View.VISIBLE);
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -140,13 +143,25 @@ public class LocalRecordRecyclerViewAdapter extends RecyclerView.Adapter<LocalRe
 
 	public void doDeleteAction() {
 		Set<Map.Entry<Integer, Boolean>> entries = deleteMap.entrySet();
-		ArrayList<Record> delRecords = new ArrayList<Record>();
+		final ArrayList<Record> delRecords = new ArrayList<Record>();
 		for (Map.Entry<Integer, Boolean> entry : entries) {
 			if (entry.getValue()) {
 				//删除
 				delRecords.add(this.list.get(entry.getKey()));
 			}
 		}
+//		删除文件
+		new Thread() {
+			@Override
+			public void run() {
+				super.run();
+				for (Record record : delRecords) {
+					final String localRecordId = record.getLocalRecordId();
+					final File voiceFile = FileUtil.getVoiceFile(activity, localRecordId);
+					voiceFile.delete();
+				}
+			}
+		}.start();
 		this.list.removeAll(delRecords);
 		try {
 			RecordBusinessDao.getInstance(activity).deleteRecords(delRecords);

@@ -27,22 +27,20 @@ import cn.ihealthbaby.weitaixinpro.base.BaseFragment;
 /**
  */
 public class RecordFragment extends BaseFragment {
-
-	private TextView tvCancel;
-	private TextView title_text;
-	private TextView function;
-	private boolean isDeleteState=false;
-	//
-
-	private static final int PAGE_SIZE = 6;
+	private static final int PAGE_SIZE = 10;
 	private final static String TAG = "RecordFragment";
 	/**
 	 * 起始页码 从1开始
 	 */
 	private static final int FIRST_PAGE = 1;
 	public HClientUser hClientUser;
+	//
 	public int currentPage;
 	public long count;
+	private TextView tvCancel;
+	private TextView title_text;
+	private TextView function;
+	private boolean isDeleteState = false;
 	private ArrayList<Record> list;
 	private boolean loading;
 	private LocalRecordRecyclerViewAdapter adapter;
@@ -65,7 +63,6 @@ public class RecordFragment extends BaseFragment {
 		viewLayout = ((View) inflater.inflate(R.layout.fragment_swipe_refresh_recycler2, null));
 		swipeRefreshLayout = (SwipeRefreshLayout) viewLayout.findViewById(R.id.swipe_refresh_layout);
 		recyclerView = (RecyclerView) viewLayout.findViewById(R.id.recycler_view);
-
 		tvCancel = (TextView) viewLayout.findViewById(R.id.tvCancel);
 		title_text = (TextView) viewLayout.findViewById(R.id.title_text);
 		function = (TextView) viewLayout.findViewById(R.id.function);
@@ -75,29 +72,24 @@ public class RecordFragment extends BaseFragment {
 		function.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				if(isDeleteState){
+				if (isDeleteState) {
 					adapter.doDeleteAction();
 				}
-
 				if (!isDeleteState) {
 					function.setText("确定删除");
-					isDeleteState=true;
+					isDeleteState = true;
 					adapter.setIsDelFalg(true);
 					swipeRefreshLayout.setRefreshing(false);
 					adapter.notifyDataSetChanged();
 					tvCancel.setVisibility(View.VISIBLE);
 					tvCancel.setText("取消");
 				}
-
-
 			}
 		});
-
 		tvCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				isDeleteState=false;
+				isDeleteState = false;
 				adapter.setIsDelFalg(false);
 				swipeRefreshLayout.setRefreshing(false);
 				adapter.initMap(adapter.getItemCount());
@@ -105,15 +97,12 @@ public class RecordFragment extends BaseFragment {
 				function.setText("批量删除");
 				tvCancel.setVisibility(View.INVISIBLE);
 				tvCancel.setText("取消");
-
 			}
 		});
-
 		return viewLayout;
 	}
 
-
-	public ArrayList<Record> gg(){
+	public ArrayList<Record> gg() {
 		ArrayList<Record> adviceItems = new ArrayList<Record>();
 		for (int i = 0; i < 20; i++) {
 			Record record = new Record();
@@ -125,7 +114,6 @@ public class RecordFragment extends BaseFragment {
 		}
 		return adviceItems;
 	}
-
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -170,7 +158,7 @@ public class RecordFragment extends BaseFragment {
 	}
 
 	private void request(final int page) {
-		LogUtil.d(TAG, "count: [%s],page:[%s]", count, page);
+		LogUtil.d(TAG, "request count: [%s],page:[%s]", count, page);
 		if (count != 0 && page >= (count / PAGE_SIZE) + 1) {
 			ToastUtil.show(getActivity().getApplicationContext(), "没有更多数据了");
 			return;
