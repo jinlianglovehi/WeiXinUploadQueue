@@ -73,9 +73,7 @@ public class BindActivity extends BaseActivity {
 		} catch (Exception e) {
 		}
 		// TODO: 15/10/13  打包发布时务必去掉
-//		if (BuildConfig.DEBUG) {
-//			deviceId = "353490069872709";
-//		}
+		deviceId = "353490069872709";
 		mTvDeviceId.setText(deviceId);
 		login(deviceId);
 		initView();

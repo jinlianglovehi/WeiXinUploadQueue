@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * Created by liuhongjian on 15/9/22 15:23.
@@ -57,7 +58,6 @@ public abstract class FixedRateCountDownTimer {
 	public FixedRateCountDownTimer(long duration, long interval) {
 		this.duration = duration;
 		this.interval = interval;
-		count = (int) (duration / interval);
 		period = interval / 100;
 	}
 
@@ -106,6 +106,9 @@ public abstract class FixedRateCountDownTimer {
 	public void startAt(long offset) {
 		start = SystemClock.elapsedRealtime();
 		stop = start + duration - offset;
+		count = (int) (duration / interval);
+		counter = ((int) (offset / interval));
+		LogUtil.d(TAG, "start:%s,stop:%s,count:%s,counter:%s", start, stop, count, counter);
 		timer = new Timer();
 		timerTask = new TimerTask() {
 			@Override

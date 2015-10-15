@@ -139,13 +139,11 @@ public class MonitorFragment extends BaseFragment {
 							break;
 						case PseudoBluetoothService.STATE_NONE:
 							LogUtil.d(TAG, "STATE_NONE");
-							reset();
 							break;
 					}
 					break;
 				case Constants.MESSAGE_STATE_FAIL:
 					reset();
-					countDownTimer.cancel();
 					switch (msg.arg1) {
 						case Constants.MESSAGE_CANNOT_CONNECT:
 							LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
@@ -231,7 +229,7 @@ public class MonitorFragment extends BaseFragment {
 
 	@OnClick(R.id.function)
 	public void ternimateMonitor() {
-		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_NOT_START));
+		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_CANCEL_NOT_START));
 	}
 
 	/**
@@ -340,7 +338,7 @@ public class MonitorFragment extends BaseFragment {
 			public void onRestart() {
 			}
 		};
-		countDownTimer = new CountDownTimer(10000, 10000) {
+		countDownTimer = new CountDownTimer(20000, 10000) {
 			@Override
 			public void onTick(long millisUntilFinished) {
 			}
@@ -378,9 +376,8 @@ public class MonitorFragment extends BaseFragment {
 			}
 
 			@Override
-			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
-				super.onRemoteNameChanged(remoteDevice, remoteName);
-				connectDevice(remoteDevice, remoteName);
+			public void onPairingRequest(BluetoothDevice remoteDevice, String remoteName, String pairingKey, int pairingVariant) {
+				LogUtil.d(TAG, "remoteDevice:%s,remoteName:%s ,pairingKey:%s ,pairingVariant:%s", remoteDevice, remoteName, pairingKey, pairingVariant);
 			}
 
 			@Override
@@ -560,13 +557,13 @@ public class MonitorFragment extends BaseFragment {
 		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
 		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, LocalRecordIdUtil.getSavedId(getActivity()));
 		switch (reason) {
-			case MonitorTerminateEvent.EVENT_AUTO:
-				LogUtil.d(TAG, "EVENT_AUTO");
+			case MonitorTerminateEvent.EVENT_UNKNOWN:
+				LogUtil.d(TAG, "EVENT_UNKNOWN");
 				runSave();
 				startActivity(intent);
 				break;
-			case MonitorTerminateEvent.EVENT_UNKNOWN:
-				LogUtil.d(TAG, "EVENT_UNKNOWN");
+			case MonitorTerminateEvent.EVENT_AUTO:
+				LogUtil.d(TAG, "EVENT_AUTO");
 				runSave();
 				startActivity(intent);
 				break;
@@ -575,12 +572,13 @@ public class MonitorFragment extends BaseFragment {
 				runSave();
 				startActivity(intent);
 				break;
-			case MonitorTerminateEvent.EVENT_MANUAL_NOT_START:
+			case MonitorTerminateEvent.EVENT_MANUAL_CANCEL_NOT_START:
 				if (autoStartTimer != null) {
 					autoStartTimer.cancel();
+					readDataTimer.cancel();
 				}
 				break;
-			case MonitorTerminateEvent.EVENT_MANUAL_CANCEL:
+			case MonitorTerminateEvent.EVENT_MANUAL_CANCEL_STARTED:
 				DataStorage.fhrs.clear();
 				DataStorage.fms.clear();
 				DataStorage.doctors.clear();
@@ -589,6 +587,7 @@ public class MonitorFragment extends BaseFragment {
 			default:
 				break;
 		}
+		reset();
 	}
 
 	private void runSave() {
