@@ -281,7 +281,8 @@ public class CurveBasicView extends CoordinateView {
 		resetPaint();
 		paint.setColor(redPointColor);
 		paint.setStyle(Paint.Style.FILL);
-		for (int i = 0; i <= timeMinute; i++) {
+		int iMax = xMax / 60 + (xMax % 60 == 0 ? 0 : 1);
+		for (int i = 0; i <= iMax; i++) {
 			canvas.drawCircle(convertX(i * 60), convertY(0), 6, paint);
 		}
 		paint.setStyle(Paint.Style.STROKE);
