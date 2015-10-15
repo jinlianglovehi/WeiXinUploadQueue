@@ -21,6 +21,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ByteUtil;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
+import cn.ihealthbaby.weitaixin.library.util.LocalRecordIdUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import de.greenrobot.event.EventBus;
 
@@ -287,19 +288,25 @@ public class Parser {
 	}
 
 	public void onEventMainThread(MonitorTerminateEvent event) {
-		handleFileOnTerminate();
-//		stopPlay();
+		final int reason = event.getEvent();
+		switch (reason) {
+			case MonitorTerminateEvent.EVENT_MANUAL_CANCEL_NOT_START:
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL_CANCEL_STARTED:
+				break;
+			case MonitorTerminateEvent.EVENT_MANUAL:
+			case MonitorTerminateEvent.EVENT_AUTO:
+			case MonitorTerminateEvent.EVENT_UNKNOWN:
+				handleFileOnTerminate();
+				break;
+			default:
+				break;
+		}
 	}
 
-//	private void stopPlay() {
-//		if (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-//			audioTrack.pause();
-//			audioTrack.flush();
-//			audioTrack.play();
-//		}
-//	}
-
 	private void handleFileOnTerminate() {
+		startMonitor = false;
+		localRecordId = LocalRecordIdUtil.getSavedId(context);
 		File tempFile = FileUtil.getTempFile(context);
 		File file = FileUtil.getVoiceFile(context, localRecordId);
 		if (tempFile.renameTo(file)) {
