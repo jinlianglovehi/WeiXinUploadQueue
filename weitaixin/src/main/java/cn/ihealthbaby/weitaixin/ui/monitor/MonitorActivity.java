@@ -96,7 +96,7 @@ public class MonitorActivity extends BaseActivity {
 			@Override
 			public void right(Object... obj) {
 				monitorDialog.dismiss();
-				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_CANCEL));
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_CANCEL_STARTED));
 				finish();
 			}
 		});
