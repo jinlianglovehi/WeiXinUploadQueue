@@ -418,6 +418,16 @@ public class MonitorFragment extends BaseFragment {
 				connectDevice(remoteDevice, remoteName);
 			}
 
+			@Override
+			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
+				connectDevice(remoteDevice, remoteName);
+			}
+
+			@Override
+			public void remoteClassChanged(BluetoothDevice remoteDevice, BluetoothClass bluetoothClass) {
+				connectDevice(remoteDevice, remoteDevice.getName());
+			}
+
 			private void connectDevice(BluetoothDevice remoteDevice, String remoteName) {
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
