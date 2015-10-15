@@ -537,11 +537,11 @@ public class MonitorFragment extends BaseFragment {
 		if (countDownTimer != null) {
 			countDownTimer.cancel();
 		}
-		if (countDownTimer != null) {
-			countDownTimer.cancel();
+		if (readDataTimer != null) {
+			readDataTimer.cancel();
 		}
-		if (countDownTimer != null) {
-			countDownTimer.cancel();
+		if (autoStartTimer != null) {
+			autoStartTimer.cancel();
 		}
 		bluetoothReceiver.unRegister(getActivity().getApplicationContext());
 		ButterKnife.unbind(this);
