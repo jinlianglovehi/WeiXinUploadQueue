@@ -25,7 +25,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/button_monitor_helper2" />
+            android:src="@drawable/button_monitor_helper" />
 
         <RelativeLayout
             android:layout_width="284dp"

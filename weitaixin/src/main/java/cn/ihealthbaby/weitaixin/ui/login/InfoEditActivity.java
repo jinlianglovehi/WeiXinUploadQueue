@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.login;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -105,6 +106,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         mTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
         mExpectTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
 
+
         //时间选择后回调
         mTimePopupWindow.setOnTimeSelectListener(new TimePopupWindow.OnTimeSelectListener() {
 
@@ -140,6 +142,22 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         return new Date();
     }
 
+
+    public void setTime(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        if(date == null) {
+            calendar.setTimeInMillis(System.currentTimeMillis());
+        } else {
+            calendar.setTime(date);
+        }
+
+//        int year = calendar.get(1);
+//        int month = calendar.get(2);
+//        int day = calendar.get(5);
+//        int hours = calendar.get(11);
+//        int minute = calendar.get(12);
+//        this.wheelTime.setPicker(year, month, day, hours, minute);
+    }
 
     @Override
     protected void onResume() {

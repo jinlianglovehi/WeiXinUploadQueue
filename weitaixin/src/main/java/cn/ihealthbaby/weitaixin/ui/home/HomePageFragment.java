@@ -366,9 +366,9 @@ public class HomePageFragment extends BaseFragment {
     public DisplayImageOptions setDisplayImageOptions() {
         DisplayImageOptions options = null;
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.button_monitor_helper)
-                .showImageForEmptyUri(R.drawable.button_monitor_helper)
-                .showImageOnFail(R.drawable.button_monitor_helper)
+                .showImageOnLoading(R.drawable.home_head_icon)
+                .showImageForEmptyUri(R.drawable.home_head_icon)
+                .showImageOnFail(R.drawable.home_head_icon)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .considerExifParams(true)
