@@ -534,6 +534,15 @@ public class MonitorFragment extends BaseFragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		handler = null;
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
 		bluetoothReceiver.unRegister(getActivity().getApplicationContext());
 		ButterKnife.unbind(this);
 		EventBus.getDefault().unregister(this);
