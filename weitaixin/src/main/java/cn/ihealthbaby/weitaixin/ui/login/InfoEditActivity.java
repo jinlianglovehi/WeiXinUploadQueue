@@ -106,7 +106,6 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         mTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
         mExpectTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
 
-
         //时间选择后回调
         mTimePopupWindow.setOnTimeSelectListener(new TimePopupWindow.OnTimeSelectListener() {
 
