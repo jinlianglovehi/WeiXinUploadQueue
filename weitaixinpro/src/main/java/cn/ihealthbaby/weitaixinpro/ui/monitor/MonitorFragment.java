@@ -526,12 +526,14 @@ public class MonitorFragment extends BaseFragment {
 				LogUtil.d(TAG, "设备名称: " + device.getName());
 				if (getDeviceName().equalsIgnoreCase(device.getName())) {
 					LogUtil.d(TAG, "找到匹配的设备,开始连接");
+					ToastUtil.show(getActivity(), "开始连接" + device.getName());
 					pseudoBluetoothService.connect(device, false);
 					return;
-				} else {
-					LogUtil.d(TAG, "直接配对未发现设备");
 				}
 			}
+			LogUtil.d(TAG, "直接配对未发现设备");
+		} else {
+			LogUtil.d(TAG, "无绑定设备");
 		}
 		LogUtil.d(TAG, "开始搜索设备");
 		//直接配对失败,开始搜索设备
