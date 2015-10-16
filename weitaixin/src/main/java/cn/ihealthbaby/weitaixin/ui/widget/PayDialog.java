@@ -15,14 +15,21 @@ import cn.ihealthbaby.weitaixin.R;
 public class PayDialog extends Dialog implements View.OnClickListener{
 
 
-    public TextView tvPayTitle;
-    public TextView tvPayNO;
-    public TextView tvPayYES;
+    private TextView tvPayTitle;
+    private TextView tvPayNO;
+    private TextView tvPayYES;
     public OperationAction operationAction;
 
-    public StringBuffer sb=new StringBuffer();
-    public String[] tipStrArr=new String[3];
+    private StringBuffer sb=new StringBuffer();
+    private String[] tipStrArr=new String[3];
 
+    public OperationAction getOperationAction() {
+        return operationAction;
+    }
+
+    public void setOperationAction(OperationAction operationAction) {
+        this.operationAction = operationAction;
+    }
 
     public PayDialog(Context context, int theme,String[] tipStrArr) {
         super(context, theme);

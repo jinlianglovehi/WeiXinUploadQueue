@@ -128,6 +128,10 @@ public class PayAddAddressActivity extends BaseActivity {
             ToastUtil.show(getApplicationContext(), "收货人至少两个字符");
             return;
         }
+        if (addressName != null && addressName.length() >10) {
+            ToastUtil.show(getApplicationContext(), "收货人最多10个字符");
+            return;
+        }
         if (TextUtils.isEmpty(addressPhone)) {
             ToastUtil.show(getApplicationContext(),"请填写收货人的手机号");
             return;

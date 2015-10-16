@@ -42,7 +42,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="right|center_vertical"
                 android:hint="请填写收货人"
-                android:maxLength="5"
+                android:maxLength="10"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/font_color"
