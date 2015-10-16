@@ -579,23 +579,20 @@ public class MonitorFragment extends BaseFragment {
 	public void onEventMainThread(MonitorTerminateEvent event) {
 		int reason = event.getEvent();
 		pseudoBluetoothService.stop();
-		Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
+		final Intent intent = new Intent(getActivity(), GuardianStateActivity.class);
 		intent.putExtra(Constants.INTENT_LOCAL_RECORD_ID, LocalRecordIdUtil.getSavedId(getActivity()));
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_UNKNOWN:
 				LogUtil.d(TAG, "EVENT_UNKNOWN");
-				runSave();
-				startActivity(intent);
+				runSave(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
-				runSave();
-				startActivity(intent);
+				runSave(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL:
 				LogUtil.d(TAG, "EVENT_MANUAL");
-				runSave();
-				startActivity(intent);
+				runSave(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL_CANCEL_NOT_START:
 				if (autoStartTimer != null) {
@@ -615,13 +612,19 @@ public class MonitorFragment extends BaseFragment {
 		reset();
 	}
 
-	private void runSave() {
+	private void runSave(final Intent intent) {
 		new Thread() {
 			@Override
 			public void run() {
 				super.run();
 				try {
 					save();
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							startActivity(intent);
+						}
+					});
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
