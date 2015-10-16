@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -21,6 +22,7 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.form.AdviceForm;
 import cn.ihealthbaby.client.model.AdviceSetting;
 import cn.ihealthbaby.client.model.User;
+import cn.ihealthbaby.client.model.Version;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.VolleyAdapter;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.volley.manager.ConnectionManager;
@@ -63,7 +65,14 @@ public class WeiTaiXinApplication extends Application {
 
         initApiManager();
 
+
+
+
     }
+
+
+
+
 
     public boolean isMonitoring() {
         return monitoring;

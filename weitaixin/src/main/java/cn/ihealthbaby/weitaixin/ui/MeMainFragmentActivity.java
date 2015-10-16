@@ -3,8 +3,10 @@ package cn.ihealthbaby.weitaixin.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +14,11 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.model.Version;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
+import cn.ihealthbaby.weitaixin.DownloadAPK;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
@@ -168,6 +175,200 @@ public class MeMainFragmentActivity extends BaseActivity {
 			fragmentTransaction.show(fragment);
 		}
 		oldFragment = fragment;
+=======
+
+
+    public HomePageFragment homePageFragment;
+    public MonitorFragment monitorFragment;
+    public RecordFragment recordFragment;
+    public WoInfoFragment woInfoFragment;
+    public Fragment oldFragment;
+    @Bind(R.id.iv_tab_01)
+    ImageView iv_tab_01;
+    @Bind(R.id.iv_tab_02)
+    ImageView iv_tab_02;
+    @Bind(R.id.iv_tab_03)
+    ImageView iv_tab_03;
+    @Bind(R.id.iv_tab_04)
+    ImageView iv_tab_04;
+    @Bind(R.id.container)
+    FrameLayout container;
+    @Bind(R.id.ll_tab_home)
+    LinearLayout mLlTabHome;
+    @Bind(R.id.ll_tab_monitor)
+    LinearLayout mLlTabMonitor;
+    @Bind(R.id.ll_tab_record)
+    LinearLayout mLlTabRecord;
+    @Bind(R.id.ll_tab_profile)
+    LinearLayout mLlTabProfile;
+    private FragmentManager fragmentManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_me_main_fragment);
+        ButterKnife.bind(this);
+
+        EventBus.getDefault().register(this);
+
+        showTabFirst();
+
+
+        ApiManager.getInstance().versionApi.checkVersion(getVerCode(this)+"", 1, new DefaultCallback<Version>(this, new AbstractBusiness<Version>() {
+            @Override
+            public void handleData(Version data) {
+                int flag = data.getFlag();
+                switch(flag){
+                    case 0:  //0 已是最新, 1 有新版本更新,2 需强制升级
+                        break;
+                    case 1:
+                        DownloadAPK downloadAPK = new DownloadAPK(MeMainFragmentActivity.this);
+                        downloadAPK.apkUrl=data.getUpdateUrl();
+                        downloadAPK.checkUpdateInfo();
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+        }), getRequestTag());
+
+    }
+
+
+    /**
+     * 获得版本号
+     */
+    public int getVerCode(Context context){
+        int verCode = -1;
+        try {
+            verCode = context.getPackageManager().getPackageInfo("cn.ihealthbaby.weitaixin", 0).versionCode;
+        } catch (Exception e) {
+            Log.e("版本号获取异常", e.getMessage());
+        }
+        return verCode;
+    }
+
+
+
+    public void onEventMainThread(LogoutEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    public void showTabFirst() {
+        iv_tab_01.setSelected(true);
+        homePageFragment = HomePageFragment.getInstance();
+        fragmentManager = getFragmentManager();
+        showFragment(R.id.container, homePageFragment);
+    }
+
+
+
+    @OnClick(R.id.ll_tab_home)
+    public void iv_tab_01() {
+        if (showTab(iv_tab_01)) {
+            if (SPUtil.isLogin(this)) {
+                homePageFragment = HomePageFragment.getInstance();
+                homePageFragment.getNumber();
+                homePageFragment.startAnim();
+                showFragment(R.id.container, homePageFragment);
+            }
+        }
+    }
+
+
+
+    @OnClick(R.id.ll_tab_monitor)
+    public void iv_tab_02() {
+        if (showTab(iv_tab_02)) {
+            if (monitorFragment == null) {
+                monitorFragment = new MonitorFragment();
+            }
+            showFragment(R.id.container, monitorFragment);
+        }
+    }
+
+
+
+    @OnClick(R.id.ll_tab_record)
+    public void iv_tab_03() {
+        if (showTab(iv_tab_03)) {
+            if (SPUtil.isLogin(this)) {
+                recordFragment = RecordFragment.getInstance();
+                showFragment(R.id.container, recordFragment);
+            }
+        }
+    }
+
+
+    @OnClick(R.id.ll_tab_profile)
+    public void iv_tab_04() {
+        if (showTab(iv_tab_04)) {
+            if (SPUtil.isLogin(this)) {
+                woInfoFragment = WoInfoFragment.getInstance();
+                showFragment(R.id.container, woInfoFragment);
+            }
+        }
+    }
+
+
+    public boolean showTab(ImageView imageView) {
+        if (!SPUtil.isLogin(this)) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            return false;
+        }
+
+        if (SPUtil.isIsInit(this)) {
+            Intent intentAct = new Intent(getApplicationContext(), InfoEditActivity.class);
+            startActivity(intentAct);
+            return false;
+        }
+
+        iv_tab_01.setSelected(false);
+        iv_tab_02.setSelected(false);
+        iv_tab_03.setSelected(false);
+        iv_tab_04.setSelected(false);
+        imageView.setSelected(true);
+        return true;
+    }
+
+
+    private void showFragment(int container, Fragment fragment/*, int animIn, int animOut*/) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        show(container, fragmentTransaction, fragment);
+        fragmentTransaction.commit();
+    }
+
+    private void show(int container, FragmentTransaction fragmentTransaction, Fragment fragment) {
+        if (fragment == null) {
+            return;
+        }
+        if (!fragment.isAdded()) {
+            if (oldFragment != null) {
+                fragmentTransaction.hide(oldFragment);
+	            if (oldFragment instanceof MonitorFragment) {
+		            final MonitorFragment monitorFragment = (MonitorFragment) this.oldFragment;
+		            monitorFragment.stopMonitor();
+	            }
+            }
+            fragmentTransaction.add(container, fragment);
+        } else if (oldFragment != fragment) {
+            fragmentTransaction.hide(oldFragment);
+            fragmentTransaction.show(fragment);
+        }
+        oldFragment = fragment;
 //        LogUtil.d("ChildCount==", "ChildCount= %s", this.container.getChildCount());
 	}
 

@@ -1,9 +1,7 @@
 package cn.ihealthbaby.weitaixin.ui.login;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,13 +17,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.TimePopupWindow;
-import com.bigkoo.pickerview.lib.WheelTime;
+import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.pickerview.TimePopupWindow;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,21 +29,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.form.UserInfoForm;
-import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.CustomDialog;
+import cn.ihealthbaby.weitaixin.UploadFileEngine;
 import cn.ihealthbaby.weitaixin.WeiTaiXinApplication;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
-import cn.ihealthbaby.weitaixin.library.log.LogUtil;
-import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
+import cn.ihealthbaby.weitaixin.library.tools.ImageTool;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.CustomDialog;
-import cn.ihealthbaby.weitaixin.library.tools.ImageTool;
-import cn.ihealthbaby.weitaixin.UploadFileEngine;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
-import cn.ihealthbaby.weitaixin.ui.mine.SetSystemGuardianActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.MyPoPoWin;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
+
+
 
 public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectPhoto {
 
@@ -87,7 +79,8 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     private boolean birthDateShow;
     private boolean expectedDateShow;
     public MyPoPoWin ppWin;
-
+    public static boolean isBirthDateShow;
+    public static boolean isExpectedDateShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +93,11 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
         form = new UserInfoForm();
 
-        WheelTime.setSTART_YEAR(1888);
-        WheelTime.setEND_YEAR(3000);
-
+//        .TimePopupWindow
         mTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
+        mTimePopupWindow.setRange(1888, 3000);
         mExpectTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
+        mExpectTimePopupWindow.setRange(1888, 3000);
 
         //时间选择后回调
         mTimePopupWindow.setOnTimeSelectListener(new TimePopupWindow.OnTimeSelectListener() {
@@ -182,7 +175,8 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     @OnClick(R.id.et_birthdate_info)
     public void etBirthdateInfo() {
 //        setDate(false,et_birthdate_info);
-
+        isBirthDateShow=true;
+        isExpectedDateShow=false;
         if (!birthDateShow) {
             mTimePopupWindow.showAtLocation(et_birthdate_info, Gravity.BOTTOM, 0, 0, new Date());
             birthDateShow = true;
@@ -195,7 +189,8 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     @OnClick(R.id.et_date_info)
     public void etDateInfo() {
-
+        isExpectedDateShow=true;
+        isBirthDateShow=false;
 //        setDate(true, et_date_info);
 
         if (!expectedDateShow) {

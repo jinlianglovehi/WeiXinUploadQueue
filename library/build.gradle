@@ -47,7 +47,7 @@ android {
         //图片加载 universal image loader
         compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
         //时间选择器
-        compile 'com.bigkoo:pickerview:1.0.0'
+//        compile 'com.bigkoo:cn.ihealthbaby.weitaixin.pickerview:1.0.0'
         //数据库
         compile 'de.greenrobot:greendao:2.0.0'
         provided 'de.greenrobot:greendao-generator:2.0.0'

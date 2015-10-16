@@ -42,6 +42,7 @@ import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
+import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoInformationActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.WoMessageActivity;
@@ -311,6 +312,7 @@ public class HomePageFragment extends BaseFragment {
     public void ivHomeHeadImg() {
         if (SPUtil.isLogin(getActivity())) {
             Intent intent = new Intent(getActivity().getApplicationContext(), WoInformationActivity.class);
+//            Intent intent = new Intent(getActivity().getApplicationContext(), InfoEditActivity.class);
             startActivity(intent);
         } else {
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
