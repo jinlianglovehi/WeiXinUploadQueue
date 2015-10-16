@@ -65,7 +65,7 @@ public class DefaultCallback<T> implements HttpClientAdapter.Callback<T> {
 					business.handleValidator(context);
 				} catch (Exception e) {
 					e.printStackTrace();
-					LogUtil.d(TAG, "Result.VALIDATOR.Exception" + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
+					LogUtil.e(TAG, "Result.VALIDATOR.Exception" + result.getMsgMap() + "Result.VALIDATORException" + e.toString());
 					business.handleException(e);
 				}
 				break;
