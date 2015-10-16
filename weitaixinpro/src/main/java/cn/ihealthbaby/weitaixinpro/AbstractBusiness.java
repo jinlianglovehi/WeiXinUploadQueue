@@ -33,7 +33,7 @@ public abstract class AbstractBusiness<T> implements Business<T> {
 
 	@Override
 	public void handleAccountError(Context context, Map<String, Object> msgMap) {
-		SPUtil.clearUser(context);
+		SPUtil.clearHClientUser(context);
 		Intent intent = new Intent(context, BindActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
