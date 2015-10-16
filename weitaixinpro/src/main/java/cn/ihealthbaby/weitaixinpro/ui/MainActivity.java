@@ -1,6 +1,5 @@
 package cn.ihealthbaby.weitaixinpro.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +11,7 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
 import cn.ihealthbaby.weitaixinpro.ui.monitor.tab.MonitorTabFragment;
@@ -32,9 +32,9 @@ public class MainActivity extends BaseActivity {
 	@Bind(R.id.container)
 	FrameLayout container;
 	@Bind(R.id.ll_tab_monitor)
-	LinearLayout mLlTabMonitor;
+	LinearLayout llTabMonitor;
 	@Bind(R.id.ll_tab_record)
-	LinearLayout mLlTabRecord;
+	LinearLayout llTabRecord;
 	@Bind(R.id.ll_tab_profile)
 	LinearLayout mLlTabProfile;
 	private MonitorTabFragment monitorTabFragment;
@@ -45,10 +45,11 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LogUtil.d(TAG, "MainActivity onCreate");
 		setContentView(R.layout.activity_me_main_fragment);
 		ButterKnife.bind(this);
 		fragmentManager = getSupportFragmentManager();
-		iv_tab_02();
+		llTabMonitor.performClick();
 	}
 
 	@OnClick(R.id.ll_tab_monitor)
@@ -72,7 +73,9 @@ public class MainActivity extends BaseActivity {
 	@OnClick(R.id.ll_tab_profile)
 	public void iv_tab_04() {
 		showTab(iv_tab_04);
-		mSettingsFragment = SettingsFragment.getInstance();
+		if (mSettingsFragment == null) {
+			mSettingsFragment = SettingsFragment.getInstance();
+		}
 		showFragment(R.id.container, mSettingsFragment);
 	}
 
@@ -103,14 +106,6 @@ public class MainActivity extends BaseActivity {
 			fragmentTransaction.show(fragment);
 		}
 		oldFragment = fragment;
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (recordFragment != null) {
-			recordFragment.onActivityResult(requestCode, resultCode, data);
-		}
 	}
 }
 
