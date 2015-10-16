@@ -24,14 +24,9 @@ public abstract class BaseActivity extends FragmentActivity {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		LogUtil.d(this.getClass().getName(), "requestQueue.cancelAll:%s", getRequestTag());
+		LogUtil.d(TAG, "requestQueue.cancelAll:%s", getRequestTag());
 		requestQueue.cancelAll(getRequestTag());
 	}
 
