@@ -62,35 +62,40 @@ public class BindActivity extends BaseActivity {
 		setContentView(R.layout.activity_login);
 		ButterKnife.bind(this);
 		if (isLogin()) {
+			LogUtil.d(TAG, "isLogin");
+			final String loginToken = SPUtil.getHClientUser(getApplicationContext()).getLoginToken();
+			((WeiTaiXinProApplication) getApplication()).getAdapter().setAccountToken(loginToken);
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
 			finish();
-		}
-		deviceId = "000000000000015";
-		try {
-			TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-			deviceId = tm.getDeviceId() == null ? deviceId : tm.getDeviceId();
-			LogUtil.d(TAG, "deviceId:" + deviceId);
-		} catch (Exception e) {
-		}
-		// TODO: 15/10/13  打包发布时务必去掉
+		} else {
+			deviceId = "";
+			try {
+				TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+				deviceId = tm.getDeviceId() == null ? deviceId : tm.getDeviceId();
+				LogUtil.d(TAG, "deviceId:" + deviceId);
+			} catch (Exception e) {
+			}
+			// TODO: 15/10/13  打包发布时务必去掉
 //		deviceId = "353490069872709";
-		mTvDeviceId.setText(deviceId);
-		login(deviceId);
-		initView();
+			mTvDeviceId.setText(deviceId);
+			login(deviceId);
+			initView();
+		}
 	}
 
 	private boolean isLogin() {
-		return SPUtil.isLogin(getApplicationContext());
+		return SPUtil.isProLogin(getApplicationContext());
 	}
 
 	private void login(@NonNull String deviceId) {
 		ApiManager.getInstance().hClientAccountApi.login(deviceId, new DefaultCallback<HClientUser>(getApplicationContext(), new AbstractBusiness<HClientUser>() {
 			@Override
 			public void handleData(HClientUser data) {
-				((WeiTaiXinProApplication) getApplication()).getAdapter().setAccountToken(data.getLoginToken());
 				SPUtil.saveHClientUser(getApplicationContext(), data);
-				requestAdviceSetting(data);
 				ToastUtil.show(getApplicationContext(), "登录成功");
+				LogUtil.d(TAG, "Login success");
+				((WeiTaiXinProApplication) getApplication()).getAdapter().setAccountToken(data.getLoginToken());
+				requestAdviceSetting(data);
 				startActivity(new Intent(getApplicationContext(), MainActivity.class));
 				finish();
 			}
@@ -133,8 +138,10 @@ public class BindActivity extends BaseActivity {
 							@Override
 							public void handleData(HClientUser data) {
 								SPUtil.saveHClientUser(getApplicationContext(), data);
-								requestAdviceSetting(data);
 								ToastUtil.show(getApplicationContext(), "绑定成功");
+								LogUtil.d(TAG, "Bind success");
+								((WeiTaiXinProApplication) getApplication()).getAdapter().setAccountToken(data.getLoginToken());
+								requestAdviceSetting(data);
 								startActivity(new Intent(getApplicationContext(), MainActivity.class));
 								finish();
 							}
