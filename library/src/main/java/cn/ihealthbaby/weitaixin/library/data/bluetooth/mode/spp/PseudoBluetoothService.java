@@ -21,7 +21,6 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import java.io.IOException;
@@ -230,8 +229,7 @@ public class PseudoBluetoothService {
 	 */
 	private void connectionFailed() {
 		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(Constants.MESSAGE_CANNOT_CONNECT);
-		mHandler.sendMessage(msg);
+		mHandler.obtainMessage(Constants.MESSAGE_STATE_FAIL, Constants.MESSAGE_CANNOT_CONNECT, -1).sendToTarget();
 		// Start the service over to restart listening mode
 		// TODO: 15/9/7 失败重连
 //		PseudoBluetoothService.this.start();
