@@ -22,7 +22,6 @@ import cn.ihealthbaby.weitaixin.library.util.ByteUtil;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.LocalRecordIdUtil;
-import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -312,7 +311,7 @@ public class Parser {
 		if (tempFile.renameTo(file)) {
 			tempFile.delete();
 		} else {
-			ToastUtil.show(context, "胎音文件错误");
+			LogUtil.d(TAG, "胎音文件重命名错误");
 		}
 		FileUtil.addFileHead(file);
 	}
