@@ -74,7 +74,7 @@ public class UnmonitorFragment extends BaseFragment {
 				LinearLayoutManager linearLayoutManager = ((LinearLayoutManager) layoutManager);
 				linearLayoutManager.findFirstCompletelyVisibleItemPosition();
 				swipeRefreshLayout.setEnabled(linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-				if (linearLayoutManager.findLastVisibleItemPosition() > itemCount - 5) {
+				if (itemCount > PAGE_SIZE && linearLayoutManager.findLastVisibleItemPosition() > itemCount - 5) {
 					request(currentPage + 1);
 				}
 			}
@@ -114,7 +114,7 @@ public class UnmonitorFragment extends BaseFragment {
 				@Override
 				public void handleData(PageData<ServiceInside> data) {
 					count = data.getCount();
-					EventBus.getDefault().post(new CountEvent(CountEvent.TYPE_UNMONITOR,count));
+					EventBus.getDefault().post(new CountEvent(CountEvent.TYPE_UNMONITOR, count));
 					currentPage = data.getPage();
 					List<ServiceInside> dataList = data.getValue();
 					list.addAll(dataList);

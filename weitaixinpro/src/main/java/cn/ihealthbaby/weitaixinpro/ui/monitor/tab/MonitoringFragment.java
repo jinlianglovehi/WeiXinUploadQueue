@@ -76,7 +76,7 @@ public class MonitoringFragment extends BaseFragment {
 				int itemCount = adapter.getItemCount();
 				layoutManager.findFirstCompletelyVisibleItemPosition();
 				swipeRefreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-				if (layoutManager.findLastVisibleItemPosition() > itemCount - 5) {
+				if (itemCount > PAGE_SIZE && layoutManager.findLastVisibleItemPosition() > itemCount - 5) {
 					request(currentPage + 1);
 				}
 			}
@@ -116,7 +116,7 @@ public class MonitoringFragment extends BaseFragment {
 				@Override
 				public void handleData(PageData<ServiceInside> data) {
 					count = data.getCount();
-					EventBus.getDefault().post(new CountEvent(CountEvent.TYPE_MONITORING,count));
+					EventBus.getDefault().post(new CountEvent(CountEvent.TYPE_MONITORING, count));
 					currentPage = data.getPage();
 					List<ServiceInside> dataList = data.getValue();
 					list.addAll(dataList);

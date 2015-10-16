@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.ihealthbaby.client.model.HClientUser;
@@ -101,19 +100,18 @@ public class RecordFragment extends BaseFragment {
 		});
 		return viewLayout;
 	}
-
-	public ArrayList<Record> gg() {
-		ArrayList<Record> adviceItems = new ArrayList<Record>();
-		for (int i = 0; i < 20; i++) {
-			Record record = new Record();
-			record.setRecordStartTime(new Date());
-			record.setUserName("UserName:" + i);
-			record.setDuration(23);
-			record.setUploadState(Record.UPLOAD_STATE_UPLOADING);
-			adviceItems.add(record);
-		}
-		return adviceItems;
-	}
+//	public ArrayList<Record> gg() {
+//		ArrayList<Record> adviceItems = new ArrayList<Record>();
+//		for (int i = 0; i < 20; i++) {
+//			Record record = new Record();
+//			record.setRecordStartTime(new Date());
+//			record.setUserName("UserName:" + i);
+//			record.setDuration(23);
+//			record.setUploadState(Record.UPLOAD_STATE_UPLOADING);
+//			adviceItems.add(record);
+//		}
+//		return adviceItems;
+//	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -135,7 +133,8 @@ public class RecordFragment extends BaseFragment {
 				int itemCount = adapter.getItemCount();
 				layoutManager.findFirstCompletelyVisibleItemPosition();
 				swipeRefreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-				if (layoutManager.findLastVisibleItemPosition() > itemCount - 5) {
+				final int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+				if (itemCount > PAGE_SIZE && lastVisibleItemPosition > itemCount - 5) {
 					request(currentPage + 1);
 				}
 			}
