@@ -145,8 +145,8 @@ public class SPUtil {
 
 	public static long getDeliveryTime(Context context) {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
-		long eliveryTime = sp.getLong("DeliveryTime", -1);
-		return eliveryTime;
+		long deliveryTime = sp.getLong("DeliveryTime", -1);
+		return deliveryTime;
 	}
 
 	public static User getUser(Context context) {
@@ -238,6 +238,11 @@ public class SPUtil {
 		return HospitalId;
 	}
 
+	public static boolean isProLogin(Context context) {
+		final HClientUser hClientUser = getHClientUser(context);
+		return !TextUtils.isEmpty(hClientUser.getLoginToken());
+	}
+
 	public static boolean isLogin(Context context) {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
 		String accountToken = sp.getString("AccountToken", "");
@@ -271,6 +276,12 @@ public class SPUtil {
 		editor.commit();
 	}
 
+	public static void clearHClientUser(Context context) {
+		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sp.edit();
+		editor.clear().commit();
+	}
+
 	public static HClientUser getHClientUser(Context context) {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_FETALHEART, Context.MODE_PRIVATE);
 		HClientUser user = new HClientUser();
@@ -279,7 +290,7 @@ public class SPUtil {
 		user.setDepartmentId(sp.getLong(DEPARTMENT_ID, 0));
 		user.setIndexNumber(sp.getLong(INDEX_NUMBER, 0L));
 		user.setHospitalId(sp.getLong(HOSPITAL_ID, 0L));
-		user.setHospitalName(sp.getString(HOSPITAL_NAME,null));
+		user.setHospitalName(sp.getString(HOSPITAL_NAME, null));
 		user.setSerialnum(sp.getString(SERIALNUM, null));
 		user.setDeviceId(sp.getString(DEVICE_ID, null));
 		user.setDepartmentName(sp.getString(DEPARTMENT_NAME, null));
