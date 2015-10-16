@@ -143,7 +143,8 @@ public class AskDoctorActivity extends BaseActivity {
         }
 
         if (adviceItemId == -1) {
-            ToastUtil.show(getApplicationContext(), "id不对");
+            LogUtil.d("adviceItemId", "adviceItemId=====>" + adviceItemId);
+//          ToastUtil.show(getApplicationContext(), "");
             return;
         }
 
