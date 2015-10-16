@@ -79,15 +79,25 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center|bottom"
-            android:text="海淀区第一妇幼保健"/>
+            android:gravity="center"
+            android:text="医院"/>
+
+        <TextView
+            android:id="@+id/tv_department_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="科室"/>
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="top|center"/>
+            android:gravity="center"
+            android:text="数量"
+            />
     </LinearLayout>
 
     <FrameLayout
