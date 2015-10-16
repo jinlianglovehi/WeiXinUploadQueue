@@ -163,6 +163,11 @@ public class MonitorFragment extends BaseFragment {
 		}
 	};
 
+	@OnClick(R.id.back)
+	void back() {
+		getActivity().finish();
+	}
+
 	@OnClick(R.id.btn_start)
 	public void startMonitor() {
 		//防止重复点击
@@ -431,7 +436,6 @@ public class MonitorFragment extends BaseFragment {
 		loadSrc(roundBackground, R.drawable.round_background_1);
 		loadSrc(roundFrontground, R.drawable.round_frontground_1);
 		loadSrc(roundScale, R.drawable.round_scale);
-		back.setVisibility(View.GONE);
 		titleText.setText("胎心监测");
 		function.setVisibility(View.GONE);
 	}
