@@ -73,6 +73,9 @@ public class RecordBusinessDao {
 	public List<Record> queryUserRecord(long userId, final int... uploadStates) throws Exception {
 		QueryBuilder<Record> recordQueryBuilder = recordDao.queryBuilder();
 		List<Record> records = recordQueryBuilder
+				                       .where(RecordDao.Properties.RecordStartTime.isNotNull())
+				                       .where(RecordDao.Properties.Duration.isNotNull())
+				                       .where(RecordDao.Properties.RecordData.isNotNull())
 				                       .where(new WhereCondition() {
 					                       @Override
 					                       public void appendTo(StringBuilder builder, String tableAlias) {
@@ -88,9 +91,6 @@ public class RecordBusinessDao {
 					                       public void appendValuesTo(List<Object> values) {
 					                       }
 				                       })
-				                       .where(RecordDao.Properties.Duration.notEq(0))
-				                       .where(RecordDao.Properties.UserId.eq(userId))
-				                       .orderDesc(RecordDao.Properties.RecordStartTime)
 				                       .build()
 				                       .list();
 		return records;
@@ -125,8 +125,6 @@ public class RecordBusinessDao {
 					                    public void appendValuesTo(List<Object> values) {
 					                    }
 				                    })
-				                    .where(RecordDao.Properties.Duration.notEq(0))
-				                    .orderDesc(RecordDao.Properties.RecordStartTime)
 				                    .build()
 				                    .list();
 		return list;
@@ -138,7 +136,7 @@ public class RecordBusinessDao {
 	 * @return
 	 */
 	public long allCount() throws Exception {
-		return recordDao.queryBuilder().where(RecordDao.Properties.Duration.notEq(0)).buildCount().count();
+		return recordDao.queryBuilder().where(RecordDao.Properties.Duration.isNotNull()).buildCount().count();
 	}
 
 	/**
@@ -166,7 +164,7 @@ public class RecordBusinessDao {
 					             public void appendValuesTo(List<Object> values) {
 					             }
 				             })
-				             .where(RecordDao.Properties.Duration.notEq(0))
+				             .where(RecordDao.Properties.Duration.isNotNull())
 				             .count();
 		return count;
 	}
