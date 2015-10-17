@@ -30,6 +30,9 @@ import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
 public class UploadFileEngine {
 
     public CustomDialog customDialog;
+    public boolean isUpdateHeadPic=false;
+    public boolean isUpdateInfo=false;
+    public FinishActivity finishActivity;
     private Context context;
     private UpCompletionHandler upCompletionHandler;
     private UpProgressHandler upProgressHandler;
@@ -38,16 +41,14 @@ public class UploadFileEngine {
     private DefaultCallback<UploadModel> callable4;
     private UserInfoForm form;
     private String key;
+	private final static String TAG = "UploadFileEngine";
 
-    public UploadFileEngine(Context context, UserInfoForm form,CustomDialog customDialog){
+	public UploadFileEngine(Context context, UserInfoForm form,CustomDialog customDialog){
         this.context=context;
         this.customDialog=customDialog;
         this.form=form;
         initHandler();
     }
-
-    public boolean isUpdateHeadPic=false;
-    public boolean isUpdateInfo=false;
 
     private void initHandler() {
         upCompletionHandler = new UpCompletionHandler() {
@@ -55,7 +56,7 @@ public class UploadFileEngine {
             public void complete(String key, ResponseInfo info, JSONObject response) {
                 if (info.statusCode==200) {
                     UploadFileEngine.this.key=key;
-                    LogUtil.e("errdata", "errdata头像上次七牛成功: " + key);
+                    LogUtil.e(TAG, "errdata头像上次七牛成功: " + key);
 //                    ToastUtil.show(context.getApplicationContext(), "七牛成功");
 //                    if(isUpdateInfo){
 //                        completeInfoAction();
@@ -85,16 +86,13 @@ public class UploadFileEngine {
         options = new UploadOptions(null, Constants.MIME_TYPE_JPEG, true, upProgressHandler, UpCancellationSignal);
     }
 
-
     public void uploadFile(File file, String key, String token) {
         uploadManager.put(file, key, token, upCompletionHandler, options);
     }
 
-
     public void uploadFile(byte[] data, String key, String token) {
 		uploadManager.put(data, key, token, upCompletionHandler, options);
     }
-
 
     public void init(final File file){
         /**
@@ -115,20 +113,12 @@ public class UploadFileEngine {
                     }
 
                     @Override
-                    public void handleException(Exception e) {
-                        super.handleException(e);
-                        customDialog.dismiss();
-                    }
-
-                    @Override
-                    public void handleClientError(Context context, Exception e) {
-                        super.handleClientError(context, e);
+                    public void handleAllFailure(Context context) {
+                        super.handleAllFailure(context);
                         customDialog.dismiss();
                     }
                 }), getRequestTag());
     }
-
-
 
     public void init(final byte[] dataBty){
         /**
@@ -142,26 +132,17 @@ public class UploadFileEngine {
                         customDialog.dismiss();
                     }
 
-                    @Override
-                    public void handleClientError(Context context, Exception e) {
-                        super.handleClientError(context, e);
-                        customDialog.dismiss();
-                    }
-
-                    @Override
-                    public void handleException(Exception e) {
-                        super.handleException(e);
-                        customDialog.dismiss();
-                    }
+	                @Override
+	                public void handleAllFailure(Context context) {
+		                super.handleAllFailure(context);
+		                customDialog.dismiss();
+	                }
                 }), getRequestTag());
     }
-
-
 
     private Object getRequestTag() {
         return this;
     }
-
 
     public void completeInfoAction(){
         form.setHeadPic(key);
@@ -206,7 +187,6 @@ public class UploadFileEngine {
                 }), getRequestTag());
     }
 
-
     public void updateHeadPicAction(){
         UpdateHeadPicForm updateHeadPicForm=new UpdateHeadPicForm();
         updateHeadPicForm.setHeadPicPath(key);
@@ -236,14 +216,12 @@ public class UploadFileEngine {
                 }),getRequestTag());
     }
 
-
-    public FinishActivity finishActivity;
-    public interface FinishActivity{
-        void onFinishActivity(boolean isFinish);
-    }
-
     public void setOnFinishActivity(FinishActivity fa){
         this.finishActivity=fa;
+    }
+
+    public interface FinishActivity{
+        void onFinishActivity(boolean isFinish);
     }
 
 
