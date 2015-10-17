@@ -68,6 +68,7 @@ import de.greenrobot.event.EventBus;
  */
 public class MonitorFragment extends BaseFragment {
 	private final static String TAG = "MonitorFragment";
+	public static MonitorFragment instance;
 	public SoundPool alertSound;
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
@@ -162,6 +163,13 @@ public class MonitorFragment extends BaseFragment {
 			}
 		}
 	};
+
+	public static MonitorFragment getInstance() {
+		if (instance == null) {
+			instance = new MonitorFragment();
+		}
+		return instance;
+	}
 
 	@OnClick(R.id.back)
 	void back() {
@@ -552,6 +560,8 @@ public class MonitorFragment extends BaseFragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		handler.removeMessages(Constants.MESSAGE_STATE_CHANGE);
+		handler.removeMessages(Constants.MESSAGE_STATE_FAIL);
 		handler = null;
 		if (countDownTimer != null) {
 			countDownTimer.cancel();

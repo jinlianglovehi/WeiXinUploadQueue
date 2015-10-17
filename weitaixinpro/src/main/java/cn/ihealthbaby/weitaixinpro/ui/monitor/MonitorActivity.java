@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixinpro.ui.monitor;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
@@ -15,7 +16,12 @@ public class MonitorActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		MonitorFragment monitorFragment = new MonitorFragment();
-		fragmentManager.beginTransaction().replace(R.id.container, monitorFragment).commit();
+		MonitorFragment monitorFragment = MonitorFragment.getInstance();
+		final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		if (!monitorFragment.isAdded()) {
+			fragmentTransaction.add(R.id.container, monitorFragment).commit();
+		} else if (monitorFragment.isHidden()) {
+			fragmentTransaction.show(monitorFragment).commit();
+		}
 	}
 }
