@@ -21,6 +21,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.tools.AsynUploadEngine;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.FileUtil;
@@ -33,6 +34,7 @@ import cn.ihealthbaby.weitaixin.ui.widget.MonitorDialog;
  * Created by liuhongjian on 15/9/20 13:13.
  */
 public class LocalRecordPlayActivity extends RecordPlayActivity {
+	private final static String TAG = "LocalRecordPlayActivity";
 	public CustomDialog customDialog;
 	private String key;
 
@@ -77,18 +79,28 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 							                                             public void handleData(final AdviceItem data) {
 								                                             ToastUtil.show(getApplicationContext(), "上传成功");
 								                                             btnBusiness.setImageResource(R.drawable.button_ask_doctor);
+								                                             try {
+									                                             final RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
+									                                             Record record = recordBusinessDao.queryByLocalRecordId(data.getClientId());
+									                                             record.setUploadState(Record.UPLOAD_STATE_CLOUD);
+
+									                                             recordBusinessDao.update(record);
+								                                             } catch (Exception e) {
+									                                             e.printStackTrace();
+									                                             LogUtil.d(TAG, "更新本地数据状态失败");
+								                                             }
 								                                             tvBusiness.setText("问医生");
 								                                             btnBusiness.setOnClickListener(new View.OnClickListener() {
 									                                             @Override
 									                                             public void onClick(View v) {
 										                                             Intent intent = new Intent(getApplicationContext(), AskDoctorActivity.class);
 										                                             intent.putExtra(Constants.INTENT_ID, data);
-										                                             if (record != null) {
-											                                             if (record.getPurposeString() != null) {
-												                                             intent.putExtra(Constants.INTENT_FEELING, record.getPurposeString());
+										                                             if (LocalRecordPlayActivity.this.record != null) {
+											                                             if (LocalRecordPlayActivity.this.record.getPurposeString() != null) {
+												                                             intent.putExtra(Constants.INTENT_FEELING, LocalRecordPlayActivity.this.record.getPurposeString());
 											                                             }
-											                                             if (record.getFeelingString() != null) {
-												                                             intent.putExtra(Constants.INTENT_PURPOSE, record.getFeelingString());
+											                                             if (LocalRecordPlayActivity.this.record.getFeelingString() != null) {
+												                                             intent.putExtra(Constants.INTENT_PURPOSE, LocalRecordPlayActivity.this.record.getFeelingString());
 											                                             }
 										                                             }
 										                                             startActivity(intent);

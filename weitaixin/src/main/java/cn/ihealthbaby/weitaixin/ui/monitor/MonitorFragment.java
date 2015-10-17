@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -73,6 +74,12 @@ import de.greenrobot.event.EventBus;
  */
 public class MonitorFragment extends BaseFragment {
 	private final static String TAG = "MonitorFragment";
+	public static MonitorFragment instance = new MonitorFragment();
+	private static WeakReference<MonitorFragment> monitorFragmentWeakReference = new WeakReference<MonitorFragment>(instance);
+	/**
+	 * 处理连接状态以及连接失败
+	 */
+	private static Handler handler = new MonitorHandler(monitorFragmentWeakReference);
 	public SoundPool alertSound;
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
@@ -119,54 +126,10 @@ public class MonitorFragment extends BaseFragment {
 	private boolean alert;
 	private int alertInterval;
 	private FixedRateCountDownTimer readDataTimer;
-	/**
-	 * 处理连接状态以及连接失败
-	 */
-	private Handler handler = new Handler() {
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case Constants.MESSAGE_STATE_CHANGE:
-					switch (msg.arg1) {
-						//已连接
-						case PseudoBluetoothService.STATE_CONNECTED:
-							LogUtil.d(TAG, "STATE_CONNECTED");
-							connected = true;
-							readDataTimer.start();
-							LogUtil.d(TAG, "开始倒计时,准备自动开始");
-							if (bluetoothScanner.isDiscovering()) {
-								bluetoothScanner.cancleDiscovery();
-							}
-							onConnectedUI();
-							break;
-						case PseudoBluetoothService.STATE_CONNECTING:
-							LogUtil.d(TAG, "STATE_CONNECTING");
-							//未连接,初始状态
-							break;
-						case PseudoBluetoothService.STATE_NONE:
-							LogUtil.d(TAG, "STATE_NONE");
-							break;
-					}
-					break;
-				case Constants.MESSAGE_STATE_FAIL:
-					reset();
-					switch (msg.arg1) {
-						case Constants.MESSAGE_CANNOT_CONNECT:
-							LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
-							ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-							break;
-						case Constants.MESSAGE_CONNECTION_LOST:
-							LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
-							ToastUtil.show(getActivity().getApplicationContext(), "断开蓝牙连接");
-							break;
-						default:
-							break;
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	};
+
+	public static MonitorFragment getInstance() {
+		return instance;
+	}
 
 	@OnClick(R.id.btn_start)
 	public void startMonitor() {
@@ -216,7 +179,6 @@ public class MonitorFragment extends BaseFragment {
 			started = false;
 			autoStartTimer.cancel();
 			SPUtil.clearUUID(getActivity().getApplicationContext());
-			return;
 		}
 	}
 
@@ -511,7 +473,7 @@ public class MonitorFragment extends BaseFragment {
 		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
 		String[] split = alarmHeartrateLimit.split("-");
 		try {
-			if (split != null && split.length == 2) {
+			if (split.length == 2) {
 				safemin = Integer.parseInt(split[0]);
 				safemax = Integer.parseInt(split[1]);
 			}
@@ -561,6 +523,12 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	public void onConnectedUI() {
+		connected = true;
+		readDataTimer.start();
+		LogUtil.d(TAG, "开始倒计时,准备自动开始");
+		if (bluetoothScanner.isDiscovering()) {
+			bluetoothScanner.cancleDiscovery();
+		}
 		rlStart.setVisibility(View.VISIBLE);
 		function.setText("立即结束");
 		function.setVisibility(View.VISIBLE);
@@ -568,7 +536,6 @@ public class MonitorFragment extends BaseFragment {
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88);
 		bpm.setImageResource(R.drawable.bpm_red);
 		hint.setVisibility(View.GONE);
-		autoStartTimer.start();
 	}
 
 	public void connectBondedDeviceOrSearch() {
@@ -579,12 +546,14 @@ public class MonitorFragment extends BaseFragment {
 				LogUtil.d(TAG, "设备名称: " + device.getName());
 				if (getDeviceName().equalsIgnoreCase(device.getName())) {
 					LogUtil.d(TAG, "找到匹配的设备,开始连接");
+					ToastUtil.show(getActivity(), "开始连接" + device.getName());
 					pseudoBluetoothService.connect(device, false);
 					return;
-				} else {
-					LogUtil.d(TAG, "直接配对未发现设备");
 				}
 			}
+			LogUtil.d(TAG, "直接配对未发现设备");
+		} else {
+			LogUtil.d(TAG, "无绑定设备");
 		}
 		LogUtil.d(TAG, "开始搜索设备");
 		//直接配对失败,开始搜索设备
@@ -596,7 +565,6 @@ public class MonitorFragment extends BaseFragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		handler = null;
 		bluetoothReceiver.unRegister(getActivity().getApplicationContext());
 		ButterKnife.unbind(this);
 		EventBus.getDefault().unregister(this);
@@ -637,18 +605,15 @@ public class MonitorFragment extends BaseFragment {
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_UNKNOWN:
 				LogUtil.d(TAG, "EVENT_UNKNOWN");
-				runSave();
-				startActivity(intent);
+				runSave(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
-				runSave();
-				startActivity(intent);
+				runSave(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL:
 				LogUtil.d(TAG, "EVENT_MANUAL");
-				runSave();
-				startActivity(intent);
+				runSave(intent);
 				break;
 			case MonitorTerminateEvent.EVENT_MANUAL_CANCEL_NOT_START:
 				if (autoStartTimer != null) {
@@ -668,13 +633,19 @@ public class MonitorFragment extends BaseFragment {
 		reset();
 	}
 
-	private void runSave() {
+	private void runSave(final Intent intent) {
 		new Thread() {
 			@Override
 			public void run() {
 				super.run();
 				try {
 					save();
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							startActivity(intent);
+						}
+					});
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -685,7 +656,7 @@ public class MonitorFragment extends BaseFragment {
 	private void save() throws Exception {
 		final String localRecordId = LocalRecordIdUtil.getSavedId(getActivity());
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getActivity().getApplicationContext());
-		Record record = null;
+		Record record;
 		try {
 			record = recordBusinessDao.queryByLocalRecordId(localRecordId);
 		} catch (Exception e) {
@@ -738,6 +709,60 @@ public class MonitorFragment extends BaseFragment {
 	public void stopMonitor() {
 		pseudoBluetoothService.stop();
 		reset();
+	}
+
+	public static class MonitorHandler extends Handler {
+		private MonitorFragment monitorFragment;
+
+		public MonitorHandler(WeakReference<MonitorFragment> monitorFragmentWeakReference) {
+			this.monitorFragment = monitorFragmentWeakReference.get();
+		}
+
+		public MonitorFragment getMonitorFragment() {
+			return monitorFragment;
+		}
+
+		public void handleMessage(Message msg) {
+			try {
+				switch (msg.what) {
+					case Constants.MESSAGE_STATE_CHANGE:
+						switch (msg.arg1) {
+							//已连接
+							case PseudoBluetoothService.STATE_CONNECTED:
+								LogUtil.d(TAG, "STATE_CONNECTED");
+								getMonitorFragment().onConnectedUI();
+								break;
+							case PseudoBluetoothService.STATE_CONNECTING:
+								LogUtil.d(TAG, "STATE_CONNECTING");
+								//未连接,初始状态
+								break;
+							case PseudoBluetoothService.STATE_NONE:
+								LogUtil.d(TAG, "STATE_NONE");
+								break;
+						}
+						break;
+					case Constants.MESSAGE_STATE_FAIL:
+						getMonitorFragment().reset();
+						switch (msg.arg1) {
+							case Constants.MESSAGE_CANNOT_CONNECT:
+								LogUtil.d(TAG, "MESSAGE_CANNOT_CONNECT");
+								ToastUtil.show(getMonitorFragment().getActivity().getApplicationContext(), "未能连接上设备,请重试");
+								break;
+							case Constants.MESSAGE_CONNECTION_LOST:
+								LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
+								ToastUtil.show(getMonitorFragment().getActivity().getApplicationContext(), "断开蓝牙连接");
+								break;
+							default:
+								break;
+						}
+						break;
+					default:
+						break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
 

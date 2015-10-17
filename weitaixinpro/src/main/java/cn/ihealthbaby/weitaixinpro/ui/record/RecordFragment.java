@@ -12,10 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -32,7 +32,8 @@ public class RecordFragment extends BaseFragment {
 	 * 起始页码 从1开始
 	 */
 	private static final int FIRST_PAGE = 1;
-	public HClientUser hClientUser;
+	private static RecordFragment instance = new RecordFragment();
+	private static Handler handler = new RecordHandler(new WeakReference<RecordFragment>(instance));
 	//
 	public int currentPage;
 	public long count;
@@ -41,20 +42,20 @@ public class RecordFragment extends BaseFragment {
 	private TextView function;
 	private boolean isDeleteState = false;
 	private ArrayList<Record> list;
-	private boolean loading;
 	private LocalRecordRecyclerViewAdapter adapter;
 	private View viewLayout;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private RecyclerView recyclerView;
 	private LinearLayoutManager layoutManager;
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			swipeRefreshLayout.setRefreshing(false);
-			adapter.notifyAllDataSetChanged();
-		}
-	};
+
+	public static RecordFragment getInstance() {
+		return instance;
+	}
+
+	private void notifyDataSetChanged() {
+		swipeRefreshLayout.setRefreshing(false);
+		adapter.notifyAllDataSetChanged();
+	}
 
 	@Nullable
 	@Override
@@ -181,5 +182,23 @@ public class RecordFragment extends BaseFragment {
 				}
 			}
 		}.start();
+	}
+
+	private static class RecordHandler extends Handler {
+		private WeakReference<RecordFragment> recordFragmentWeakReference;
+
+		public RecordHandler(WeakReference<RecordFragment> recordFragmentWeakReference) {
+			this.recordFragmentWeakReference = recordFragmentWeakReference;
+		}
+
+		public WeakReference<RecordFragment> getRecordFragmentWeakReference() {
+			return recordFragmentWeakReference;
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			getRecordFragmentWeakReference().get().notifyDataSetChanged();
+		}
 	}
 }

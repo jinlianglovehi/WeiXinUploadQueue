@@ -28,176 +28,156 @@ import de.greenrobot.event.EventBus;
  * Created by Think on 2015/8/13
  */
 public class MeMainFragmentActivity extends BaseActivity {
+	public HomePageFragment homePageFragment;
+	public MonitorFragment monitorFragment;
+	public RecordFragment recordFragment;
+	public WoInfoFragment woInfoFragment;
+	public Fragment oldFragment;
+	@Bind(R.id.iv_tab_01)
+	ImageView iv_tab_01;
+	@Bind(R.id.iv_tab_02)
+	ImageView iv_tab_02;
+	@Bind(R.id.iv_tab_03)
+	ImageView iv_tab_03;
+	@Bind(R.id.iv_tab_04)
+	ImageView iv_tab_04;
+	@Bind(R.id.container)
+	FrameLayout container;
+	@Bind(R.id.ll_tab_home)
+	LinearLayout mLlTabHome;
+	@Bind(R.id.ll_tab_monitor)
+	LinearLayout mLlTabMonitor;
+	@Bind(R.id.ll_tab_record)
+	LinearLayout mLlTabRecord;
+	@Bind(R.id.ll_tab_profile)
+	LinearLayout mLlTabProfile;
+	private FragmentManager fragmentManager;
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_me_main_fragment);
+		ButterKnife.bind(this);
+		EventBus.getDefault().register(this);
+		showTabFirst();
+	}
 
-    public HomePageFragment homePageFragment;
-    public MonitorFragment monitorFragment;
-    public RecordFragment recordFragment;
-    public WoInfoFragment woInfoFragment;
-    public Fragment oldFragment;
-    @Bind(R.id.iv_tab_01)
-    ImageView iv_tab_01;
-    @Bind(R.id.iv_tab_02)
-    ImageView iv_tab_02;
-    @Bind(R.id.iv_tab_03)
-    ImageView iv_tab_03;
-    @Bind(R.id.iv_tab_04)
-    ImageView iv_tab_04;
-    @Bind(R.id.container)
-    FrameLayout container;
-    @Bind(R.id.ll_tab_home)
-    LinearLayout mLlTabHome;
-    @Bind(R.id.ll_tab_monitor)
-    LinearLayout mLlTabMonitor;
-    @Bind(R.id.ll_tab_record)
-    LinearLayout mLlTabRecord;
-    @Bind(R.id.ll_tab_profile)
-    LinearLayout mLlTabProfile;
-    private FragmentManager fragmentManager;
+	public void onEventMainThread(LogoutEvent event) {
+		finish();
+	}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_me_main_fragment);
-        ButterKnife.bind(this);
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ButterKnife.unbind(this);
+		EventBus.getDefault().unregister(this);
+	}
 
-        EventBus.getDefault().register(this);
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
 
-        showTabFirst();
-    }
+	public void showTabFirst() {
+		iv_tab_01.setSelected(true);
+		homePageFragment = HomePageFragment.getInstance();
+		fragmentManager = getFragmentManager();
+		showFragment(R.id.container, homePageFragment);
+	}
 
-    public void onEventMainThread(LogoutEvent event) {
-        finish();
-    }
+	@OnClick(R.id.ll_tab_home)
+	public void iv_tab_01() {
+		if (showTab(iv_tab_01)) {
+			if (SPUtil.isLogin(this)) {
+				homePageFragment = HomePageFragment.getInstance();
+				homePageFragment.getNumber();
+				homePageFragment.startAnim();
+				showFragment(R.id.container, homePageFragment);
+			}
+		}
+	}
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ButterKnife.unbind(this);
-        EventBus.getDefault().unregister(this);
-    }
+	@OnClick(R.id.ll_tab_monitor)
+	public void iv_tab_02() {
+		if (showTab(iv_tab_02)) {
+			monitorFragment = MonitorFragment.getInstance();
+			showFragment(R.id.container, monitorFragment);
+		}
+	}
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+	@OnClick(R.id.ll_tab_record)
+	public void iv_tab_03() {
+		if (showTab(iv_tab_03)) {
+			if (SPUtil.isLogin(this)) {
+				recordFragment = RecordFragment.getInstance();
+				showFragment(R.id.container, recordFragment);
+			}
+		}
+	}
 
-    public void showTabFirst() {
-        iv_tab_01.setSelected(true);
-        homePageFragment = HomePageFragment.getInstance();
-        fragmentManager = getFragmentManager();
-        showFragment(R.id.container, homePageFragment);
-    }
+	@OnClick(R.id.ll_tab_profile)
+	public void iv_tab_04() {
+		if (showTab(iv_tab_04)) {
+			if (SPUtil.isLogin(this)) {
+				woInfoFragment = WoInfoFragment.getInstance();
+				showFragment(R.id.container, woInfoFragment);
+			}
+		}
+	}
 
+	public boolean showTab(ImageView imageView) {
+		if (!SPUtil.isLogin(this)) {
+			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+			startActivity(intent);
+			return false;
+		}
+		if (SPUtil.isIsInit(this)) {
+			Intent intentAct = new Intent(getApplicationContext(), InfoEditActivity.class);
+			startActivity(intentAct);
+			return false;
+		}
+		iv_tab_01.setSelected(false);
+		iv_tab_02.setSelected(false);
+		iv_tab_03.setSelected(false);
+		iv_tab_04.setSelected(false);
+		imageView.setSelected(true);
+		return true;
+	}
 
+	private void showFragment(int container, Fragment fragment/*, int animIn, int animOut*/) {
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		show(container, fragmentTransaction, fragment);
+		fragmentTransaction.commit();
+	}
 
-    @OnClick(R.id.ll_tab_home)
-    public void iv_tab_01() {
-        if (showTab(iv_tab_01)) {
-            if (SPUtil.isLogin(this)) {
-                homePageFragment = HomePageFragment.getInstance();
-                homePageFragment.getNumber();
-                homePageFragment.startAnim();
-                showFragment(R.id.container, homePageFragment);
-            }
-        }
-    }
-
-
-
-    @OnClick(R.id.ll_tab_monitor)
-    public void iv_tab_02() {
-        if (showTab(iv_tab_02)) {
-            if (monitorFragment == null) {
-                monitorFragment = new MonitorFragment();
-            }
-            showFragment(R.id.container, monitorFragment);
-        }
-    }
-
-
-
-    @OnClick(R.id.ll_tab_record)
-    public void iv_tab_03() {
-        if (showTab(iv_tab_03)) {
-            if (SPUtil.isLogin(this)) {
-                recordFragment = RecordFragment.getInstance();
-                showFragment(R.id.container, recordFragment);
-            }
-        }
-    }
-
-
-    @OnClick(R.id.ll_tab_profile)
-    public void iv_tab_04() {
-        if (showTab(iv_tab_04)) {
-            if (SPUtil.isLogin(this)) {
-                woInfoFragment = WoInfoFragment.getInstance();
-                showFragment(R.id.container, woInfoFragment);
-            }
-        }
-    }
-
-
-    public boolean showTab(ImageView imageView) {
-        if (!SPUtil.isLogin(this)) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-            return false;
-        }
-
-        if (SPUtil.isIsInit(this)) {
-            Intent intentAct = new Intent(getApplicationContext(), InfoEditActivity.class);
-            startActivity(intentAct);
-            return false;
-        }
-
-        iv_tab_01.setSelected(false);
-        iv_tab_02.setSelected(false);
-        iv_tab_03.setSelected(false);
-        iv_tab_04.setSelected(false);
-        imageView.setSelected(true);
-        return true;
-    }
-
-
-    private void showFragment(int container, Fragment fragment/*, int animIn, int animOut*/) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        show(container, fragmentTransaction, fragment);
-        fragmentTransaction.commit();
-    }
-
-    private void show(int container, FragmentTransaction fragmentTransaction, Fragment fragment) {
-        if (fragment == null) {
-            return;
-        }
-        if (!fragment.isAdded()) {
-            if (oldFragment != null) {
-                fragmentTransaction.hide(oldFragment);
-	            if (oldFragment instanceof MonitorFragment) {
-		            final MonitorFragment monitorFragment = (MonitorFragment) this.oldFragment;
-		            monitorFragment.stopMonitor();
-	            }
-            }
-            fragmentTransaction.add(container, fragment);
-        } else if (oldFragment != fragment) {
-            fragmentTransaction.hide(oldFragment);
-            fragmentTransaction.show(fragment);
-        }
-        oldFragment = fragment;
+	private void show(int container, FragmentTransaction fragmentTransaction, Fragment fragment) {
+		if (fragment == null) {
+			return;
+		}
+		if (!fragment.isAdded()) {
+			if (oldFragment != null) {
+				fragmentTransaction.hide(oldFragment);
+				if (oldFragment instanceof MonitorFragment) {
+					final MonitorFragment monitorFragment = (MonitorFragment) this.oldFragment;
+					monitorFragment.stopMonitor();
+				}
+			}
+			fragmentTransaction.add(container, fragment);
+		} else if (oldFragment != fragment) {
+			fragmentTransaction.hide(oldFragment);
+			fragmentTransaction.show(fragment);
+		}
+		oldFragment = fragment;
 //        LogUtil.d("ChildCount==", "ChildCount= %s", this.container.getChildCount());
-    }
+	}
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (recordFragment != null) {
-            recordFragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (recordFragment != null) {
+			recordFragment.onActivityResult(requestCode, resultCode, data);
+		}
+	}
 }
 
 
