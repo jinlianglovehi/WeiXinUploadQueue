@@ -62,12 +62,13 @@ public class BindActivity extends BaseActivity {
 		setContentView(R.layout.activity_login);
 		ButterKnife.bind(this);
 		if (isLogin()) {
-			LogUtil.d(TAG, "isLogin");
+			LogUtil.d(TAG, "status: is Login");
 			final String loginToken = SPUtil.getHClientUser(getApplicationContext()).getLoginToken();
 			((WeiTaiXinProApplication) getApplication()).getAdapter().setAccountToken(loginToken);
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
 			finish();
 		} else {
+			LogUtil.d(TAG, "status:not Login, now: logining");
 			deviceId = "";
 			try {
 				TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -103,6 +104,7 @@ public class BindActivity extends BaseActivity {
 			@Override
 			public void handleValidator(Context context) {
 				super.handleValidator(context);
+				LogUtil.d(TAG, "login fail");
 				ToastUtil.show(getApplicationContext(), "请绑定设备");
 				initData();
 			}
