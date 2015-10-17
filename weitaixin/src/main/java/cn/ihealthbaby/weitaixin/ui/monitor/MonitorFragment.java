@@ -410,7 +410,7 @@ public class MonitorFragment extends BaseFragment {
 			}
 		};
 		bluetoothScanner = new DefaultBluetoothScanner(adapter);
-		pseudoBluetoothService = new PseudoBluetoothService(getActivity().getApplicationContext(), handler);
+		pseudoBluetoothService = PseudoBluetoothService.getInstance(getActivity().getApplicationContext(), handler);
 		bluetoothReceiver.register(getActivity().getApplicationContext());
 		bluetoothReceiver.setListener(new AbstractBluetoothListener() {
 			@Override

@@ -48,6 +48,7 @@ public class PseudoBluetoothService {
 	// Name for the SDP record when creating server socket
 	private static final String NAME_SECURE = "Secure";
 	private static final String NAME_INSECURE = "Insecure";
+	private static PseudoBluetoothService instance;
 	// Member fields
 	private final BluetoothAdapter mAdapter;
 	private final Handler mHandler;
@@ -64,11 +65,18 @@ public class PseudoBluetoothService {
 	 * @param context The UI Activity Context
 	 * @param handler A Handler to send messages back to the UI Activity
 	 */
-	public PseudoBluetoothService(Context context, Handler handler) {
+	private PseudoBluetoothService(Context context, Handler handler) {
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
 		mState = STATE_NONE;
 		mHandler = handler;
 		parser = new Parser(context, mHandler);
+	}
+
+	public static PseudoBluetoothService getInstance(Context context, Handler handler) {
+		if (instance == null) {
+			instance = new PseudoBluetoothService(context, handler);
+		}
+		return instance;
 	}
 
 	/**

@@ -165,6 +165,10 @@ public class MonitorFragment extends BaseFragment {
 
 	@OnClick(R.id.back)
 	void back() {
+		pseudoBluetoothService.stop();
+		if (adapter.isDiscovering()) {
+			adapter.cancelDiscovery();
+		}
 		getActivity().finish();
 	}
 
@@ -362,7 +366,7 @@ public class MonitorFragment extends BaseFragment {
 			}
 		};
 		bluetoothScanner = new DefaultBluetoothScanner(adapter);
-		pseudoBluetoothService = new PseudoBluetoothService(getActivity().getApplicationContext(), handler);
+		pseudoBluetoothService = PseudoBluetoothService.getInstance(getActivity().getApplicationContext(), handler);
 		bluetoothReceiver.register(getActivity().getApplicationContext());
 		bluetoothReceiver.setListener(new AbstractBluetoothListener() {
 			@Override
@@ -519,7 +523,6 @@ public class MonitorFragment extends BaseFragment {
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88);
 		bpm.setImageResource(R.drawable.bpm_red);
 		hint.setVisibility(View.GONE);
-		autoStartTimer.start();
 	}
 
 	public void connectBondedDeviceOrSearch() {
