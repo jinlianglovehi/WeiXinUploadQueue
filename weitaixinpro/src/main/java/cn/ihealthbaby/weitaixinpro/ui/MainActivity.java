@@ -1,5 +1,6 @@
 package cn.ihealthbaby.weitaixinpro.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +47,15 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LogUtil.d(TAG, "MainActivity onCreate");
+		setContentView(R.layout.activity_me_main_fragment);
+		ButterKnife.bind(this);
+		fragmentManager = getSupportFragmentManager();
+		llTabMonitor.performClick();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
 		setContentView(R.layout.activity_me_main_fragment);
 		ButterKnife.bind(this);
 		fragmentManager = getSupportFragmentManager();
