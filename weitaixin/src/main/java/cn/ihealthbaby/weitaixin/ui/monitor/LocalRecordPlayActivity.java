@@ -98,7 +98,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 									                                             @Override
 									                                             public void onClick(View v) {
 										                                             Intent intent = new Intent(getApplicationContext(), AskDoctorActivity.class);
-										                                             intent.putExtra(Constants.INTENT_ID, data);
+										                                             intent.putExtra(Constants.INTENT_ID, data.getId());
 										                                             if (LocalRecordPlayActivity.this.record != null) {
 											                                             if (LocalRecordPlayActivity.this.record.getPurposeString() != null) {
 												                                             intent.putExtra(Constants.INTENT_FEELING, record.getPurposeString());
