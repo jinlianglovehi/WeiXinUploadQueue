@@ -30,7 +30,7 @@ import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
 import cn.ihealthbaby.weitaixinpro.ui.widget.CurveHorizontalScrollView;
-import cn.ihealthbaby.weitaixinpro.ui.widget.CurveMonitorDetialView;
+import cn.ihealthbaby.weitaixinpro.ui.widget.CurveMonitorPlayView;
 
 public abstract class RecordPlayActivity extends BaseActivity {
 	public String path;
@@ -38,11 +38,11 @@ public abstract class RecordPlayActivity extends BaseActivity {
 	public String uuid;
 	protected Data data;
 	protected List<Integer> fhrs;
-	protected List<Integer> fetalMove;
+	protected List<Integer> fms;
 	protected List<Integer> doctors;
 	protected Dialog dialog;
 	@Bind(R.id.curve_play)
-	CurveMonitorDetialView curvePlay;
+	CurveMonitorPlayView curvePlay;
 	@Bind(R.id.chs)
 	CurveHorizontalScrollView chs;
 	@Bind(R.id.play)
@@ -124,9 +124,8 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		configCurve();
 		tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(record.getRecordStartTime().getTime()));
 		mediaPlayer = new MediaPlayer();
-		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
-			public int doctorPosition;
-			public int fmposition;
+		final int duration = fhrs.size() * data.getInterval();
+		countDownTimer = new ExpendableCountDownTimer(duration, 500) {
 			public int position;
 
 			@Override
@@ -148,37 +147,27 @@ public abstract class RecordPlayActivity extends BaseActivity {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				int size = fhrs.size();
-				if (position < size) {
-					int fhr = fhrs.get(position);
-					curvePlay.addPoint(fhr);
-					tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
-					if (fmposition < fetalMove.size() && fetalMove.get(fmposition) == position) {
-						curvePlay.addRedHeart(position);
-						fmposition++;
-					}
-					if (doctorPosition < fetalMove.size() && fetalMove.get(doctorPosition) == position) {
-						curvePlay.addDoctor(position);
-						doctorPosition++;
-					}
-					curvePlay.postInvalidate();
-					if (bpm != null) {
-						if (fhr >= safemin && fhr <= safemax) {
-							bpm.setTextColor(Color.parseColor("#49DCB8"));
-						} else {
-							bpm.setTextColor(Color.parseColor("#FE0058"));
-						}
-						bpm.setText(fhr + "");
-					}
-					if (!chs.isTouching()) {
-						chs.smoothScrollTo((int) (curvePlay.getCurrentPositionX() - width / 2), 0);
-					}
-				}
+				tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
+				int fhr = fhrs.get(position);
+				curvePlay.draw2Position(position);
+				curvePlay.postInvalidate();
 				position++;
+				if (bpm != null) {
+					if (fhr >= safemin && fhr <= safemax) {
+						bpm.setTextColor(Color.parseColor("#49DCB8"));
+					} else {
+						bpm.setTextColor(Color.parseColor("#FE0058"));
+					}
+					bpm.setText(fhr + "");
+				}
+				if (!chs.isTouching()) {
+					chs.smoothScrollTo((int) (curvePlay.getCurrentPositionX() - width / 2), 0);
+				}
 			}
 
 			@Override
 			public void onFinish() {
+				onTick(0);
 				ToastUtil.show(getApplicationContext(), "播放结束");
 				mediaPlayer.stop();
 				mediaPlayer.reset();
@@ -187,7 +176,6 @@ public abstract class RecordPlayActivity extends BaseActivity {
 			@Override
 			public void onRestart() {
 				position = 0;
-				fmposition = 0;
 				curvePlay.reset();
 				chs.smoothScrollTo(0, 0);
 			}
@@ -196,7 +184,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 
 	/**
 	 * 从网络或者本地数据库获取数据 protected Data data; protected List<Integer> fhrs; protected List<Integer>
-	 * fetalMove;
+	 * fms;
 	 */
 	protected abstract void getData();
 
@@ -207,6 +195,9 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		curvePlay.setxMax(xMax);
 		curvePlay.setCellWidth(Util.dip2px(getApplicationContext(), 10));
 		curvePlay.setCurveStrokeWidth(2);
+		curvePlay.setFhrs(fhrs);
+		curvePlay.setDoctors(doctors);
+		curvePlay.setHearts(fms);
 		ViewGroup.LayoutParams layoutParams = curvePlay.getLayoutParams();
 		layoutParams.width = curvePlay.getMinWidth();
 		layoutParams.height = curvePlay.getMinHeight() + Util.dip2px(getApplicationContext(), 16);

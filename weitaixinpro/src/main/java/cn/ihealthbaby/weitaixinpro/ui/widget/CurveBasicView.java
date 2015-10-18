@@ -30,22 +30,22 @@ public class CurveBasicView extends CoordinateView {
 	protected int redPointColor = Color.parseColor("#01CF97");
 	protected int gridColor = Color.parseColor("#B2DEDEDE");
 	protected int shadowColor = Color.parseColor("#E8F6EF");
-	private Bitmap doctorScaledBitmap;
-	private Bitmap heartScaledBitmap;
 	/**
 	 * 保存的是发生胎动的点的位置
 	 */
-	private List<Integer> hearts = new ArrayList<>();
-	private List<Integer> doctors = new ArrayList<>();
-	private Path path = new Path();
+	protected List<Integer> hearts = new ArrayList<>();
+	protected List<Integer> doctors = new ArrayList<>();
+	protected Path path = new Path();
 	/**
 	 * 保存胎心数值
 	 */
-	private List<Integer> fhrs = new ArrayList<>();
+	protected List<Integer> fhrs = new ArrayList<>();
+	protected boolean moved = true;
+	protected float curveStrokeWidth = 2;
+	private Bitmap doctorScaledBitmap;
+	private Bitmap heartScaledBitmap;
 	private int position;
-	private boolean moved = true;
 	private int heartWidth;
-	private float curveStrokeWidth = 2;
 	private int pureLineColor = Color.BLACK;
 
 	public CurveBasicView(Context context) {
