@@ -138,7 +138,7 @@ public class MonitorDetialActivity extends BaseActivity {
 					curve.resetPoints();
 					curve.postInvalidate();
 					tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
-					int fhr1 = DataStorage.fhrs.get(DataStorage.fhrs.size() - 1);
+					int fhr1 = fhrPackage.getFHR1();
 					if (fhr1 >= safemin && fhr1 <= safemax) {
 						bpm.setTextColor(Color.parseColor("#49DCB8"));
 					} else {
