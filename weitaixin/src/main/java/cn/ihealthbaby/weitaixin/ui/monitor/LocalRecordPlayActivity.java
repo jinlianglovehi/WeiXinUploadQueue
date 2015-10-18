@@ -62,8 +62,13 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 
 	private void upload() {
 		AsynUploadEngine asynUploadEngine = new AsynUploadEngine(getApplicationContext());
+		final File file = new File(FileUtil.getVoiceDir(getApplicationContext()), uuid);
+		if (!file.exists()) {
+			ToastUtil.show(getApplicationContext(), "未找到胎音文件");
+			return;
+		}
 		dialog.show();
-		asynUploadEngine.init(new File(FileUtil.getVoiceDir(getApplicationContext()), uuid));
+		asynUploadEngine.init(file);
 		asynUploadEngine.setOnFinishActivity(new AsynUploadEngine.FinishedToDoWork() {
 			@Override
 			public void onFinishedWork(final String key, final ResponseInfo info, JSONObject response) {
@@ -81,9 +86,8 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 								                                             btnBusiness.setImageResource(R.drawable.button_ask_doctor);
 								                                             try {
 									                                             final RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
-									                                             Record record = recordBusinessDao.queryByLocalRecordId(data.getClientId());
+									                                             record = recordBusinessDao.queryByLocalRecordId(data.getClientId());
 									                                             record.setUploadState(Record.UPLOAD_STATE_CLOUD);
-
 									                                             recordBusinessDao.update(record);
 								                                             } catch (Exception e) {
 									                                             e.printStackTrace();
@@ -97,10 +101,10 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 										                                             intent.putExtra(Constants.INTENT_ID, data);
 										                                             if (LocalRecordPlayActivity.this.record != null) {
 											                                             if (LocalRecordPlayActivity.this.record.getPurposeString() != null) {
-												                                             intent.putExtra(Constants.INTENT_FEELING, LocalRecordPlayActivity.this.record.getPurposeString());
+												                                             intent.putExtra(Constants.INTENT_FEELING, record.getPurposeString());
 											                                             }
 											                                             if (LocalRecordPlayActivity.this.record.getFeelingString() != null) {
-												                                             intent.putExtra(Constants.INTENT_PURPOSE, LocalRecordPlayActivity.this.record.getFeelingString());
+												                                             intent.putExtra(Constants.INTENT_PURPOSE, record.getFeelingString());
 											                                             }
 										                                             }
 										                                             startActivity(intent);
