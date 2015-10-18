@@ -367,6 +367,8 @@ public class RecordFragment extends BaseFragment {
 						case 2:
 						case 3:
 							intent.setClass(getActivity().getApplicationContext(), CloudRecordPlayActivity.class);
+							intent.putExtra(Constants.INTENT_PURPOSE, adviceItem.getAskPurpose());
+							intent.putExtra(Constants.INTENT_FEELING, adviceItem.getFeeling());
 							intent.putExtra(Constants.INTENT_ID, adviceItem.getId());
 							intent.putExtra(Constants.INTENT_URL, adviceItem.getFetalTonePath());
 							break;
@@ -400,13 +402,13 @@ public class RecordFragment extends BaseFragment {
 		final ServiceInfo serviceInfo = SPUtil.getServiceInfo(getActivity().getApplicationContext());
 		if (serviceInfo != null && serviceInfo.getHospitalId() != -1) {
 			ApiManager.getInstance().adviceApi.getAdviceSetting(serviceInfo.getHospitalId(),
-					new DefaultCallback<AdviceSetting>(getActivity(), new AbstractBusiness<AdviceSetting>() {
-				@Override
-				public void handleData(AdviceSetting data) {
-					LogUtil.d(TAG,"askMinTime==> "+askMinTime);
-					askMinTime = data.getAskMinTime();
-				}
-			}), getRequestTag());
+					                                                   new DefaultCallback<AdviceSetting>(getActivity(), new AbstractBusiness<AdviceSetting>() {
+						                                                   @Override
+						                                                   public void handleData(AdviceSetting data) {
+							                                                   LogUtil.d(TAG, "askMinTime==> " + askMinTime);
+							                                                   askMinTime = data.getAskMinTime();
+						                                                   }
+					                                                   }), getRequestTag());
 		}
 	}
 
@@ -425,7 +427,7 @@ public class RecordFragment extends BaseFragment {
 							                                                 adapter.setDatas(dataList);
 							                                                 adapter.notifyDataSetChanged();
 							                                                 mAdviceItems = adapter.datas;
-							                                                 countNumber = data.getCount()+records.size();
+							                                                 countNumber = data.getCount() + records.size();
 						                                                 } else {
 							                                                 if (records != null && records.size() > 0) {
 								                                                 adapter.setDatas(switchList(records));
