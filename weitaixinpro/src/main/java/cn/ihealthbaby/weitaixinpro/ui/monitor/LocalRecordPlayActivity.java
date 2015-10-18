@@ -80,6 +80,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
 		try {
 			record = recordBusinessDao.queryByLocalRecordId(getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID));
+			LogUtil.d(TAG, "record:" + record);
 			uploadDataUtil = new UploadDataUtil(this, record);
 			path = record.getSoundPath();
 			String rData = record.getRecordData();
@@ -88,7 +89,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			data = recordData.getData();
 			fhrs = data.getHeartRate();
 			doctors = Util.time2Position(data.getDoctor());
-			fetalMove = Util.time2Position(data.getFm());
+			fms = Util.time2Position(data.getFm());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ToastUtil.show(getApplicationContext(), "获取数据失败");
