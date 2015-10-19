@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="cn.ihealthbaby.weitaixin.ui.monitor.LocalRecordPlayActivity">
+                tools:context=".ui.monitor.RecordPlayActivity">
 
     <include
         android:id="@+id/title"
@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title">
+
 
         <cn.ihealthbaby.weitaixinpro.ui.widget.CurveHorizontalScrollView
             android:id="@+id/chs"
@@ -27,6 +28,16 @@
                 android:padding="20dp"
                 />
         </cn.ihealthbaby.weitaixinpro.ui.widget.CurveHorizontalScrollView>
+
+        <ImageView
+            android:id="@+id/vertical_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/chs"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@id/chs"
+            android:src="@drawable/vertical_red_line"
+            />
 
         <RelativeLayout
             android:layout_width="wrap_content"

@@ -26,13 +26,22 @@
 
             <cn.ihealthbaby.weitaixinpro.ui.widget.CurveMonitorDetialView
                 android:id="@+id/curve"
-                android:layout_width="wrap_content"
+                android:layout_width="500dp"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
                 />
 
 
         </cn.ihealthbaby.weitaixinpro.ui.widget.CurveHorizontalScrollView>
+
+        <ImageView
+            android:id="@+id/vertical_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/chs"
+            android:layout_alignTop="@id/chs"
+            android:src="@drawable/vertical_red_line"
+            />
 
         <RelativeLayout
             android:layout_width="wrap_content"
