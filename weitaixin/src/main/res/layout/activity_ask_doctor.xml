@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="共0次，已咨询0次，剩余0次"
+        android:text="共次，已咨询次，剩余次"
         android:textColor="@color/gray7"
         android:textSize="@dimen/font_normal" />
 

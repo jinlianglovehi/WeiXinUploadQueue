@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,11 +114,18 @@ public class HomePageFragment extends BaseFragment {
         animationSet.setFillEnabled(true);
         animationSet.setFillAfter(true);
         animationSet.setDuration(500);
+        animationSet.setStartOffset(300);
         animationSet.addAnimation(translateAnimation);
         translateAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                tvPregnancyDayText.setText("");
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvPregnancyDayText.setText("");
+                    }
+                }, 300);
             }
 
             @Override

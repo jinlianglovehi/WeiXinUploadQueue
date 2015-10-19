@@ -212,7 +212,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="未填"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/font_normal"/>
 
@@ -243,7 +243,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="未填"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/font_normal"/>
 
@@ -274,7 +274,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="未填"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/font_normal"/>
 
@@ -305,7 +305,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="未填"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/font_normal"/>
 
@@ -336,7 +336,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="未填"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/font_normal"/>
 
@@ -368,7 +368,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="30dp"
                     android:singleLine="true"
-                    android:text="未填"
+                    android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/font_normal"/>
 

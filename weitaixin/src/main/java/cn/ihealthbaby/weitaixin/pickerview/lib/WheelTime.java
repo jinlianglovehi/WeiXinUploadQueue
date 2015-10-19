@@ -87,18 +87,20 @@ public class WheelTime {
 		// 年
 		wv_year = (WheelView) view.findViewById(R.id.year);
 
-//		if (InfoEditActivity.isBirthDateShow) {
-//			Calendar c = Calendar.getInstance();
-//			int cuurYear = c.get(Calendar.YEAR);
-//			LogUtil.d("cuurYear", "cuurYear==> " + cuurYear);
-//			wv_year.setAdapter(new NumericWheelAdapter(cuurYear - 15, cuurYear + 60));// 设置"年"的显示数据
-//			wv_year.setLabel(context.getString(R.string.pickerview_year));// 添加文字
-//			wv_year.setCurrentItem(cuurYear);// 初始化时显示的数据
-//		} else  {
+		if (InfoEditActivity.isBirthDateShow) {
+			Calendar c = Calendar.getInstance();
+			int cuurYear = c.get(Calendar.YEAR);
+			LogUtil.d("cuurYear", "cuurYear==> " + cuurYear);
+			START_YEAR = cuurYear - 15;
+			END_YEAR = cuurYear + 60;
+			wv_year.setAdapter(new NumericWheelAdapter(cuurYear - 15, cuurYear + 60));// 设置"年"的显示数据
+			wv_year.setLabel(context.getString(R.string.pickerview_year));// 添加文字
+			wv_year.setCurrentItem(cuurYear - START_YEAR);// 初始化时显示的数据
+		} else  {
 			wv_year.setAdapter(new NumericWheelAdapter(START_YEAR, END_YEAR));// 设置"年"的显示数据
 			wv_year.setLabel(context.getString(R.string.pickerview_year));// 添加文字
 			wv_year.setCurrentItem(year - START_YEAR);// 初始化时显示的数据
-//		}
+		}
 
 
 

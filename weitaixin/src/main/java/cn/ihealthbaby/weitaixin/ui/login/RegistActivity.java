@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -111,6 +113,17 @@ public class RegistActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    public static boolean isMobileNO(String mobiles){
+        boolean flag = false;
+        try{
+            Pattern p = Pattern.compile("^((1[0-9][0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+            Matcher m = p.matcher(mobiles);
+            flag = m.matches();
+        }catch(Exception e){
+            flag = false;
+        }
+        return flag;
+    }
 
     public boolean isSend = true;
 
@@ -126,6 +139,10 @@ public class RegistActivity extends BaseActivity {
             }
             if (phone_number.length() != 11) {
                 ToastUtil.show(getApplicationContext(), "手机号必须是11位");
+                return;
+            }
+            if (!isMobileNO(phone_number)) {
+                ToastUtil.show(getApplicationContext(), "请输入正确的手机号");
                 return;
             }
             getAuthCode();
@@ -254,6 +271,10 @@ public class RegistActivity extends BaseActivity {
             ToastUtil.show(getApplicationContext(), "手机号必须是11位");
             return;
         }
+        if (!isMobileNO(phone_number)) {
+            ToastUtil.show(getApplicationContext(), "请输入正确的手机号");
+            return;
+        }
         if (TextUtils.isEmpty(password)) {
             ToastUtil.show(getApplicationContext(), "请输入密码");
             return;
@@ -371,10 +392,12 @@ public class RegistActivity extends BaseActivity {
             ivAgreeRegister.setImageResource(R.drawable.pitch);
             tv_regist_action.setEnabled(true);
             tv_regist_action.setTextColor(getResources().getColor(R.color.white0));
+            tv_regist_action.setBackgroundResource(R.drawable.frame_regist_action_selector);
         } else {
             ivAgreeRegister.setImageResource(R.drawable.pitch_un);
             tv_regist_action.setEnabled(false);
             tv_regist_action.setTextColor(getResources().getColor(R.color.gray1));
+            tv_regist_action.setBackgroundResource(R.color.gray4);
         }
     }
 

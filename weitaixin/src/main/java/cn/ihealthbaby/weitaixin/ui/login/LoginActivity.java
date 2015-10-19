@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -93,11 +96,22 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    public static boolean isMobileNO(String mobiles){
+        boolean flag = false;
+        try{
+            Pattern p = Pattern.compile("^((1[0-9][0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+            Matcher m = p.matcher(mobiles);
+            flag = m.matches();
+        }catch(Exception e){
+            flag = false;
+        }
+        return flag;
+    }
 
     private LoginByPasswordForm loginForm;
     private ApiManager instance;
 
-    String phone_number_login;
+    public String phone_number_login;
 
     @OnClick(R.id.tv_login_action)
     public void tvLoginAction() {
@@ -109,6 +123,10 @@ public class LoginActivity extends BaseActivity {
         }
         if (phone_number_login.length() != 11) {
             ToastUtil.show(getApplicationContext(), "手机号必须是11位");
+            return;
+        }
+        if (!isMobileNO(phone_number_login)) {
+            ToastUtil.show(getApplicationContext(), "请输入正确的手机号");
             return;
         }
         if (TextUtils.isEmpty(password_login)) {

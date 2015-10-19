@@ -10,13 +10,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 public class PayAccountActivity extends BaseActivity {
 
@@ -37,6 +40,7 @@ public class PayAccountActivity extends BaseActivity {
     private User user;
     private long orderId = -1;
     private boolean isRentEquipment=false;
+    private boolean isRentErr=false;
 
 
     @Override
@@ -59,6 +63,7 @@ public class PayAccountActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         isRentEquipment = false;
+        isRentErr = false;
         pullData();
     }
 
@@ -66,49 +71,68 @@ public class PayAccountActivity extends BaseActivity {
     private final int ACTIVATE_SERVICE = 2;
 
     private void pullData() {
+        final CustomDialog customDialog = new CustomDialog();
+        customDialog.createDialog1(this, "数据加载中...");
+        customDialog.show();
+
         user = SPUtil.getUser(this);
         if (user != null) {
             boolean hasService = user.getHasService();
             if (hasService) {
                 ApiManager.getInstance().serviceApi.getByUser(
                         new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
-                    @Override
-                    public void handleData(Service data) {
-                        //0 开通未绑定设备,1绑定未激活服务,2服务已激活,3服务结束,4服务已取消
-                        if (data.getServiceStatus() == ACTIVATE_SERVICE) {
-                            tvPayAccountRentDay.setText("已租用设备" + data.getRentedDays() + "天");
-                            orderId = data.getOrderId();
-                        } else {
-                            tvPayAccountRentDay.setText("租用设备");
-                            orderId = data.getOrderId();
-                        }
-                        isRentEquipment=true;
-                    }
+                            @Override
+                            public void handleData(Service data) {
+                                //0 开通未绑定设备,1绑定未激活服务,2服务已激活,3服务结束,4服务已取消
+                                if (data.getServiceStatus() == ACTIVATE_SERVICE) {
+                                    tvPayAccountRentDay.setText("已租用设备" + data.getRentedDays() + "天");
+                                    orderId = data.getOrderId();
+                                } else {
+                                    tvPayAccountRentDay.setText("租用设备");
+                                    orderId = data.getOrderId();
+                                }
+                                isRentEquipment = true;
+                                isRentErr = false;
+                            }
 
-                    @Override
-                    public void handleClientError(Context context,Exception e) {
-                        super.handleClientError(context,e);
-                        setOrgin();
-                    }
+                            @Override
+                            public void handleResult(Result<Service> result) {
+                                super.handleResult(result);
+                                customDialog.dismiss();
+                            }
 
-                    @Override
-                    public void handleException(Exception e) {
-                        super.handleException(e);
-                        setOrgin();
-                    }
+                            @Override
+                            public void handleClientError(Context context,Exception e) {
+                                super.handleClientError(context,e);
+                                setOrgin(customDialog);
+                            }
+
+                            @Override
+                            public void handleAllFailure(Context context) {
+                                super.handleAllFailure(context);
+                                setOrgin(customDialog);
+                            }
+
+                            @Override
+                            public void handleException(Exception e) {
+                                super.handleException(e);
+                                setOrgin(customDialog);
+                            }
                 }), getRequestTag());
             } else {
-                setOrgin();
+                setOrgin(customDialog);
             }
         } else {
-            setOrgin();
+            setOrgin(customDialog);
         }
     }
 
-    public void setOrgin(){
-        isRentEquipment=true;
+    public void setOrgin(CustomDialog customDialog) {
+        isRentEquipment = true;
+        isRentErr = true;
         tvPayAccountRentDay.setText("租用设备");
         orderId = -1;
+        customDialog.dismiss();
     }
 
     @OnClick(R.id.back)
@@ -118,6 +142,10 @@ public class PayAccountActivity extends BaseActivity {
 
     @OnClick(R.id.llRentEquipment)
     public void RentEquipment() {
+        if(isRentErr){
+            ToastUtil.show(this, "服务器错误");
+            return;
+        }
         if (isRentEquipment) {
             if (user != null) {
                 boolean hasService = user.getHasService();
@@ -135,6 +163,8 @@ public class PayAccountActivity extends BaseActivity {
                     startActivity(intent);
                 }
             }
+        }else{
+            ToastUtil.show(this,"没有获取到租凭信息");
         }
     }
 

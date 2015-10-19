@@ -16,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AskForm;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -97,14 +98,18 @@ public class AskDoctorActivity extends BaseActivity {
     }
 
 
-    private int totalCount,usedCount;
+    private int totalCount=-100,usedCount;
     private void pullData(){
+        final CustomDialog customDialog = new CustomDialog();
+        Dialog dialog=customDialog.createDialog1(this, "数据加载中...");
+        customDialog.show();
         ApiManager.getInstance().serviceApi.getByUser(
                 new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
                     @Override
                     public void handleData(Service data) {
-                        if (data!=null) {
-                            totalCount=data.getTotalCount();
+                        if (data != null) {
+                            totalCount = data.getTotalCount();
+                            LogUtil.d("totalCount", "totalCount==>" + totalCount);
                             if (totalCount == -1) {
                                 usedCount = data.getUsedCount();
                                 tvOtherInfo.setText("共" + "无限" + "次，已咨询" + usedCount + "次，剩余" + "无限" + "次");
@@ -125,6 +130,18 @@ public class AskDoctorActivity extends BaseActivity {
                     public void handleException(Exception e) {
                         super.handleException(e);
                     }
+
+                    @Override
+                    public void handleResult(Result<Service> result) {
+                        super.handleResult(result);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleAllFailure(Context context) {
+                        super.handleAllFailure(context);
+                        ToastUtil.show(AskDoctorActivity.this, "服务器错误");
+                    }
                 }),getRequestTag());
     }
 
@@ -141,6 +158,13 @@ public class AskDoctorActivity extends BaseActivity {
             ToastUtil.show(getApplicationContext(), "没有咨询次数了");
             return;
         }
+
+        if (totalCount == -100) {
+            ToastUtil.show(getApplicationContext(), "服务器错误");
+//          ToastUtil.show(getApplicationContext(), "");
+            return;
+        }
+
 
         if (adviceItemId == -1) {
             LogUtil.d("adviceItemId", "adviceItemId=====>" + adviceItemId);

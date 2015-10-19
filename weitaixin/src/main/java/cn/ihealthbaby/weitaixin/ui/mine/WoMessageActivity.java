@@ -70,8 +70,8 @@ public class WoMessageActivity extends BaseActivity {
         ButterKnife.bind(this);
         title_text.setText("我的消息");
 
-        type=getIntent().getIntExtra("MessageType",3);
-
+        type = getIntent().getIntExtra("MessageType", 3);
+        LogUtil.d("type", "MessageType==>" + type);
 
         adapter = new MyRefreshAdapter(this, null);
         pullToRefresh.setAdapter(adapter);

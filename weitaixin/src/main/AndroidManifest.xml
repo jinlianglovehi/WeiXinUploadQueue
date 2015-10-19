@@ -43,7 +43,7 @@
         android:theme="@android:style/Theme.Light.NoTitleBar"
         tools:replace="android:icon">
         <activity
-            android:name=".ui.WelcomeActivity"
+            android:name=".ui.login.InfoEditActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
             <intent-filter>
@@ -72,7 +72,7 @@
             android:screenOrientation="portrait"
             android:name=".ui.mine.SetSystemActivity" />
         <activity android:name=".ui.mine.WoInformationActivity" />
-        <activity android:name=".ui.login.InfoEditActivity" />
+       <!-- <activity android:name=".ui.login.InfoEditActivity" />-->
         <activity android:name=".ui.mine.GradedActivity" />
         <activity android:name=".ui.mine.WoGoldenActivity" />
         <activity android:name=".ui.mine.WoMessageActivity" />

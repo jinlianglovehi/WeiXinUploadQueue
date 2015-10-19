@@ -135,21 +135,21 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     }
 
 
-    public void setTime(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        if(date == null) {
-            calendar.setTimeInMillis(System.currentTimeMillis());
-        } else {
-            calendar.setTime(date);
-        }
-
+//    public void setTimes(Date date) {
+//        Calendar calendar = Calendar.getInstance();
+//        if(date == null) {
+//            calendar.setTimeInMillis(System.currentTimeMillis());
+//        } else {
+//            calendar.setTime(date);
+//        }
+//
 //        int year = calendar.get(1);
 //        int month = calendar.get(2);
 //        int day = calendar.get(5);
 //        int hours = calendar.get(11);
 //        int minute = calendar.get(12);
 //        this.wheelTime.setPicker(year, month, day, hours, minute);
-    }
+//    }
 
     @Override
     protected void onResume() {
@@ -175,8 +175,11 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     @OnClick(R.id.et_birthdate_info)
     public void etBirthdateInfo() {
 //        setDate(false,et_birthdate_info);
-        isBirthDateShow=true;
-        isExpectedDateShow=false;
+        isBirthDateShow = true;
+        isExpectedDateShow = false;
+        mTimePopupWindow.setRange(1888, 3000);
+        mExpectTimePopupWindow.setRange(1888, 3000);
+
         if (!birthDateShow) {
             mTimePopupWindow.showAtLocation(et_birthdate_info, Gravity.BOTTOM, 0, 0, new Date());
             birthDateShow = true;
@@ -189,9 +192,11 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     @OnClick(R.id.et_date_info)
     public void etDateInfo() {
-        isExpectedDateShow=true;
-        isBirthDateShow=false;
+        isExpectedDateShow = true;
+        isBirthDateShow = false;
 //        setDate(true, et_date_info);
+        mTimePopupWindow.setRange(1888, 3000);
+        mExpectTimePopupWindow.setRange(1888, 3000);
 
         if (!expectedDateShow) {
             mExpectTimePopupWindow.showAtLocation(et_birthdate_info, Gravity.BOTTOM, 0, 0, new Date());
