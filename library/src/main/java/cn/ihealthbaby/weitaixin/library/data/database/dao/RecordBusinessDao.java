@@ -76,6 +76,7 @@ public class RecordBusinessDao {
 				                       .where(RecordDao.Properties.RecordStartTime.isNotNull())
 				                       .where(RecordDao.Properties.Duration.isNotNull())
 				                       .where(RecordDao.Properties.RecordData.isNotNull())
+				                       .orderDesc(RecordDao.Properties.RecordStartTime)
 				                       .where(new WhereCondition() {
 					                       @Override
 					                       public void appendTo(StringBuilder builder, String tableAlias) {
@@ -110,6 +111,7 @@ public class RecordBusinessDao {
 				                    .where(RecordDao.Properties.RecordStartTime.isNotNull())
 				                    .where(RecordDao.Properties.Duration.isNotNull())
 				                    .where(RecordDao.Properties.RecordData.isNotNull())
+				                    .orderDesc(RecordDao.Properties.RecordStartTime)
 				                    .where(new WhereCondition() {
 					                    @Override
 					                    public void appendTo(StringBuilder builder, String tableAlias) {
