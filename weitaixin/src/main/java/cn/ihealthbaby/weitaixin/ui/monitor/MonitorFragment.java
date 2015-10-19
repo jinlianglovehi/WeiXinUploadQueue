@@ -742,6 +742,7 @@ public class MonitorFragment extends BaseFragment {
 								break;
 							case PseudoBluetoothService.STATE_NONE:
 								LogUtil.d(TAG, "STATE_NONE");
+								getMonitorFragment().reset();
 								break;
 						}
 						break;

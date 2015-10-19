@@ -121,6 +121,7 @@ public class MonitorFragment extends BaseFragment {
 	private boolean alert;
 	private int alertInterval;
 	private FixedRateCountDownTimer readDataTimer;
+	private boolean autoStart;
 
 	public static MonitorFragment getInstance() {
 		return instance;
@@ -128,7 +129,7 @@ public class MonitorFragment extends BaseFragment {
 
 	@OnClick(R.id.back)
 	void back() {
-		pseudoBluetoothService.stop();
+		function.performClick();
 		if (adapter.isDiscovering()) {
 			adapter.cancelDiscovery();
 		}
@@ -286,7 +287,11 @@ public class MonitorFragment extends BaseFragment {
 			@Override
 			public void onStart(long startTime) {
 				hint.setText("");
-				hint.setVisibility(View.VISIBLE);
+				if (autoStart) {
+					hint.setVisibility(View.VISIBLE);
+				} else {
+					hint.setVisibility(View.GONE);
+				}
 			}
 
 			@Override
@@ -438,12 +443,13 @@ public class MonitorFragment extends BaseFragment {
 		// TODO: 15/9/17 autoBeginAdviceMax = 3,autoBeginAdvice=20??? @小顾
 		//{"data":{"autoBeginAdvice":20,"autoAdviceTimeLong":20,"fetalMoveTime":5,"autoBeginAdviceMax":3,"askMinTime":20,"alarmHeartrateLimit":"100-160","hospitalId":3}}
 		alert = localSetting.isAlert();
-		if (alert) {
+		alertInterval = localSetting.getAlertInterval();
+		autoStart = localSetting.isAutoStart();
+		if (autoStart) {
 			autoStartTime = adviceSetting.getAutoBeginAdvice() * 1000;
 		} else {
 			autoStartTime = adviceSetting.getAutoBeginAdviceMax() * 1000;
 		}
-		alertInterval = localSetting.getAlertInterval();
 		LogUtil.d(TAG, "safemin:%s,safemax:%s,autoStartTime:%s", safemin, safemax, autoStartTime);
 	}
 
@@ -480,6 +486,7 @@ public class MonitorFragment extends BaseFragment {
 	public void onConnectedUI() {
 		connected = true;
 		readDataTimer.start();
+		autoStartTimer.start();
 		LogUtil.d(TAG, "开始倒计时,准备自动开始");
 		if (bluetoothScanner.isDiscovering()) {
 			bluetoothScanner.cancleDiscovery();
@@ -490,7 +497,6 @@ public class MonitorFragment extends BaseFragment {
 		tvBluetooth.setText("--");
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88);
 		bpm.setImageResource(R.drawable.bpm_red);
-		hint.setVisibility(View.GONE);
 	}
 
 	public void connectBondedDeviceOrSearch() {
@@ -689,6 +695,7 @@ public class MonitorFragment extends BaseFragment {
 								break;
 							case PseudoBluetoothService.STATE_NONE:
 								LogUtil.d(TAG, "STATE_NONE");
+								getMonitorFragment().reset();
 								break;
 						}
 						break;
