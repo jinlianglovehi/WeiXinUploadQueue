@@ -109,12 +109,18 @@ public class WheelTime {
 //		if (InfoEditActivity.isExpectedDateShow) {
 //			Calendar c = Calendar.getInstance();
 //			int cuurMonth = c.get(Calendar.MONTH);
-//			LogUtil.d("cuurMonth", "cuurMonth==>" + cuurMonth);
-//			wv_month.setAdapter(new NumericWheelAdapter(cuurMonth + 1 - 1, (cuurMonth + 1 + 10) / 12));
+//
+//			int mTh = ((cuurMonth + 1 + 10) % 12);
+//			LogUtil.d("cuurMonth", mTh + "cuurMonth==>" + cuurMonth);
+//			if (cuurMonth <= mTh) {
+//				wv_month.setAdapter(new NumericWheelAdapter(cuurMonth + 1 - 1, mTh));
+//			} else {
+//				wv_month.setAdapter(new NumericWheelAdapter(mTh, cuurMonth + 1 - 1));
+//			}
 //			wv_month.setLabel(context.getString(R.string.pickerview_month));
-//			wv_month.setCurrentItem(cuurMonth + 1);
+//			wv_month.setCurrentItem(cuurMonth);
 //		} else {
-//			LogUtil.d("cuurMonth", "cuurMonth==>" + month);
+			LogUtil.d("cuurMonthmonth", "cuurMonthmonth==>" + month);
 			wv_month.setAdapter(new NumericWheelAdapter(1, 12));
 			wv_month.setLabel(context.getString(R.string.pickerview_month));
 			wv_month.setCurrentItem(month);

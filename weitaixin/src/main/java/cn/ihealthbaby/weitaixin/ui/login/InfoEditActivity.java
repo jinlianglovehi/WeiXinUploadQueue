@@ -22,8 +22,10 @@ import cn.ihealthbaby.weitaixin.pickerview.TimePopupWindow;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,6 +38,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.tools.ImageTool;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.pickerview.lib.NumericWheelAdapter;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.GradedActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.MyPoPoWin;
@@ -44,6 +47,40 @@ import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
 public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectPhoto {
+
+
+
+    //-28天≤当前日期≤300天；
+    public void sdsd(){
+        String[] months_big = { "1", "3", "5", "7", "8", "10", "12" };
+        String[] months_little = { "4", "6", "9", "11" };
+
+        final List<String> list_big = Arrays.asList(months_big);
+        final List<String> list_little = Arrays.asList(months_little);
+
+        Calendar c = Calendar.getInstance();
+        int cuurYear = c.get(Calendar.YEAR);
+        int cuurMonth = c.get(Calendar.MONTH);
+        int cuurDay = c.get(Calendar.DAY_OF_MONTH);
+
+        int dayNumber;
+
+        if (list_big.contains(String.valueOf(cuurMonth + 1))) {
+//            wv_day.setAdapter(new NumericWheelAdapter(1, 31));
+        } else if (list_little.contains(String.valueOf(cuurMonth + 1))) {
+//            wv_day.setAdapter(new NumericWheelAdapter(1, 30));
+        } else {
+            // 闰年
+            if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+//                wv_day.setAdapter(new NumericWheelAdapter(1, 29));
+            } else {
+//                wv_day.setAdapter(new NumericWheelAdapter(1, 28));
+                dayNumber = cuurDay - 28;
+            }
+        }
+
+    }
+
 
     @Bind(R.id.back)
     RelativeLayout back;
