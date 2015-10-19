@@ -38,23 +38,39 @@ public class CurveMonitorPlayView extends CurveBasicView {
 		drawSafeLine(canvas);
 		drawWholeCurve(canvas);
 		drawCurve(canvas);
-		drawVerticalLine(canvas);
 		drawScaleX(canvas);
 		drawRedPoints(canvas);
 		drawRedHeart(canvas, 10);
 		drawDoctor(canvas, 10);
 	}
 
-	private void drawVerticalLine(Canvas canvas) {
-		resetPaint();
-		paint.setColor(Color.RED);
-		final float x = positionToX(position);
-		canvas.drawLine(convertX(x), convertY(yMax), convertX(x), convertY(yMin), paint);
-	}
-
 	public void draw2Position(int position) {
 		this.position = position;
 		generatePath(path, position);
+	}
+
+	public void add2Position(int position) {
+		this.position = position;
+		add2Path(path, position);
+	}
+
+	private Path add2Path(Path path, int position) {
+		final int size = fhrs.size();
+		if (position >= size) {
+			return null;
+		}
+		int fhr = fhrs.get(position);
+		if (fhr < limitMin || fhr > limitMax) {
+			fhr = 0;
+		}
+		if (fhr == 0 || position == 0) {
+			path.moveTo(convertX(positionToX(position)), convertY(fhr));
+		} else if (Math.abs(fhr - fhrs.get(position - 1)) > 20) {
+			path.moveTo(convertX(positionToX(position)), convertY(fhr));
+		} else {
+			path.lineTo(convertX(positionToX(position)), convertY(fhr));
+		}
+		return path;
 	}
 
 	protected void drawWholeCurve(Canvas canvas) {
@@ -92,6 +108,10 @@ public class CurveMonitorPlayView extends CurveBasicView {
 	}
 
 	public float getCurrentPositionX() {
+		return convertX(positionToX(position));
+	}
+
+	public float convertPositionX(int position) {
 		return convertX(positionToX(position));
 	}
 

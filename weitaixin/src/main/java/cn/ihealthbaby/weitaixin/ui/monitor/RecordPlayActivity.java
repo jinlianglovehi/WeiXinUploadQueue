@@ -153,8 +153,11 @@ public abstract class RecordPlayActivity extends BaseActivity {
 						}
 						bpm.setText(fhr + "");
 					}
+					final float diff = curvePlay.getCurrentPositionX() - width / 2;
+					if (diff > 0) {
+					}
 					if (!chs.isTouching()) {
-						chs.smoothScrollTo((int) (curvePlay.getCurrentPositionX() - width / 2), 0);
+						chs.smoothScrollTo((int) diff, 0);
 					}
 				}
 				position++;

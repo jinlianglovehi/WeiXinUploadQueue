@@ -63,6 +63,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	ImageView btnDoctorInterrupt;
 	@Bind(R.id.tv_doctor_interrupt)
 	TextView tvDoctorInterrupt;
+	@Bind(R.id.vertical_line)
+	ImageView verticalLine;
 	private long consumedtime;
 	private long duration;
 	private long interval;
@@ -70,7 +72,6 @@ public class MonitorDetialActivity extends BaseActivity {
 	private boolean needReset = true;
 	private FixedRateCountDownTimer countDownTimer;
 	private long lastFMTime;
-	private boolean terminate;
 	private int safemin = 110;
 	private int safemax = 160;
 	private int limitMax = 200;
@@ -125,9 +126,21 @@ public class MonitorDetialActivity extends BaseActivity {
 
 	@OnClick(R.id.function)
 	public void terminate() {
-		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
-		terminate = true;
-		finish();
+		final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"满20分钟的监测才能问医生\n是否继续监测", "继续监测", "立即完成"});
+		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+			@Override
+			public void left(Object... obj) {
+				monitorDialog.dismiss();
+			}
+
+			@Override
+			public void right(Object... obj) {
+				monitorDialog.dismiss();
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
+				finish();
+			}
+		});
+		monitorDialog.show();
 	}
 
 	private void saveFetalMovementPosition(int position) {
@@ -148,16 +161,17 @@ public class MonitorDetialActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		countDownTimer = new FixedRateCountDownTimer(duration, 500) {
+			public RelativeLayout.LayoutParams layoutParams;
 			public long lastTime;
 
 			@Override
 			public void onStart(long startTime) {
-				terminate = false;
 				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
 				tvSumTime.setText("共" + getDuration() / 1000 / 60 + "分钟");
 				DataStorage.fhrs.clear();
 				DataStorage.fms.clear();
 				DataStorage.doctors.clear();
+				layoutParams = (RelativeLayout.LayoutParams) verticalLine.getLayoutParams();
 			}
 
 			@Override
@@ -204,8 +218,16 @@ public class MonitorDetialActivity extends BaseActivity {
 				curve.postInvalidate();
 				tvConsumTime.setText("已记录" + DateTimeTool.million2mmss(getConsumedTime()));
 				int size = curve.getHearts().size();
+				final float currentPositionX = curve.getCurrentPositionX();
+				final float diff = currentPositionX - width / 2;
+				LogUtil.d(TAG, "currentPositionX:[%s], diff:[%s]", currentPositionX, diff);
+				if (diff <= 0) {
+					layoutParams.setMargins((int) currentPositionX, 0, 0, 0);
+				} else {
+					layoutParams.setMargins(width / 2, 0, 0, 0);
+				}
 				if (!chs.isTouching()) {
-					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
+					chs.smoothScrollTo((int) diff, 0);
 				}
 			}
 		};

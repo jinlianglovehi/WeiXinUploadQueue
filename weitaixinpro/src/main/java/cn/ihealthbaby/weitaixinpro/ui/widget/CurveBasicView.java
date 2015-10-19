@@ -128,39 +128,16 @@ public class CurveBasicView extends CoordinateView {
 
 	public void addPoint(int fhr) {
 		fhrs.add(fhr);
-		int position = fhrs.size();
+		int position = fhrs.size() - 1;
 		if (fhr < limitMin || fhr > limitMax) {
 			fhr = 0;
 		}
 		if (fhr == 0 || position == 0) {
 			path.moveTo(convertX(positionToX(position)), convertY(fhr));
-			moved = true;
-		} else if (moved) {
+		} else if (Math.abs(fhr - fhrs.get(position - 1)) > 20) {
 			path.moveTo(convertX(positionToX(position)), convertY(fhr));
-			moved = false;
 		} else {
 			path.lineTo(convertX(positionToX(position)), convertY(fhr));
-			moved = false;
-		}
-	}
-
-	public void autoAddPoint() {
-		if (position < fhrs.size()) {
-			Integer fhr = fhrs.get(position);
-			if (fhr < limitMin || fhr > limitMax) {
-				fhr = 0;
-			}
-			if (fhr == 0 || position == 0) {
-				path.moveTo(convertX(positionToX(position)), convertY(fhr));
-				moved = true;
-			} else if (moved) {
-				path.moveTo(convertX(positionToX(position)), convertY(fhr));
-				moved = false;
-			} else {
-				path.lineTo(convertX(positionToX(position)), convertY(fhr));
-				moved = false;
-			}
-			position++;
 		}
 	}
 
@@ -181,13 +158,10 @@ public class CurveBasicView extends CoordinateView {
 			int fhr = fhrs.get(i);
 			if (fhr == 0 || i == 0) {
 				path.moveTo(convertX(positionToX(i)), convertY(fhr));
-				moved = true;
-			} else if (moved) {
+			} else if (Math.abs(fhr - fhrs.get(position - 1)) > 20) {
 				path.moveTo(convertX(positionToX(i)), convertY(fhr));
-				moved = false;
 			} else {
 				path.lineTo(convertX(positionToX(i)), convertY(fhr));
-				moved = false;
 			}
 		}
 	}

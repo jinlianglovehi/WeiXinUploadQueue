@@ -17,7 +17,6 @@ package cn.ihealthbaby.weitaixin.library.util;
 
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 
 /**
  * 根据countDownTimer修改来的辅助工具类,增加部分功能,如 总时间延时,暂停,恢复,从某一时间开始
@@ -46,17 +45,17 @@ public abstract class ExpendableCountDownTimer {
 				if (mCancelled) {
 					return;
 				}
-				final long millisLeft = stopTime - SystemClock.elapsedRealtime();
+				final long millisLeft = stopTime - System.currentTimeMillis();
 				if (millisLeft <= 0) {
 					onFinish();
 				} else if (millisLeft < interval) {
 					// no tick, just delay until done
 					sendMessageDelayed(obtainMessage(MSG), millisLeft);
 				} else {
-					long lastTickStart = SystemClock.elapsedRealtime();
+					long lastTickStart = System.currentTimeMillis();
 					onTick(millisLeft);
 					// take into account user's onTick taking time to execute
-					long delay = lastTickStart + interval - SystemClock.elapsedRealtime();
+					long delay = lastTickStart + interval - System.currentTimeMillis();
 					// special case: user's onTick took more than interval to
 					// complete, skip to next interval
 					while (delay < 0) delay += interval;
@@ -65,6 +64,7 @@ public abstract class ExpendableCountDownTimer {
 			}
 		}
 	};
+	private long offset;
 
 	public ExpendableCountDownTimer(long duration, long interval) {
 		this.duration = duration;
@@ -78,7 +78,7 @@ public abstract class ExpendableCountDownTimer {
 		//延长总时间
 		duration += extraTime;
 		//重新设定结束时间
-		stopTime = SystemClock.elapsedRealtime() + duration;
+		stopTime = System.currentTimeMillis() + duration;
 		onExtra(duration, extraTime, stopTime);
 	}
 
@@ -86,13 +86,14 @@ public abstract class ExpendableCountDownTimer {
 	 * @param offset 开始的时间点,相对时间
 	 */
 	public synchronized final void startAt(long offset) {
+		this.offset = offset;
 		mCancelled = false;
 		if (duration <= offset) {
 			onFinish();
 			return;
 		}
-		startTime = SystemClock.elapsedRealtime() - offset;
-		stopTime = SystemClock.elapsedRealtime() + duration - offset;
+		startTime = System.currentTimeMillis() - offset;
+		stopTime = System.currentTimeMillis() + duration - offset;
 		mHandler.sendMessage(mHandler.obtainMessage(MSG));
 		onStart(startTime);
 	}
@@ -123,7 +124,7 @@ public abstract class ExpendableCountDownTimer {
 	}
 
 	public long getConsumedTime() {
-		long consumedTime = SystemClock.elapsedRealtime() - startTime;
+		long consumedTime = System.currentTimeMillis() - startTime;
 		if (consumedTime < 0) {
 			consumedTime = 0;
 		}
@@ -144,5 +145,9 @@ public abstract class ExpendableCountDownTimer {
 		cancel();
 		onRestart();
 		start();
+	}
+
+	public long getOffset() {
+		return offset;
 	}
 }

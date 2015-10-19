@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 
 /**
  * Created by liuhongjian on 15/9/2 10:16. 坐标转换的基类
  */
 public class CoordinateView extends View {
+	private final static String TAG = "CoordinateView";
 	protected int cellWidth;
 	protected int yMax = 300;
 	protected int yMin = 0;
@@ -48,7 +50,10 @@ public class CoordinateView extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		setMeasuredDimension(getMinWidth() + getPaddingLeft() + getPaddingRight(), getMinHeight() + getPaddingTop() + getPaddingBottom());
+		final int measuredWidth = getMinWidth() + getPaddingLeft() + getPaddingRight();
+		final int measuredHeight = getMinHeight() + getPaddingTop() + getPaddingBottom();
+		LogUtil.d(TAG, "measuredWidth:[%s],measuredHeight:[%s]", measuredWidth, measuredHeight);
+		setMeasuredDimension(measuredWidth, measuredHeight);
 	}
 
 	public int getMinHeight() {
@@ -67,6 +72,20 @@ public class CoordinateView extends View {
 	 */
 	protected float convertX(float x) {
 		return getPaddingLeft() + xMin + x * cellWidth / gridX;
+	}
+
+	/**
+	 * canvas坐标转换为 图表坐标(单位s)
+	 *
+	 * @param x 像素,px
+	 * @return 时间 单位s
+	 */
+	public float reconvertX(float x) {
+		return (x - getPaddingLeft() - xMin) * gridX / cellWidth;
+	}
+
+	public float reconvertXDiff(float xDiff) {
+		return xDiff * gridX / cellWidth;
 	}
 
 	/**

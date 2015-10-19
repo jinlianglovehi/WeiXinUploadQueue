@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 	public String path;
 	public Record record;
 	public String uuid;
+	public RelativeLayout.LayoutParams layoutParams;
 	protected Data data;
 	protected List<Integer> fhrs;
 	protected List<Integer> fms;
@@ -75,11 +77,17 @@ public abstract class RecordPlayActivity extends BaseActivity {
 	ImageView btnData;
 	@Bind(R.id.rl_data)
 	RelativeLayout rlData;
+	@Bind(R.id.vertical_line)
+	ImageView verticalLine;
 	private int width;
 	private ExpendableCountDownTimer countDownTimer;
 	private MediaPlayer mediaPlayer;
 	private int safemin;
 	private int safemax;
+	private long pausedTime;
+	private float diffTime;
+	private long newOffset;
+	private boolean playing;
 
 	@OnClick(R.id.back)
 	public void back() {
@@ -88,7 +96,16 @@ public abstract class RecordPlayActivity extends BaseActivity {
 
 	@OnClick(R.id.play)
 	public void play() {
-		countDownTimer.restart();
+		if (playing) {
+			pausedTime = countDownTimer.getConsumedTime();
+			countDownTimer.cancel();
+			mediaPlayer.pause();
+			play.setImageResource(R.drawable.button_play);
+		} else {
+			countDownTimer.startAt(pausedTime);
+//			play.setImageResource(R.drawable.button_pause);
+		}
+		playing = !playing;
 	}
 
 	@OnClick(R.id.replay)
@@ -125,18 +142,70 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(record.getRecordStartTime().getTime()));
 		mediaPlayer = new MediaPlayer();
 		final int duration = fhrs.size() * data.getInterval();
+		chs.setOnTouchListener(new View.OnTouchListener() {
+			public int scrollX1;
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				final int action = event.getAction();
+				switch (action) {
+					case MotionEvent.ACTION_DOWN:
+						scrollX1 = chs.getScrollX();
+						pausedTime = countDownTimer.getConsumedTime();
+						countDownTimer.cancel();
+						mediaPlayer.pause();
+						play.setImageResource(R.drawable.button_play);
+						LogUtil.d(TAG, "pausedTime:[%s]", pausedTime);
+						break;
+					case MotionEvent.ACTION_MOVE:
+						break;
+					case MotionEvent.ACTION_UP:
+						final int scrollX2 = chs.getScrollX();
+						LogUtil.d(TAG, "scrollX2:[%s]", scrollX2);
+						diffTime = curvePlay.reconvertXDiff(scrollX2 - scrollX1);
+						newOffset = pausedTime + (long) (diffTime) * 1000;
+						LogUtil.d(TAG, "newOffset:[%s]", newOffset);
+						countDownTimer.cancel();
+						countDownTimer.startAt(newOffset);
+						break;
+					default:
+						break;
+				}
+				return false;
+			}
+		});
+		layoutParams = (RelativeLayout.LayoutParams) verticalLine.getLayoutParams();
+		layoutParams.setMargins(curvePlay.getPaddingLeft(), 0, 0, 0);
 		countDownTimer = new ExpendableCountDownTimer(duration, 500) {
 			public int position;
 
 			@Override
 			public void onStart(long startTime) {
+				curvePlay.reset();
+				play.setImageResource(R.drawable.button_pause);
+				position = (int) (getOffset() / getInterval());
+				LogUtil.d(TAG, "position:[%s]", position);
+				LogUtil.d(TAG, "getOffset():[%s]", getOffset());
+				layoutParams.setMargins(curvePlay.getPaddingLeft(), 0, 0, 0);
 				try {
 					mediaPlayer.reset();
 					mediaPlayer.setDataSource(path);
 					mediaPlayer.prepare();
+					mediaPlayer.seekTo((int) getOffset());
 					mediaPlayer.start();
 				} catch (IOException e) {
 					e.printStackTrace();
+				}
+				curvePlay.draw2Position(position);
+				final float currentPositionX = curvePlay.convertPositionX(position);
+				final float diff = currentPositionX - width / 2;
+				if (diff <= 0) {
+					layoutParams.setMargins((int) currentPositionX, 0, 0, 0);
+				} else {
+					layoutParams.setMargins(width / 2, 0, 0, 0);
+				}
+				if (!chs.isTouching()) {
+					chs.smoothScrollTo((int) diff, 0);
 				}
 				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(record.getRecordStartTime().getTime()));
 			}
@@ -149,7 +218,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 			public void onTick(long millisUntilFinished) {
 				tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
 				int fhr = fhrs.get(position);
-				curvePlay.draw2Position(position);
+				curvePlay.add2Position(position);
 				curvePlay.postInvalidate();
 				position++;
 				if (bpm != null) {
@@ -160,14 +229,23 @@ public abstract class RecordPlayActivity extends BaseActivity {
 					}
 					bpm.setText(fhr + "");
 				}
+				final float currentPositionX = curvePlay.convertPositionX(position);
+				final float diff = currentPositionX - width / 2;
+//				LogUtil.d(TAG, "currentPositionX:[%s], diff:[%s]", currentPositionX, diff);
+				if (diff <= 0) {
+					layoutParams.setMargins((int) currentPositionX, 0, 0, 0);
+				} else {
+					layoutParams.setMargins(width / 2, 0, 0, 0);
+				}
 				if (!chs.isTouching()) {
-					chs.smoothScrollTo((int) (curvePlay.getCurrentPositionX() - width / 2), 0);
+					chs.smoothScrollTo((int) diff, 0);
 				}
 			}
 
 			@Override
 			public void onFinish() {
-				onTick(0);
+//				onTick(0);
+				LogUtil.d(TAG, "finish");
 				ToastUtil.show(getApplicationContext(), "播放结束");
 				mediaPlayer.stop();
 				mediaPlayer.reset();
