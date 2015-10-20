@@ -76,8 +76,7 @@ public class BindActivity extends BaseActivity {
 				LogUtil.d(TAG, "deviceId:" + deviceId);
 			} catch (Exception e) {
 			}
-			// TODO: 15/10/13  打包发布时务必去掉
-			mTvDeviceId.setText(deviceId);
+			mTvDeviceId.setText("宿主ID:" + deviceId);
 			login(deviceId);
 			initView();
 		}

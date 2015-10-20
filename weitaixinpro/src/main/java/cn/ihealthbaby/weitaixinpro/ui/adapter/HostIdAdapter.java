@@ -61,7 +61,8 @@ public class HostIdAdapter extends BaseAdapter {
 		holder.mTvHostId.setText(fetalHeart.getSerialnum());
 		holder.mTvHostDepartment.setText(fetalHeart.getDepartmentName());
 		holder.mTvHostName.setText(fetalHeart.getHospitalName());
-		holder.mTvIndexNumber.setText("院内编号:" + fetalHeart.getIndexNumber());
+		final long indexNumber = fetalHeart.getIndexNumber();
+		holder.mTvIndexNumber.setText("院内编号:" + String.format("%04d", indexNumber));
 		if (selection == position) {
 			holder.mIvSelect.setVisibility(View.VISIBLE);
 		} else {
