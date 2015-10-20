@@ -13,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
 import cn.ihealthbaby.weitaixinpro.ui.login.BindActivity;
@@ -44,6 +45,8 @@ public class MainActivity extends BaseActivity {
 	private Fragment recordFragment;
 	private Fragment settingsFragment;
 	private FragmentManager fragmentManager;
+	private boolean first = true;
+	private long exitTime;
 
 	public void onEventMainThread(RebindEvent event) {
 		Intent intent = new Intent(getApplicationContext(), BindActivity.class);
@@ -122,6 +125,16 @@ public class MainActivity extends BaseActivity {
 		ButterKnife.unbind(this);
 		EventBus.getDefault().unregister(this);
 		LogUtil.d(TAG, "remove all fragments");
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (System.currentTimeMillis() - exitTime > 3000) {
+			ToastUtil.show(getApplicationContext(), "再次点击返回,退出应用");
+			exitTime = System.currentTimeMillis();
+		} else {
+			super.onBackPressed();
+		}
 	}
 }
 
