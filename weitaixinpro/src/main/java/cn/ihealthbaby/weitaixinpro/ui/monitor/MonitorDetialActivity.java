@@ -151,6 +151,11 @@ public class MonitorDetialActivity extends BaseActivity {
 			@Override
 			public void right(Object... obj) {
 				monitorDialog.dismiss();
+				try {
+					alertSound.release();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
 				finish();
 			}
@@ -204,7 +209,12 @@ public class MonitorDetialActivity extends BaseActivity {
 
 			@Override
 			public void onFinish() {
-				function.performClick();
+				try {
+					alertSound.release();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_AUTO));
 			}
 
 			@Override
@@ -220,6 +230,7 @@ public class MonitorDetialActivity extends BaseActivity {
 					fhr = 0;
 				}
 				lastTime = time;
+				//报警
 				if (fhr > safemax || fhr < safemin) {
 					if (alert) {
 						long currentTimeMillis = System.currentTimeMillis();
@@ -234,7 +245,6 @@ public class MonitorDetialActivity extends BaseActivity {
 						}
 					}
 				}
-
 				//如果越界,则值设置为0
 				if ((fhr > limitMax || fhr < limitMin)) {
 					fhr = 0;
