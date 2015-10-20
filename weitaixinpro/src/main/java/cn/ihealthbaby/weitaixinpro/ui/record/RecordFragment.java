@@ -32,8 +32,8 @@ public class RecordFragment extends BaseFragment {
 	 * 起始页码 从1开始
 	 */
 	private static final int FIRST_PAGE = 1;
-	private static RecordFragment instance = new RecordFragment();
-	private static Handler handler = new RecordHandler(new WeakReference<RecordFragment>(instance));
+	private static RecordFragment instance;
+	private static Handler handler;
 	//
 	public int currentPage;
 	public long count;
@@ -49,6 +49,10 @@ public class RecordFragment extends BaseFragment {
 	private LinearLayoutManager layoutManager;
 
 	public static RecordFragment getInstance() {
+		if (instance == null) {
+			instance = new RecordFragment();
+			handler = new RecordHandler(new WeakReference<RecordFragment>(instance));
+		}
 		return instance;
 	}
 
@@ -101,18 +105,6 @@ public class RecordFragment extends BaseFragment {
 		});
 		return viewLayout;
 	}
-//	public ArrayList<Record> gg() {
-//		ArrayList<Record> adviceItems = new ArrayList<Record>();
-//		for (int i = 0; i < 20; i++) {
-//			Record record = new Record();
-//			record.setRecordStartTime(new Date());
-//			record.setUserName("UserName:" + i);
-//			record.setDuration(23);
-//			record.setUploadState(Record.UPLOAD_STATE_UPLOADING);
-//			adviceItems.add(record);
-//		}
-//		return adviceItems;
-//	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {

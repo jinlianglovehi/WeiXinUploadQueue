@@ -169,4 +169,10 @@ public class BindActivity extends BaseActivity {
 			}
 		}), getRequestTag());
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ButterKnife.unbind(this);
+	}
 }

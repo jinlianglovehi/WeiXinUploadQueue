@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixinpro.ui.monitor;
 
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -31,6 +33,7 @@ import cn.ihealthbaby.weitaixinpro.ui.widget.MonitorDialog;
 import de.greenrobot.event.EventBus;
 
 public class MonitorDetialActivity extends BaseActivity {
+	public int askMinTime;
 	@Bind(R.id.chs)
 	CurveHorizontalScrollView chs;
 	@Bind(R.id.bpm)
@@ -78,6 +81,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	private int limitMin = 60;
 	private boolean alert;
 	private int alertInterval;
+	private long lastAlert;
+	private SoundPool alertSound;
 
 	@OnClick(R.id.back)
 	public void back() {
@@ -126,7 +131,7 @@ public class MonitorDetialActivity extends BaseActivity {
 
 	@OnClick(R.id.function)
 	public void terminate() {
-		final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"满20分钟的监测才能问医生\n是否继续监测", "继续监测", "立即完成"});
+		final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"满" + askMinTime + "分钟的监测才是有效数据\n是否继续监测", "继续监测", "立即完成"});
 		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
 			@Override
 			public void left(Object... obj) {
@@ -160,6 +165,8 @@ public class MonitorDetialActivity extends BaseActivity {
 		width = metric.widthPixels;
 		getAdviceSetting();
 		configCurve();
+		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
+		alertSound.load(getApplicationContext(), R.raw.didi, 1);
 		countDownTimer = new FixedRateCountDownTimer(duration, 500) {
 			public RelativeLayout.LayoutParams layoutParams;
 			public long lastTime;
@@ -197,6 +204,12 @@ public class MonitorDetialActivity extends BaseActivity {
 			private void tick(FHRPackage fhrPackage) {
 				//获取当前心率值
 				int fhr = fhrPackage.getFHR1();
+				if (alert) {
+					long currentTimeMillis = System.currentTimeMillis();
+					if (currentTimeMillis - lastAlert >= alertInterval * 1000)
+						alertSound.play(1, 1, 1, 0, 0, 1);
+					lastAlert = currentTimeMillis;
+				}
 				long time = fhrPackage.getTime();
 				//防止重复
 				if (lastTime == time) {
@@ -239,6 +252,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		hsLayoutParams.width = width;
 		chs.setLayoutParams(hsLayoutParams);
 		curve.setFhrs(DataStorage.fhrs);
+		curve.setxMax((int) (duration / 1000));
 		curve.setCellWidth(Util.dip2px(getApplicationContext(), 10));
 		curve.setHearts(DataStorage.fms);
 		curve.setDoctors(DataStorage.doctors);
@@ -267,6 +281,7 @@ public class MonitorDetialActivity extends BaseActivity {
 	private void getAdviceSetting() {
 		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
 		AdviceSetting adviceSetting = SPUtil.getAdviceSetting(getApplicationContext());
+		askMinTime = adviceSetting.getAskMinTime();
 		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
 		String[] split = alarmHeartrateLimit.split("-");
 		try {

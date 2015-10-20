@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -90,6 +89,8 @@ public class MonitorFragment extends BaseFragment {
 	ImageView btnStart;
 	@Bind(R.id.tv_bluetooth)
 	TextView tvBluetooth;
+	@Bind(R.id.tv_start)
+	TextView tvStart;
 	@Bind(R.id.rl_start)
 	RelativeLayout rlStart;
 	@Bind(R.id.back)
@@ -244,8 +245,6 @@ public class MonitorFragment extends BaseFragment {
 		ButterKnife.bind(this, view);
 		initView();
 		reset();
-		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
-		alertSound.load(getActivity().getApplicationContext(), R.raw.didi, 1);
 		readDataTimer = new FixedRateCountDownTimer(100000, 500) {
 			@Override
 			protected void onExtra(long duration, long extraTime, long stopTime) {
@@ -267,12 +266,6 @@ public class MonitorFragment extends BaseFragment {
 						tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
 					} else {
 						tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
-						if (alert && connected && started) {
-							long currentTimeMillis = System.currentTimeMillis();
-							if (currentTimeMillis - lastAlert >= alertInterval * 1000)
-								alertSound.play(1, 1, 1, 0, 0, 1);
-							lastAlert = currentTimeMillis;
-						}
 					}
 					tvBluetooth.setText(fhr + "");
 				}
@@ -286,6 +279,7 @@ public class MonitorFragment extends BaseFragment {
 		autoStartTimer = new ExpendableCountDownTimer(autoStartTime, 1000) {
 			@Override
 			public void onStart(long startTime) {
+				tvStart.setVisibility(View.GONE);
 				hint.setText("");
 				if (autoStart) {
 					hint.setVisibility(View.VISIBLE);
@@ -455,8 +449,8 @@ public class MonitorFragment extends BaseFragment {
 
 	public void reset() {
 		LogUtil.d(TAG, "重置状态");
-		tvBluetooth.setTextColor(getResources().getColor(R.color.green0));
-		tvBluetooth.setText("start");
+		tvStart.setVisibility(View.VISIBLE);
+		tvBluetooth.setText("");
 		tvBluetooth.setClickable(true);
 		btnStart.setClickable(true);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
@@ -473,6 +467,7 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	private void onConnectingUI() {
+		tvStart.setVisibility(View.GONE);
 		tvBluetooth.setText("连接中");
 		tvBluetooth.setClickable(false);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);

@@ -15,9 +15,11 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
+import cn.ihealthbaby.weitaixinpro.ui.login.BindActivity;
 import cn.ihealthbaby.weitaixinpro.ui.monitor.tab.MonitorTabFragment;
 import cn.ihealthbaby.weitaixinpro.ui.record.RecordFragment;
 import cn.ihealthbaby.weitaixinpro.ui.settings.SettingsFragment;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Think on 2015/8/13.
@@ -38,53 +40,51 @@ public class MainActivity extends BaseActivity {
 	LinearLayout llTabRecord;
 	@Bind(R.id.ll_tab_profile)
 	LinearLayout mLlTabProfile;
-	private MonitorTabFragment monitorTabFragment;
-	private RecordFragment recordFragment;
-	private SettingsFragment mSettingsFragment;
+	private Fragment monitorTabFragment;
+	private Fragment recordFragment;
+	private Fragment settingsFragment;
 	private FragmentManager fragmentManager;
+
+	public void onEventMainThread(RebindEvent event) {
+		Intent intent = new Intent(getApplicationContext(), BindActivity.class);
+		startActivity(intent);
+		finish();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LogUtil.d(TAG, "MainActivity onCreate");
-		setContentView(R.layout.activity_me_main_fragment);
-		ButterKnife.bind(this);
-		fragmentManager = getSupportFragmentManager();
-		llTabMonitor.performClick();
+		init();
 	}
 
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
+	private void init() {
 		setContentView(R.layout.activity_me_main_fragment);
 		ButterKnife.bind(this);
+		EventBus.getDefault().register(this);
 		fragmentManager = getSupportFragmentManager();
+		monitorTabFragment = MonitorTabFragment.getInstance();
+		recordFragment = RecordFragment.getInstance();
+		settingsFragment = SettingsFragment.getInstance();
 		llTabMonitor.performClick();
 	}
 
 	@OnClick(R.id.ll_tab_monitor)
 	public void iv_tab_02() {
 		showTab(iv_tab_02);
-		if (monitorTabFragment == null) {
-			monitorTabFragment = MonitorTabFragment.getInstance();
-		}
 		showFragment(R.id.container, monitorTabFragment);
 	}
 
 	@OnClick(R.id.ll_tab_record)
 	public void iv_tab_03() {
 		showTab(iv_tab_03);
-		recordFragment = RecordFragment.getInstance();
 		showFragment(R.id.container, recordFragment);
 	}
 
 	@OnClick(R.id.ll_tab_profile)
 	public void iv_tab_04() {
 		showTab(iv_tab_04);
-		if (mSettingsFragment == null) {
-			mSettingsFragment = SettingsFragment.getInstance();
-		}
-		showFragment(R.id.container, mSettingsFragment);
+		showFragment(R.id.container, settingsFragment);
 	}
 
 	public void showTab(ImageView imageView) {
@@ -114,6 +114,14 @@ public class MainActivity extends BaseActivity {
 			fragmentTransaction.show(fragment);
 		}
 		oldFragment = fragment;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ButterKnife.unbind(this);
+		EventBus.getDefault().unregister(this);
+		LogUtil.d(TAG, "remove all fragments");
 	}
 }
 

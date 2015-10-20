@@ -36,6 +36,8 @@
             android:layout_alignBottom="@id/chs"
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@id/chs"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/vertical_red_line"
             />
 
@@ -70,8 +72,6 @@
                     android:maxLength="3"
                     android:text=""
                     android:textSize="46sp"
-
-
                     />
 
                 <LinearLayout

@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -99,6 +101,20 @@ public class MonitorTabFragment extends BaseFragment {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
 		EventBus.getDefault().unregister(this);
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		try {
+			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
+		} catch (NoSuchFieldException i) {
+			throw new RuntimeException(i);
+		} catch (IllegalAccessException i) {
+			throw new RuntimeException(i);
+		}
 	}
 
 	public void onEventMainThread(CountEvent event) {

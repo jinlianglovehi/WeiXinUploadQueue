@@ -1,7 +1,6 @@
 package cn.ihealthbaby.weitaixinpro;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -17,7 +16,8 @@ import cn.ihealthbaby.weitaixin.library.data.net.Business;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixinpro.ui.login.BindActivity;
+import cn.ihealthbaby.weitaixinpro.ui.RebindEvent;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by liuhongjian on 15/7/28 17:55.
@@ -34,9 +34,7 @@ public abstract class AbstractBusiness<T> implements Business<T> {
 	@Override
 	public void handleAccountError(Context context, Map<String, Object> msgMap) {
 		SPUtil.clearHClientUser(context);
-		Intent intent = new Intent(context, BindActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(intent);
+		EventBus.getDefault().post(new RebindEvent());
 	}
 
 	@Override
