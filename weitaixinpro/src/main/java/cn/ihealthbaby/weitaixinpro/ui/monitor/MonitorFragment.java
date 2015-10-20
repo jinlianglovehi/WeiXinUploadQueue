@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -74,7 +73,6 @@ public class MonitorFragment extends BaseFragment {
 	 * 处理连接状态以及连接失败
 	 */
 	private static Handler handler = new MonitorHandler(monitorFragmentWeakReference);
-	public SoundPool alertSound;
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
 	@Bind(R.id.round_background)

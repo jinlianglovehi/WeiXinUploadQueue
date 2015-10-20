@@ -96,6 +96,11 @@ public class MonitorDetialActivity extends BaseActivity {
 			@Override
 			public void right(Object... obj) {
 				monitorDialog.dismiss();
+				try {
+					alertSound.release();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_CANCEL_STARTED));
 				finish();
 			}
@@ -171,7 +176,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		alertSound = new SoundPool(1, AudioManager.STREAM_MUSIC, 5);
-		alertSound.load(getApplicationContext(), R.raw.didi, 1);
+		final int soundId = alertSound.load(getApplicationContext(), R.raw.didi, 1);
 		countDownTimer = new FixedRateCountDownTimer(duration, 500) {
 			public RelativeLayout.LayoutParams layoutParams;
 			public long lastTime;
@@ -222,9 +227,13 @@ public class MonitorDetialActivity extends BaseActivity {
 						long currentTimeMillis = System.currentTimeMillis();
 						if (currentTimeMillis - lastAlert >= alertInterval * 1000) {
 							LogUtil.d(TAG, "alert");
-							alertSound.play(0, 1, 1, 0, 0, 1);
+							try {
+								alertSound.play(soundId, 1, 1, 0, 0, 1);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							lastAlert = currentTimeMillis;
 						}
-						lastAlert = currentTimeMillis;
 					}
 				}
 				if (fhr >= safemin && fhr <= safemax) {
