@@ -116,9 +116,6 @@ public class MonitorFragment extends BaseFragment {
 	private ExpendableCountDownTimer autoStartTimer;
 	private int safemin;
 	private int safemax;
-	private long lastAlert;
-	private boolean alert;
-	private int alertInterval;
 	private FixedRateCountDownTimer readDataTimer;
 	private boolean autoStart;
 
@@ -434,8 +431,6 @@ public class MonitorFragment extends BaseFragment {
 		}
 		// TODO: 15/9/17 autoBeginAdviceMax = 3,autoBeginAdvice=20??? @小顾
 		//{"data":{"autoBeginAdvice":20,"autoAdviceTimeLong":20,"fetalMoveTime":5,"autoBeginAdviceMax":3,"askMinTime":20,"alarmHeartrateLimit":"100-160","hospitalId":3}}
-		alert = localSetting.isAlert();
-		alertInterval = localSetting.getAlertInterval();
 		autoStart = localSetting.isAutoStart();
 		if (autoStart) {
 			autoStartTime = adviceSetting.getAutoBeginAdvice() * 1000;

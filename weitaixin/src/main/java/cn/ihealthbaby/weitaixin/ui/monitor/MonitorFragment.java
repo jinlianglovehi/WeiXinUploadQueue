@@ -7,8 +7,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -80,7 +78,6 @@ public class MonitorFragment extends BaseFragment {
 	 * 处理连接状态以及连接失败
 	 */
 	private static Handler handler = new MonitorHandler(monitorFragmentWeakReference);
-	public SoundPool alertSound;
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
 	@Bind(R.id.round_background)
@@ -95,6 +92,8 @@ public class MonitorFragment extends BaseFragment {
 	ImageView btnStart;
 	@Bind(R.id.tv_bluetooth)
 	TextView tvBluetooth;
+	@Bind(R.id.tv_start)
+	TextView tvStart;
 	@Bind(R.id.rl_start)
 	RelativeLayout rlStart;
 	@Bind(R.id.back)
@@ -122,9 +121,6 @@ public class MonitorFragment extends BaseFragment {
 	private ExpendableCountDownTimer autoStartTimer;
 	private int safemin;
 	private int safemax;
-	private long lastAlert;
-	private boolean alert;
-	private int alertInterval;
 	private FixedRateCountDownTimer readDataTimer;
 	private boolean autoStart;
 
@@ -288,8 +284,6 @@ public class MonitorFragment extends BaseFragment {
 		ButterKnife.bind(this, view);
 		initView();
 		reset();
-		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
-		alertSound.load(getActivity().getApplicationContext(), R.raw.didi, 1);
 		readDataTimer = new FixedRateCountDownTimer(100000, 500) {
 			@Override
 			protected void onExtra(long duration, long extraTime, long stopTime) {
@@ -311,12 +305,6 @@ public class MonitorFragment extends BaseFragment {
 						tvBluetooth.setTextColor(Color.parseColor("#49DCB8"));
 					} else {
 						tvBluetooth.setTextColor(Color.parseColor("#FE0058"));
-						if (alert && connected && started) {
-							long currentTimeMillis = System.currentTimeMillis();
-							if (currentTimeMillis - lastAlert >= alertInterval * 1000)
-								alertSound.play(1, 1, 1, 0, 0, 1);
-							lastAlert = currentTimeMillis;
-						}
 					}
 					tvBluetooth.setText(fhr + "");
 				}
@@ -330,9 +318,12 @@ public class MonitorFragment extends BaseFragment {
 		autoStartTimer = new ExpendableCountDownTimer(autoStartTime, 1000) {
 			@Override
 			public void onStart(long startTime) {
+				tvStart.setVisibility(View.GONE);
 				hint.setText("");
 				if (autoStart) {
 					hint.setVisibility(View.VISIBLE);
+				} else {
+					hint.setVisibility(View.GONE);
 				}
 			}
 
@@ -485,8 +476,6 @@ public class MonitorFragment extends BaseFragment {
 		}
 		// TODO: 15/9/17 autoBeginAdviceMax = 3,autoBeginAdvice=20??? @小顾
 		//{"data":{"autoBeginAdvice":20,"autoAdviceTimeLong":20,"fetalMoveTime":5,"autoBeginAdviceMax":3,"askMinTime":20,"alarmHeartrateLimit":"100-160","hospitalId":3}}
-		alert = localSetting.isAlert();
-		alertInterval = localSetting.getAlertInterval();
 		autoStart = localSetting.isAutoStart();
 		if (autoStart) {
 			autoStartTime = adviceSetting.getAutoBeginAdvice() * 1000;
@@ -498,8 +487,8 @@ public class MonitorFragment extends BaseFragment {
 
 	public void reset() {
 		LogUtil.d(TAG, "重置状态");
-		tvBluetooth.setTextColor(getResources().getColor(R.color.green0));
-		tvBluetooth.setText("start");
+		tvStart.setVisibility(View.VISIBLE);
+		tvBluetooth.setText("");
 		tvBluetooth.setClickable(true);
 		btnStart.setClickable(true);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
@@ -516,6 +505,7 @@ public class MonitorFragment extends BaseFragment {
 	}
 
 	private void onConnectingUI() {
+		tvStart.setVisibility(View.GONE);
 		tvBluetooth.setText("连接中");
 		tvBluetooth.setClickable(false);
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
@@ -529,6 +519,7 @@ public class MonitorFragment extends BaseFragment {
 	public void onConnectedUI() {
 		connected = true;
 		readDataTimer.start();
+		autoStartTimer.start();
 		LogUtil.d(TAG, "开始倒计时,准备自动开始");
 		if (bluetoothScanner.isDiscovering()) {
 			bluetoothScanner.cancleDiscovery();
@@ -539,7 +530,6 @@ public class MonitorFragment extends BaseFragment {
 		tvBluetooth.setText("--");
 		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88);
 		bpm.setImageResource(R.drawable.bpm_red);
-		hint.setVisibility(View.GONE);
 	}
 
 	public void connectBondedDeviceOrSearch() {
