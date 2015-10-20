@@ -5,6 +5,9 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -21,6 +24,7 @@ import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.DownloadAPK;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
@@ -70,20 +74,42 @@ public class MeMainFragmentActivity extends BaseActivity {
 
         showTabFirst();
 
+        pullV();
 
-        ApiManager.getInstance().versionApi.checkVersion(getVerCode(this)+"", 1, new DefaultCallback<Version>(this, new AbstractBusiness<Version>() {
+    }
+
+
+    public void pullV(){
+        //软件类型 0 微胎心会员端安卓版, 1 微胎心院内安卓版, 2 微胎心会员端iOS版
+        ApiManager.getInstance().versionApi.checkVersion(getversionName(), 0,
+                new DefaultCallback<Version>(this, new AbstractBusiness<Version>() {
             @Override
             public void handleData(Version data) {
                 int flag = data.getFlag();
+                LogUtil.d("flag", "flag==>"+flag);
                 switch(flag){
                     case 0:  //0 已是最新, 1 有新版本更新,2 需强制升级
+
                         break;
+
                     case 1:
-                        DownloadAPK downloadAPK = new DownloadAPK(MeMainFragmentActivity.this);
-                        downloadAPK.apkUrl=data.getUpdateUrl();
-                        downloadAPK.checkUpdateInfo();
+                        Intent intent = new Intent();
+                        intent.setAction("android.intent.action.VIEW");
+                        Uri content_url = Uri.parse(data.getUpdateUrl());
+                        intent.setData(content_url);
+                        startActivity(intent);
+
+//                        DownloadAPK downloadAPK = new DownloadAPK(MeMainFragmentActivity.this);
+//                        downloadAPK.apkUrl=data.getUpdateUrl();
+//                        downloadAPK.checkUpdateInfo();
                         break;
+
                     case 2:
+                        Intent intent2 = new Intent();
+                        intent2.setAction("android.intent.action.VIEW");
+                        Uri content_url2 = Uri.parse(data.getUpdateUrl());
+                        intent2.setData(content_url2);
+                        startActivity(intent2);
                         break;
                 }
             }
@@ -93,12 +119,30 @@ public class MeMainFragmentActivity extends BaseActivity {
 
 
     /**
+     * 获取版本号
+     * @return 当前应用的版本号
+     */
+    public String getversionName() {
+        try {
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            String versionName = info.versionName;
+            int versionCode = info.versionCode;
+            return versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 获得版本号
      */
     public int getVerCode(Context context){
         int verCode = -1;
         try {
             verCode = context.getPackageManager().getPackageInfo("cn.ihealthbaby.weitaixin", 0).versionCode;
+            LogUtil.d("verCode", "verCode==>" + verCode);
         } catch (Exception e) {
             Log.e("版本号获取异常", e.getMessage());
         }
@@ -139,6 +183,7 @@ public class MeMainFragmentActivity extends BaseActivity {
                 homePageFragment = HomePageFragment.getInstance();
                 homePageFragment.getNumber();
                 homePageFragment.startAnim();
+//                pullV();
                 showFragment(R.id.container, homePageFragment);
             }
         }
