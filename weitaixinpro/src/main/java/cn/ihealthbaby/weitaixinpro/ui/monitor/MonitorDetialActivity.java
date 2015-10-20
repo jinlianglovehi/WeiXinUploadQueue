@@ -220,9 +220,7 @@ public class MonitorDetialActivity extends BaseActivity {
 					fhr = 0;
 				}
 				lastTime = time;
-				//如果越界,则值设置为0
-				if ((fhr > limitMax || fhr < limitMin)) {
-					fhr = 0;
+				if (fhr > safemax || fhr < safemin) {
 					if (alert) {
 						long currentTimeMillis = System.currentTimeMillis();
 						if (currentTimeMillis - lastAlert >= alertInterval * 1000) {
@@ -235,6 +233,11 @@ public class MonitorDetialActivity extends BaseActivity {
 							lastAlert = currentTimeMillis;
 						}
 					}
+				}
+
+				//如果越界,则值设置为0
+				if ((fhr > limitMax || fhr < limitMin)) {
+					fhr = 0;
 				}
 				if (fhr >= safemin && fhr <= safemax) {
 					bpm.setTextColor(Color.parseColor("#49DCB8"));
