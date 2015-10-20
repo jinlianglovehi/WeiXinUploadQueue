@@ -133,9 +133,9 @@ public class MonitorDetialActivity extends BaseActivity {
 	public void terminate() {
 		final MonitorDialog monitorDialog;
 		if (countDownTimer.getConsumedTime() / 1000 < askMinTime * 60) {
-			monitorDialog = new MonitorDialog(this, new String[]{"满" + askMinTime + "分钟的监测才是有效数据\n是否继续监测", "继续监测", "立即完成"});
+			monitorDialog = new MonitorDialog(this, new String[]{"不满" + askMinTime + "分钟会影响医生判读", "继续监测", "立即完成"});
 		} else {
-			monitorDialog = new MonitorDialog(this, new String[]{"是否立即完成", "继续监测", "立即完成"});
+			monitorDialog = new MonitorDialog(this, new String[]{"是否立即结束", "继续监测", "立即完成"});
 		}
 		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
 			@Override
