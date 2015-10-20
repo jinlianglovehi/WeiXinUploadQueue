@@ -72,6 +72,42 @@ public class WheelTime {
 		this.setPicker(year, month, day, 0, 0);
 	}
 
+
+
+
+	//-28天≤当前日期≤300天；
+	public Date[] showInfoEdit() {
+
+//        Date date = new Date();
+		long time =  System.currentTimeMillis();
+
+		//-28
+		long preTime = time - 28L * 24 * 3600 * 1000;
+
+		//300
+		long postTime = time + 300L * 24 * 3600 * 1000;
+
+		Date date1 = new Date(preTime);
+
+		Date date2 = new Date(postTime);
+
+//		newD(date1);
+//
+//		newD(date2);
+
+		return new Date[]{date1, date2};
+	}
+
+	public void newD(Date date){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int cuurYear = c.get(Calendar.YEAR);
+		int cuurMonth = c.get(Calendar.MONTH)+1;
+		int cuurDay = c.get(Calendar.DAY_OF_MONTH);
+		LogUtil.d("Calend+==", "Calend+==>" + cuurYear + ":" + cuurMonth + ":" + cuurDay);
+	}
+
+
 	/**
 	 * @Description: TODO 弹出日期时间选择器
 	 */
@@ -91,32 +127,67 @@ public class WheelTime {
 			Calendar c = Calendar.getInstance();
 			int cuurYear = c.get(Calendar.YEAR);
 			LogUtil.d("cuurYear", "cuurYear==> " + cuurYear);
-			START_YEAR = cuurYear - 15;
-			END_YEAR = cuurYear + 60;
-			wv_year.setAdapter(new NumericWheelAdapter(cuurYear - 15, cuurYear + 60));// 设置"年"的显示数据
+			START_YEAR = cuurYear - 60;
+			END_YEAR = cuurYear - 15;
+			wv_year.setAdapter(new NumericWheelAdapter(cuurYear - 60, cuurYear - 15));// 设置"年"的显示数据
 			wv_year.setLabel(context.getString(R.string.pickerview_year));// 添加文字
 			wv_year.setCurrentItem(cuurYear - START_YEAR);// 初始化时显示的数据
 		} else  {
+
+			Date[] dates = showInfoEdit();
+
+
+			Calendar c = Calendar.getInstance();
+			c.setTime(dates[0]);
+			int cuurYear = c.get(Calendar.YEAR);
+			int cuurMonth = c.get(Calendar.MONTH)+1;
+			int cuurDay = c.get(Calendar.DAY_OF_MONTH);
+
+			Calendar c2 = Calendar.getInstance();
+			c2.setTime(dates[1]);
+			int cuurYear2 = c2.get(Calendar.YEAR);
+
+			START_YEAR = cuurYear;
+			END_YEAR = cuurYear2;
+
 			wv_year.setAdapter(new NumericWheelAdapter(START_YEAR, END_YEAR));// 设置"年"的显示数据
 			wv_year.setLabel(context.getString(R.string.pickerview_year));// 添加文字
-			wv_year.setCurrentItem(year - START_YEAR);// 初始化时显示的数据
+			wv_year.setCurrentItem(cuurYear - START_YEAR);// 初始化时显示的数据
+//			wv_year.setCurrentItem(year - START_YEAR);// 初始化时显示的数据
 		}
+
+
+
+
+
 
 
 
 		// 月
 		wv_month = (WheelView) view.findViewById(R.id.month);
 //		if (InfoEditActivity.isExpectedDateShow) {
-//			Calendar c = Calendar.getInstance();
-//			int cuurMonth = c.get(Calendar.MONTH);
 //
-//			int mTh = ((cuurMonth + 1 + 10) % 12);
-//			LogUtil.d("cuurMonth", mTh + "cuurMonth==>" + cuurMonth);
-//			if (cuurMonth <= mTh) {
-//				wv_month.setAdapter(new NumericWheelAdapter(cuurMonth + 1 - 1, mTh));
+//			Date[] dates = showInfoEdit();
+//
+//
+//			Calendar c = Calendar.getInstance();
+//			c.setTime(dates[0]);
+//			int cuurMonth = c.get(Calendar.MONTH)+1;
+////			int cuurDay = c.get(Calendar.DAY_OF_MONTH);
+//
+//			Calendar c2 = Calendar.getInstance();
+//			c2.setTime(dates[1]);
+//			int cuurMonth2 = c2.get(Calendar.MONTH)+1;
+//
+//			LogUtil.d("cuurMonthmonth", cuurMonth + "cuurMonthmonth==>" + cuurMonth2);
+//
+//			if(cuurMonth<=cuurMonth2){
+//				wv_month.setAdapter(new NumericWheelAdapter(cuurMonth, cuurMonth2));
 //			} else {
-//				wv_month.setAdapter(new NumericWheelAdapter(mTh, cuurMonth + 1 - 1));
+//				wv_month.setAdapter(new NumericWheelAdapter(cuurMonth2, cuurMonth));
 //			}
+//
+//
 //			wv_month.setLabel(context.getString(R.string.pickerview_month));
 //			wv_month.setCurrentItem(cuurMonth);
 //		} else {
@@ -130,20 +201,50 @@ public class WheelTime {
 
 		// 日
 		wv_day = (WheelView) view.findViewById(R.id.day);
-		// 判断大小月及是否闰年,用来确定"日"的数据
-		if (list_big.contains(String.valueOf(month + 1))) {
-			wv_day.setAdapter(new NumericWheelAdapter(1, 31));
-		} else if (list_little.contains(String.valueOf(month + 1))) {
-			wv_day.setAdapter(new NumericWheelAdapter(1, 30));
-		} else {
-			// 闰年
-			if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
-				wv_day.setAdapter(new NumericWheelAdapter(1, 29));
-			else
-				wv_day.setAdapter(new NumericWheelAdapter(1, 28));
-		}
-		wv_day.setLabel(context.getString(R.string.pickerview_day));
-		wv_day.setCurrentItem(day - 1);
+//		if (InfoEditActivity.isExpectedDateShow) {
+//
+//			Date[] dates = showInfoEdit();
+//
+//
+//			Calendar c = Calendar.getInstance();
+//			c.setTime(dates[0]);
+//			int cuurDay = c.get(Calendar.DAY_OF_MONTH);
+//
+//			Calendar c2 = Calendar.getInstance();
+//			c2.setTime(dates[1]);
+//			int cuurDay2 = c2.get(Calendar.DAY_OF_MONTH);
+//
+//			LogUtil.d("cuurMonthmonth", cuurDay + "cuurMonthmonth==>" + cuurDay2);
+//
+//
+//			if (cuurDay <= cuurDay2) {
+//				wv_day.setAdapter(new NumericWheelAdapter(cuurDay, cuurDay2));
+//			} else {
+//				wv_day.setAdapter(new NumericWheelAdapter(cuurDay2, cuurDay));
+//			}
+//
+//
+//			wv_day.setLabel(context.getString(R.string.pickerview_day));
+//			wv_day.setCurrentItem(cuurDay - 1);
+//
+//		}else {
+			// 判断大小月及是否闰年,用来确定"日"的数据
+			if (list_big.contains(String.valueOf(month + 1))) {
+				wv_day.setAdapter(new NumericWheelAdapter(1, 31));
+			} else if (list_little.contains(String.valueOf(month + 1))) {
+				wv_day.setAdapter(new NumericWheelAdapter(1, 30));
+			} else {
+				// 闰年
+				if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+					wv_day.setAdapter(new NumericWheelAdapter(1, 29));
+				else
+					wv_day.setAdapter(new NumericWheelAdapter(1, 28));
+			}
+			wv_day.setLabel(context.getString(R.string.pickerview_day));
+			wv_day.setCurrentItem(day - 1);
+//		}
+
+
 
 
 		wv_hours = (WheelView)view.findViewById(R.id.hour);

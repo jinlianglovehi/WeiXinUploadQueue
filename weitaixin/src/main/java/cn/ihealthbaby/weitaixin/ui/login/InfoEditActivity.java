@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.ihealthbaby.weitaixin.R;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.pickerview.TimePopupWindow;
 
 import java.text.ParseException;
@@ -49,15 +51,48 @@ import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectPhoto {
 
 
-
     //-28天≤当前日期≤300天；
-    public void sdsd(){
+    public void showInfoEdit() {
+
+//        Date date = new Date();
+        long time =  System.currentTimeMillis();
+
+        SimpleDateFormat dateFm = new SimpleDateFormat("yyyy-MM-dd"); //格式化当前系统日期
+        String dateTime = dateFm.format(new Date(time));
+        String dateTime2 = dateFm.format(new Date().getTime());
+        LogUtil.d("SimpleDateFormat+==", "SimpleDateFormat+==>" + dateTime);
+        LogUtil.d("SimpleDateFormat222+==", "SimpleDateFormat222+==>" + dateTime2);
 
 
+        //-28
+        long preTime = time - 28L * 24 * 3600 * 1000;
 
+        //300
+        long postTime = time + 300L * 24 * 3600 * 1000;
 
+        Date date1 = new Date(preTime);
+
+        Date date2 = new Date(postTime);
+
+        newD(date1);
+
+        newD(date2);
     }
 
+    public void newD(Date date){
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        int cuurYear = c.get(Calendar.YEAR);
+        int cuurMonth = c.get(Calendar.MONTH)+1;
+        int cuurDay = c.get(Calendar.DAY_OF_MONTH);
+        LogUtil.d("Calend+==", "Calend+==>" + cuurYear + ":" + cuurMonth + ":" + cuurDay);
+
+//        SimpleDateFormat dateFm = new SimpleDateFormat("yyyy-MM-dd"); //格式化当前系统日期
+//        String dateTime = dateFm.format(date);
+//        LogUtil.d("dateTime+==", "dateTime+==>" + dateTime);
+
+    }
 
     @Bind(R.id.back)
     RelativeLayout back;
@@ -189,6 +224,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     @OnClick(R.id.et_birthdate_info)
     public void etBirthdateInfo() {
 //        setDate(false,et_birthdate_info);
+        showInfoEdit();
         isBirthDateShow = true;
         isExpectedDateShow = false;
         mTimePopupWindow.setRange(1888, 3000);
@@ -206,6 +242,7 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     @OnClick(R.id.et_date_info)
     public void etDateInfo() {
+        showInfoEdit();
         isExpectedDateShow = true;
         isBirthDateShow = false;
 //        setDate(true, et_date_info);
