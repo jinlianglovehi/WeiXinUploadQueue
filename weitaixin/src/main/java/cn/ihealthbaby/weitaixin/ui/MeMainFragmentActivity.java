@@ -21,7 +21,6 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.Version;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
-import cn.ihealthbaby.weitaixin.DownloadAPK;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -195,7 +194,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     public void iv_tab_02() {
         if (showTab(iv_tab_02)) {
             if (monitorFragment == null) {
-                monitorFragment = new MonitorFragment();
+                monitorFragment =   MonitorFragment.getInstance();
             }
             showFragment(R.id.container, monitorFragment);
         }
