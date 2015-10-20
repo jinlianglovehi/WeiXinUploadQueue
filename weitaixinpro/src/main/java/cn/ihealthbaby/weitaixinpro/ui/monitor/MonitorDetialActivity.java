@@ -170,7 +170,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		width = metric.widthPixels;
 		getAdviceSetting();
 		configCurve();
-		alertSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 5);
+		alertSound = new SoundPool(1, AudioManager.STREAM_MUSIC, 5);
 		alertSound.load(getApplicationContext(), R.raw.didi, 1);
 		countDownTimer = new FixedRateCountDownTimer(duration, 500) {
 			public RelativeLayout.LayoutParams layoutParams;
@@ -209,12 +209,6 @@ public class MonitorDetialActivity extends BaseActivity {
 			private void tick(FHRPackage fhrPackage) {
 				//获取当前心率值
 				int fhr = fhrPackage.getFHR1();
-				if (alert) {
-					long currentTimeMillis = System.currentTimeMillis();
-					if (currentTimeMillis - lastAlert >= alertInterval * 1000)
-						alertSound.play(1, 1, 1, 0, 0, 1);
-					lastAlert = currentTimeMillis;
-				}
 				long time = fhrPackage.getTime();
 				//防止重复
 				if (lastTime == time) {
@@ -224,6 +218,14 @@ public class MonitorDetialActivity extends BaseActivity {
 				//如果越界,则值设置为0
 				if ((fhr > limitMax || fhr < limitMin)) {
 					fhr = 0;
+					if (alert) {
+						long currentTimeMillis = System.currentTimeMillis();
+						if (currentTimeMillis - lastAlert >= alertInterval * 1000) {
+							LogUtil.d(TAG, "alert");
+							alertSound.play(0, 1, 1, 0, 0, 1);
+						}
+						lastAlert = currentTimeMillis;
+					}
 				}
 				if (fhr >= safemin && fhr <= safemax) {
 					bpm.setTextColor(Color.parseColor("#49DCB8"));
@@ -238,7 +240,7 @@ public class MonitorDetialActivity extends BaseActivity {
 				int size = curve.getHearts().size();
 				final float currentPositionX = curve.getCurrentPositionX();
 				final float diff = currentPositionX - width / 2;
-				LogUtil.d(TAG, "currentPositionX:[%s], diff:[%s]", currentPositionX, diff);
+//				LogUtil.d(TAG, "currentPositionX:[%s], diff:[%s]", currentPositionX, diff);
 				if (diff <= 0) {
 					layoutParams.setMargins((int) currentPositionX, 0, 0, 0);
 				} else {
