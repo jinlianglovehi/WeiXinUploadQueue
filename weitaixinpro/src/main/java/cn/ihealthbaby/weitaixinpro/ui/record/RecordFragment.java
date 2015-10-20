@@ -66,6 +66,10 @@ public class RecordFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewLayout = ((View) inflater.inflate(R.layout.fragment_swipe_refresh_recycler2, null));
 		swipeRefreshLayout = (SwipeRefreshLayout) viewLayout.findViewById(R.id.swipe_refresh_layout);
+		swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+				                                          android.R.color.holo_green_light,
+				                                          android.R.color.holo_orange_light,
+				                                          android.R.color.holo_red_light);
 		recyclerView = (RecyclerView) viewLayout.findViewById(R.id.recycler_view);
 		tvCancel = (TextView) viewLayout.findViewById(R.id.tvCancel);
 		title_text = (TextView) viewLayout.findViewById(R.id.title_text);

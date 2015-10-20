@@ -40,6 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/chs"
             android:layout_alignTop="@id/chs"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/vertical_red_line"
             />
 

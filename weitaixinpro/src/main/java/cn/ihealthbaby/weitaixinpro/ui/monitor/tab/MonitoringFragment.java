@@ -38,17 +38,16 @@ public class MonitoringFragment extends BaseFragment {
 	public HClientUser hClientUser;
 	public int currentPage;
 	public int count;
+	private LinearLayoutManager layoutManager;
+	private RecyclerView recyclerView;
+	private SwipeRefreshLayout swipeRefreshLayout;
 	private List<ServiceInside> list;
 	private MonitoringRecyclerViewAdapter adapter;
-	private SwipeRefreshLayout swipeRefreshLayout;
-	private RecyclerView recyclerView;
-	private LinearLayoutManager layoutManager;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		swipeRefreshLayout = ((SwipeRefreshLayout) inflater.inflate(R.layout.fragment_swipe_refresh_recycler, null));
-		recyclerView = (RecyclerView) swipeRefreshLayout.findViewById(R.id.recycler_view);
 		return swipeRefreshLayout;
 	}
 
@@ -60,6 +59,7 @@ public class MonitoringFragment extends BaseFragment {
 				                                          android.R.color.holo_orange_light,
 				                                          android.R.color.holo_red_light);
 		layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+		recyclerView = (RecyclerView) swipeRefreshLayout.findViewById(R.id.recycler_view);
 		recyclerView.setLayoutManager(layoutManager);
 		list = new ArrayList<ServiceInside>();
 		adapter = new MonitoringRecyclerViewAdapter(getActivity().getApplicationContext(), list);

@@ -28,9 +28,9 @@ import de.greenrobot.event.EventBus;
 /**
  */
 public class UnmonitorFragment extends BaseFragment {
-	private static final int MONITORING = 1;
 	private static final int UNMONITOR = 0;
 	private static final int PAGE_SIZE = 20;
+	private final static String TAG = "UnmonitoringFragment";
 	/**
 	 * 起始页码 从1开始
 	 */
@@ -38,11 +38,10 @@ public class UnmonitorFragment extends BaseFragment {
 	public HClientUser hClientUser;
 	public int currentPage;
 	public int count;
-	private RecyclerView.LayoutManager layoutManager;
+	private LinearLayoutManager layoutManager;
 	private RecyclerView recyclerView;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private List<ServiceInside> list;
-	private boolean loading;
 	private UnmonitorRecyclerViewAdapter adapter;
 
 	@Nullable
@@ -55,8 +54,12 @@ public class UnmonitorFragment extends BaseFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+		swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+				                                          android.R.color.holo_green_light,
+				                                          android.R.color.holo_orange_light,
+				                                          android.R.color.holo_red_light);
 		layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+		recyclerView = (RecyclerView) swipeRefreshLayout.findViewById(R.id.recycler_view);
 		recyclerView.setLayoutManager(layoutManager);
 		list = new ArrayList<ServiceInside>();
 		adapter = new UnmonitorRecyclerViewAdapter(getActivity().getApplicationContext(), list);
@@ -71,10 +74,9 @@ public class UnmonitorFragment extends BaseFragment {
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
 				int itemCount = adapter.getItemCount();
-				LinearLayoutManager linearLayoutManager = ((LinearLayoutManager) layoutManager);
-				linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-				swipeRefreshLayout.setEnabled(linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-				if (itemCount > PAGE_SIZE && linearLayoutManager.findLastVisibleItemPosition() > itemCount - 5) {
+				layoutManager.findFirstCompletelyVisibleItemPosition();
+				swipeRefreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+				if (itemCount > PAGE_SIZE && layoutManager.findLastVisibleItemPosition() > itemCount - 5) {
 					request(currentPage + 1);
 				}
 			}
