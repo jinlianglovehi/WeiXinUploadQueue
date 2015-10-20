@@ -2,6 +2,8 @@ package cn.ihealthbaby.weitaixin.ui.monitor;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -83,6 +85,8 @@ public class MonitorActivity extends BaseActivity {
 	private int safemax = 160;
 	private int limitMax = 210;
 	private int limitMin = 60;
+	private long lastAlert;
+	private SoundPool alertSound;
 
 	@OnClick(R.id.back)
 	public void back() {
@@ -96,6 +100,11 @@ public class MonitorActivity extends BaseActivity {
 			@Override
 			public void right(Object... obj) {
 				monitorDialog.dismiss();
+				try {
+					alertSound.release();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_CANCEL_STARTED));
 				finish();
 			}
@@ -105,6 +114,11 @@ public class MonitorActivity extends BaseActivity {
 
 	@OnClick(R.id.function)
 	public void terminate() {
+		try {
+			alertSound.release();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
 	}
 
@@ -153,6 +167,8 @@ public class MonitorActivity extends BaseActivity {
 		//
 		roundProgressMask.setBackgroundResource(R.drawable.round_background_3);
 		configCurveSimple();
+		alertSound = new SoundPool(1, AudioManager.STREAM_MUSIC, 5);
+		final int soundId = alertSound.load(getApplicationContext(), R.raw.didi, 1);
 		final long interval = 500;
 		countDownTimer = new FixedRateCountDownTimer(duration, interval) {
 //			private int fhr;
@@ -175,6 +191,21 @@ public class MonitorActivity extends BaseActivity {
 				roundProgressMask.postInvalidate();
 				//获取当前心率值
 				int fhr = fhrPackage.getFHR1();
+				//报警
+				if (fhr > safemax || fhr < safemin) {
+					if (alert) {
+						long currentTimeMillis = System.currentTimeMillis();
+						if (currentTimeMillis - lastAlert >= alertInterval * 1000) {
+							LogUtil.d(TAG, "alert");
+							try {
+								alertSound.play(soundId, 1, 1, 0, 0, 1);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							lastAlert = currentTimeMillis;
+						}
+					}
+				}
 				//如果越界,则值设置为0
 				if ((fhr > limitMax || fhr < limitMin)) {
 					fhr = 0;
@@ -203,6 +234,11 @@ public class MonitorActivity extends BaseActivity {
 			@Override
 			public void onFinish() {
 				//
+				try {
+					alertSound.release();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_AUTO));
 				//
 			}
@@ -304,6 +340,8 @@ public class MonitorActivity extends BaseActivity {
 		if (autoAdviceTimeLong > 0) {
 			duration = autoAdviceTimeLong * 60 * 1000;
 		}
+		alert = localSetting.isAlert();
+		alertInterval = localSetting.getAlertInterval();
 		LogUtil.d(TAG, "safemin:%s,safemax:%s,alertSound:%s,alertInterval:%s,duration:%s", safemin, safemax, alert, alertInterval, duration);
 	}
 
