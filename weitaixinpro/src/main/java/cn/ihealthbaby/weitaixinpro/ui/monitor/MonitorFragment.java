@@ -528,11 +528,6 @@ public class MonitorFragment extends BaseFragment {
 		}
 	}
 
-	/**
-	 * 有变更
-	 *
-	 * @return
-	 */
 	private String getDeviceName() {
 		HClientUser hClientUser = SPUtil.getHClientUser(getActivity().getApplicationContext());
 		String serialnum = hClientUser.getSerialnum();

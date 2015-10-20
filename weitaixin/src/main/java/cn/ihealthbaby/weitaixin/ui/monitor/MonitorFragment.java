@@ -77,7 +77,7 @@ public class MonitorFragment extends BaseFragment {
 	/**
 	 * 处理连接状态以及连接失败
 	 */
-	private static Handler handler = new MonitorHandler(monitorFragmentWeakReference);
+	private static Handler handler;
 	@Bind(R.id.round_frontground)
 	ImageView roundFrontground;
 	@Bind(R.id.round_background)
@@ -125,6 +125,9 @@ public class MonitorFragment extends BaseFragment {
 	private boolean autoStart;
 
 	public static MonitorFragment getInstance() {
+		if (handler == null) {
+			handler = new MonitorHandler(monitorFragmentWeakReference);
+		}
 		return instance;
 	}
 
@@ -157,12 +160,13 @@ public class MonitorFragment extends BaseFragment {
 		Record record = new Record();
 		//必填内容:userId,userName,serialNumber,localRecordId
 		record.setUserId(user.getId());
+		record.setUserName(user.getName());
+		record.setGestationalWeeks(DateTimeTool.getGestationalWeeks(user.getDeliveryTime(), recordStartTime));
+		//
 		record.setSerialNumber(getDeviceName());
 		record.setUploadState(Record.UPLOAD_STATE_LOCAL);
-		record.setUserName(user.getName());
 		record.setLocalRecordId(localRecordId);
 		record.setRecordStartTime(recordStartTime);
-		record.setGestationalWeeks(DateTimeTool.getGestationalWeeks(user.getDeliveryTime(), recordStartTime));
 		try {
 			recordBusinessDao.insert(record);
 			if (Constants.MODE_DEBUG) {
