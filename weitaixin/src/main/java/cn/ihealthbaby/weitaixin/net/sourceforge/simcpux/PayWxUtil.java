@@ -28,7 +28,7 @@ import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 public class PayWxUtil {
 
-    private static final String TAG = "MicroMsg.SDKSample.PayWxUtil";
+    private static final String TAG = "cn.ihealthbaby.weitaixin.net.sourceforge.simcpux.PayWxUtil";
 
     public PayReq req;
     public TextView show;
@@ -155,7 +155,7 @@ public class PayWxUtil {
             sb.append('&');
         }
         sb.append("key=");
-        sb.append(Constants.API_KEY);
+//        sb.append(Constants.API_KEY);
 
 
         String packageSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
@@ -163,24 +163,24 @@ public class PayWxUtil {
         return packageSign;
     }
 
-
-    private String genAppSign(List<NameValuePair> params) {
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < params.size(); i++) {
-            sb.append(params.get(i).getName());
-            sb.append('=');
-            sb.append(params.get(i).getValue());
-            sb.append('&');
-        }
-        sb.append("key=");
-        sb.append(Constants.API_KEY);
-
-        this.sb.append("sign str\n" + sb.toString() + "\n\n");
-        String appSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
-        Log.e("orion",appSign);
-        return appSign;
-    }
+//
+//    private String genAppSign(List<NameValuePair> params) {
+//        StringBuilder sb = new StringBuilder();
+//
+//        for (int i = 0; i < params.size(); i++) {
+//            sb.append(params.get(i).getName());
+//            sb.append('=');
+//            sb.append(params.get(i).getValue());
+//            sb.append('&');
+//        }
+//        sb.append("key=");
+//        sb.append(Constants.API_KEY);
+//
+//        this.sb.append("sign str\n" + sb.toString() + "\n\n");
+//        String appSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
+//        Log.e("orion",appSign);
+//        return appSign;
+//    }
 
 
     private String toXml(List<NameValuePair> params) {
@@ -310,7 +310,7 @@ public class PayWxUtil {
             List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
             packageParams.add(new BasicNameValuePair("appid", Constants.APP_ID));
             packageParams.add(new BasicNameValuePair("body", "weixin"));
-            packageParams.add(new BasicNameValuePair("mch_id", Constants.MCH_ID));
+//            packageParams.add(new BasicNameValuePair("mch_id", Constants.MCH_ID));
             packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));
             packageParams.add(new BasicNameValuePair("notify_url", "http://121.40.35.3/test"));
             packageParams.add(new BasicNameValuePair("out_trade_no", genOutTradNo()));

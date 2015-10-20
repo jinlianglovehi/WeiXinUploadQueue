@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixin.ui.mine;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,26 +42,40 @@ import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISelectPhoto {
 
-    @Bind(R.id.back) RelativeLayout back;
-    @Bind(R.id.title_text) TextView title_text;
-    @Bind(R.id.function) TextView function;
+    @Bind(R.id.back)
+    RelativeLayout back;
+    @Bind(R.id.title_text)
+    TextView title_text;
+    @Bind(R.id.function)
+    TextView function;
     //
 
-    @Bind(R.id.tv_wo_head_name) TextView tv_wo_head_name;
-    @Bind(R.id.tv_wo_head_breed_date) TextView tv_wo_head_breed_date;
-    @Bind(R.id.tv_wo_head_deliveryTime) TextView tv_wo_head_deliveryTime;
-    @Bind(R.id.tv_phone_number) TextView tv_phone_number;
-    @Bind(R.id.tv_birthday) TextView tv_birthday;
-    @Bind(R.id.tv_sn_number) TextView tv_sn_number;
-    @Bind(R.id.tv_place_name) TextView tv_place_name;
-    @Bind(R.id.tv_hospital_name) TextView tv_hospital_name;
-    @Bind(R.id.tv_doctor_name) TextView tv_doctor_name;
-    @Bind(R.id.tv_doctor_advisory_number) TextView tv_doctor_advisory_number;
-    @Bind(R.id.tv_doctor_surplus_advisory_number) TextView tv_doctor_surplus_advisory_number;
-    @Bind(R.id.iv_wo_head_icon) RoundImageView iv_wo_head_icon;
+    @Bind(R.id.tv_wo_head_name)
+    TextView tv_wo_head_name;
+    @Bind(R.id.tv_wo_head_breed_date)
+    TextView tv_wo_head_breed_date;
+    @Bind(R.id.tv_wo_head_deliveryTime)
+    TextView tv_wo_head_deliveryTime;
+    @Bind(R.id.tv_phone_number)
+    TextView tv_phone_number;
+    @Bind(R.id.tv_birthday)
+    TextView tv_birthday;
+    @Bind(R.id.tv_sn_number)
+    TextView tv_sn_number;
+    @Bind(R.id.tv_place_name)
+    TextView tv_place_name;
+    @Bind(R.id.tv_hospital_name)
+    TextView tv_hospital_name;
+    @Bind(R.id.tv_doctor_name)
+    TextView tv_doctor_name;
+    @Bind(R.id.tv_doctor_advisory_number)
+    TextView tv_doctor_advisory_number;
+    @Bind(R.id.tv_doctor_surplus_advisory_number)
+    TextView tv_doctor_surplus_advisory_number;
+    @Bind(R.id.iv_wo_head_icon)
+    RoundImageView iv_wo_head_icon;
 
     public Bitmap photo;
-
 
 
     @Override
@@ -70,12 +85,23 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
 
         ButterKnife.bind(this);
         title_text.setText("我的信息");
-
-
     }
 
 
-    private void pullData(){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pullData();
+    }
+
+
+    private void pullData() {
+        User user = SPUtil.getUser(this);
+        if (user != null) {
+            initInformation(user);
+        }
+
+
         final CustomDialog customDialog = new CustomDialog();
         customDialog.createDialog1(this, "获取数据中...");
         customDialog.show();
@@ -98,29 +124,35 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
                 super.handleResult(result);
                 customDialog.dismiss();
             }
+
+            @Override
+            public void handleAllFailure(Context context) {
+                super.handleAllFailure(context);
+                customDialog.dismiss();
+            }
         }), getRequestTag());
     }
 
 
-    public void initInformation(User user){
+    public void initInformation(User user) {
 //        User user = SPUtil.getUser(this);
         if (SPUtil.isLogin(this) && user != null) {
-            LogUtil.d("User2==>", "User2==> " + user.toString());
+//            LogUtil.d("User2==>", "User2==> " + user.toString());
             ImageLoader.getInstance().displayImage(user.getHeadPic(), iv_wo_head_icon, setDisplayImageOptions());
             tv_wo_head_name.setText(user.getName() + "");
             tv_wo_head_breed_date.setText("已孕：" + DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
             tv_wo_head_deliveryTime.setText("预产：" + DateTimeTool.date2Str(user.getDeliveryTime(), "yyyy年MM月dd日"));
-            tv_phone_number.setText(user.getMobile()+"");
-            tv_birthday.setText(DateTimeTool.date2Str(user.getBirthday(), "MM月dd日")+"");
+            tv_phone_number.setText(user.getMobile() + "");
+            tv_birthday.setText(DateTimeTool.date2Str(user.getBirthday(), "MM月dd日") + "");
 
             ServiceInfo serviceInfo = user.getServiceInfo();
-            if(serviceInfo!=null){
-                tv_sn_number.setText(serviceInfo.getSerialnum()+ "");
-                tv_place_name.setText(serviceInfo.getAreaInfo()+ "");
-                tv_hospital_name.setText(serviceInfo.getHospitalName()+ "");
-                tv_doctor_name.setText(serviceInfo.getDoctorName()+ "");
+            if (serviceInfo != null) {
+                tv_sn_number.setText(serviceInfo.getSerialnum() + "");
+                tv_place_name.setText(serviceInfo.getAreaInfo() + "");
+                tv_hospital_name.setText(serviceInfo.getHospitalName() + "");
+                tv_doctor_name.setText(serviceInfo.getDoctorName() + "");
 
-                tv_doctor_advisory_number.setText(serviceInfo.getTotalCount()+ "");
+                tv_doctor_advisory_number.setText(serviceInfo.getTotalCount() + "");
                 tv_doctor_surplus_advisory_number.setText(serviceInfo.getTotalCount() - serviceInfo.getUsedCount() + "");
 
                 if (serviceInfo.getTotalCount() == -1) {
@@ -132,32 +164,25 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        pullData();
-
-    }
-
 
     @OnClick(R.id.back)
-    public void onBack( ) {
+    public void onBack() {
         this.finish();
     }
 
 
     public MyPoPoWin ppWin;
+
     @OnClick(R.id.iv_wo_head_icon)
-    public void ivWoHeadIcon( ) {
+    public void ivWoHeadIcon() {
         ppWin = new MyPoPoWin(this);
         ppWin.showAtLocation(iv_wo_head_icon);
         ppWin.setListener(this);
     }
 
 
-
     public DisplayImageOptions setDisplayImageOptions() {
-        DisplayImageOptions options=null;
+        DisplayImageOptions options = null;
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.button_monitor_helper)
                 .showImageForEmptyUri(R.drawable.button_monitor_helper)
@@ -199,19 +224,19 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
 
 
     public UploadFileEngine engine;
-    public void upLoadHeadPic(){
-        CustomDialog customDialog=new CustomDialog();
-        Dialog dialog=customDialog.createDialog1(this, "头像上传中...");
-        engine=new UploadFileEngine(this,null ,customDialog);
-        if(photo!=null) {
+
+    public void upLoadHeadPic() {
+        CustomDialog customDialog = new CustomDialog();
+        Dialog dialog = customDialog.createDialog1(this, "头像上传中...");
+        engine = new UploadFileEngine(this, null, customDialog);
+        if (photo != null) {
             dialog.show();
-            engine.isUpdateHeadPic=true;
+            engine.isUpdateHeadPic = true;
             engine.init(ImageTool.Bitmap2Bytes(photo));
         } else {
             ToastUtil.show(getApplicationContext(), "头像没有");
         }
     }
-
 
 
     @Override
@@ -221,12 +246,12 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
 
         switch (requestCode) {
             case MyPoPoWin.FLAG_TAKE_PHOTO: //拍照
-                Bundle bundle  = data.getExtras();
+                Bundle bundle = data.getExtras();
                 if (bundle != null) {
                     Bitmap bitmap = (Bitmap) bundle.get("data");
-                    if(bitmap!=null){
-                        bitmap=ImageTool.compressBitmap(bitmap);
-                        photo=bitmap;
+                    if (bitmap != null) {
+                        bitmap = ImageTool.compressBitmap(bitmap);
+                        photo = bitmap;
                         iv_wo_head_icon.setImageBitmap(bitmap);
                         upLoadHeadPic();
                     }
@@ -237,9 +262,9 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
                 ContentResolver cr = this.getContentResolver();
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(data.getData()));
-                    if(bitmap!=null){
-                        bitmap=ImageTool.compressBitmap(bitmap);
-                        photo=bitmap;
+                    if (bitmap != null) {
+                        bitmap = ImageTool.compressBitmap(bitmap);
+                        photo = bitmap;
                         iv_wo_head_icon.setImageBitmap(bitmap);
                         upLoadHeadPic();
                     }
@@ -251,9 +276,6 @@ public class WoInformationActivity extends BaseActivity implements MyPoPoWin.ISe
 
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
-
 
 
 }

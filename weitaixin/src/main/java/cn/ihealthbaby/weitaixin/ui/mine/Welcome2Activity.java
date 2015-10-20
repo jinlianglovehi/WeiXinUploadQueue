@@ -31,7 +31,7 @@ import cn.ihealthbaby.weitaixin.ui.Fragment05;
 public class Welcome2Activity extends FragmentActivity {
 
     private ViewPager viewPagerWelcome;
-    private TextView ivWelcomeStart;
+//    private TextView ivWelcomeStart;
     private LinearLayout llDot;
 
 
@@ -56,12 +56,12 @@ public class Welcome2Activity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_welcome);
+        setContentView(R.layout.activity_main_welcome2);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
 
 
         viewPagerWelcome = (ViewPager) this.findViewById(R.id.viewPagerWelcome);
-        ivWelcomeStart = (TextView) this.findViewById(R.id.ivWelcomeStart);
+//        ivWelcomeStart = (TextView) this.findViewById(R.id.ivWelcomeStart);
         llDot = (LinearLayout) this.findViewById(R.id.llDot);
 
 
@@ -71,18 +71,21 @@ public class Welcome2Activity extends FragmentActivity {
 
 
 
-        ivWelcomeStart.setVisibility(View.VISIBLE);
+//        ivWelcomeStart.setVisibility(View.VISIBLE);
 
-        handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ivWelcomeStart.setVisibility(View.GONE);
-                initView();
-                initDataView();
-            }
-        }, 1500);
+//        handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                ivWelcomeStart.setVisibility(View.GONE);
+//                initView();
+//                initDataView();
+//            }
+//        }, 1500);
 
+
+        initView();
+        initDataView();
 
     }
 

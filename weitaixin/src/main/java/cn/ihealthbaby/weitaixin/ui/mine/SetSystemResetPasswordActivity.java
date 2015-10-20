@@ -18,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.ChangePasswordForm;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
@@ -139,10 +140,10 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
-            }else{
+            } else {
                 final CustomDialog customDialog = new CustomDialog();
                 dialog = customDialog.createDialog1(this, "验证码发送中...");
-                dialog.show();
+                customDialog.show();
 
                 isSend = false;
 
@@ -248,10 +249,15 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
             return;
         }
 
+        if (mark_number!=null&&mark_number.length() != 6) {
+            ToastUtil.show(getApplicationContext(), "验证码必须是6位的数字");
+            return;
+        }
+
 
         final CustomDialog customDialog = new CustomDialog();
         final Dialog dialog = customDialog.createDialog1(this, "登录中...");
-        dialog.show();
+        customDialog.show();
 
 
         ChangePasswordForm changePasswordForm = new ChangePasswordForm(Integer.parseInt(mark_number), newPassword);
@@ -264,22 +270,39 @@ public class SetSystemResetPasswordActivity extends BaseActivity {
                             ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "修改密码成功");
                             finish();
                         }
-                        dialog.dismiss();
+                        customDialog.dismiss();
                     }
 
                     @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
-                        dialog.dismiss();
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "修改密码失败");
+                        customDialog.dismiss();
                     }
 
                     @Override
                     public void handleClientError(Context context, Exception e) {
                         super.handleClientError(context, e);
-                        dialog.dismiss();
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "修改密码失败");
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleAllFailure(Context context) {
+                        super.handleAllFailure(context);
+                        ToastUtil.show(SetSystemResetPasswordActivity.this.getApplicationContext(), "修改密码失败");
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<Boolean> result) {
+                        super.handleResult(result);
+                        customDialog.dismiss();
                     }
                 }), getRequestTag());
     }
 
 
 }
+
+
