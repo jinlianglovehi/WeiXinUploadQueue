@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -63,6 +64,7 @@ public class GuardianStateActivity extends BaseActivity {
 		setContentView(R.layout.activity_guardian_state);
 		ButterKnife.bind(this);
 		title_text.setText("监护状态");
+		back.setVisibility(View.GONE);
 		final CustomDialog customDialog = new CustomDialog();
 		Dialog dialog = customDialog.createDialog1(this, "加载中...");
 		dialog.show();
@@ -79,11 +81,6 @@ public class GuardianStateActivity extends BaseActivity {
 				customDialog.dismiss();
 			}
 		}, getRequestTag());
-	}
-
-	@OnClick(R.id.back)
-	public void onBack() {
-		this.finish();
 	}
 
 	@OnClick(R.id.flGuardianPurpose)
@@ -170,6 +167,11 @@ public class GuardianStateActivity extends BaseActivity {
 		}
 		startActivity(intent);
 		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		ToastUtil.show(getApplicationContext(), "请选择监护心情和监护目的");
 	}
 }
 
