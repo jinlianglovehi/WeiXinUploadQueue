@@ -20,6 +20,7 @@ import cn.ihealthbaby.weitaixinpro.R;
  * Created by liuhongjian on 15/9/8 14:47.绘图的基类
  */
 public class CurveBasicView extends CoordinateView {
+	public RectF rectF;
 	protected Paint paint;
 	protected float textSizeY = 40;
 	protected float textSizeX = 30;
@@ -64,6 +65,7 @@ public class CurveBasicView extends CoordinateView {
 		heartWidth = Util.dip2px(context, 6);
 		heartScaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.red_heart_small)).getBitmap(), heartWidth, heartWidth, true);
 		doctorScaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.doctor_small)).getBitmap(), heartWidth, heartWidth, true);
+		getRectF();
 	}
 
 	public int getSafeLineColor() {
@@ -123,7 +125,35 @@ public class CurveBasicView extends CoordinateView {
 		resetPaint();
 		paint.setColor(shadowColor);
 		paint.setStyle(Paint.Style.FILL);
-		canvas.drawRect(new RectF(convertX(xMin), convertY(safeMax), convertX(xMax), convertY(safeMin)), paint);
+		canvas.drawRect(rectF, paint);
+	}
+
+	private void getRectF() {
+		rectF = new RectF(convertX(xMin), convertY(safeMax), convertX(xMax), convertY(safeMin));
+	}
+
+	@Override
+	public void setxMax(int xMax) {
+		super.setxMax(xMax);
+		getRectF();
+	}
+
+	@Override
+	public void setxMin(int xMin) {
+		super.setxMin(xMin);
+		getRectF();
+	}
+
+	@Override
+	public void setSafeMax(int safeMax) {
+		super.setSafeMax(safeMax);
+		getRectF();
+	}
+
+	@Override
+	public void setSafeMin(int safeMin) {
+		super.setSafeMin(safeMin);
+		getRectF();
 	}
 
 	public void addPoint(int fhr) {
@@ -243,11 +273,11 @@ public class CurveBasicView extends CoordinateView {
 		}
 		for (int j = 0; j < xMax / 60; j++) {
 			paint.setColor(limitLineColor);
-			canvas.drawText("" + limitMax, convertX(j * 60 - 2), convertY(limitMax - 5), paint);
-			canvas.drawText("" + limitMin, convertX(j * 60 - 2), convertY(limitMin - 5), paint);
+			canvas.drawText(limitMaxString, convertX(j * 60 - 2), convertY(limitMax - 5), paint);
+			canvas.drawText(limitMinString, convertX(j * 60 - 2), convertY(limitMin - 5), paint);
 			paint.setColor(safeLineColor);
-			canvas.drawText("" + safeMax, convertX(j * 60 - 2), convertY(safeMax - 5), paint);
-			canvas.drawText("" + safeMin, convertX(j * 60 - 2), convertY(safeMin - 5), paint);
+			canvas.drawText(safeMaxString, convertX(j * 60 - 2), convertY(safeMax - 5), paint);
+			canvas.drawText(safeMinString, convertX(j * 60 - 2), convertY(safeMin - 5), paint);
 		}
 	}
 

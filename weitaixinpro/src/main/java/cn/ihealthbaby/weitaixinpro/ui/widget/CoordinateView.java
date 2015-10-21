@@ -34,6 +34,10 @@ public class CoordinateView extends View {
 	 * 每个格子代表的心跳值
 	 */
 	protected int gridY = 10;
+	protected String limitMinString;
+	protected String limitMaxString;
+	protected String safeMaxString;
+	protected String safeMinString;
 
 	public CoordinateView(Context context) {
 		this(context, null, 0);
@@ -46,6 +50,10 @@ public class CoordinateView extends View {
 	public CoordinateView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		cellWidth = Util.dip2px(context, 10);
+		limitMinString = "" + limitMin;
+		limitMaxString = "" + limitMax;
+		safeMaxString = "" + safeMax;
+		safeMinString = "" + safeMin;
 	}
 
 	@Override
@@ -128,6 +136,7 @@ public class CoordinateView extends View {
 
 	public void setLimitMax(int limitMax) {
 		this.limitMax = limitMax;
+		limitMaxString = "" + limitMax;
 	}
 
 	public int getLimitMin() {
@@ -136,6 +145,7 @@ public class CoordinateView extends View {
 
 	public void setLimitMin(int limitMin) {
 		this.limitMin = limitMin;
+		limitMinString = "" + limitMin;
 	}
 
 	public int getPointsPerMin() {
@@ -152,6 +162,7 @@ public class CoordinateView extends View {
 
 	public void setSafeMax(int safeMax) {
 		this.safeMax = safeMax;
+		safeMaxString = "" + safeMax;
 	}
 
 	public int getSafeMin() {
@@ -160,6 +171,7 @@ public class CoordinateView extends View {
 
 	public void setSafeMin(int safeMin) {
 		this.safeMin = safeMin;
+		safeMinString = "" + safeMin;
 	}
 
 	public void resetTimeMinute() {
