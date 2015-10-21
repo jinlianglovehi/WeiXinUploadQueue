@@ -65,8 +65,6 @@ public class Parser {
 	private int[] soundDataBufferV1 = new int[321];
 	private int[] soundDataBufferV2 = new int[101];
 	private boolean startMonitor;
-	private File tempFile;
-	private File recordFile;
 	private String localRecordId;
 
 	public Parser(Context context, Handler handler) {
@@ -278,10 +276,14 @@ public class Parser {
 	public void onEventMainThread(MonitorStartEvent event) {
 		startMonitor = true;
 		localRecordId = event.getLocalRecordId();
-		//先将数据写入临时文件
 		try {
-			fileOutputStream = new FileOutputStream(FileUtil.getTempFile(context));
+			final File voiceFile = FileUtil.getVoiceFile(context, localRecordId);
+			if (voiceFile.createNewFile()) {
+				fileOutputStream = new FileOutputStream(voiceFile);
+			}
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -306,13 +308,15 @@ public class Parser {
 	private void handleFileOnTerminate() {
 		startMonitor = false;
 		localRecordId = LocalRecordIdUtil.getSavedId(context);
-		File tempFile = FileUtil.getTempFile(context);
 		File file = FileUtil.getVoiceFile(context, localRecordId);
-		if (tempFile.renameTo(file)) {
-			tempFile.delete();
-		} else {
-			LogUtil.d(TAG, "胎音文件重命名错误");
-		}
 		FileUtil.addFileHead(file);
+		//关闭流
+		try {
+			if (fileOutputStream != null) {
+				fileOutputStream.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
