@@ -328,8 +328,6 @@ public class PseudoBluetoothService {
 				mmServerSocket.close();
 			} catch (IOException e) {
 				Log.e(TAG, "Socket Type" + mSocketType + "close() of server failed", e);
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}
