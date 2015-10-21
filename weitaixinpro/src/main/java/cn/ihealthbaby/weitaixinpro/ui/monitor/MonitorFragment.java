@@ -445,8 +445,9 @@ public class MonitorFragment extends BaseFragment {
 		tvStart.setVisibility(View.VISIBLE);
 		tvBluetooth.setText("");
 		tvBluetooth.setClickable(true);
+		roundFrontground.setClickable(true);
 		btnStart.setClickable(true);
-		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
+		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
 		hint.setText("");
 		hint.setVisibility(View.GONE);
 		bpm.setVisibility(View.GONE);
@@ -463,7 +464,8 @@ public class MonitorFragment extends BaseFragment {
 		tvStart.setVisibility(View.GONE);
 		tvBluetooth.setText("连接中");
 		tvBluetooth.setClickable(false);
-		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
+		roundFrontground.setClickable(false);
+//		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
 		hint.setText("请耐心等待");
 		hint.setVisibility(View.VISIBLE);
 		bpm.setImageResource(R.drawable.bpm_dark);
