@@ -247,6 +247,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 			@Override
 			public void onFinish() {
 				playing = false;
+				pausedTime = 0;
 				play.setImageResource(R.drawable.button_play);
 				LogUtil.d(TAG, "finish");
 				ToastUtil.show(getApplicationContext(), "播放结束");
