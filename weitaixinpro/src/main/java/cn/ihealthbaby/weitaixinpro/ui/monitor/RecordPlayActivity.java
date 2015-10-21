@@ -150,6 +150,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 				final int action = event.getAction();
 				switch (action) {
 					case MotionEvent.ACTION_DOWN:
+						playing = false;
 						scrollX1 = chs.getScrollX();
 						pausedTime = countDownTimer.getConsumedTime();
 						countDownTimer.cancel();
@@ -160,6 +161,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 					case MotionEvent.ACTION_MOVE:
 						break;
 					case MotionEvent.ACTION_UP:
+						playing = true;
 						final int scrollX2 = chs.getScrollX();
 						LogUtil.d(TAG, "scrollX2:[%s]", scrollX2);
 						diffTime = curvePlay.reconvertXDiff(scrollX2 - scrollX1);
@@ -244,7 +246,8 @@ public abstract class RecordPlayActivity extends BaseActivity {
 
 			@Override
 			public void onFinish() {
-//				onTick(0);
+				playing = false;
+				play.setImageResource(R.drawable.button_play);
 				LogUtil.d(TAG, "finish");
 				ToastUtil.show(getApplicationContext(), "播放结束");
 				mediaPlayer.stop();
