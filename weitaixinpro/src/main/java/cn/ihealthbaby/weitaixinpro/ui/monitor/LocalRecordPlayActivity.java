@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.AdviceItem;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.data.model.data.RecordData;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -64,6 +65,12 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 					} else {
 						ToastUtil.show(getApplicationContext(), "已上传全部数据");
 						LogUtil.d(TAG, "已上传过,有胎音");
+						try {
+							record.setUploadState(Record.UPLOAD_STATE_CLOUD);
+							RecordBusinessDao.getInstance(getApplicationContext()).update(record);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}

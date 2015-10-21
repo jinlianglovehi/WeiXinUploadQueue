@@ -11,6 +11,7 @@ import android.widget.PopupWindow;
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.AdviceItem;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
+import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
@@ -115,6 +116,12 @@ public class ChooseUploadContentPopupWindow extends PopupWindow {
 						LogUtil.d(TAG, "已上传过,无胎音");
 					} else {
 						ToastUtil.show(context, "已上传全部数据");
+						try {
+							record.setUploadState(Record.UPLOAD_STATE_CLOUD);
+							RecordBusinessDao.getInstance(context).update(record);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 						LogUtil.d(TAG, "已上传过,有胎音");
 					}
 				}
