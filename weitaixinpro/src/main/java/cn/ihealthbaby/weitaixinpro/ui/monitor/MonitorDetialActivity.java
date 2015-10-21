@@ -215,6 +215,7 @@ public class MonitorDetialActivity extends BaseActivity {
 					e.printStackTrace();
 				}
 				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_AUTO));
+				finish();
 			}
 
 			@Override
