@@ -60,10 +60,13 @@ public class Parser {
 	//
 	private byte[] fetalDataBufferV1 = new byte[4];
 	private byte[] fetalDataBufferV2 = new byte[7];
-	private byte[] bytes321 = new byte[321];
-	private byte[] bytes101 = new byte[101];
-	private int[] soundDataBufferV1 = new int[321];
-	private int[] soundDataBufferV2 = new int[101];
+	//	private byte[] bytes321 = new byte[321];
+//	private byte[] bytes101 = new byte[101];
+//	private int[] soundDataBufferV1 = new int[321];
+//	private int[] soundDataBufferV2 = new int[101];
+//修改
+	private int[] soundDataBufferV1 = new int[320];
+	private int[] soundDataBufferV2 = new int[100];
 	private boolean startMonitor;
 	private String localRecordId;
 
@@ -217,7 +220,7 @@ public class Parser {
 	 * @return
 	 */
 	private int[] getVoice(InputStream inputStream) {
-		for (int i = 0; i < 321; i++) {
+		for (int i = 0; i < 320; i++) {
 			try {
 				soundDataBufferV1[i] = inputStream.read();
 			} catch (IOException e) {
@@ -229,11 +232,12 @@ public class Parser {
 	}
 
 	private int[] getVoiceAd(InputStream inputStream) {
-		for (int i = 0; i < 101; i++) {
+		for (int i = 0; i < 100; i++) {
 			try {
 				soundDataBufferV2[i] = inputStream.read();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return null;
 			}
 		}
 		return soundDataBufferV2;
