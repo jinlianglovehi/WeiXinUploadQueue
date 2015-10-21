@@ -73,8 +73,6 @@ public class MeMainFragmentActivity extends BaseActivity {
 
         showTabFirst();
 
-        pullV();
-
     }
 
 
@@ -149,7 +147,6 @@ public class MeMainFragmentActivity extends BaseActivity {
     }
 
 
-
     public void onEventMainThread(LogoutEvent event) {
         finish();
     }
@@ -164,6 +161,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        pullV();
     }
 
     public void showTabFirst() {

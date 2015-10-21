@@ -20,6 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -176,7 +177,7 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
     private void pullData() {
         final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
-        dialog.show();
+        customDialog.show();
         ApiManager.getInstance().addressApi.getAddresss(
                 new DefaultCallback<ApiList<Address>>(this, new AbstractBusiness<ApiList<Address>>() {
                     @Override
@@ -203,6 +204,19 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
                         super.handleException(e);
                         customDialog.dismiss();
                     }
+
+
+                    @Override
+                    public void handleAllFailure(Context context) {
+                        super.handleAllFailure(context);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<ApiList<Address>> result) {
+                        super.handleResult(result);
+                        customDialog.dismiss();
+                    }
                 }), getRequestTag());
     }
 
@@ -210,7 +224,7 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
     private void pullDataAddress() {
         final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
-        dialog.show();
+        customDialog.show();
         ApiManager.getInstance().addressApi.getAddresss(
                 new DefaultCallback<ApiList<Address>>(this, new AbstractBusiness<ApiList<Address>>() {
                     @Override
@@ -232,6 +246,20 @@ public class PayMimeAddressWithEditActivity extends BaseActivity {
                         super.handleClientError(context, e);
                         customDialog.dismiss();
                     }
+
+
+                    @Override
+                    public void handleAllFailure(Context context) {
+                        super.handleAllFailure(context);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<ApiList<Address>> result) {
+                        super.handleResult(result);
+                        customDialog.dismiss();
+                    }
+
                 }), getRequestTag());
     }
 

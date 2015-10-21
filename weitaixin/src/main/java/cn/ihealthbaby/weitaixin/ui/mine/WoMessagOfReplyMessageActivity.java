@@ -112,7 +112,7 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
                             tvFeeling.setText("监护心情: " + data.getFeeling());
                             tvQuestion.setText(data.getQuestion());
                             mTvDate.setText(DateTimeTool.getGestationalWeeks(user.getDeliveryTime()));
-                            tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime(), "MM月dd日 hh:mm"));
+                            tvAskTime.setText(DateTimeTool.date2Str(data.getAskTime(), "MM月dd日 HH:mm"));
 
                             AdviceReply adviceReply = data.getAdviceReply();
                             if (adviceReply != null) {
@@ -121,7 +121,8 @@ public class WoMessagOfReplyMessageActivity extends BaseActivity {
                                 tvDoctorTitle.setText(adviceReply.getDoctorTitle());
                                 tvHospitalName.setText(adviceReply.getHospitalName());
                                 tvReplyContext.setText(adviceReply.getReplyContext());
-                                tvReplyTime.setText(RelativeDateFormat.format(adviceReply.getReplyTime()));
+                                tvReplyTime.setText(DateTimeTool.date2Str(adviceReply.getReplyTime(), "MM月dd日 HH:mm"));
+//                                tvReplyTime.setText(RelativeDateFormat.format(adviceReply.getReplyTime()));
                             }
                         }
                         customDialog.dismiss();

@@ -60,13 +60,9 @@ public class WeiTaiXinApplication extends Application {
 
         MobclickAgent.updateOnlineConfig(this);
 
-
         initUniversalImageLoader();
 
         initApiManager();
-
-
-
 
     }
 

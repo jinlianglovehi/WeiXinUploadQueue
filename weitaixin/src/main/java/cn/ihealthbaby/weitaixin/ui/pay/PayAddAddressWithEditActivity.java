@@ -13,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AddressForm;
 import cn.ihealthbaby.client.model.Address;
 import cn.ihealthbaby.weitaixin.CustomDialog;
@@ -81,7 +82,7 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
             tvAddAddressName.setText(address.getLinkMan());
             tvAddAddressPhone.setText(address.getMobile());
             tvAddAddressArea.setText(address.getArea());
-            tvAddAddressDetailAddress.setText(address.getArea() + address.getAddress());
+            tvAddAddressDetailAddress.setText(/*address.getArea() + */address.getAddress());
         }
 
         String addressName = tvAddAddressName.getText().toString().trim();
@@ -166,7 +167,7 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
 
         final CustomDialog customDialog = new CustomDialog();
         Dialog dialog = customDialog.createDialog1(this, "数据加载中...");
-        dialog.show();
+        customDialog.show();
 
         AddressForm addressForm = new AddressForm();
         addressForm.setLinkMan(addressName);
@@ -185,11 +186,25 @@ public class PayAddAddressWithEditActivity extends BaseActivity {
                     @Override
                     public void handleClientError(Context context, Exception e) {
                         super.handleClientError(context, e);
+                        customDialog.dismiss();
                     }
 
                     @Override
                     public void handleException(Exception e) {
                         super.handleException(e);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleAllFailure(Context context) {
+                        super.handleAllFailure(context);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void handleResult(Result<Void> result) {
+                        super.handleResult(result);
+                        customDialog.dismiss();
                     }
                 }), getRequestTag());
 
