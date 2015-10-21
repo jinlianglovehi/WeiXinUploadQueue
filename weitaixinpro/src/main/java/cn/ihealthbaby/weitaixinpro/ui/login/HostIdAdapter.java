@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro.ui.adapter;
+package cn.ihealthbaby.weitaixinpro.ui.login;
 
 import android.content.Context;
 import android.view.View;

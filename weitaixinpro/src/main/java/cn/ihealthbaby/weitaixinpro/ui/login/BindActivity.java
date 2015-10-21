@@ -33,7 +33,6 @@ import cn.ihealthbaby.weitaixinpro.WeiTaiXinProApplication;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
 import cn.ihealthbaby.weitaixinpro.service.ConfigService;
 import cn.ihealthbaby.weitaixinpro.ui.MainActivity;
-import cn.ihealthbaby.weitaixinpro.ui.adapter.HostIdAdapter;
 
 /**
  * @author by kang on 2015/9/10.
