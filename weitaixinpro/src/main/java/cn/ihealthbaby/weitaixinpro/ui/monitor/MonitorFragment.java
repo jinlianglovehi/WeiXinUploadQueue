@@ -118,6 +118,7 @@ public class MonitorFragment extends BaseFragment {
 	private int safemax;
 	private FixedRateCountDownTimer readDataTimer;
 	private boolean autoStart;
+	private boolean first = true;
 
 	public static MonitorFragment getInstance() {
 		return instance;
@@ -344,7 +345,12 @@ public class MonitorFragment extends BaseFragment {
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
 						LogUtil.d(TAG, "发现匹配的设备,正在连接设备:" + remoteName);
-						pseudoBluetoothService.connect(remoteDevice, false);
+						if (first) {
+							pseudoBluetoothService.connect(remoteDevice, false);
+							first = false;
+						} else {
+							pseudoBluetoothService.start();
+						}
 					}
 					scanedDevices.add(remoteDevice);
 				}
