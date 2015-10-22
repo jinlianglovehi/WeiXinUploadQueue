@@ -86,6 +86,9 @@ public abstract class ExpendableCountDownTimer {
 	 * @param offset 开始的时间点,相对时间
 	 */
 	public synchronized final void startAt(long offset) {
+		if (offset < 0) {
+			offset = 0;
+		}
 		this.offset = offset;
 		mCancelled = false;
 		if (duration <= offset) {
@@ -124,9 +127,12 @@ public abstract class ExpendableCountDownTimer {
 	}
 
 	public long getConsumedTime() {
-		long consumedTime = System.currentTimeMillis() - startTime;
-		if (consumedTime < 0) {
-			consumedTime = 0;
+		long consumedTime = 0;
+		if (startTime != 0) {
+			consumedTime = System.currentTimeMillis() - startTime;
+			if (consumedTime < 0) {
+				consumedTime = 0;
+			}
 		}
 		return consumedTime;
 	}
