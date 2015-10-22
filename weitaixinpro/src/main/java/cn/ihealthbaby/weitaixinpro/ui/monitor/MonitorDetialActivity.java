@@ -72,7 +72,6 @@ public class MonitorDetialActivity extends BaseActivity {
 	private long duration;
 	private long interval;
 	private int width;
-	private boolean needReset = true;
 	private FixedRateCountDownTimer countDownTimer;
 	private long lastFMTime;
 	private int safemin = 110;
@@ -120,7 +119,12 @@ public class MonitorDetialActivity extends BaseActivity {
 
 	@OnClick(R.id.btn_extra_time)
 	public void extra() {
-		countDownTimer.extra(5 * 60 * 1000);
+		//最长 40min
+		if (countDownTimer.getDuration() <= 40 * 60 * 1000) {
+			countDownTimer.extra(5 * 60 * 1000);
+		} else {
+			ToastUtil.show(getApplicationContext(), "最长监测为40分钟");
+		}
 	}
 
 	@OnClick(R.id.btn_doctor_interrupt)
@@ -312,6 +316,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
 		AdviceSetting adviceSetting = SPUtil.getAdviceSetting(getApplicationContext());
 		askMinTime = adviceSetting.getAskMinTime();
+		final int fetalMoveTime = adviceSetting.getFetalMoveTime();
 		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
 		String[] split = alarmHeartrateLimit.split("-");
 		try {
