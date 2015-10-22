@@ -174,7 +174,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			RecordData recordData = gson.fromJson(rData, RecordData.class);
 			data = recordData.getData();
 			fhrs = data.getHeartRate();
-			fetalMove = Util.time2Position(data.getFm());
+			fms = Util.time2Position(data.getFm());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ToastUtil.show(getApplicationContext(), "获取数据失败");
