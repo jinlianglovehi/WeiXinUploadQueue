@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +19,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.collecton.ApiList;
 import cn.ihealthbaby.client.form.HClientForm;
 import cn.ihealthbaby.client.model.FetalHeart;
@@ -53,6 +55,8 @@ public class BindActivity extends BaseActivity {
 	TextView mTvDeviceId;
 	@Bind(R.id.rl_login)
 	RelativeLayout mRlLogin;
+	@Bind(R.id.swipe_refresh_layout)
+	SwipeRefreshLayout swipeRefreshLayout;
 	private List<FetalHeart> list = new ArrayList<>();
 
 	@Override
@@ -60,6 +64,17 @@ public class BindActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		ButterKnife.bind(this);
+		swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+				                                          android.R.color.holo_green_light,
+				                                          android.R.color.holo_orange_light,
+				                                          android.R.color.holo_red_light);
+		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				swipeRefreshLayout.setRefreshing(true);
+				initData();
+			}
+		});
 		if (isLogin()) {
 			LogUtil.d(TAG, "status: is Login");
 			final String loginToken = SPUtil.getHClientUser(getApplicationContext()).getLoginToken();
@@ -74,6 +89,8 @@ public class BindActivity extends BaseActivity {
 				deviceId = tm.getDeviceId() == null ? deviceId : tm.getDeviceId();
 				LogUtil.d(TAG, "deviceId:" + deviceId);
 			} catch (Exception e) {
+				LogUtil.d(TAG, "获取设备id发生异常");
+				ToastUtil.show(getApplicationContext(), "获取设备id发生异常");
 			}
 			mTvDeviceId.setText("宿主ID:" + deviceId);
 			login(deviceId);
@@ -154,6 +171,7 @@ public class BindActivity extends BaseActivity {
 	}
 
 	private void initData() {
+		list.clear();
 		ApiManager.getInstance().hClientAccountApi.getFetalHearts(new DefaultCallback<ApiList<FetalHeart>>(getApplicationContext(), new AbstractBusiness<ApiList<FetalHeart>>() {
 			@Override
 			public void handleData(ApiList<FetalHeart> data) {
@@ -164,6 +182,12 @@ public class BindActivity extends BaseActivity {
 						adapter.notifyDataSetChanged();
 					}
 				}
+			}
+
+			@Override
+			public void handleResult(Result<ApiList<FetalHeart>> result) {
+				super.handleResult(result);
+				swipeRefreshLayout.setRefreshing(false);
 			}
 		}), getRequestTag());
 	}
