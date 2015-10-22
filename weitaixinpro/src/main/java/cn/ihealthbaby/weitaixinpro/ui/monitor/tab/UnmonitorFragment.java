@@ -61,7 +61,7 @@ public class UnmonitorFragment extends BaseFragment {
 		layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 		recyclerView = (RecyclerView) swipeRefreshLayout.findViewById(R.id.recycler_view);
 		recyclerView.setLayoutManager(layoutManager);
-		list = new ArrayList<ServiceInside>();
+		list = new ArrayList<>();
 		adapter = new UnmonitorRecyclerViewAdapter(getActivity().getApplicationContext(), list);
 		recyclerView.setAdapter(adapter);
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
