@@ -20,6 +20,7 @@ import cn.ihealthbaby.weitaixin.library.util.Util;
  * Created by liuhongjian on 15/9/8 14:47.绘图的基类
  */
 public class CurveBasicView extends CoordinateView {
+	public RectF rectF;
 	protected Paint paint;
 	protected float textSizeY = 40;
 	protected float textSizeX = 30;
@@ -41,7 +42,6 @@ public class CurveBasicView extends CoordinateView {
 	 */
 	private List<Integer> fhrs = new ArrayList<>();
 	private int position;
-	private boolean moved = true;
 	private int heartWidth;
 	private float curveStrokeWidth = 2;
 
@@ -60,6 +60,23 @@ public class CurveBasicView extends CoordinateView {
 		paint.setStyle(Paint.Style.STROKE);
 		heartWidth = Util.dip2px(context, 6);
 		scaledBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) getResources().getDrawable(R.drawable.red_heart_small)).getBitmap(), heartWidth, heartWidth, true);
+		getRectF();
+	}
+
+	public int getSafeLineColor() {
+		return safeLineColor;
+	}
+
+	public void setSafeLineColor(int safeLineColor) {
+		this.safeLineColor = safeLineColor;
+	}
+
+	public int getLimitLineColor() {
+		return limitLineColor;
+	}
+
+	public void setLimitLineColor(int limitLineColor) {
+		this.limitLineColor = limitLineColor;
 	}
 
 	public float getCurveStrokeWidth() {
@@ -103,7 +120,35 @@ public class CurveBasicView extends CoordinateView {
 		resetPaint();
 		paint.setColor(shadowColor);
 		paint.setStyle(Paint.Style.FILL);
-		canvas.drawRect(new RectF(convertX(xMin), convertY(safeMax), convertX(xMax), convertY(safeMin)), paint);
+		canvas.drawRect(rectF, paint);
+	}
+
+	private void getRectF() {
+		rectF = new RectF(convertX(xMin), convertY(safeMax), convertX(xMax), convertY(safeMin));
+	}
+
+	@Override
+	public void setxMax(int xMax) {
+		super.setxMax(xMax);
+		getRectF();
+	}
+
+	@Override
+	public void setxMin(int xMin) {
+		super.setxMin(xMin);
+		getRectF();
+	}
+
+	@Override
+	public void setSafeMax(int safeMax) {
+		super.setSafeMax(safeMax);
+		getRectF();
+	}
+
+	@Override
+	public void setSafeMin(int safeMin) {
+		super.setSafeMin(safeMin);
+		getRectF();
 	}
 
 	public void addPoint(int fhr) {
@@ -114,59 +159,30 @@ public class CurveBasicView extends CoordinateView {
 		}
 		if (fhr == 0 || position == 0) {
 			path.moveTo(convertX(positionToX(position)), convertY(fhr));
-			moved = true;
-		} else if (moved) {
-			path.moveTo(convertX(positionToX(position)), convertY(fhr));
-			moved = false;
 		} else {
 			path.lineTo(convertX(positionToX(position)), convertY(fhr));
-			moved = false;
 		}
 	}
 
-	public void autoAddPoint() {
-		if (position < fhrs.size()) {
-			Integer fhr = fhrs.get(position);
-			if (fhr < limitMin || fhr > limitMax) {
-				fhr = 0;
-			}
-			if (fhr == 0 || position == 0) {
-				path.moveTo(convertX(positionToX(position)), convertY(fhr));
-				moved = true;
-			} else if (moved) {
-				path.moveTo(convertX(positionToX(position)), convertY(fhr));
-				moved = false;
-			} else {
-				path.lineTo(convertX(positionToX(position)), convertY(fhr));
-				moved = false;
-			}
-			position++;
-		}
-	}
+
+
 
 	public void reset() {
 		fhrs.clear();
 		hearts.clear();
 		path.reset();
 		position = 0;
-		moved = true;
 	}
 
 	public void resetPoints() {
 		int position = fhrs.size() - 1;
 		path.reset();
-		moved = true;
 		for (int i = 0; i < position; i++) {
 			int fhr = fhrs.get(i);
 			if (fhr == 0 || i == 0) {
 				path.moveTo(convertX(positionToX(i)), convertY(fhr));
-				moved = true;
-			} else if (moved) {
-				path.moveTo(convertX(positionToX(i)), convertY(fhr));
-				moved = false;
-			} else {
+			} else  {
 				path.lineTo(convertX(positionToX(i)), convertY(fhr));
-				moved = false;
 			}
 		}
 	}
@@ -175,6 +191,8 @@ public class CurveBasicView extends CoordinateView {
 		resetPaint();
 		paint.setStrokeWidth(curveStrokeWidth);
 		paint.setStyle(Paint.Style.STROKE);
+		paint.setStrokeCap(Paint.Cap.ROUND);
+		paint.setStrokeJoin(Paint.Join.ROUND);
 		canvas.save();
 		paint.setColor(safeLineColor);
 		canvas.clipRect(convertX(0), convertY(safeMin), convertX(xMax), convertY(limitMin));
@@ -219,11 +237,11 @@ public class CurveBasicView extends CoordinateView {
 		}
 		for (int j = 0; j < xMax / 60; j++) {
 			paint.setColor(limitLineColor);
-			canvas.drawText("" + limitMax, convertX(j * 60 - 2), convertY(limitMax - 5), paint);
-			canvas.drawText("" + limitMin, convertX(j * 60 - 2), convertY(limitMin - 5), paint);
+			canvas.drawText(limitMaxString, convertX(j * 60 - 2), convertY(limitMax - 5), paint);
+			canvas.drawText(limitMinString, convertX(j * 60 - 2), convertY(limitMin - 5), paint);
 			paint.setColor(safeLineColor);
-			canvas.drawText("" + safeMax, convertX(j * 60 - 2), convertY(safeMax - 5), paint);
-			canvas.drawText("" + safeMin, convertX(j * 60 - 2), convertY(safeMin - 5), paint);
+			canvas.drawText(safeMaxString, convertX(j * 60 - 2), convertY(safeMax - 5), paint);
+			canvas.drawText(safeMinString, convertX(j * 60 - 2), convertY(safeMin - 5), paint);
 		}
 	}
 
@@ -231,7 +249,8 @@ public class CurveBasicView extends CoordinateView {
 		resetPaint();
 		paint.setColor(redPointColor);
 		paint.setStyle(Paint.Style.FILL);
-		for (int i = 0; i <= timeMinute; i++) {
+		int iMax = xMax / 60 + (xMax % 60 == 0 ? 0 : 1);
+		for (int i = 0; i <= iMax; i++) {
 			canvas.drawCircle(convertX(i * 60), convertY(0), 6, paint);
 		}
 		paint.setStyle(Paint.Style.STROKE);

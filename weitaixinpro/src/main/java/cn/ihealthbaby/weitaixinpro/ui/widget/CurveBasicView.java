@@ -41,11 +41,10 @@ public class CurveBasicView extends CoordinateView {
 	 * 保存胎心数值
 	 */
 	protected List<Integer> fhrs = new ArrayList<>();
-	protected boolean moved = true;
+	private int position;
 	protected float curveStrokeWidth = 2;
 	private Bitmap doctorScaledBitmap;
 	private Bitmap heartScaledBitmap;
-	private int position;
 	private int heartWidth;
 	private int pureLineColor = Color.BLACK;
 
@@ -177,13 +176,11 @@ public class CurveBasicView extends CoordinateView {
 		doctors.clear();
 		path.reset();
 		position = 0;
-		moved = true;
 	}
 
 	public void resetPoints() {
 		int position = fhrs.size() - 1;
 		path.reset();
-		moved = true;
 		for (int i = 0; i < position; i++) {
 			int fhr = fhrs.get(i);
 			if (fhr == 0 || i == 0) {
@@ -247,21 +244,6 @@ public class CurveBasicView extends CoordinateView {
 
 	public void addRedHeart(int position) {
 		hearts.add(position);
-	}
-
-	public void addDoctor(int position) {
-		doctors.add(position);
-	}
-
-	public void drawDoctor(Canvas canvas, int y) {
-		resetPaint();
-		int size = doctors.size();
-		if (size <= 0) {
-			return;
-		}
-		for (int i = 0; i < size; i++) {
-			canvas.drawBitmap(doctorScaledBitmap, convertX(positionToX(doctors.get(i))) - heartWidth / 2, convertY(y) - heartWidth / 2, paint);
-		}
 	}
 
 	protected void drawScaleX(Canvas canvas) {
@@ -330,6 +312,20 @@ public class CurveBasicView extends CoordinateView {
 		return convertX(positionToX(fhrs.size() - 1));
 	}
 
+	public void addDoctor(int position) {
+		doctors.add(position);
+	}
+
+	public void drawDoctor(Canvas canvas, int y) {
+		resetPaint();
+		int size = doctors.size();
+		if (size <= 0) {
+			return;
+		}
+		for (int i = 0; i < size; i++) {
+			canvas.drawBitmap(doctorScaledBitmap, convertX(positionToX(doctors.get(i))) - heartWidth / 2, convertY(y) - heartWidth / 2, paint);
+		}
+	}
 	public List<Integer> getDoctors() {
 		return doctors;
 	}

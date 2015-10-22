@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 
 /**
  * Created by liuhongjian on 15/9/2 10:16. 坐标转换的基类
  */
 public class CoordinateView extends View {
+	private final static String TAG = "CoordinateView";
 	protected int cellWidth;
 	protected int yMax = 300;
 	protected int yMin = 0;
@@ -32,6 +34,10 @@ public class CoordinateView extends View {
 	 * 每个格子代表的心跳值
 	 */
 	protected int gridY = 10;
+	protected String limitMinString;
+	protected String limitMaxString;
+	protected String safeMaxString;
+	protected String safeMinString;
 
 	public CoordinateView(Context context) {
 		this(context, null, 0);
@@ -44,11 +50,18 @@ public class CoordinateView extends View {
 	public CoordinateView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		cellWidth = Util.dip2px(context, 10);
+		limitMinString = "" + limitMin;
+		limitMaxString = "" + limitMax;
+		safeMaxString = "" + safeMax;
+		safeMinString = "" + safeMin;
 	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		setMeasuredDimension(getMinWidth() + getPaddingLeft() + getPaddingRight(), getMinHeight() + getPaddingTop() + getPaddingBottom());
+		final int measuredWidth = getMinWidth() + getPaddingLeft() + getPaddingRight();
+		final int measuredHeight = getMinHeight() + getPaddingTop() + getPaddingBottom();
+		LogUtil.d(TAG, "measuredWidth:[%s],measuredHeight:[%s]", measuredWidth, measuredHeight);
+		setMeasuredDimension(measuredWidth, measuredHeight);
 	}
 
 	public int getMinHeight() {
@@ -109,6 +122,7 @@ public class CoordinateView extends View {
 
 	public void setLimitMax(int limitMax) {
 		this.limitMax = limitMax;
+		limitMaxString = "" + limitMax;
 	}
 
 	public int getLimitMin() {
@@ -117,6 +131,7 @@ public class CoordinateView extends View {
 
 	public void setLimitMin(int limitMin) {
 		this.limitMin = limitMin;
+		limitMinString = "" + limitMin;
 	}
 
 	public int getPointsPerMin() {
@@ -133,6 +148,7 @@ public class CoordinateView extends View {
 
 	public void setSafeMax(int safeMax) {
 		this.safeMax = safeMax;
+		safeMaxString = "" + safeMax;
 	}
 
 	public int getSafeMin() {
@@ -141,6 +157,7 @@ public class CoordinateView extends View {
 
 	public void setSafeMin(int safeMin) {
 		this.safeMin = safeMin;
+		safeMinString = "" + safeMin;
 	}
 
 	public void resetTimeMinute() {
