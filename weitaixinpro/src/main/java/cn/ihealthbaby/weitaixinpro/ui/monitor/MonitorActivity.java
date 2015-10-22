@@ -18,10 +18,6 @@ public class MonitorActivity extends BaseActivity {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		MonitorFragment monitorFragment = MonitorFragment.getInstance();
 		final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-		if (!monitorFragment.isAdded()) {
-			fragmentTransaction.add(R.id.container, monitorFragment).commit();
-		} else if (monitorFragment.isHidden()) {
-			fragmentTransaction.show(monitorFragment).commit();
-		}
+		fragmentTransaction.replace(R.id.container, monitorFragment).commit();
 	}
 }
