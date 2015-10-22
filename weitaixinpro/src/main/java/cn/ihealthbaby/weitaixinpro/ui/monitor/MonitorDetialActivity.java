@@ -123,6 +123,8 @@ public class MonitorDetialActivity extends BaseActivity {
 		if (countDownTimer.getDuration() <= 40 * 60 * 1000) {
 			countDownTimer.extra(5 * 60 * 1000);
 		} else {
+			//UI需要变化
+//			btnExtraTime.setImageResource(R.drawable.btn_extra_time);
 			ToastUtil.show(getApplicationContext(), "最长监测为40分钟");
 		}
 	}
