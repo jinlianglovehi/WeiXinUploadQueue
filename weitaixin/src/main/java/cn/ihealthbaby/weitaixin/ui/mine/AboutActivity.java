@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin.ui.mine;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -11,9 +12,15 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ihealthbaby.client.ApiManager;
+import cn.ihealthbaby.client.model.Version;
+import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.WelcomeActivity;
 import cn.ihealthbaby.weitaixin.ui.mine.event.WelcomeEvent;
 import de.greenrobot.event.EventBus;
@@ -99,6 +106,12 @@ public class AboutActivity extends BaseActivity {
     }
 
 
+    @OnClick(R.id.rl_update)
+    public void rl_update() {
+        pullV();
+    }
+
+
     /**
      * 获取版本号
      *
@@ -115,4 +128,66 @@ public class AboutActivity extends BaseActivity {
             return this.getString(R.string.version);
         }
     }
+
+
+
+
+
+    public void pullV(){
+        //软件类型 0 微胎心会员端安卓版, 1 微胎心院内安卓版, 2 微胎心会员端iOS版
+        ApiManager.getInstance().versionApi.checkVersion(getversionName(), 0,
+                new DefaultCallback<Version>(this, new AbstractBusiness<Version>() {
+                    @Override
+                    public void handleData(Version data) {
+                        int flag = data.getFlag();
+                        LogUtil.d("flag", "flag==>" + flag);
+                        switch (flag) {
+                            case 0:  //0 已是最新, 1 有新版本更新,2 需强制升级
+                                ToastUtil.show(AboutActivity.this, "已是最新版本");
+                                break;
+
+                            case 1:
+                                Intent intent = new Intent();
+                                intent.setAction("android.intent.action.VIEW");
+                                Uri content_url = Uri.parse(data.getUpdateUrl());
+                                intent.setData(content_url);
+                                startActivity(intent);
+
+//                        DownloadAPK downloadAPK = new DownloadAPK(MeMainFragmentActivity.this);
+//                        downloadAPK.apkUrl=data.getUpdateUrl();
+//                        downloadAPK.checkUpdateInfo();
+                                break;
+
+                            case 2:
+                                Intent intent2 = new Intent();
+                                intent2.setAction("android.intent.action.VIEW");
+                                Uri content_url2 = Uri.parse(data.getUpdateUrl());
+                                intent2.setData(content_url2);
+                                startActivity(intent2);
+                                break;
+                        }
+                    }
+                }), getRequestTag());
+
+    }
+
+
+    /**
+     * 获取版本号
+     * @return 当前应用的版本号
+     */
+    public String getversionName() {
+        try {
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            String versionName = info.versionName;
+            int versionCode = info.versionCode;
+            return versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }
