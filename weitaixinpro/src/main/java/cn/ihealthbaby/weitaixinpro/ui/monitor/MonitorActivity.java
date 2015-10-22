@@ -11,13 +11,20 @@ import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
  * Created by liuhongjian on 15/9/24 14:23.
  */
 public class MonitorActivity extends BaseActivity {
+	public MonitorFragment monitorFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		MonitorFragment monitorFragment = MonitorFragment.getInstance();
+		monitorFragment = MonitorFragment.getInstance();
 		final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		fragmentTransaction.replace(R.id.container, monitorFragment).commit();
+	}
+
+	@Override
+	public void onBackPressed() {
+		monitorFragment.back();
 	}
 }
