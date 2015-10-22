@@ -25,6 +25,7 @@ import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
@@ -62,15 +63,14 @@ public class MeMainFragmentActivity extends BaseActivity {
     @Bind(R.id.ll_tab_profile)
     LinearLayout mLlTabProfile;
     private FragmentManager fragmentManager;
+	private long exitTime;
 
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_me_main_fragment);
         ButterKnife.bind(this);
-
         EventBus.getDefault().register(this);
-
         showTabFirst();
 
     }
@@ -276,6 +276,16 @@ public class MeMainFragmentActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (recordFragment != null) {
 			recordFragment.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (System.currentTimeMillis() - exitTime > 3000) {
+			ToastUtil.show(getApplicationContext(), "再次点击返回,退出应用");
+			exitTime = System.currentTimeMillis();
+		} else {
+			super.onBackPressed();
 		}
 	}
 }
