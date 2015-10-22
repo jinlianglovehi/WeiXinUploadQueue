@@ -1,17 +1,23 @@
 package cn.ihealthbaby.weitaixin.ui.login;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -58,10 +64,6 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         long time =  System.currentTimeMillis();
 
         SimpleDateFormat dateFm = new SimpleDateFormat("yyyy-MM-dd"); //格式化当前系统日期
-        String dateTime = dateFm.format(new Date(time));
-        String dateTime2 = dateFm.format(new Date().getTime());
-        LogUtil.d("SimpleDateFormat+==", "SimpleDateFormat+==>" + dateTime);
-        LogUtil.d("SimpleDateFormat222+==", "SimpleDateFormat222+==>" + dateTime2);
 
 
         //-28
@@ -142,35 +144,6 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
         form = new UserInfoForm();
 
-//        .TimePopupWindow
-        mTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
-        mTimePopupWindow.setRange(1888, 3000);
-        mExpectTimePopupWindow = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
-        mExpectTimePopupWindow.setRange(1888, 3000);
-
-        //时间选择后回调
-        mTimePopupWindow.setOnTimeSelectListener(new TimePopupWindow.OnTimeSelectListener() {
-
-            @Override
-            public void onTimeSelect(Date date) {
-                et_birthdate_info.setGravity(Gravity.LEFT);
-                et_birthdate_info.setText(getTime(date));
-                form.setBirthday(date);
-                mTvBirthday.setVisibility(View.VISIBLE);
-            }
-        });
-
-        mExpectTimePopupWindow.setOnTimeSelectListener(new TimePopupWindow.OnTimeSelectListener() {
-
-            @Override
-            public void onTimeSelect(Date date) {
-                form.setDeliveryTime(date);
-                et_date_info.setGravity(Gravity.LEFT);
-                et_date_info.setText(getTime(date));
-                mTvExpectDay.setVisibility(View.VISIBLE);
-            }
-        });
-
     }
 
     public Date getDate(){
@@ -184,21 +157,6 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
     }
 
 
-//    public void setTimes(Date date) {
-//        Calendar calendar = Calendar.getInstance();
-//        if(date == null) {
-//            calendar.setTimeInMillis(System.currentTimeMillis());
-//        } else {
-//            calendar.setTime(date);
-//        }
-//
-//        int year = calendar.get(1);
-//        int month = calendar.get(2);
-//        int day = calendar.get(5);
-//        int hours = calendar.get(11);
-//        int minute = calendar.get(12);
-//        this.wheelTime.setPicker(year, month, day, hours, minute);
-//    }
 
     @Override
     protected void onResume() {
@@ -223,40 +181,16 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
 
     @OnClick(R.id.et_birthdate_info)
     public void etBirthdateInfo() {
-//        setDate(false,et_birthdate_info);
         showInfoEdit();
-        isBirthDateShow = true;
-        isExpectedDateShow = false;
-        mTimePopupWindow.setRange(1888, 3000);
-        mExpectTimePopupWindow.setRange(1888, 3000);
-
-        if (!birthDateShow) {
-            mTimePopupWindow.showAtLocation(et_birthdate_info, Gravity.BOTTOM, 0, 0, new Date());
-            birthDateShow = true;
-        } else {
-            mTimePopupWindow.dismiss();
-            birthDateShow = false;
-        }
-
+        setDate(false, et_birthdate_info);
     }
 
     @OnClick(R.id.et_date_info)
     public void etDateInfo() {
         showInfoEdit();
-        isExpectedDateShow = true;
-        isBirthDateShow = false;
-//        setDate(true, et_date_info);
-        mTimePopupWindow.setRange(1888, 3000);
-        mExpectTimePopupWindow.setRange(1888, 3000);
-
-        if (!expectedDateShow) {
-            mExpectTimePopupWindow.showAtLocation(et_birthdate_info, Gravity.BOTTOM, 0, 0, new Date());
-            expectedDateShow = true;
-        } else {
-            mExpectTimePopupWindow.dismiss();
-            expectedDateShow = false;
-        }
+        setDate(true, et_date_info);
     }
+
 
     public void setDate(final boolean bool, final TextView textView) {
         Calendar calendar = Calendar.getInstance();
@@ -268,30 +202,54 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         minute = calendar.get(Calendar.MINUTE);
 
         //
-//        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener()
-//        {
-//            @Override
-//            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
-//            {
-//                String dateStr="生日  " + year + "年" + (monthOfYear + 1) + "月" + dayOfMonth+"日";
-//                SpannableString ss = new SpannableString(dateStr);
-//                ss.setSpan(new ForegroundColorSpan(Color.parseColor("#FFB8B8B8")), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                form.setBirthday(new Date(year,(monthOfYear+1),dayOfMonth));
-//                if(bool){
-//                    dateStr="预产日期  " + year + "年"+ (monthOfYear + 1) + "月" + dayOfMonth+"日";
-//                    ss = new SpannableString(dateStr);
-//                    ss.setSpan(new ForegroundColorSpan(Color.parseColor("#FFB8B8B8")), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    textView.setText(ss);
-//                    isDone3=true;
-//                    form.setDeliveryTime(new Date(year,(monthOfYear+1),dayOfMonth));
-//                }else {
-//                    textView.setText(ss);
-//                    isDone4=true;
-//                }
-//            }
-//        }, year, monthOfYear, dayOfMonth);
-//        datePickerDialog.show();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener()
+        {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+            {
+                String dateStr="你的生日  " + year + "年" + (monthOfYear + 1) + "月" + dayOfMonth+"日";
+                SpannableString ss = new SpannableString(dateStr);
+                ss.setSpan(new ForegroundColorSpan(Color.parseColor("#FFB8B8B8")), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                form.setBirthday(new Date(year,(monthOfYear+1),dayOfMonth));
+                if(bool){
+                    dateStr="预产日期  " + year + "年"+ (monthOfYear + 1) + "月" + dayOfMonth+"日";
+                    ss = new SpannableString(dateStr);
+                    ss.setSpan(new ForegroundColorSpan(Color.parseColor("#FFB8B8B8")), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    textView.setText(ss);
+                    isDone3=true;
+                    form.setDeliveryTime(new Date(year,(monthOfYear+1),dayOfMonth));
+                }else {
+                    textView.setText(ss);
+                    isDone4=true;
+                }
+            }
+        }, year, monthOfYear, dayOfMonth);
+
+        if (bool) {
+            long time = System.currentTimeMillis();
+            //-28
+            long preTime = time - 28L * 24 * 3600 * 1000;
+
+            //300
+            long postTime = time + 300L * 24 * 3600 * 1000;
+
+            datePickerDialog.getDatePicker().setMinDate(preTime);
+            datePickerDialog.getDatePicker().setMaxDate(postTime);
+        } else {
+            long time = System.currentTimeMillis();
+            //60
+            long preTime = time - 60L * 365 * 24 * 3600 * 1000;
+
+            //15
+            long postTime = time - 15L * 365 * 24 * 3600 * 1000;
+
+            datePickerDialog.getDatePicker().setMinDate(preTime);
+            datePickerDialog.getDatePicker().setMaxDate(postTime);
+        }
+
+        datePickerDialog.show();
     }
+
 
     UserInfoForm form;
     UploadFileEngine engine;
