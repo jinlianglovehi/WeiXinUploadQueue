@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +25,7 @@ import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.DataStorage;
 import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
+import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
@@ -55,24 +55,19 @@ public class MonitorDetialActivity extends BaseActivity {
 	RelativeLayout rlMovement;
 	@Bind(R.id.tv_consum_time)
 	TextView tvConsumTime;
-	@Bind(R.id.ivDelectAction)
-	ImageView ivDelectAction;
-	@Bind(R.id.tvDelectAction)
-	TextView tvDelectAction;
-	@Bind(R.id.flDelAction)
-	FrameLayout flDelAction;
 	@Bind(R.id.tv_start_time)
 	TextView tvStartTime;
 	private long consumedtime;
 	private long duration;
 	private long interval;
 	private int width;
-	private boolean needReset = true;
 	private FixedRateCountDownTimer countDownTimer;
-	private long lastFMTime;
 	private boolean terminate;
-	private int safemin;
-	private int safemax;
+	private int safemin = 110;
+	private int safemax = 160;
+	private int limitMax = 200;
+	private int limitMin = 60;
+	private int askMinTime;
 
 	@OnClick(R.id.back)
 	void back() {
@@ -118,7 +113,6 @@ public class MonitorDetialActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		countDownTimer = new FixedRateCountDownTimer(duration, 1000) {
-			public boolean reset;
 			public long lastStart;
 
 			@Override
@@ -170,6 +164,7 @@ public class MonitorDetialActivity extends BaseActivity {
 		hsLayoutParams.width = width;
 		chs.setLayoutParams(hsLayoutParams);
 		curve.setFhrs(DataStorage.fhrs);
+		curve.setxMax((int) (duration / 1000));
 		curve.setCellWidth(Util.dip2px(getApplicationContext(), 10));
 		curve.setHearts(DataStorage.fms);
 		curve.setCurveStrokeWidth(Util.dip2px(getApplicationContext(), 2));
@@ -196,21 +191,17 @@ public class MonitorDetialActivity extends BaseActivity {
 	private void getAdviceSetting() {
 		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
 		AdviceSetting adviceSetting = SPUtil.getAdviceSetting(getApplicationContext());
+		askMinTime = adviceSetting.getAskMinTime();
 		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
 		String[] split = alarmHeartrateLimit.split("-");
 		try {
 			if (split != null && split.length == 2) {
-				int safemin = Integer.parseInt(split[0]);
-				if (safemin > 0) {
-					this.safemin = safemin;
-				}
-				int safemax = Integer.parseInt(split[1]);
-				if (safemax > 0) {
-					this.safemax = safemax;
-				}
+				safemin = Integer.parseInt(split[0]);
+				safemax = Integer.parseInt(split[1]);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			ToastUtil.show(getApplicationContext(), "解析错误");
 		}
 		LogUtil.d(TAG, "safemin:%s,safemax:%s", safemin, safemax);
 	}
