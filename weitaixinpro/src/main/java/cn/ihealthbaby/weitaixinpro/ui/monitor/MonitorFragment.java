@@ -118,7 +118,6 @@ public class MonitorFragment extends BaseFragment {
 	private int safemax;
 	private FixedRateCountDownTimer readDataTimer;
 	private boolean autoStart;
-	private boolean first = true;
 
 	public static MonitorFragment getInstance() {
 		return instance;

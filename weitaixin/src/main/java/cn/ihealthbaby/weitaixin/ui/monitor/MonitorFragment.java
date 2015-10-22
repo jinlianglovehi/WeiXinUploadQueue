@@ -191,6 +191,7 @@ public class MonitorFragment extends BaseFragment {
 
 	@OnClick(R.id.function)
 	public void ternimateMonitor() {
+		readDataTimer.cancel();
 		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL_CANCEL_NOT_START));
 	}
 
@@ -377,22 +378,21 @@ public class MonitorFragment extends BaseFragment {
 			public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
 				connectDevice(remoteDevice, remoteName);
 			}
+//			@Override
+//			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
+//				connectDevice(remoteDevice, remoteName);
+//			}
+//			@Override
+//			public void remoteClassChanged(BluetoothDevice remoteDevice, BluetoothClass bluetoothClass) {
+//				connectDevice(remoteDevice, remoteDevice.getName());
+//			}
 
-			@Override
-			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
-				connectDevice(remoteDevice, remoteName);
-			}
-
-			@Override
-			public void remoteClassChanged(BluetoothDevice remoteDevice, BluetoothClass bluetoothClass) {
-				connectDevice(remoteDevice, remoteDevice.getName());
-			}
-
-			private void connectDevice(BluetoothDevice remoteDevice, String remoteName) {
+			private synchronized void connectDevice(BluetoothDevice remoteDevice, String remoteName) {
 				if (!scanedDevices.contains(remoteDevice)) {
 					if (getDeviceName().equalsIgnoreCase(remoteName)) {
 						LogUtil.d(TAG, "发现匹配的设备,正在连接设备:" + remoteName);
-						pseudoBluetoothService.connect(remoteDevice, false);
+						adapter.cancelDiscovery();
+						pseudoBluetoothService.connect(remoteDevice, true);
 					}
 					scanedDevices.add(remoteDevice);
 				}
@@ -410,7 +410,7 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onDisconnect(BluetoothDevice remoteDevice) {
-				reset();
+//				reset();
 			}
 
 			@Override
@@ -421,6 +421,7 @@ public class MonitorFragment extends BaseFragment {
 			@Override
 			public void onStateOFF() {
 				ToastUtil.show(getActivity().getApplicationContext(), "蓝牙被关闭");
+				pseudoBluetoothService.stop();
 			}
 
 			@Override
@@ -435,7 +436,6 @@ public class MonitorFragment extends BaseFragment {
 
 			@Override
 			public void onDiscoveryFinished() {
-				scanedDevices.clear();
 			}
 		});
 	}
@@ -494,8 +494,9 @@ public class MonitorFragment extends BaseFragment {
 		tvStart.setVisibility(View.VISIBLE);
 		tvBluetooth.setText("");
 		tvBluetooth.setClickable(true);
+		roundFrontground.setClickable(true);
 		btnStart.setClickable(true);
-		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 58);
+		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
 		hint.setText("");
 		hint.setVisibility(View.GONE);
 		bpm.setVisibility(View.GONE);
@@ -512,7 +513,8 @@ public class MonitorFragment extends BaseFragment {
 		tvStart.setVisibility(View.GONE);
 		tvBluetooth.setText("连接中");
 		tvBluetooth.setClickable(false);
-		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
+		roundFrontground.setClickable(false);
+//		tvBluetooth.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38);
 		hint.setText("请耐心等待");
 		hint.setVisibility(View.VISIBLE);
 		bpm.setImageResource(R.drawable.bpm_dark);
@@ -541,9 +543,9 @@ public class MonitorFragment extends BaseFragment {
 		LogUtil.d(TAG, "已绑定的设备数量" + bondedDevices.size());
 		if (bondedDevices != null && bondedDevices.size() > 0) {
 			for (BluetoothDevice device : bondedDevices) {
-				LogUtil.d(TAG, "设备名称: " + device.getName());
+				LogUtil.d(TAG, "已绑定的设备名称: " + device.getName());
 				if (getDeviceName().equalsIgnoreCase(device.getName())) {
-					LogUtil.d(TAG, "找到匹配的设备,开始连接");
+					LogUtil.d(TAG, "找到匹配的设备,开始连接:" + device.getName());
 					ToastUtil.show(getActivity(), "开始连接" + device.getName());
 					pseudoBluetoothService.connect(device, false);
 					return;
@@ -554,6 +556,7 @@ public class MonitorFragment extends BaseFragment {
 			LogUtil.d(TAG, "无绑定设备");
 		}
 		LogUtil.d(TAG, "开始搜索设备");
+		ToastUtil.show(getActivity().getApplicationContext(), "开始搜索设备");
 		//直接配对失败,开始搜索设备
 		if (!adapter.isDiscovering()) {
 			adapter.startDiscovery();
