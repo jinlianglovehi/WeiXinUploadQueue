@@ -22,6 +22,7 @@ import cn.ihealthbaby.weitaixinpro.service.UploadDataUtil;
  * Created by liuhongjian on 15/9/20 13:13.
  */
 public class LocalRecordPlayActivity extends RecordPlayActivity {
+	private final static String TAG = "LocalRecordPlayActivity";
 	private static final int BUTTON_ALL = 1;
 	private static final int BUTTON_DATA = 2;
 	public UploadDataUtil uploadDataUtil;
