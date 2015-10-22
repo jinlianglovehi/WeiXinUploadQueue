@@ -226,22 +226,30 @@ public class InfoEditActivity extends BaseActivity implements MyPoPoWin.ISelectP
         }, year, monthOfYear, dayOfMonth);
 
         if (bool) {
-            long time = System.currentTimeMillis();
-            //-28
-            long preTime = time - 28L * 24 * 3600 * 1000;
+            Calendar cd = Calendar.getInstance();
+            cd.setTime(new Date());
+            cd.add(Calendar.DATE, -28);
+            long preTime = cd.getTimeInMillis();
 
-            //300
-            long postTime = time + 300L * 24 * 3600 * 1000;
+
+            Calendar cd2 = Calendar.getInstance();
+            cd2.setTime(new Date());
+            cd2.add(Calendar.DATE, 300);
+            long postTime = cd2.getTimeInMillis();
 
             datePickerDialog.getDatePicker().setMinDate(preTime);
             datePickerDialog.getDatePicker().setMaxDate(postTime);
         } else {
-            long time = System.currentTimeMillis();
-            //60
-            long preTime = time - 60L * 365 * 24 * 3600 * 1000;
+            Calendar cd = Calendar.getInstance();
+            cd.setTime(new Date());
+            cd.add(Calendar.YEAR, -60);
+            long preTime = cd.getTimeInMillis();
 
-            //15
-            long postTime = time - 15L * 365 * 24 * 3600 * 1000;
+
+            Calendar cd2 = Calendar.getInstance();
+            cd2.setTime(new Date());
+            cd2.add(Calendar.YEAR, -15);
+            long postTime = cd2.getTimeInMillis();
 
             datePickerDialog.getDatePicker().setMinDate(preTime);
             datePickerDialog.getDatePicker().setMaxDate(postTime);
