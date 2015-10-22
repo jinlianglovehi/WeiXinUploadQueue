@@ -120,7 +120,7 @@ public class MonitorDetialActivity extends BaseActivity {
 	@OnClick(R.id.btn_extra_time)
 	public void extra() {
 		//最长 40min
-		if (countDownTimer.getDuration() <= 40 * 60 * 1000) {
+		if (countDownTimer.getDuration() < 40 * 60 * 1000) {
 			countDownTimer.extra(5 * 60 * 1000);
 		} else {
 			//UI需要变化
