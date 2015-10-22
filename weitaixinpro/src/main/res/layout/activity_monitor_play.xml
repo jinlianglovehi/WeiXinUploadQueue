@@ -105,25 +105,38 @@
             </RelativeLayout>
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/play"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/chs"
-            android:layout_marginLeft="28dp"
-            android:layout_marginTop="26dp"
-            android:src="@drawable/button_play"
-            />
+        <RelativeLayout
+            android:id="@+id/play_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/chs">
 
-        <ImageView
-            android:id="@+id/replay"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="28dp"
+                android:src="@drawable/button_play"
+                />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/replay_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/chs"
-            android:layout_marginRight="28dp"
-            android:layout_marginTop="26dp"
-            android:src="@drawable/button_replay"/>
+            android:layout_below="@id/chs">
+
+            <ImageView
+                android:id="@+id/replay"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+
+                android:layout_margin="28dp"
+
+                android:src="@drawable/button_replay"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

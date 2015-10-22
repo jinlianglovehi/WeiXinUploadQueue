@@ -95,7 +95,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		finish();
 	}
 
-	@OnClick(R.id.play)
+	@OnClick({R.id.play, R.id.play_wrapper})
 	public void play() {
 		if (playing) {
 			pausedTime = countDownTimer.getConsumedTime();
@@ -109,7 +109,7 @@ public abstract class RecordPlayActivity extends BaseActivity {
 		playing = !playing;
 	}
 
-	@OnClick(R.id.replay)
+	@OnClick({R.id.replay, R.id.replay_wrapper})
 	public void replay() {
 		countDownTimer.restart();
 	}
