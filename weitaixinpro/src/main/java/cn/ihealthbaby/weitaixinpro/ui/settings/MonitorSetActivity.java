@@ -59,20 +59,20 @@ public class MonitorSetActivity extends BaseActivity {
 		mSlideSwitchViewBegin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
+				LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
 				if (!localSetting.isAutoStart()) {
 					mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
 				} else {
 					mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
 				}
 				localSetting.setAutoStart(!localSetting.isAutoStart());
-				SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
+				SPUtil.setLocalSetting(getApplicationContext(), localSetting);
 			}
 		});
 		mSlideSwitchViewAlarm.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
+				LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
 				if (!localSetting.isAlert()) {
 					mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
 					meLinearLayout.setVisibility(View.VISIBLE);
@@ -81,13 +81,13 @@ public class MonitorSetActivity extends BaseActivity {
 					meLinearLayout.setVisibility(View.GONE);
 				}
 				localSetting.setAlert(!localSetting.isAlert());
-				SPUtil.setLocalSetting(MonitorSetActivity.this, localSetting);
+				SPUtil.setLocalSetting(getApplicationContext(), localSetting);
 			}
 		});
 	}
 
 	private void initView() {
-		LocalSetting localSetting = SPUtil.getLocalSetting(MonitorSetActivity.this);
+		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
 		if (localSetting.isAutoStart()) {
 			mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
 		} else {

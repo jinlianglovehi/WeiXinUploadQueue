@@ -1,8 +1,6 @@
 package cn.ihealthbaby.weitaixin.ui.mine;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,183 +19,168 @@ import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
-import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 
-
 public class SetSystemGuardianActivity extends BaseActivity {
+	@Bind(R.id.back)
+	RelativeLayout back;
+	@Bind(R.id.title_text)
+	TextView title_text;
+	@Bind(R.id.function)
+	TextView function;
+	@Bind(R.id.lvGuardian)
+	ListView lvGuardian;
+	@Bind(R.id.meLinearLayout)
+	LinearLayout meLinearLayout;
+	@Bind(R.id.slide_switch_begin)
+	ImageView mSlideSwitchViewBegin;
+	@Bind(R.id.slide_switch_alarm)
+	ImageView mSlideSwitchViewAlarm;
+	MyTimeAdapter myTimeAdapter;
+	private int selectPosition;
 
-    @Bind(R.id.back)
-    RelativeLayout back;
-    @Bind(R.id.title_text)
-    TextView title_text;
-    @Bind(R.id.function)
-    TextView function;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_set_system_guardian);
+		ButterKnife.bind(this);
+		title_text.setText("监护设置");
+		initData();
+		initView();
+		initListener();
+	}
 
-    @Bind(R.id.lvGuardian)
-    ListView lvGuardian;
-    @Bind(R.id.meLinearLayout)
-    LinearLayout meLinearLayout;
-    @Bind(R.id.slide_switch_begin)
-    ImageView mSlideSwitchViewBegin;
-    @Bind(R.id.slide_switch_alarm)
-    ImageView mSlideSwitchViewAlarm;
-    private int selectPosition;
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
 
+	private void initListener() {
+		mSlideSwitchViewBegin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+				if (!localSetting.isAutoStart()) {
+					mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
+				} else {
+					mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
+				}
+				localSetting.setAutoStart(!localSetting.isAutoStart());
+				SPUtil.setLocalSetting(getApplicationContext(), localSetting);
+			}
+		});
+		mSlideSwitchViewAlarm.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+				if (!localSetting.isAlert()) {
+					mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
+					meLinearLayout.setVisibility(View.VISIBLE);
+				} else {
+					mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
+					meLinearLayout.setVisibility(View.GONE);
+				}
+				localSetting.setAlert(!localSetting.isAlert());
+				SPUtil.setLocalSetting(getApplicationContext(), localSetting);
+			}
+		});
+	}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_system_guardian);
-        ButterKnife.bind(this);
-        title_text.setText("监护设置");
-        initData();
-        initView();
-        initListener();
-    }
+	private void initView() {
+		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+		if (localSetting.isAutoStart()) {
+			mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
+		} else {
+			mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
+		}
+		if (localSetting.isAlert()) {
+			mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
+			meLinearLayout.setVisibility(View.VISIBLE);
+		} else {
+			mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
+			meLinearLayout.setVisibility(View.GONE);
+		}
+		selectPosition = localSetting.getAlertInterval() / 5 - 1;
+	}
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+	private void initData() {
+		myTimeAdapter = new MyTimeAdapter(getApplicationContext());
+		lvGuardian.setAdapter(myTimeAdapter);
+		lvGuardian.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				selectPosition = position;
+//				SharedPreferences sharedPreferences = getSharedPreferences(Constants.TAI_XIN_YI, Activity.MODE_PRIVATE);
+//				SharedPreferences.Editor editor = sharedPreferences.edit();
+//				editor.putInt("selectPosition", position);
+//				editor.commit();
+				final LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
+				localSetting.setAlertInterval((position + 1) * 5);
+				SPUtil.setLocalSetting(getApplicationContext(), localSetting);
+				myTimeAdapter.notifyDataSetChanged();
+			}
+		});
+	}
 
-    private void initListener() {
+	@OnClick(R.id.back)
+	public void onBack() {
+		this.finish();
+	}
 
-        mSlideSwitchViewBegin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
-                if (!localSetting.isAutoStart()) {
-                    mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
-                } else {
-                    mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
-                }
-                localSetting.setAutoStart(!localSetting.isAutoStart());
-                SPUtil.setLocalSetting(getApplicationContext(), localSetting);
+	public class MyTimeAdapter extends BaseAdapter {
+		public boolean isFirst = true;
+		private String[] titleTimes = new String[]{"5秒", "10秒", "15秒", "20秒", "25秒", "30秒"};
+		private LayoutInflater inflater;
 
-            }
-        });
+		public MyTimeAdapter(Context context) {
+			inflater = LayoutInflater.from(context);
+		}
 
-        mSlideSwitchViewAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
-                if (!localSetting.isAlert()) {
-                    mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
-                    meLinearLayout.setVisibility(View.VISIBLE);
-                } else {
-                    mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
-                    meLinearLayout.setVisibility(View.GONE);
-                }
-                localSetting.setAlert(!localSetting.isAlert());
-                SPUtil.setLocalSetting(getApplicationContext(), localSetting);
-            }
-        });
-    }
+		@Override
+		public int getCount() {
+			return titleTimes.length;
+		}
 
+		@Override
+		public Object getItem(int position) {
+			return titleTimes[position];
+		}
 
-    private void initView() {
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
 
-        LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
-        if (localSetting.isAutoStart()) {
-            mSlideSwitchViewBegin.setImageResource(R.drawable.switch_on);
-        } else {
-            mSlideSwitchViewBegin.setImageResource(R.drawable.switch_off);
-        }
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder viewHolder = null;
+			if (convertView == null) {
+				convertView = inflater.inflate(R.layout.item_set_system_guardian, null);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			viewHolder.tvTime.setText(titleTimes[position]);
+			if (selectPosition == position) {
+				viewHolder.tvTime.setTextColor(getResources().getColor(R.color.green0));
+				viewHolder.tvState.setVisibility(View.VISIBLE);
+			} else {
+				viewHolder.tvTime.setTextColor(getResources().getColor(R.color.gray9));
+				viewHolder.tvState.setVisibility(View.INVISIBLE);
+			}
+			return convertView;
+		}
 
-        if (localSetting.isAlert()) {
-            mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_on);
-            meLinearLayout.setVisibility(View.VISIBLE);
-        } else {
-            mSlideSwitchViewAlarm.setImageResource(R.drawable.switch_off);
-            meLinearLayout.setVisibility(View.GONE);
-        }
+		class ViewHolder {
+			@Bind(R.id.tvTime)
+			TextView tvTime;
+			@Bind(R.id.tvState)
+			ImageView tvState;
 
-    }
-
-    MyTimeAdapter myTimeAdapter;
-
-    private void initData() {
-        myTimeAdapter = new MyTimeAdapter(this);
-        lvGuardian.setAdapter(myTimeAdapter);
-        lvGuardian.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectPosition = position;
-                SharedPreferences sharedPreferences = getSharedPreferences(Constants.TAI_XIN_YI, Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("selectPosition", position);
-                editor.commit();
-                myTimeAdapter.notifyDataSetChanged();
-            }
-        });
-    }
-
-    @OnClick(R.id.back)
-    public void onBack() {
-        this.finish();
-    }
-
-
-    public class MyTimeAdapter extends BaseAdapter {
-
-        private String[] titleTimes = new String[]{"5秒", "10秒", "15秒", "20秒", "25秒", "30秒"};
-        private LayoutInflater inflater;
-        public boolean isFirst = true;
-
-        public MyTimeAdapter(Context context) {
-            inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public int getCount() {
-            return titleTimes.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return titleTimes[position];
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.item_set_system_guardian, null);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.tvTime.setText(titleTimes[position]);
-
-
-            if (selectPosition == position) {
-                viewHolder.tvTime.setTextColor(getResources().getColor(R.color.green0));
-                viewHolder.tvState.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.tvTime.setTextColor(getResources().getColor(R.color.gray9));
-                viewHolder.tvState.setVisibility(View.INVISIBLE);
-            }
-            return convertView;
-        }
-
-        class ViewHolder {
-            @Bind(R.id.tvTime)
-            TextView tvTime;
-            @Bind(R.id.tvState)
-            ImageView tvState;
-
-            public ViewHolder(View convertView) {
-                ButterKnife.bind(this, convertView);
-            }
-        }
-    }
-
-
+			public ViewHolder(View convertView) {
+				ButterKnife.bind(this, convertView);
+			}
+		}
+	}
 }
