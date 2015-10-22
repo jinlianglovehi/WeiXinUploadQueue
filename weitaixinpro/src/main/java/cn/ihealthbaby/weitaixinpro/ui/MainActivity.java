@@ -47,10 +47,10 @@ public class MainActivity extends BaseActivity {
 	private FragmentManager fragmentManager;
 	private boolean first = true;
 	private long exitTime;
+	private boolean rebind;
 
 	public void onEventMainThread(RebindEvent event) {
-		Intent intent = new Intent(getApplicationContext(), BindActivity.class);
-		startActivity(intent);
+		rebind = true;
 		finish();
 	}
 
@@ -120,20 +120,23 @@ public class MainActivity extends BaseActivity {
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		ButterKnife.unbind(this);
-		EventBus.getDefault().unregister(this);
-		LogUtil.d(TAG, "remove all fragments");
-	}
-
-	@Override
 	public void onBackPressed() {
 		if (System.currentTimeMillis() - exitTime > 3000) {
 			ToastUtil.show(getApplicationContext(), "再次点击返回,退出应用");
 			exitTime = System.currentTimeMillis();
 		} else {
 			super.onBackPressed();
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ButterKnife.unbind(this);
+		EventBus.getDefault().unregister(this);
+		if (rebind) {
+			Intent intent = new Intent(getApplicationContext(), BindActivity.class);
+			startActivity(intent);
 		}
 	}
 }
