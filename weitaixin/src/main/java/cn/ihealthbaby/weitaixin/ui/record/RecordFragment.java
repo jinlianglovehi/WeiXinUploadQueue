@@ -117,6 +117,8 @@ public class RecordFragment extends BaseFragment {
 		startActivity(intent);
 	}
 
+	View tvAdviceStatusIdOld;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_record, null);
@@ -150,6 +152,9 @@ public class RecordFragment extends BaseFragment {
 						if (adapter.selectedViewOld != null && adapter.selectedViewOld != adapter.selectedView) {
 							adapter.cancel(adapter.selectedViewOld);
 						}
+						if (tvAdviceStatusIdOld != null) {
+							tvAdviceStatusIdOld.setVisibility(View.VISIBLE);
+						}
 						selectedView = adapter.getSelectedView();
 //                        tvAdviceStatused = adapter.getAdviceStatused();
 						oldXDis = event.getX();
@@ -165,6 +170,9 @@ public class RecordFragment extends BaseFragment {
 							if (Math.abs(distanceX) > Math.abs(distanceY)) {
 								if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
 									selectedView.setX(-adapter.recordDelete.getWidth());
+									View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
+									tvAdviceStatusIdOld = tvAdviceStatusId;
+									tvAdviceStatusId.setVisibility(View.INVISIBLE);
 								} else {
 									if (selectedView != null && selectedView.getX() >= -adapter.recordDelete.getWidth()) {
 										selectedView.setX(selectedView.getX() + distanceX);
@@ -172,17 +180,17 @@ public class RecordFragment extends BaseFragment {
 								}
 							}
 						} else {
-//                            float distanceY = event.getY() - oldY;
-//                            if (Math.abs(distanceX) > Math.abs(distanceY)&&selectedView.getX()<=0) {
-//                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
-//                                    selectedView.setX(0);
-//                                } else {
-//                                    if (selectedView != null) {
-//                                        selectedView.setX(selectedView.getX() + distanceX);
-//                                    }
-//                                }
-//                            }
-							adapter.cancel();
+                            float distanceY = event.getY() - oldY;
+                            if (Math.abs(distanceX) > Math.abs(distanceY)&&selectedView.getX()<=0) {
+                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
+                                    selectedView.setX(0);
+                                } else {
+                                    if (selectedView != null) {
+                                        selectedView.setX(selectedView.getX() + distanceX);
+                                    }
+                                }
+                            }
+//							adapter.cancel();
 						}
 						oldX = event.getX();
 						oldY = event.getY();
@@ -192,6 +200,9 @@ public class RecordFragment extends BaseFragment {
 						if (distanceX2 < 0) {
 							if (Math.abs(distanceX2) >= adapter.recordDelete.getWidth() / 2 && selectedView != null) {
 								selectedView.setX(-adapter.recordDelete.getWidth());
+								View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
+								tvAdviceStatusIdOld = tvAdviceStatusId;
+								tvAdviceStatusId.setVisibility(View.INVISIBLE);
 							} else {
 								if (selectedView != null) {
 									selectedView.setX(0);

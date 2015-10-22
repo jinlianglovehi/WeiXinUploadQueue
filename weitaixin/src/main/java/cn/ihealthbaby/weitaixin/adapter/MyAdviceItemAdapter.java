@@ -111,6 +111,10 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 		if (selectedView == null) {
 			return;
 		}
+
+		View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
+		tvAdviceStatusId.setVisibility(View.VISIBLE);
+
 		ObjectAnimator.ofFloat(selectedView, "x", 0f).start();
 		selectedView = null;
 //        tvAdviceStatused=null;
