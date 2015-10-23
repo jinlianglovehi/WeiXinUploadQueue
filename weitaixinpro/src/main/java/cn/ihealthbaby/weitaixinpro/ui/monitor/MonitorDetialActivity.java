@@ -4,9 +4,11 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -82,6 +84,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	private int alertInterval;
 	private long lastAlert;
 	private SoundPool alertSound;
+	private PowerManager powerManager;
+	private PowerManager.WakeLock wakeLock;
 
 	@OnClick(R.id.back)
 	public void back() {
@@ -176,6 +180,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_monitor_detial);
 		ButterKnife.bind(this);
 		titleText.setText("胎心监测");
