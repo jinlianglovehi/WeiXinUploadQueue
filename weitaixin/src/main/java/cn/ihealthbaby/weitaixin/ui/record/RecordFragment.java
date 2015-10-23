@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -135,6 +136,19 @@ public class RecordFragment extends BaseFragment {
 //
 		getAskMinTime();
 		pullDatas();
+		pullToRefresh.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				if (tvAdviceStatusIdOld != null) {
+					tvAdviceStatusIdOld.setVisibility(View.VISIBLE);
+				}
+			}
+		});
 //      registerForContextMenu(pullToRefresh.getRefreshableView());
 		pullToRefresh.getRefreshableView().setOnTouchListener(new View.OnTouchListener() {
 			private View selectedView;
@@ -155,14 +169,13 @@ public class RecordFragment extends BaseFragment {
 						}
 
 						selectedView = adapter.getSelectedView();
-						View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
-//						tvAdviceStatusIdOld = tvAdviceStatusId;
-						tvAdviceStatusIdPre = tvAdviceStatusId;
-						tvAdviceStatusId.setVisibility(View.INVISIBLE);
-
-						if (tvAdviceStatusIdOld != null && tvAdviceStatusIdOld != tvAdviceStatusIdPre) {
-							tvAdviceStatusIdOld.setVisibility(View.VISIBLE);
-						}
+//						View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
+//						tvAdviceStatusIdPre = tvAdviceStatusId;
+//						tvAdviceStatusId.setVisibility(View.INVISIBLE);
+//
+//						if (tvAdviceStatusIdOld != null && tvAdviceStatusIdOld != tvAdviceStatusIdPre) {
+//							tvAdviceStatusIdOld.setVisibility(View.VISIBLE);
+//						}
 
 
 //                      tvAdviceStatused = adapter.getAdviceStatused();
@@ -179,10 +192,12 @@ public class RecordFragment extends BaseFragment {
 							if (Math.abs(distanceX) > Math.abs(distanceY)) {
 								if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
 									selectedView.setX(-adapter.recordDelete.getWidth());
-//									View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
-//									tvAdviceStatusIdOld = tvAdviceStatusId;
-//									tvAdviceStatusIdPre = tvAdviceStatusId;
-//									tvAdviceStatusId.setVisibility(View.INVISIBLE);
+									View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
+									tvAdviceStatusIdPre = tvAdviceStatusId;
+									tvAdviceStatusId.setVisibility(View.INVISIBLE);
+									if (tvAdviceStatusIdOld != null && tvAdviceStatusIdOld != tvAdviceStatusIdPre) {
+										tvAdviceStatusIdOld.setVisibility(View.VISIBLE);
+									}
 								} else {
 									if (selectedView != null/* && selectedView.getX() >= -adapter.recordDelete.getWidth()*/) {
 										if (selectedView.getX() <= -adapter.recordDelete.getWidth()) {
@@ -196,20 +211,20 @@ public class RecordFragment extends BaseFragment {
 						} else {
 							LogUtil.d("selectedViewX", "selectedViewX==> " + selectedView.getX());
 //							if (selectedView.getX() <= 0) {
-								float distanceY = event.getY() - oldY;
-								if (Math.abs(distanceX) > Math.abs(distanceY) && selectedView.getX() <= 0) {
-									if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
-										selectedView.setX(0);
-									} else {
-										if (selectedView != null) {
-											if (selectedView.getX() >= 0) {
-												selectedView.setX(0);
-											} else {
-												selectedView.setX(selectedView.getX() + distanceX);
-											}
+							float distanceY = event.getY() - oldY;
+							if (Math.abs(distanceX) > Math.abs(distanceY) && selectedView.getX() <= 0) {
+								if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
+									selectedView.setX(0);
+								} else {
+									if (selectedView != null) {
+										if (selectedView.getX() >= 0) {
+											selectedView.setX(0);
+										} else {
+											selectedView.setX(selectedView.getX() + distanceX);
 										}
 									}
 								}
+							}
 //								adapter.cancel();
 //							}
 						}
