@@ -179,7 +179,7 @@ public class BindActivity extends BaseActivity {
 					List<FetalHeart> dataList = data.getList();
 					if (dataList != null && dataList.size() > 0) {
 						list.addAll(dataList);
-						adapter.notifyDataSetChanged();
+						adapter.setSelection(HostIdAdapter.SELECT_NONE);
 					}
 				}
 			}
