@@ -118,6 +118,7 @@ public class RecordFragment extends BaseFragment {
 	}
 
 	View tvAdviceStatusIdOld;
+	View tvAdviceStatusIdPre;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -152,11 +153,19 @@ public class RecordFragment extends BaseFragment {
 						if (adapter.selectedViewOld != null && adapter.selectedViewOld != adapter.selectedView) {
 							adapter.cancel(adapter.selectedViewOld);
 						}
-						if (tvAdviceStatusIdOld != null) {
+
+						selectedView = adapter.getSelectedView();
+						View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
+//						tvAdviceStatusIdOld = tvAdviceStatusId;
+						tvAdviceStatusIdPre = tvAdviceStatusId;
+						tvAdviceStatusId.setVisibility(View.INVISIBLE);
+
+						if (tvAdviceStatusIdOld != null && tvAdviceStatusIdOld != tvAdviceStatusIdPre) {
 							tvAdviceStatusIdOld.setVisibility(View.VISIBLE);
 						}
-						selectedView = adapter.getSelectedView();
-//                        tvAdviceStatused = adapter.getAdviceStatused();
+
+
+//                      tvAdviceStatused = adapter.getAdviceStatused();
 						oldXDis = event.getX();
 						oldX = event.getX();
 						oldY = event.getY();
@@ -170,27 +179,39 @@ public class RecordFragment extends BaseFragment {
 							if (Math.abs(distanceX) > Math.abs(distanceY)) {
 								if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
 									selectedView.setX(-adapter.recordDelete.getWidth());
-									View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
-									tvAdviceStatusIdOld = tvAdviceStatusId;
-									tvAdviceStatusId.setVisibility(View.INVISIBLE);
+//									View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
+//									tvAdviceStatusIdOld = tvAdviceStatusId;
+//									tvAdviceStatusIdPre = tvAdviceStatusId;
+//									tvAdviceStatusId.setVisibility(View.INVISIBLE);
 								} else {
-									if (selectedView != null && selectedView.getX() >= -adapter.recordDelete.getWidth()) {
-										selectedView.setX(selectedView.getX() + distanceX);
+									if (selectedView != null/* && selectedView.getX() >= -adapter.recordDelete.getWidth()*/) {
+										if (selectedView.getX() <= -adapter.recordDelete.getWidth()) {
+											selectedView.setX(-adapter.recordDelete.getWidth());
+										} else {
+											selectedView.setX(selectedView.getX() + distanceX);
+										}
 									}
 								}
 							}
 						} else {
-                            float distanceY = event.getY() - oldY;
-                            if (Math.abs(distanceX) > Math.abs(distanceY)&&selectedView.getX()<=0) {
-                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
-                                    selectedView.setX(0);
-                                } else {
-                                    if (selectedView != null) {
-                                        selectedView.setX(selectedView.getX() + distanceX);
-                                    }
-                                }
-                            }
-//							adapter.cancel();
+							LogUtil.d("selectedViewX", "selectedViewX==> " + selectedView.getX());
+//							if (selectedView.getX() <= 0) {
+								float distanceY = event.getY() - oldY;
+								if (Math.abs(distanceX) > Math.abs(distanceY) && selectedView.getX() <= 0) {
+									if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
+										selectedView.setX(0);
+									} else {
+										if (selectedView != null) {
+											if (selectedView.getX() >= 0) {
+												selectedView.setX(0);
+											} else {
+												selectedView.setX(selectedView.getX() + distanceX);
+											}
+										}
+									}
+								}
+//								adapter.cancel();
+//							}
 						}
 						oldX = event.getX();
 						oldY = event.getY();
@@ -200,9 +221,10 @@ public class RecordFragment extends BaseFragment {
 						if (distanceX2 < 0) {
 							if (Math.abs(distanceX2) >= adapter.recordDelete.getWidth() / 2 && selectedView != null) {
 								selectedView.setX(-adapter.recordDelete.getWidth());
-								View tvAdviceStatusId = selectedView.findViewById(R.id.tvAdviceStatus);
-								tvAdviceStatusIdOld = tvAdviceStatusId;
-								tvAdviceStatusId.setVisibility(View.INVISIBLE);
+								View tvAdviceStatusId2 = selectedView.findViewById(R.id.tvAdviceStatus);
+								tvAdviceStatusIdOld = tvAdviceStatusId2;
+//								tvAdviceStatusIdPre = tvAdviceStatusId2;
+								tvAdviceStatusId2.setVisibility(View.INVISIBLE);
 							} else {
 								if (selectedView != null) {
 									selectedView.setX(0);
