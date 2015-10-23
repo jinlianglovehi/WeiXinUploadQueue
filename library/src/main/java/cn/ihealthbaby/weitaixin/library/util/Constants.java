@@ -60,4 +60,5 @@ public class Constants {
 	public static final String INTENT_HID = "HID";
 	public static final String INTENT_SERVICE_TYPE = "SERVICE_TYPE";
 	public static final String INTENT_SERVICE_ID = "SERVICE_ID";
+	public static final String BUG_HD_SDK_GENERAL_KEY = "BUG_HD_SDK_GENERAL_KEY";
 }

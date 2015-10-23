@@ -1,6 +1,8 @@
 package cn.ihealthbaby.weitaixinpro.ui;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.base.BaseActivity;
@@ -21,6 +24,9 @@ import cn.ihealthbaby.weitaixinpro.ui.monitor.tab.MonitorTabFragment;
 import cn.ihealthbaby.weitaixinpro.ui.record.RecordFragment;
 import cn.ihealthbaby.weitaixinpro.ui.settings.SettingsFragment;
 import de.greenrobot.event.EventBus;
+import im.fir.sdk.FIR;
+import im.fir.sdk.callback.VersionCheckCallback;
+import im.fir.sdk.version.AppVersion;
 
 /**
  * Created by Think on 2015/8/13.
@@ -45,7 +51,6 @@ public class MainActivity extends BaseActivity {
 	private Fragment recordFragment;
 	private Fragment settingsFragment;
 	private FragmentManager fragmentManager;
-	private boolean first = true;
 	private long exitTime;
 	private boolean rebind;
 
@@ -76,6 +81,53 @@ public class MainActivity extends BaseActivity {
 	public void iv_tab_02() {
 		showTab(iv_tab_02);
 		showFragment(R.id.container, monitorTabFragment);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		String firToken = null;
+		try {
+			ApplicationInfo appInfo = null;
+			appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+			firToken = appInfo.metaData.getString(Constants.BUG_HD_SDK_GENERAL_KEY);
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (firToken != null) {
+			FIR.checkForUpdateInFIR(firToken, new VersionCheckCallback() {
+				@Override
+				public void onSuccess(AppVersion appVersion, boolean b) {
+					if (b) {
+						ToastUtil.show(getApplicationContext(), "发现新版本");
+					} else {
+						LogUtil.d(TAG, "暂无新版本");
+					}
+				}
+
+				@Override
+				public void onFail(String s, int i) {
+					LogUtil.d(TAG, "upload request Fail");
+				}
+
+				@Override
+				public void onError(Exception e) {
+					LogUtil.d(TAG, "upload request Error");
+				}
+
+				@Override
+				public void onStart() {
+					LogUtil.d(TAG, "开始检查版本信息");
+				}
+
+				@Override
+				public void onFinish() {
+					LogUtil.d(TAG, "检查版本信息结束");
+				}
+			});
+		}
 	}
 
 	@OnClick(R.id.ll_tab_record)
@@ -140,13 +192,3 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
