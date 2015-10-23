@@ -1,6 +1,5 @@
 package cn.ihealthbaby.weitaixin.ui.monitor;
 
-import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
@@ -204,9 +203,8 @@ public class MonitorFragment extends BaseFragment {
 		//确认获取到配置
 		LogUtil.d(TAG, "检查服务状态");
 		final ApiManager apiManager = ApiManager.getInstance();
-		final CustomDialog customDialog = new CustomDialog();
-		final Dialog dialog = customDialog.createDialog1(getActivity(), "正在查询配置信息");
-		dialog.show();
+		final CustomDialog customDialog = new CustomDialog(getActivity(), "正在查询配置信息");
+		customDialog.show();
 		apiManager.userApi.refreshInfo(new DefaultCallback<User>(getActivity().getApplicationContext(), new AbstractBusiness<User>() {
 			@Override
 			public void handleData(User user) {
@@ -361,7 +359,7 @@ public class MonitorFragment extends BaseFragment {
 			public void onFinish() {
 				if (!connected) {
 					ToastUtil.show(getActivity().getApplicationContext(), "未能连接上设备,请重试");
-					reset();
+					LogUtil.d(TAG, "时间到,未能连接到设备");
 					pseudoBluetoothService.stop();
 				}
 				if (bluetoothScanner.isDiscovering()) {
@@ -378,14 +376,16 @@ public class MonitorFragment extends BaseFragment {
 			public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
 				connectDevice(remoteDevice, remoteName);
 			}
-//			@Override
-//			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
-//				connectDevice(remoteDevice, remoteName);
-//			}
-//			@Override
-//			public void remoteClassChanged(BluetoothDevice remoteDevice, BluetoothClass bluetoothClass) {
-//				connectDevice(remoteDevice, remoteDevice.getName());
-//			}
+
+			@Override
+			public void onRemoteNameChanged(BluetoothDevice remoteDevice, String remoteName) {
+				connectDevice(remoteDevice, remoteName);
+			}
+
+			@Override
+			public void remoteClassChanged(BluetoothDevice remoteDevice, BluetoothClass bluetoothClass) {
+				connectDevice(remoteDevice, remoteDevice.getName());
+			}
 
 			private synchronized void connectDevice(BluetoothDevice remoteDevice, String remoteName) {
 				if (!scanedDevices.contains(remoteDevice)) {
@@ -753,6 +753,7 @@ public class MonitorFragment extends BaseFragment {
 							case Constants.MESSAGE_CONNECTION_LOST:
 								LogUtil.d(TAG, "MESSAGE_CONNECTION_LOST");
 								ToastUtil.show(getMonitorFragment().getActivity().getApplicationContext(), "断开蓝牙连接");
+								// TODO: 15/10/23 丢失连接 通知监测页面结束监测
 								break;
 							default:
 								break;

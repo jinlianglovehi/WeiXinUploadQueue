@@ -46,6 +46,8 @@ public class MonitorActivity extends BaseActivity {
 	public boolean alert;
 	public int duration = 20 * 60 * 1000;
 	public Date recordStartTime;
+	public int askMinTime;
+	public MonitorDialog monitorDialog;
 	@Bind(R.id.back)
 	RelativeLayout back;
 	@Bind(R.id.title_text)
@@ -90,7 +92,7 @@ public class MonitorActivity extends BaseActivity {
 
 	@OnClick(R.id.back)
 	public void back() {
-		final MonitorDialog monitorDialog = new MonitorDialog(this, new String[]{"满20分钟的监测才能问医生\n是否继续监测", "继续监测", "立即完成"});
+		monitorDialog = new MonitorDialog(this, new String[]{"是否放弃本次监测", "继续监测", "放弃监测"});
 		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
 			@Override
 			public void left(Object... obj) {
@@ -114,12 +116,26 @@ public class MonitorActivity extends BaseActivity {
 
 	@OnClick(R.id.function)
 	public void terminate() {
-		try {
-			alertSound.release();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
+		monitorDialog = new MonitorDialog(this, new String[]{"满" + askMinTime + "分钟的监测才能问医生\n是否继续监测", "继续监测", "立即完成"});
+		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+			@Override
+			public void left(Object... obj) {
+				monitorDialog.dismiss();
+			}
+
+			@Override
+			public void right(Object... obj) {
+				monitorDialog.dismiss();
+				try {
+					alertSound.release();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
+				finish();
+			}
+		});
+		monitorDialog.show();
 	}
 
 	@OnClick({R.id.curve_simple, R.id.hs})
@@ -304,6 +320,11 @@ public class MonitorActivity extends BaseActivity {
 			countDownTimer.cancel();
 		}
 		int reason = event.getEvent();
+		try {
+			alertSound.release();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		switch (reason) {
 			case MonitorTerminateEvent.EVENT_AUTO:
 				LogUtil.d(TAG, "EVENT_AUTO");
@@ -325,6 +346,7 @@ public class MonitorActivity extends BaseActivity {
 	private void getAdviceSetting() {
 		LocalSetting localSetting = SPUtil.getLocalSetting(getApplicationContext());
 		AdviceSetting adviceSetting = SPUtil.getAdviceSetting(getApplicationContext());
+		askMinTime = adviceSetting.getAskMinTime();
 		String alarmHeartrateLimit = adviceSetting.getAlarmHeartrateLimit();
 		String[] split = alarmHeartrateLimit.split("-");
 		try {

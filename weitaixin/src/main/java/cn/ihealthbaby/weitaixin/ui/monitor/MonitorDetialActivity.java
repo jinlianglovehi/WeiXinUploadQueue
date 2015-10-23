@@ -29,6 +29,7 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
+import cn.ihealthbaby.weitaixin.ui.widget.MonitorDialog;
 import de.greenrobot.event.EventBus;
 
 public class MonitorDetialActivity extends BaseActivity {
@@ -68,6 +69,7 @@ public class MonitorDetialActivity extends BaseActivity {
 	private int limitMax = 200;
 	private int limitMin = 60;
 	private int askMinTime;
+	private MonitorDialog monitorDialog;
 
 	@OnClick(R.id.back)
 	void back() {
@@ -76,20 +78,27 @@ public class MonitorDetialActivity extends BaseActivity {
 
 	@OnClick(value = {R.id.tv_record, R.id.btn_start})
 	public void fetalMovement() {
-//		long consumedTime = countDownTimer.getConsumedTime();
-//		int position = (int) (consumedTime / countDownTimer.getInterval());
-//		if (lastFMTime == 0 || consumedTime - lastFMTime >= 3 * 1000) {
-//			savePosition(position);
-//			lastFMTime = consumedTime;
-//		}
 		EventBus.getDefault().post(new FetalMovementEvent());
 	}
 
 	@OnClick(R.id.function)
 	public void terminate() {
-		EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
-		terminate = true;
-		finish();
+		monitorDialog = new MonitorDialog(this, new String[]{"满" + askMinTime + "分钟的监测才能问医生\n是否继续监测", "继续监测", "立即完成"});
+		monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+			@Override
+			public void left(Object... obj) {
+				monitorDialog.dismiss();
+			}
+
+			@Override
+			public void right(Object... obj) {
+				monitorDialog.dismiss();
+				EventBus.getDefault().post(new MonitorTerminateEvent(MonitorTerminateEvent.EVENT_MANUAL));
+				terminate = true;
+				finish();
+			}
+		});
+		monitorDialog.show();
 	}
 
 	private void savePosition(int position) {
