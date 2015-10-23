@@ -127,7 +127,7 @@ public class CloudRecordPlayActivity extends BaseActivity {
 				break;
 			case 2:
 				intent.setClass(getApplicationContext(), ReplyedActivity.class);
-				intent.putExtra(Constants.INTENT_ID, getIntent().getStringExtra(Constants.INTENT_ID));
+				intent.putExtra(Constants.INTENT_ID, getIntent().getLongExtra(Constants.INTENT_ID, -1));
 				break;
 			case 4:
 			case -1:
