@@ -8,8 +8,8 @@ android {
         applicationId "cn.ihealthbaby.weitaixinpro"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 9
-        versionName "0.17"
+        versionCode 10
+        versionName "0.18"
     }
     buildTypes {
         release {
