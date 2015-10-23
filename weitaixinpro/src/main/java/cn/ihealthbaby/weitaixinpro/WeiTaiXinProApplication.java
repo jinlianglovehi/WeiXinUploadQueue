@@ -3,6 +3,8 @@ package cn.ihealthbaby.weitaixinpro;
 import android.app.Application;
 
 import com.android.volley.RequestQueue;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.weitaixin.library.data.net.adapter.AbstractHttpClientAdapter;
@@ -15,14 +17,20 @@ import im.fir.sdk.FIR;
  * @author by kang on 2015/9/9.
  */
 public class WeiTaiXinProApplication extends Application {
+	public RefWatcher refWatcher;
 	private AbstractHttpClientAdapter adapter;
 
 	@Override
 	public void onCreate() {
 		FIR.init(this);
 		super.onCreate();
+		refWatcher = LeakCanary.install(this);
 //		initUniversalImageLoader();
 		initApiManager();
+	}
+
+	public RefWatcher getRefWatcher() {
+		return refWatcher;
 	}
 
 	public void initApiManager() {
@@ -34,7 +42,6 @@ public class WeiTaiXinProApplication extends Application {
 	public AbstractHttpClientAdapter getAdapter() {
 		return adapter;
 	}
-
 //	public void initUniversalImageLoader() {
 //		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
 //				                                  .memoryCacheExtraOptions(480, 800)
