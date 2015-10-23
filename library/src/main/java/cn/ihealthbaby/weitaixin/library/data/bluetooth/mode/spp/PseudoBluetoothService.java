@@ -47,6 +47,7 @@ public class PseudoBluetoothService {
 	private ConnectedThread mConnectedThread;
 	private int mState;
 	private Parser parser;
+	private int RETRY_TIMES = 3;
 
 	/**
 	 * Constructor. Prepares a new BluetoothChat session.
@@ -223,20 +224,25 @@ public class PseudoBluetoothService {
 			// Always cancel discovery because it will slow down a connection
 			mAdapter.cancelDiscovery();
 			// Make a connection to the BluetoothSocket
-			try {
-				// This is a blocking call and will only return on a
-				// successful connection or an exception
-				mmSocket.connect();
-			} catch (IOException e) {
-				LogUtil.e(TAG, "" + "connectionFailed：" + e.toString());
-				// Close the socket
+			label1:
+			for (int i = 0; i < RETRY_TIMES; i++) {
 				try {
-					mmSocket.close();
-				} catch (IOException e1) {
-					Log.e(TAG, "unable to close() " + mSocketType + " socket during connection failure", e1);
+					// 连接的方法,阻塞或者异常
+					mmSocket.connect();
+					break label1;
+				} catch (IOException e) {
+					LogUtil.e(TAG, "" + "connectionFailed：" + e.toString());
+					if (i == RETRY_TIMES - 1) {
+						try {
+							// Close the socket
+							mmSocket.close();
+						} catch (IOException e1) {
+							Log.e(TAG, "unable to close() " + mSocketType + " socket during connection failure", e1);
+						}
+						connectionFailed();
+						return;
+					}
 				}
-				connectionFailed();
-				return;
 			}
 			// Reset the ConnectThread because we're done
 			synchronized (PseudoBluetoothService.this) {
