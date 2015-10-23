@@ -307,13 +307,6 @@ public class Parser {
 			default:
 				break;
 		}
-	}
-
-	private void handleFileOnTerminate() {
-		startMonitor = false;
-		localRecordId = LocalRecordIdUtil.getSavedId(context);
-		File file = FileUtil.getVoiceFile(context, localRecordId);
-		FileUtil.addFileHead(file);
 		//关闭流
 		try {
 			if (fileOutputStream != null) {
@@ -322,5 +315,12 @@ public class Parser {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void handleFileOnTerminate() {
+		startMonitor = false;
+		localRecordId = LocalRecordIdUtil.getSavedId(context);
+		File file = FileUtil.getVoiceFile(context, localRecordId);
+		FileUtil.addFileHead(file);
 	}
 }
