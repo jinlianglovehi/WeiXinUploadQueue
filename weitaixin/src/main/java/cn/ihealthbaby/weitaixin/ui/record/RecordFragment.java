@@ -118,8 +118,8 @@ public class RecordFragment extends BaseFragment {
 		startActivity(intent);
 	}
 
-	View tvAdviceStatusIdOld;
-	View tvAdviceStatusIdPre;
+	public View tvAdviceStatusIdOld;
+	public View tvAdviceStatusIdPre;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -136,19 +136,6 @@ public class RecordFragment extends BaseFragment {
 //
 		getAskMinTime();
 		pullDatas();
-		pullToRefresh.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (tvAdviceStatusIdOld != null) {
-					tvAdviceStatusIdOld.setVisibility(View.VISIBLE);
-				}
-			}
-		});
 //      registerForContextMenu(pullToRefresh.getRefreshableView());
 		pullToRefresh.getRefreshableView().setOnTouchListener(new View.OnTouchListener() {
 			private View selectedView;
@@ -166,6 +153,9 @@ public class RecordFragment extends BaseFragment {
 					case MotionEvent.ACTION_DOWN:
 						if (adapter.selectedViewOld != null && adapter.selectedViewOld != adapter.selectedView) {
 							adapter.cancel(adapter.selectedViewOld);
+							if (tvAdviceStatusIdOld != null) {
+								tvAdviceStatusIdOld.setVisibility(View.VISIBLE);
+							}
 						}
 
 						selectedView = adapter.getSelectedView();

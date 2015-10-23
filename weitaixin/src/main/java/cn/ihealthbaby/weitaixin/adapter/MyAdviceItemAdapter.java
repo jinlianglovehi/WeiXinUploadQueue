@@ -92,7 +92,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 	private TextView tvUsedCount;
 	RecordBusinessDao recordBusinessDao;
 
-	public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas, TextView tvUsedCount) {
+	public MyAdviceItemAdapter(MeMainFragmentActivity context, ArrayList<AdviceItem> datas, TextView tvUsedCount ) {
 		recordBusinessDao = RecordBusinessDao.getInstance(context);
 		mInflater = LayoutInflater.from(context);
 		this.context = context;
@@ -117,6 +117,7 @@ public class MyAdviceItemAdapter extends BaseAdapter {
 
 		ObjectAnimator.ofFloat(selectedView, "x", 0f).start();
 		selectedView = null;
+
 //        tvAdviceStatused=null;
 	}
 
