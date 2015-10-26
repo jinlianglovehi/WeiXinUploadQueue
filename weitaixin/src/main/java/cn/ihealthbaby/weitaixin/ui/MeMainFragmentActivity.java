@@ -21,6 +21,8 @@ import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.Version;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
+import cn.ihealthbaby.weitaixin.DownloadAPKUtils;
+import cn.ihealthbaby.weitaixin.Global;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
@@ -102,11 +104,9 @@ public class MeMainFragmentActivity extends BaseActivity {
                         break;
 
                     case 2:
-                        Intent intent2 = new Intent();
-                        intent2.setAction("android.intent.action.VIEW");
-                        Uri content_url2 = Uri.parse(data.getUpdateUrl());
-                        intent2.setData(content_url2);
-                        startActivity(intent2);
+                        Global.downloadURL = data.getUpdateUrl();
+                        DownloadAPKUtils downloadAPKUtils = new DownloadAPKUtils(MeMainFragmentActivity.this);
+                        downloadAPKUtils.showDownDialog(true);
                         break;
                 }
             }
@@ -180,7 +180,7 @@ public class MeMainFragmentActivity extends BaseActivity {
                 homePageFragment = HomePageFragment.getInstance();
                 homePageFragment.getNumber();
                 homePageFragment.startAnim();
-//                pullV();
+                pullV();
                 showFragment(R.id.container, homePageFragment);
             }
         }
