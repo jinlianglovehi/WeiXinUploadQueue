@@ -11,6 +11,7 @@ import cn.ihealthbaby.client.model.HClientUser;
 import cn.ihealthbaby.client.model.ServiceInfo;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 
 /**
  * SharedPreferences 工具类
@@ -39,6 +40,7 @@ public class SPUtil {
 	private static final String UPDATE_TIME = "updateTime";
 	private static final String CREATE_TIME = "createTime";
 	private static final String LOGIN_TOKEN = "loginToken";
+	private final static String TAG = "SPUtil";
 
 	public static String getRememberMobile(Context context) {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_REMEMBERMOBILE, Context.MODE_PRIVATE);
@@ -105,17 +107,27 @@ public class SPUtil {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_TEMP, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
 		editor.putString("uuid", uuid);
-		editor.commit();
+		if (editor.commit()) {
+			LogUtil.d(TAG, "set uuid:[%s]", uuid);
+		} else {
+			LogUtil.d(TAG, "set uuid fail");
+		}
 	}
 
 	public static String getUUID(Context context) {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_TEMP, Context.MODE_PRIVATE);
-		return sp.getString("uuid", null);
+		final String uuid = sp.getString("uuid", null);
+		LogUtil.d(TAG, "get uuid:[%s]", uuid);
+		return uuid;
 	}
 
 	public static void clearUUID(Context context) {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_TEMP, Context.MODE_PRIVATE);
-		sp.edit().clear().commit();
+		if (sp.edit().clear().commit()) {
+			LogUtil.d(TAG, "clear uuid");
+		} else {
+			LogUtil.d(TAG, "clear uuid fail");
+		}
 	}
 
 	public static void setLocalSetting(Context context, LocalSetting localSetting) {
