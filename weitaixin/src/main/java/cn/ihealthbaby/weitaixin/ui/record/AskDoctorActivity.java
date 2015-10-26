@@ -31,26 +31,23 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 
 public class AskDoctorActivity extends BaseActivity {
 
+    private final int resultCoded = 200;
+    private final int statused = 1;
     @Bind(R.id.back) RelativeLayout back;
+    //
     @Bind(R.id.title_text) TextView title_text;
     @Bind(R.id.function) TextView function;
-    //
-
-
     @Bind(R.id.etAskDoctorText) EditText etAskDoctorText;
     @Bind(R.id.tvSendDoctorAction) TextView tvSendDoctorAction;
     @Bind(R.id.tvOtherInfo) TextView tvOtherInfo;
     @Bind(R.id.tvAskDoctorTextCount) TextView tvAskDoctorTextCount;
     @Bind(R.id.tvPurpose) TextView tvPurpose;
     @Bind(R.id.tvFeeling) TextView tvFeeling;
-
-
     private long adviceItemId=-1;
     private int position;
-    private final int resultCoded = 200;
-    private final int statused = 1;
     private String adviceItemPurpose;
     private String adviceItemFeeling;
+    private int totalCount=-100,usedCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +93,6 @@ public class AskDoctorActivity extends BaseActivity {
         this.finish();
     }
 
-
-    private int totalCount=-100,usedCount;
     private void pullData(){
         final CustomDialog customDialog = new CustomDialog();
         Dialog dialog=customDialog.createDialog1(this, "数据加载中...");
@@ -106,6 +101,7 @@ public class AskDoctorActivity extends BaseActivity {
                 new DefaultCallback<Service>(this, new AbstractBusiness<Service>() {
                     @Override
                     public void handleData(Service data) {
+                        customDialog.dismiss();
                         if (data != null) {
                             totalCount = data.getTotalCount();
                             LogUtil.d("totalCount", "totalCount==>" + totalCount);
