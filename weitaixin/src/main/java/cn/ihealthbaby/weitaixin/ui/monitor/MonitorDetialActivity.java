@@ -2,9 +2,11 @@ package cn.ihealthbaby.weitaixin.ui.monitor;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -58,6 +60,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	TextView tvConsumTime;
 	@Bind(R.id.tv_start_time)
 	TextView tvStartTime;
+	@Bind(R.id.vertical_line)
+	ImageView verticalLine;
 	private long consumedtime;
 	private long duration;
 	private long interval;
@@ -70,6 +74,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	private int limitMin = 60;
 	private int askMinTime;
 	private MonitorDialog monitorDialog;
+	private PowerManager powerManager;
+	private PowerManager.WakeLock wakeLock;
 
 	@OnClick(R.id.back)
 	void back() {
@@ -108,6 +114,8 @@ public class MonitorDetialActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_monitor_detial);
 		ButterKnife.bind(this);
 		titleText.setText("胎心监测");
@@ -122,12 +130,21 @@ public class MonitorDetialActivity extends BaseActivity {
 		getAdviceSetting();
 		configCurve();
 		countDownTimer = new FixedRateCountDownTimer(duration, 1000) {
+			public RelativeLayout.LayoutParams layoutParams;
 			public long lastStart;
 
 			@Override
 			public void onStart(long startTime) {
 				terminate = false;
 				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(System.currentTimeMillis()));
+				layoutParams = (RelativeLayout.LayoutParams) verticalLine.getLayoutParams();
+				final float currentPositionX = curve.getCurrentPositionX();
+				final float diff = currentPositionX - width / 2;
+				if (diff <= 0) {
+					layoutParams.setMargins((int) currentPositionX, 0, 0, 0);
+				} else {
+					layoutParams.setMargins(width / 2, 0, 0, 0);
+				}
 			}
 
 			@Override
@@ -149,10 +166,17 @@ public class MonitorDetialActivity extends BaseActivity {
 					}
 					bpm.setText(fhr1 + "");
 				}
-				if (!chs.isTouching()) {
-					chs.smoothScrollTo((int) (curve.getCurrentPositionX() - width / 2), 0);
+				final float currentPositionX = curve.getCurrentPositionX();
+				final float diff = currentPositionX - width / 2;
+//				LogUtil.d(TAG, "currentPositionX:[%s], diff:[%s]", currentPositionX, diff);
+				if (diff <= 0) {
+					layoutParams.setMargins((int) currentPositionX, 0, 0, 0);
+				} else {
+					layoutParams.setMargins(width / 2, 0, 0, 0);
 				}
-				long stop = System.currentTimeMillis();
+				if (!chs.isTouching()) {
+					chs.smoothScrollTo((int) diff, 0);
+				}
 //				LogUtil.d(TAG, "duration:[%s] , interval:[%s] ,consumedTime:[%s]s ,listSize:[%s]", (stop - start), start - lastStart, getConsumedTime() / 1000, curve.getFhrs().size());
 				lastStart = start;
 			}

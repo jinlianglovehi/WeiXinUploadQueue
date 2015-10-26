@@ -83,6 +83,20 @@ public class CoordinateView extends View {
 	}
 
 	/**
+	 * canvas坐标转换为 图表坐标(单位s)
+	 *
+	 * @param x 像素,px
+	 * @return 时间 单位s
+	 */
+	public float reconvertX(float x) {
+		return (x - getPaddingLeft() - xMin) * gridX / cellWidth;
+	}
+
+	public float reconvertXDiff(float xDiff) {
+		return xDiff * gridX / cellWidth;
+	}
+
+	/**
 	 * 图表坐标转换为canvas坐标
 	 *
 	 * @param y 心率值,单位为1

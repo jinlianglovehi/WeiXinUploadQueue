@@ -35,7 +35,6 @@ import cn.ihealthbaby.weitaixinpro.ui.widget.MonitorDialog;
 import de.greenrobot.event.EventBus;
 
 public class MonitorDetialActivity extends BaseActivity {
-	public int askMinTime;
 	@Bind(R.id.chs)
 	CurveHorizontalScrollView chs;
 	@Bind(R.id.bpm)
@@ -80,6 +79,7 @@ public class MonitorDetialActivity extends BaseActivity {
 	private int safemax = 160;
 	private int limitMax = 200;
 	private int limitMin = 60;
+	private int askMinTime;
 	private boolean alert;
 	private int alertInterval;
 	private long lastAlert;

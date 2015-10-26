@@ -20,13 +20,25 @@
             android:layout_height="wrap_content"
             android:scrollbars="none">
 
-            <cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView
+            <cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorPlayView
                 android:id="@+id/curve_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
                 />
         </cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView>
+
+        <ImageView
+            android:id="@+id/vertical_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/chs"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@id/chs"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/vertical_red_line"
+            />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -59,8 +71,6 @@
                     android:maxLength="3"
                     android:text=""
                     android:textSize="46sp"
-
-
                     />
 
                 <LinearLayout
@@ -94,25 +104,36 @@
             </RelativeLayout>
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/play"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/chs"
-            android:layout_marginLeft="28dp"
-            android:layout_marginTop="26dp"
-            android:src="@drawable/button_play"
-            />
+        <RelativeLayout
+            android:id="@+id/play_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/chs">
 
-        <ImageView
-            android:id="@+id/replay"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="28dp"
+                android:src="@drawable/button_play"
+                />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/replay_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/chs"
-            android:layout_marginRight="28dp"
-            android:layout_marginTop="26dp"
-            android:src="@drawable/button_replay"/>
+            android:layout_below="@id/chs">
+
+            <ImageView
+                android:id="@+id/replay"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="28dp"
+                android:src="@drawable/button_replay"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

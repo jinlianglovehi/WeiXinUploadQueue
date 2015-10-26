@@ -13,8 +13,8 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixinpro.R;
+import cn.ihealthbaby.weitaixin.library.util.Util;
 
 /**
  * Created by liuhongjian on 15/9/8 14:47.绘图的基类

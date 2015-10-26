@@ -35,15 +35,15 @@ public class CurveBasicView extends CoordinateView {
 	/**
 	 * 保存的是发生胎动的点的位置
 	 */
-	private List<Integer> hearts = new ArrayList<>();
-	private Path path = new Path();
+	protected List<Integer> hearts = new ArrayList<>();
+	protected Path path = new Path();
 	/**
 	 * 保存胎心数值
 	 */
-	private List<Integer> fhrs = new ArrayList<>();
+	protected List<Integer> fhrs = new ArrayList<>();
 	private int position;
 	private int heartWidth;
-	private float curveStrokeWidth = 2;
+	protected float curveStrokeWidth = 2;
 
 	public CurveBasicView(Context context) {
 		this(context, null, 0);
@@ -153,19 +153,18 @@ public class CurveBasicView extends CoordinateView {
 
 	public void addPoint(int fhr) {
 		fhrs.add(fhr);
-		int position = fhrs.size();
+		int position = fhrs.size() - 1;
 		if (fhr < limitMin || fhr > limitMax) {
 			fhr = 0;
 		}
 		if (fhr == 0 || position == 0) {
 			path.moveTo(convertX(positionToX(position)), convertY(fhr));
+		} else if (Math.abs(fhr - fhrs.get(position - 1)) > 20) {
+			path.moveTo(convertX(positionToX(position)), convertY(fhr));
 		} else {
 			path.lineTo(convertX(positionToX(position)), convertY(fhr));
 		}
 	}
-
-
-
 
 	public void reset() {
 		fhrs.clear();
@@ -181,7 +180,9 @@ public class CurveBasicView extends CoordinateView {
 			int fhr = fhrs.get(i);
 			if (fhr == 0 || i == 0) {
 				path.moveTo(convertX(positionToX(i)), convertY(fhr));
-			} else  {
+			} else if (Math.abs(fhr - fhrs.get(position - 1)) > 20) {
+				path.moveTo(convertX(positionToX(i)), convertY(fhr));
+			} else {
 				path.lineTo(convertX(positionToX(i)), convertY(fhr));
 			}
 		}

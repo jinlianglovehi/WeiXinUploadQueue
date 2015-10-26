@@ -73,60 +73,60 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 			@Override
 			public void onFinishedWork(final String key, final ResponseInfo info, JSONObject response) {
 				ApiManager.getInstance().adviceApi.uploadData(getUploadData(record, key),
-						                                             new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
-							                                             @Override
-							                                             public void handleResult(Result<AdviceItem> result) {
-								                                             super.handleResult(result);
-								                                             customDialog.dismiss();
-							                                             }
+             new DefaultCallback<AdviceItem>(getApplicationContext(), new AbstractBusiness<AdviceItem>() {
+                 @Override
+                 public void handleResult(Result<AdviceItem> result) {
+                     super.handleResult(result);
+                     customDialog.dismiss();
+                 }
 
-							                                             @Override
-							                                             public void handleData(final AdviceItem data) {
-								                                             ToastUtil.show(getApplicationContext(), "上传成功");
-								                                             btnBusiness.setImageResource(R.drawable.button_ask_doctor);
-								                                             try {
-									                                             final RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
-									                                             record = recordBusinessDao.queryByLocalRecordId(data.getClientId());
-									                                             record.setUploadState(Record.UPLOAD_STATE_CLOUD);
-									                                             recordBusinessDao.update(record);
-								                                             } catch (Exception e) {
-									                                             e.printStackTrace();
-									                                             LogUtil.d(TAG, "更新本地数据状态失败");
-								                                             }
-								                                             tvBusiness.setText("问医生");
-								                                             btnBusiness.setOnClickListener(new View.OnClickListener() {
-									                                             @Override
-									                                             public void onClick(View v) {
-										                                             Intent intent = new Intent(getApplicationContext(), AskDoctorActivity.class);
-										                                             intent.putExtra(Constants.INTENT_ID, data.getId());
-										                                             if (LocalRecordPlayActivity.this.record != null) {
-											                                             if (LocalRecordPlayActivity.this.record.getPurposeString() != null) {
-												                                             intent.putExtra(Constants.INTENT_FEELING, record.getPurposeString());
-											                                             }
-											                                             if (LocalRecordPlayActivity.this.record.getFeelingString() != null) {
-												                                             intent.putExtra(Constants.INTENT_PURPOSE, record.getFeelingString());
-											                                             }
-										                                             }
-										                                             startActivity(intent);
-									                                             }
-								                                             });
-								                                             final MonitorDialog monitorDialog = new MonitorDialog(LocalRecordPlayActivity.this, new String[]{"上传完成,问问医生吗", "去问医生", "暂不询问"});
-								                                             monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
-									                                             @Override
-									                                             public void left(Object... obj) {
-										                                             monitorDialog.dismiss();
-										                                             btnBusiness.performClick();
-									                                             }
+                 @Override
+                 public void handleData(final AdviceItem data) {
+                     ToastUtil.show(getApplicationContext(), "上传成功");
+                     btnBusiness.setImageResource(R.drawable.button_ask_doctor);
+                     try {
+                         final RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
+                         record = recordBusinessDao.queryByLocalRecordId(data.getClientId());
+                         record.setUploadState(Record.UPLOAD_STATE_CLOUD);
+                         recordBusinessDao.update(record);
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                         LogUtil.d(TAG, "更新本地数据状态失败");
+                     }
+                     tvBusiness.setText("问医生");
+                     btnBusiness.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+                             Intent intent = new Intent(getApplicationContext(), AskDoctorActivity.class);
+                             intent.putExtra(Constants.INTENT_ID, data.getId());
+                             if (LocalRecordPlayActivity.this.record != null) {
+                                 if (LocalRecordPlayActivity.this.record.getPurposeString() != null) {
+                                     intent.putExtra(Constants.INTENT_FEELING, record.getPurposeString());
+                                 }
+                                 if (LocalRecordPlayActivity.this.record.getFeelingString() != null) {
+                                     intent.putExtra(Constants.INTENT_PURPOSE, record.getFeelingString());
+                                 }
+                             }
+                             startActivity(intent);
+                         }
+                     });
+                     final MonitorDialog monitorDialog = new MonitorDialog(LocalRecordPlayActivity.this, new String[]{"上传完成,问问医生吗", "去问医生", "暂不询问"});
+                     monitorDialog.setOperationAction(new MonitorDialog.OperationAction() {
+                         @Override
+                         public void left(Object... obj) {
+                             monitorDialog.dismiss();
+                             btnBusiness.performClick();
+                         }
 
-									                                             @Override
-									                                             public void right(Object... obj) {
-										                                             monitorDialog.dismiss();
-									                                             }
-								                                             });
-								                                             monitorDialog.show();
-								                                             saveDataToDatabase(data.getId());
-							                                             }
-						                                             }), getRequestTag());
+                         @Override
+                         public void right(Object... obj) {
+                             monitorDialog.dismiss();
+                         }
+                     });
+                     monitorDialog.show();
+                     saveDataToDatabase(data.getId());
+                 }
+             }), getRequestTag());
 			}
 		});
 	}
@@ -168,6 +168,7 @@ public class LocalRecordPlayActivity extends RecordPlayActivity {
 		RecordBusinessDao recordBusinessDao = RecordBusinessDao.getInstance(getApplicationContext());
 		try {
 			record = recordBusinessDao.queryByLocalRecordId(getIntent().getStringExtra(Constants.INTENT_LOCAL_RECORD_ID));
+			LogUtil.d(TAG, "record:" + record);
 			path = record.getSoundPath();
 			String rData = record.getRecordData();
 			Gson gson = new Gson();
