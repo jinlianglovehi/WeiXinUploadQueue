@@ -14,9 +14,11 @@ import cn.ihealthbaby.weitaixin.ui.widget.PayDialog;
 public class DownloadAPKUtils {
 
     public Context context;
+    public boolean isForce=false;
 
-    public DownloadAPKUtils(Context context) {
+    public DownloadAPKUtils(Context context,boolean isForce) {
         this.context = context;
+        this.isForce = isForce;
     }
 
     public void showDownDialog(boolean isFlag) {
@@ -31,7 +33,9 @@ public class DownloadAPKUtils {
 
                 @Override
                 public void payNo(Object... obj) {
-
+                    if (isForce) {
+                        System.exit(0);
+                    }
                 }
             });
             payDialog.show();

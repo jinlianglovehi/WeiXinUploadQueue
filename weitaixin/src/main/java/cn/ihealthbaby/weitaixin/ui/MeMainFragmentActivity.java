@@ -14,6 +14,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -79,38 +82,51 @@ public class MeMainFragmentActivity extends BaseActivity {
 
 
     public void pullV(){
-        //软件类型 0 微胎心会员端安卓版, 1 微胎心院内安卓版, 2 微胎心会员端iOS版
-        ApiManager.getInstance().versionApi.checkVersion(getversionName(), 0,
-                new DefaultCallback<Version>(this, new AbstractBusiness<Version>() {
-            @Override
-            public void handleData(Version data) {
-                int flag = data.getFlag();
-                LogUtil.d("flag", "flag==>"+flag);
-                switch(flag){
-                    case 0:  //0 已是最新, 1 有新版本更新,2 需强制升级
 
-                        break;
+        long downloadAPK = SPUtil.getDownloadAPK(this);
 
-                    case 1:
-                        Intent intent = new Intent();
-                        intent.setAction("android.intent.action.VIEW");
-                        Uri content_url = Uri.parse(data.getUpdateUrl());
-                        intent.setData(content_url);
-                        startActivity(intent);
+        Calendar cd = Calendar.getInstance();
+        long postTime = cd.getTimeInMillis();
 
-//                        DownloadAPK downloadAPK = new DownloadAPK(MeMainFragmentActivity.this);
-//                        downloadAPK.apkUrl=data.getUpdateUrl();
-//                        downloadAPK.checkUpdateInfo();
-                        break;
+        if (postTime - downloadAPK >= 1 * 3600 * 1000) {
+            //软件类型 0 微胎心会员端安卓版, 1 微胎心院内安卓版, 2 微胎心会员端iOS版
+            ApiManager.getInstance().versionApi.checkVersion(getversionName(), 0,
+                    new DefaultCallback<Version>(this, new AbstractBusiness<Version>() {
+                        @Override
+                        public void handleData(Version data) {
+                            int flag = data.getFlag();
+                            LogUtil.d("flag", "flag==>"+flag);
+                            switch(flag){
+                                case 0:  //0 已是最新, 1 有新版本更新,2 需强制升级
+//                                    ToastUtil.show(MeMainFragmentActivity.this, "已是最新版本");
+                                    break;
 
-                    case 2:
-                        Global.downloadURL = data.getUpdateUrl();
-                        DownloadAPKUtils downloadAPKUtils = new DownloadAPKUtils(MeMainFragmentActivity.this);
-                        downloadAPKUtils.showDownDialog(true);
-                        break;
-                }
-            }
-        }), getRequestTag());
+                                case 1:
+                                    Global.downloadURL = data.getUpdateUrl();
+                                    DownloadAPKUtils downloadAPKUtils = new DownloadAPKUtils(MeMainFragmentActivity.this,false);
+                                    downloadAPKUtils.showDownDialog(true);
+
+            //                        Intent intent = new Intent();
+            //                        intent.setAction("android.intent.action.VIEW");
+            //                        Uri content_url = Uri.parse(data.getUpdateUrl());
+            //                        intent.setData(content_url);
+            //                        startActivity(intent);
+
+            //                        DownloadAPK downloadAPK = new DownloadAPK(MeMainFragmentActivity.this);
+            //                        downloadAPK.apkUrl=data.getUpdateUrl();
+            //                        downloadAPK.checkUpdateInfo();
+                                    break;
+
+                                case 2:
+                                    Global.downloadURL = data.getUpdateUrl();
+                                    DownloadAPKUtils downloadAPKUtils2 = new DownloadAPKUtils(MeMainFragmentActivity.this, true);
+                                    downloadAPKUtils2.showDownDialog(true);
+                                    break;
+                            }
+                        }
+                    }), getRequestTag());
+            SPUtil.saveDownloadAPK(this, Calendar.getInstance().getTimeInMillis());
+        }
 
     }
 
@@ -161,8 +177,13 @@ public class MeMainFragmentActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         pullV();
+
+
+
     }
+
 
     public void showTabFirst() {
         iv_tab_01.setSelected(true);
@@ -282,7 +303,7 @@ public class MeMainFragmentActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		if (System.currentTimeMillis() - exitTime > 3000) {
-			ToastUtil.show(getApplicationContext(), "再次点击返回,退出应用");
+			ToastUtil.show(getApplicationContext(), "再次点击返回，退出应用");
 			exitTime = System.currentTimeMillis();
 		} else {
 			super.onBackPressed();

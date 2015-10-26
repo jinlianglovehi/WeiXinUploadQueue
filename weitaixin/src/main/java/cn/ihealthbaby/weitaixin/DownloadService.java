@@ -82,20 +82,15 @@ public class DownloadService extends Service {
         this.updateNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         this.updateNotification = new Notification();
 
-        //设置下载过程中，点击通知栏，回到主界面
         updateIntent = new Intent();
         updatePendingIntent = PendingIntent.getActivity(this, 0, updateIntent, 0);
-        //设置通知栏显示内容
         updateNotification.icon = R.mipmap.ic_launcher;
         updateNotification.tickerText = "开始下载";
         updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "正在下载 0%", updatePendingIntent);
-        //发出通知
         updateNotificationManager.notify(0, updateNotification);
 
 
-
-        //开启一个新的线程下载，如果使用Service同步下载，会导致ANR问题，Service本身也会阻塞
-        new Thread(new DownloadTaskRunnable()).start();//这个是下载的重点，是下载的过程
+        new Thread(new DownloadTaskRunnable()).start();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -105,13 +100,12 @@ public class DownloadService extends Service {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DOWNLOAD_COMPLETE:
-                    //点击安装PendingIntent
                     Uri uri = Uri.fromFile(updateFile);
                     Intent installIntent = new Intent(Intent.ACTION_VIEW);
                     installIntent.setDataAndType(uri, "application/vnd.android.package-archive");
                     updatePendingIntent = PendingIntent.getActivity(DownloadService.this, 0, installIntent, 0);
 
-                    updateNotification.defaults = Notification.DEFAULT_SOUND;//铃声提醒
+                    updateNotification.defaults = Notification.DEFAULT_SOUND;
                     updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "下载完成，点击安装。", updatePendingIntent);
                     updateNotificationManager.notify(0, updateNotification);
 
@@ -140,7 +134,6 @@ public class DownloadService extends Service {
         public void run() {
             message.what = DOWNLOAD_COMPLETE;
             try {
-                //下载函数，以QQ为例子
                 long downloadSize = downloadFile(Global.downloadURL, updateFile);
                 if (downloadSize > 0) {
                     //下载成功
@@ -157,7 +150,6 @@ public class DownloadService extends Service {
 
 
     public long downloadFile(String downloadUrl, File saveFile) throws Exception {
-        //这样的下载代码很多，我就不做过多的说明
         int downloadCount = 0;
         int currentSize = 0;
         long totalSize = 0;
@@ -190,9 +182,8 @@ public class DownloadService extends Service {
 
                 int upSize = (int) totalSize * 100 / updateTotalSize;
 
-                LogUtil.d("downloadCount", "downloadCount==> "+ upSize);
+//                LogUtil.d("downloadCount", "downloadCount==> "+ upSize);
 
-                //为了防止频繁的通知导致应用吃紧，百分比增加10才通知一次
                 if ((downloadCount == 0) || upSize - 4 > downloadCount) {
                     downloadCount += 4;
                     updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "正在下载 " + upSize + "%", updatePendingIntent);

@@ -18,6 +18,7 @@ import cn.ihealthbaby.weitaixin.library.data.model.LocalSetting;
 public class SPUtil {
 	private static final String FILE_NAME = "weitaixin_share_data";
 	private static final String FILE_NAME_USER = "user_share_data";
+	private static final String FILE_NAME_DOWNLOAD_APK = "download_apk_share_data";
 	private static final String FILE_NAME_SERVICEINFO = "serviceinfo_share_data";
 	private static final String FILE_NAME_TEMP = "temp_share_data";
 	private static final String FILE_NAME_FETALHEART = "fetalheart_share_data";
@@ -199,6 +200,20 @@ public class SPUtil {
 		editor.putLong("HospitalId", adviceSetting.getHospitalId());
 		editor.commit();
 	}
+
+	public static void saveDownloadAPK(Context context, long time) {
+		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_DOWNLOAD_APK, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sp.edit();
+		editor.putLong("DownloadAPK", time);
+		editor.commit();
+	}
+
+	public static long getDownloadAPK(Context context) {
+		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_DOWNLOAD_APK, Context.MODE_PRIVATE);
+		return sp.getLong("DownloadAPK", -1);
+	}
+
+
 
 	public static AdviceSetting getAdviceSetting(Context context) {
 		SharedPreferences sp = context.getSharedPreferences(FILE_NAME_USER, Context.MODE_PRIVATE);
