@@ -15,6 +15,7 @@ public class LocalRecordIdUtil {
 	}
 
 	public static String generateAndSaveId(Context context) {
+		SPUtil.clearUUID(context);
 		String uuid = generateId();
 		SPUtil.setUUID(context, uuid);
 		return uuid;

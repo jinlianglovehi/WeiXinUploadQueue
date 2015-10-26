@@ -642,7 +642,7 @@ public class MonitorFragment extends BaseFragment {
 				return;
 			}
 		}
-		SPUtil.clearUUID(getActivity().getApplicationContext());
+//		SPUtil.clearUUID(getActivity().getApplicationContext());
 		DataStorage.fhrs.clear();
 		DataStorage.fms.clear();
 		DataStorage.doctors.clear();
