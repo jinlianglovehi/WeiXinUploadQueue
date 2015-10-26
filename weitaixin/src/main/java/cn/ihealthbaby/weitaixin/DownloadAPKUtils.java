@@ -23,7 +23,12 @@ public class DownloadAPKUtils {
 
     public void showDownDialog(boolean isFlag) {
         if (isFlag) {
-            PayDialog payDialog = new PayDialog(context, new String[]{"有最新版本哦", "取消", "确定"});
+            PayDialog payDialog=null;
+            if (isForce) {
+                payDialog = new PayDialog(context, new String[]{"有最新版本哦", "退出应用", "确定"});
+            } else {
+                payDialog = new PayDialog(context, new String[]{"有最新版本哦", "取消", "确定"});
+            }
             payDialog.setOperationAction(new PayDialog.OperationAction() {
                 @Override
                 public void payYes(Object... obj) {
