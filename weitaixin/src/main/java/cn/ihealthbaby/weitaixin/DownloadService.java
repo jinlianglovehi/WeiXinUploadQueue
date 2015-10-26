@@ -88,7 +88,7 @@ public class DownloadService extends Service {
         //设置通知栏显示内容
         updateNotification.icon = R.mipmap.ic_launcher;
         updateNotification.tickerText = "开始下载";
-        updateNotification.setLatestEventInfo(this, getResources().getString(R.string.app_name), "0%", updatePendingIntent);
+        updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "正在下载 0%", updatePendingIntent);
         //发出通知
         updateNotificationManager.notify(0, updateNotification);
 
@@ -112,7 +112,7 @@ public class DownloadService extends Service {
                     updatePendingIntent = PendingIntent.getActivity(DownloadService.this, 0, installIntent, 0);
 
                     updateNotification.defaults = Notification.DEFAULT_SOUND;//铃声提醒
-                    updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "下载完成,点击安装。", updatePendingIntent);
+                    updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "下载完成，点击安装。", updatePendingIntent);
                     updateNotificationManager.notify(0, updateNotification);
 
                     //停止服务
@@ -121,8 +121,10 @@ public class DownloadService extends Service {
 
                 case DOWNLOAD_FAIL:
                     //下载失败
-                    updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "下载完成,点击安装。", updatePendingIntent);
+                    updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "下载失败。", updatePendingIntent);
                     updateNotificationManager.notify(0, updateNotification);
+                    //停止服务
+                    stopSelf();
                     break;
 
                 default:
@@ -186,12 +188,14 @@ public class DownloadService extends Service {
                 fos.write(buffer, 0, readsize);
                 totalSize += readsize;
 
-                LogUtil.d("downloadCount", "downloadCount==> "+(int) totalSize * 100 / updateTotalSize);
+                int upSize = (int) totalSize * 100 / updateTotalSize;
+
+                LogUtil.d("downloadCount", "downloadCount==> "+ upSize);
 
                 //为了防止频繁的通知导致应用吃紧，百分比增加10才通知一次
-                if ((downloadCount == 0) || (int) (totalSize * 100 / updateTotalSize) - 4 > downloadCount) {
+                if ((downloadCount == 0) || upSize - 4 > downloadCount) {
                     downloadCount += 4;
-                    updateNotification.setLatestEventInfo(DownloadService.this, "正在下载", (int) totalSize * 100 / updateTotalSize + "%", updatePendingIntent);
+                    updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "正在下载 " + upSize + "%", updatePendingIntent);
                     updateNotificationManager.notify(0, updateNotification);
                 }
             }
