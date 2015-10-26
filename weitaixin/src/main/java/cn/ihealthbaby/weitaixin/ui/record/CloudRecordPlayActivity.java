@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,7 +22,6 @@ import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import org.apache.http.Header;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -48,23 +49,29 @@ import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.library.util.Util;
 import cn.ihealthbaby.weitaixin.ui.mine.WaitReplyingActivity;
 import cn.ihealthbaby.weitaixin.ui.widget.CurveHorizontalScrollView;
-import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorDetialView;
+import cn.ihealthbaby.weitaixin.ui.widget.CurveMonitorPlayView;
 
 public class CloudRecordPlayActivity extends BaseActivity {
 	private final static String TAG = "LocalRecordPlayActivity";
 	public String path;
+	public String uuid;
+	public RelativeLayout.LayoutParams layoutParams;
 	protected Data data;
 	protected List<Integer> fhrs;
-	protected List<Integer> fetalMove;
+	protected List<Integer> fms;
 	protected Dialog dialog;
 	@Bind(R.id.curve_play)
-	CurveMonitorDetialView curvePlay;
+	CurveMonitorPlayView curvePlay;
 	@Bind(R.id.chs)
 	CurveHorizontalScrollView chs;
 	@Bind(R.id.play)
 	ImageView play;
 	@Bind(R.id.replay)
 	ImageView replay;
+	@Bind(R.id.tv_business)
+	TextView tvBusiness;
+	@Bind(R.id.btn_business)
+	ImageView btnBusiness;
 	@Bind(R.id.rl_function)
 	RelativeLayout rlFunction;
 	@Bind(R.id.back)
@@ -81,75 +88,46 @@ public class CloudRecordPlayActivity extends BaseActivity {
 	TextView tvStartTime;
 	@Bind(R.id.tv_consum_time)
 	TextView tvConsumTime;
-	@Bind(R.id.tv_business)
-	TextView tvBusiness;
-	@Bind(R.id.btn_business)
-	ImageView btnBusiness;
+	@Bind(R.id.vertical_line)
+	ImageView verticalLine;
 	private int width;
 	private ExpendableCountDownTimer countDownTimer;
 	private MediaPlayer mediaPlayer;
 	private int safemin;
 	private int safemax;
+	private long pausedTime;
+	private float diffTime;
+	private long newOffset;
+	private boolean playing;
 	private Advice advice;
-	private FileOutputStream fileOutputStream;
 
 	@OnClick(R.id.back)
 	public void back() {
 		finish();
 	}
 
-	@OnClick(R.id.play)
+	@OnClick({R.id.play, R.id.play_wrapper})
 	public void play() {
-		countDownTimer.restart();
+		if (playing) {
+			pausedTime = countDownTimer.getConsumedTime();
+			countDownTimer.cancel();
+			mediaPlayer.pause();
+			play.setImageResource(R.drawable.button_play);
+		} else {
+			countDownTimer.startAt(pausedTime);
+//			play.setImageResource(R.drawable.button_pause);
+		}
+		playing = !playing;
 	}
 
-	@OnClick(R.id.replay)
+	@OnClick({R.id.replay, R.id.replay_wrapper})
 	public void replay() {
 		countDownTimer.restart();
 	}
 
 	@OnClick(R.id.btn_business)
 	public void function(View view) {
-		int status = getIntent().getIntExtra(Constants.INTENT_STATUS, -1);
-		Intent intent = new Intent();
-		switch (status) {
-			//0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除(弃用) 4 本地数据 -1未获取到数据
-			case 0:
-				intent.setClass(getApplicationContext(), AskDoctorActivity.class);
-				intent.putExtra(Constants.INTENT_ID, getIntent().getLongExtra(Constants.INTENT_ID, 0));
-				intent.putExtra(Constants.INTENT_PURPOSE, getIntent().getStringExtra(Constants.INTENT_PURPOSE));
-				intent.putExtra(Constants.INTENT_FEELING, getIntent().getStringExtra(Constants.INTENT_FEELING));
-				intent.putExtra(Constants.INTENT_POSITION, getIntent().getStringExtra(Constants.INTENT_POSITION));
-				break;
-			case 1:
-				intent.setClass(getApplicationContext(), WaitReplyingActivity.class);
-				intent.putExtra(Constants.INTENT_ID, getIntent().getStringExtra(Constants.INTENT_ID));
-				break;
-			case 2:
-				intent.setClass(getApplicationContext(), ReplyedActivity.class);
-				intent.putExtra(Constants.INTENT_ID, getIntent().getLongExtra(Constants.INTENT_ID, -1));
-				break;
-			case 4:
-			case -1:
-			default:
-				ToastUtil.show(getApplicationContext(), "数据格式错误,status");
-				break;
-		}
-		startActivity(intent);
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_monitor_play);
-		ButterKnife.bind(this);
-		titleText.setText("胎心监测");
-		final DisplayMetrics metric = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metric);
-		width = metric.widthPixels;
-		mediaPlayer = new MediaPlayer();
-		getData();
-		changeButton();
+		function();
 	}
 
 	private void changeButton() {
@@ -199,7 +177,7 @@ public class CloudRecordPlayActivity extends BaseActivity {
 				data = recordData.getData();
 				fhrs = data.getHeartRate();
 				List<Long> afm = data.getAfm();
-				fetalMove = Util.time2Position(afm);
+				fms = Util.time2Position(afm);
 				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(advice.getTestTime().getTime()));
 				config();
 				customDialog.dismiss();
@@ -255,22 +233,41 @@ public class CloudRecordPlayActivity extends BaseActivity {
 	private void config() {
 		getAdviceSetting();
 		configCurve();
-		countDownTimer = new ExpendableCountDownTimer(fhrs.size() * data.getInterval(), 500) {
-			public int fmposition;
+		layoutParams = (RelativeLayout.LayoutParams) verticalLine.getLayoutParams();
+		layoutParams.setMargins(curvePlay.getPaddingLeft(), 0, 0, 0);
+		final int duration = fhrs.size() * data.getInterval();
+		countDownTimer = new ExpendableCountDownTimer(duration, 500) {
 			public int position;
 
 			@Override
 			public void onStart(long startTime) {
-				if (path != null) {
-					try {
-						mediaPlayer.reset();
-						mediaPlayer.setDataSource(path);
-						mediaPlayer.prepare();
-						mediaPlayer.start();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				curvePlay.reset();
+				play.setImageResource(R.drawable.button_pause);
+				position = (int) (getOffset() / getInterval());
+				LogUtil.d(TAG, "position:[%s]", position);
+				LogUtil.d(TAG, "getOffset():[%s]", getOffset());
+				layoutParams.setMargins(curvePlay.getPaddingLeft(), 0, 0, 0);
+				try {
+					mediaPlayer.reset();
+					mediaPlayer.setDataSource(path);
+					mediaPlayer.prepare();
+					mediaPlayer.seekTo((int) getOffset());
+					mediaPlayer.start();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+				curvePlay.draw2Position(position);
+				final float currentPositionX = curvePlay.convertPositionX(position);
+				final float diff = currentPositionX - width / 2;
+				if (diff <= 0) {
+					layoutParams.setMargins((int) currentPositionX, 0, 0, 0);
+				} else {
+					layoutParams.setMargins(width / 2, 0, 0, 0);
+				}
+				if (!chs.isTouching()) {
+					chs.smoothScrollTo((int) diff, 0);
+				}
+				tvStartTime.setText("开始时间 " + DateTimeTool.million2hhmmss(advice.getTestTime().getTime()));
 			}
 
 			@Override
@@ -279,54 +276,141 @@ public class CloudRecordPlayActivity extends BaseActivity {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				int size = fhrs.size();
-				if (position < size) {
-					int fhr = fhrs.get(position);
-					curvePlay.addPoint(fhr);
-					tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
-					if (fmposition < fetalMove.size() && fetalMove.get(fmposition) == position) {
-						curvePlay.addRedHeart(position);
-						fmposition++;
-					}
-					curvePlay.postInvalidate();
-					if (bpm != null) {
-						if (fhr >= safemin && fhr <= safemax) {
-							bpm.setTextColor(Color.parseColor("#49DCB8"));
-						} else {
-							bpm.setTextColor(Color.parseColor("#FE0058"));
-						}
-						bpm.setText(fhr + "");
-					}
-					if (!chs.isTouching()) {
-						chs.smoothScrollTo((int) (curvePlay.getCurrentPositionX() - width / 2), 0);
-					}
-				}
+				tvConsumTime.setText(DateTimeTool.million2mmss(getConsumedTime()));
+				int fhr = fhrs.get(position);
+				curvePlay.add2Position(position);
+				curvePlay.postInvalidate();
 				position++;
+				if (bpm != null) {
+					if (fhr >= safemin && fhr <= safemax) {
+						bpm.setTextColor(Color.parseColor("#49DCB8"));
+					} else {
+						bpm.setTextColor(Color.parseColor("#FE0058"));
+					}
+					bpm.setText(fhr + "");
+				}
+				final float currentPositionX = curvePlay.convertPositionX(position);
+				final float diff = currentPositionX - width / 2;
+//				LogUtil.d(TAG, "currentPositionX:[%s], diff:[%s]", currentPositionX, diff);
+				if (diff <= 0) {
+					layoutParams.setMargins((int) currentPositionX, 0, 0, 0);
+				} else {
+					layoutParams.setMargins(width / 2, 0, 0, 0);
+				}
+				if (!chs.isTouching()) {
+					chs.smoothScrollTo((int) diff, 0);
+				}
 			}
 
 			@Override
 			public void onFinish() {
+				playing = false;
+				pausedTime = 0;
+				play.setImageResource(R.drawable.button_play);
+				LogUtil.d(TAG, "finish");
 				ToastUtil.show(getApplicationContext(), "播放结束");
-				if (path != null) {
-					mediaPlayer.stop();
-					mediaPlayer.reset();
-				}
+				mediaPlayer.stop();
+				mediaPlayer.reset();
 			}
 
 			@Override
 			public void onRestart() {
 				position = 0;
-				fmposition = 0;
 				curvePlay.reset();
 				chs.smoothScrollTo(0, 0);
 			}
 		};
 	}
 
+	protected void function() {
+		int status = getIntent().getIntExtra(Constants.INTENT_STATUS, -1);
+		Intent intent = new Intent();
+		switch (status) {
+			//0 提交但为咨询 1咨询未回复 2 咨询已回复 3 咨询已删除(弃用) 4 本地数据 -1未获取到数据
+			case 0:
+				intent.setClass(getApplicationContext(), AskDoctorActivity.class);
+				intent.putExtra(Constants.INTENT_ID, getIntent().getLongExtra(Constants.INTENT_ID, 0));
+				intent.putExtra(Constants.INTENT_PURPOSE, getIntent().getStringExtra(Constants.INTENT_PURPOSE));
+				intent.putExtra(Constants.INTENT_FEELING, getIntent().getStringExtra(Constants.INTENT_FEELING));
+				intent.putExtra(Constants.INTENT_POSITION, getIntent().getStringExtra(Constants.INTENT_POSITION));
+				break;
+			case 1:
+				intent.setClass(getApplicationContext(), WaitReplyingActivity.class);
+				intent.putExtra(Constants.INTENT_ID, getIntent().getStringExtra(Constants.INTENT_ID));
+				break;
+			case 2:
+				intent.setClass(getApplicationContext(), ReplyedActivity.class);
+				intent.putExtra(Constants.INTENT_ID, getIntent().getLongExtra(Constants.INTENT_ID, -1));
+				break;
+			case 4:
+			case -1:
+			default:
+				ToastUtil.show(getApplicationContext(), "数据格式错误,status");
+				break;
+		}
+		startActivity(intent);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_monitor_play);
+		ButterKnife.bind(this);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		titleText.setText("胎心监测");
+		final DisplayMetrics metric = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metric);
+		width = metric.widthPixels;
+		mediaPlayer = new MediaPlayer();
+		getData();
+		changeButton();
+		btnBusiness.setImageResource(R.drawable.button_upload);
+		tvBusiness.setText("上传监测图");
+		chs.setOnTouchListener(new View.OnTouchListener() {
+			public int scrollX1;
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				final int action = event.getAction();
+				switch (action) {
+					case MotionEvent.ACTION_DOWN:
+						playing = false;
+						scrollX1 = chs.getScrollX();
+						pausedTime = countDownTimer.getConsumedTime();
+						countDownTimer.cancel();
+						mediaPlayer.pause();
+						play.setImageResource(R.drawable.button_play);
+						LogUtil.d(TAG, "pausedTime:[%s]", pausedTime);
+						break;
+					case MotionEvent.ACTION_MOVE:
+						break;
+					case MotionEvent.ACTION_UP:
+						playing = true;
+						final int scrollX2 = chs.getScrollX();
+						LogUtil.d(TAG, "scrollX2:[%s]", scrollX2);
+						diffTime = curvePlay.reconvertXDiff(scrollX2 - scrollX1);
+						newOffset = pausedTime + (long) (diffTime) * 1000;
+						LogUtil.d(TAG, "newOffset:[%s]", newOffset);
+						countDownTimer.cancel();
+						countDownTimer.startAt(newOffset);
+						break;
+					default:
+						break;
+				}
+				return false;
+			}
+		});
+	}
+
 	private void configCurve() {
-		curvePlay.setxMax(20 * 60);
+		// TODO: 15/9/9  设置数据源
+		int duration = advice.getTestTimeLong();
+		int xMax = duration / 60 * 60 + (duration % 60 == 0 ? 0 : 1) * 60;
+		curvePlay.setxMax(xMax);
 		curvePlay.setCellWidth(Util.dip2px(getApplicationContext(), 10));
 		curvePlay.setCurveStrokeWidth(Util.dip2px(getApplicationContext(), 2));
+		curvePlay.setFhrs(fhrs);
+		curvePlay.setHearts(fms);
 		ViewGroup.LayoutParams layoutParams = curvePlay.getLayoutParams();
 		layoutParams.width = curvePlay.getMinWidth();
 		layoutParams.height = curvePlay.getMinHeight() + Util.dip2px(getApplicationContext(), 16);
