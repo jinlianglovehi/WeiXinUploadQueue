@@ -171,7 +171,7 @@ public class GuardianStateActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		ToastUtil.show(getApplicationContext(), "请选择监护心情和监护目的");
+		ToastUtil.show(getApplicationContext(), "请选择监护目的和监护心情");
 	}
 }
 
