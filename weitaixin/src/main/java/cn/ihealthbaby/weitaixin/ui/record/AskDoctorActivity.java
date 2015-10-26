@@ -16,18 +16,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.client.ApiManager;
-import cn.ihealthbaby.client.Result;
 import cn.ihealthbaby.client.form.AskForm;
 import cn.ihealthbaby.client.model.Service;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.MaxLengthWatcher;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixin.CustomDialog;
-import cn.ihealthbaby.weitaixin.library.tools.MaxLengthWatcher;
 
 
 public class AskDoctorActivity extends BaseActivity {
@@ -122,25 +121,9 @@ public class AskDoctorActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Context context, Exception e) {
-                        super.handleClientError(context, e);
-                    }
-
-                    @Override
-                    public void handleException(Exception e) {
-                        super.handleException(e);
-                    }
-
-                    @Override
-                    public void handleResult(Result<Service> result) {
-                        super.handleResult(result);
-                        customDialog.dismiss();
-                    }
-
-                    @Override
                     public void handleAllFailure(Context context) {
                         super.handleAllFailure(context);
-                        ToastUtil.show(AskDoctorActivity.this, "服务器错误");
+                        customDialog.dismiss();
                     }
                 }),getRequestTag());
     }
@@ -196,14 +179,8 @@ public class AskDoctorActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Context context, Exception e) {
-                        super.handleClientError(context, e);
-                        customDialog.dismiss();
-                    }
-
-                    @Override
-                    public void handleException(Exception e) {
-                        super.handleException(e);
+                    public void handleAllFailure(Context context) {
+                        super.handleAllFailure(context);
                         customDialog.dismiss();
                     }
                 }),getRequestTag());

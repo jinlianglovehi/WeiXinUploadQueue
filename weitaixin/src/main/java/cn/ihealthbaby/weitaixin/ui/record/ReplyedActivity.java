@@ -20,13 +20,13 @@ import cn.ihealthbaby.client.model.AdviceReply;
 import cn.ihealthbaby.client.model.ReplyDetail;
 import cn.ihealthbaby.client.model.User;
 import cn.ihealthbaby.weitaixin.AbstractBusiness;
+import cn.ihealthbaby.weitaixin.CustomDialog;
 import cn.ihealthbaby.weitaixin.DefaultCallback;
 import cn.ihealthbaby.weitaixin.R;
 import cn.ihealthbaby.weitaixin.base.BaseActivity;
+import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
-import cn.ihealthbaby.weitaixin.CustomDialog;
-import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.ui.widget.RoundImageView;
 
 
@@ -104,14 +104,8 @@ public class ReplyedActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void handleClientError(Context context, Exception e) {
-                        super.handleClientError(context, e);
-                        customDialog.dismiss();
-                    }
-
-                    @Override
-                    public void handleException(Exception e) {
-                        super.handleException(e);
+                    public void handleAllFailure(Context context) {
+                        super.handleAllFailure(context);
                         customDialog.dismiss();
                     }
                 }), getRequestTag());
