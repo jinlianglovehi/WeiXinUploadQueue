@@ -469,7 +469,7 @@ public class RecordFragment extends BaseFragment {
                                 }
                             }
                         }
-                        re.removeAll(re);
+                        records.removeAll(re);
 
                         dataList.addAll(switchList(records));
                         if (dataList != null && dataList.size() > 0) {
