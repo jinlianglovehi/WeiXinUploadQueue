@@ -459,16 +459,17 @@ public class RecordFragment extends BaseFragment {
                         ArrayList<Record> records = getLocalDB();
                         //把本地记录 转换成云端 记录集合类型
 
+                        ArrayList<Record> re=new ArrayList<Record>();
                         for (int i = 0; i < records.size(); i++) {
                             Record record = records.get(i);
                             for (int j = 0; j < dataList.size(); j++) {
                                 AdviceItem adviceItem = dataList.get(j);
                                 if (adviceItem.getId() == record.getId()) {
-                                    dataList.remove(j);
+                                    re.add(record);
                                 }
                             }
                         }
-
+                        re.removeAll(re);
 
                         dataList.addAll(switchList(records));
                         if (dataList != null && dataList.size() > 0) {
