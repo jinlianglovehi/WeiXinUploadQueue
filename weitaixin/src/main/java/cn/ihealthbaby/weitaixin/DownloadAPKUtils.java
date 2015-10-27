@@ -3,6 +3,7 @@ package cn.ihealthbaby.weitaixin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 
 import java.io.File;
 
@@ -45,11 +46,18 @@ public class DownloadAPKUtils {
             });
             payDialog.show();
         } else {
-            File updateFile = new File(Global.downloadDir, context.getResources().getString(R.string.app_name) + ".apk");
-            if (updateFile.exists()) {
-                //当不需要的时候，清除之前的下载文件，避免浪费用户空间
-                updateFile.delete();
+
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                File updateDir = new File(Environment.getExternalStorageDirectory(), Global.downloadDir);
+                File updateFile = new File(updateDir.getPath(), context.getResources().getString(R.string.app_name) + ".apk");
+                if (updateFile != null && updateFile.exists()) {
+                    //当不需要的时候，清除之前的下载文件，避免浪费用户空间
+                    updateFile.delete();
+                }
             }
+
+//            File updateFile = new File(Global.downloadDir, context.getResources().getString(R.string.app_name) + ".apk");
+
         }
     }
 

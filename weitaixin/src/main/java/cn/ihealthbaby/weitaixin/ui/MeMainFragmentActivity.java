@@ -88,7 +88,7 @@ public class MeMainFragmentActivity extends BaseActivity {
         Calendar cd = Calendar.getInstance();
         long postTime = cd.getTimeInMillis();
 
-        if (postTime - downloadAPK >= 1 * 3600 * 1000) {
+        if (postTime - downloadAPK >= 1 * 15 * 1000) {
             //软件类型 0 微胎心会员端安卓版, 1 微胎心院内安卓版, 2 微胎心会员端iOS版
             ApiManager.getInstance().versionApi.checkVersion(getversionName(), 0,
                     new DefaultCallback<Version>(this, new AbstractBusiness<Version>() {

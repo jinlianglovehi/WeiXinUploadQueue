@@ -12,6 +12,20 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
+import cn.ihealthbaby.weitaixin.library.tools.AsynUploadEngine;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
 import cn.ihealthbaby.weitaixin.ui.MeMainFragmentActivity;
 
@@ -69,7 +84,22 @@ public class DownloadService extends Service {
                 try {
                     updateFile.createNewFile();
                 } catch (Exception e) {
+                    ToastUtil.show(this, "创建文件失败");
                     e.printStackTrace();
+                    stopSelf();
+                    return super.onStartCommand(intent,flags,startId);
+                }
+            } else {
+                updateFile.delete();
+                if (!updateFile.exists()) {
+                    try {
+                        updateFile.createNewFile();
+                    } catch (Exception e) {
+                        ToastUtil.show(this, "创建文件失败");
+                        e.printStackTrace();
+                        stopSelf();
+                        return super.onStartCommand(intent,flags,startId);
+                    }
                 }
             }
         }else{
@@ -86,11 +116,11 @@ public class DownloadService extends Service {
         updatePendingIntent = PendingIntent.getActivity(this, 0, updateIntent, 0);
         updateNotification.icon = R.mipmap.ic_launcher;
         updateNotification.tickerText = "开始下载";
-        updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "正在下载 0%", updatePendingIntent);
+        updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "等待下载 0%", updatePendingIntent);
         updateNotificationManager.notify(0, updateNotification);
 
-
-        new Thread(new DownloadTaskRunnable()).start();
+        new DownloadTaskRunnable().run();
+//        new Thread(new DownloadTaskRunnable()).start();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -117,6 +147,7 @@ public class DownloadService extends Service {
                     //下载失败
                     updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "下载失败。", updatePendingIntent);
                     updateNotificationManager.notify(0, updateNotification);
+                    ToastUtil.show(DownloadService.this, "请求超时");
                     //停止服务
                     stopSelf();
                     break;
@@ -127,29 +158,104 @@ public class DownloadService extends Service {
         }
     };
 
-
-    class DownloadTaskRunnable implements Runnable {
-        Message message = updateHandler.obtainMessage();
+    Message message = updateHandler.obtainMessage();
+    class DownloadTaskRunnable /*implements Runnable*/ {
+//        Message message = updateHandler.obtainMessage();
 
         public void run() {
-            message.what = DOWNLOAD_COMPLETE;
+            message.what = DOWNLOAD_FAIL;
             try {
-                long downloadSize = downloadFile(Global.downloadURL, updateFile);
-                if (downloadSize > 0) {
-                    //下载成功
-                    updateHandler.sendMessage(message);
-                }
+                boolean isSuccess = downloadFile(Global.downloadURL, updateFile);
+//                if (isSuccess) {
+//                    message.what = DOWNLOAD_COMPLETE;
+//                    updateHandler.sendMessage(message);
+//                } else {
+//                    message.what = DOWNLOAD_FAIL;
+//                    updateHandler.sendMessage(message);
+//                }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 message.what = DOWNLOAD_FAIL;
-                //下载失败
                 updateHandler.sendMessage(message);
             }
         }
     }
 
+    boolean isDown=false;
+    public boolean downloadFile(final String downloadUrl, final File saveFile) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        client.post(downloadUrl, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (statusCode == 200) {
 
-    public long downloadFile(String downloadUrl, File saveFile) throws Exception {
+                    FileOutputStream fos = null;
+                    ByteArrayInputStream bais = null;
+
+                    try {
+                        fos = new FileOutputStream(saveFile, false);
+                        byte buffer[] = new byte[4096];
+                        int readsize = 0;
+
+                        bais = new ByteArrayInputStream(responseBody);
+
+                        while ((readsize = bais.read(buffer)) > 0) {
+                            fos.write(buffer, 0, readsize);
+                        }
+
+                        isDown=true;
+                        message.what = DOWNLOAD_COMPLETE;
+                        updateHandler.sendMessage(message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        isDown=false;
+                        message.what = DOWNLOAD_FAIL;
+                        updateHandler.sendMessage(message);
+                    } finally {
+                        if (bais != null) {
+                            try {
+                                bais.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (fos != null) {
+                            try {
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                error.printStackTrace();// 把错误信息打印出轨迹来
+                isDown=false;
+                message.what = DOWNLOAD_FAIL;
+                updateHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+                super.onProgress(bytesWritten, totalSize);
+
+                long upSize = (long) bytesWritten * 100 / totalSize;
+//              LogUtil.d("downloadCount", "downloadCount==> " + upSize);
+                updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "正在下载 " + upSize + "%", updatePendingIntent);
+                updateNotificationManager.notify(0, updateNotification);
+            }
+        });
+
+        return isDown;
+    }
+
+
+
+    public boolean downloadFile7(String downloadUrl, File saveFile) throws Exception {
         int downloadCount = 0;
         int currentSize = 0;
         long totalSize = 0;
@@ -166,30 +272,48 @@ public class DownloadService extends Service {
             if (currentSize > 0) {
                 httpConnection.setRequestProperty("RANGE", "bytes=" + currentSize + "-");
             }
-            httpConnection.setConnectTimeout(10000);
-            httpConnection.setReadTimeout(20000);
-            updateTotalSize = httpConnection.getContentLength();
-            if (httpConnection.getResponseCode() == 404) {
-                throw new Exception("fail!");
-            }
-            is = httpConnection.getInputStream();
-            fos = new FileOutputStream(saveFile, false);
-            byte buffer[] = new byte[4096];
-            int readsize = 0;
-            while ((readsize = is.read(buffer)) > 0) {
-                fos.write(buffer, 0, readsize);
-                totalSize += readsize;
+            httpConnection.setConnectTimeout(20000);
+            httpConnection.setReadTimeout(30000);
+            LogUtil.d("httpConn3", "httpConn3==> ");
+            httpConnection.connect();
+            LogUtil.d("httpConn", "httpConn==> ");
 
-                int upSize = (int) totalSize * 100 / updateTotalSize;
 
-//                LogUtil.d("downloadCount", "downloadCount==> "+ upSize);
 
-                if ((downloadCount == 0) || upSize - 4 > downloadCount) {
-                    downloadCount += 4;
-                    updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "正在下载 " + upSize + "%", updatePendingIntent);
-                    updateNotificationManager.notify(0, updateNotification);
+            int responseCode = httpConnection.getResponseCode();
+            LogUtil.d("httpConnresponseCode", "httpConnresponseCode==> "+responseCode);
+            if (responseCode == 200) {
+                updateTotalSize = httpConnection.getContentLength();
+                LogUtil.d("httpConn77", "httpConn77==> ");
+                is = httpConnection.getInputStream();
+                LogUtil.d("httpConn55", "httpConn55==> ");
+
+                fos = new FileOutputStream(saveFile, false);
+                byte buffer[] = new byte[4096];
+                int readsize = 0;
+                LogUtil.d("httpConn2", "httpConn2==> ");
+                while ((readsize = is.read(buffer)) > 0) {
+                    fos.write(buffer, 0, readsize);
+                    totalSize += readsize;
+
+                    int upSize = (int) totalSize * 100 / updateTotalSize;
+
+                    LogUtil.d("downloadCount", "downloadCount==> "+ upSize);
+
+                    if ((downloadCount == 0) || upSize - 2 > downloadCount) {
+                        downloadCount += 2;
+                        updateNotification.setLatestEventInfo(DownloadService.this, getResources().getString(R.string.app_name), "正在下载 " + upSize + "%", updatePendingIntent);
+                        updateNotificationManager.notify(0, updateNotification);
+                    }
                 }
+                return true;
+            } else {
+                ToastUtil.show(this, "服务器错误：" + responseCode);
+                return false;
             }
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
         } finally {
             if (httpConnection != null) {
                 httpConnection.disconnect();
@@ -201,7 +325,6 @@ public class DownloadService extends Service {
                 fos.close();
             }
         }
-        return totalSize;
     }
 
 
