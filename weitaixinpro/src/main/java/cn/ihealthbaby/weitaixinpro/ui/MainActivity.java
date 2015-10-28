@@ -101,9 +101,10 @@ public class MainActivity extends BaseActivity {
 				@Override
 				public void onSuccess(AppVersion appVersion, boolean b) {
 					if (b) {
-						ToastUtil.show(getApplicationContext(), "发现新版本");
+						LogUtil.d(TAG, "发现新版本" + appVersion);
+						ToastUtil.show(getApplicationContext(), "发现新版本" + appVersion.getVersionName() + "\r\n\r\n" + appVersion.getChangeLog());
 					} else {
-						LogUtil.d(TAG, "暂无新版本");
+						LogUtil.d(TAG, "暂无新版本" + appVersion);
 					}
 				}
 
