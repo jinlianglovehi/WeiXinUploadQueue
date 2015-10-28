@@ -31,6 +31,7 @@ import cn.ihealthbaby.weitaixin.base.BaseActivity;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.SPUtil;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
+import cn.ihealthbaby.weitaixin.service.CommonConfigService;
 import cn.ihealthbaby.weitaixin.ui.home.HomePageFragment;
 import cn.ihealthbaby.weitaixin.ui.login.InfoEditActivity;
 import cn.ihealthbaby.weitaixin.ui.login.LoginActivity;
@@ -78,6 +79,8 @@ public class MeMainFragmentActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         showTabFirst();
 
+        Intent intent = new Intent(this, CommonConfigService.class);
+        startService(intent);
     }
 
 
@@ -177,11 +180,7 @@ public class MeMainFragmentActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         pullV();
-
-
-
     }
 
 
