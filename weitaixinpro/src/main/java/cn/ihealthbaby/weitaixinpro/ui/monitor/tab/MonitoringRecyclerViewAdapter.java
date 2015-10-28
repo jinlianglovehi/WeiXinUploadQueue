@@ -1,6 +1,6 @@
 package cn.ihealthbaby.weitaixinpro.ui.monitor.tab;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -11,13 +11,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import butterknife.Bind;
-import cn.ihealthbaby.client.ApiManager;
 import cn.ihealthbaby.client.model.ServiceInside;
 import cn.ihealthbaby.weitaixin.library.tools.DateTimeTool;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.ToastUtil;
-import cn.ihealthbaby.weitaixinpro.AbstractBusiness;
-import cn.ihealthbaby.weitaixinpro.DefaultCallback;
 import cn.ihealthbaby.weitaixinpro.R;
 import cn.ihealthbaby.weitaixinpro.ui.monitor.MonitorActivity;
 
@@ -25,7 +22,7 @@ import cn.ihealthbaby.weitaixinpro.ui.monitor.MonitorActivity;
  * Created by liuhongjian on 15/9/24 13:48.
  */
 public class MonitoringRecyclerViewAdapter extends RecyclerView.Adapter<MonitoringRecyclerViewAdapter.ViewHolder> {
-	private final Context context;
+	private final Activity activity;
 	private final List<ServiceInside> list;
 	@Bind(R.id.tv_begin)
 	TextView tvBegin;
@@ -36,8 +33,8 @@ public class MonitoringRecyclerViewAdapter extends RecyclerView.Adapter<Monitori
 	@Bind(R.id.tv_time)
 	TextView tvTime;
 
-	public MonitoringRecyclerViewAdapter(Context context, List<ServiceInside> list) {
-		this.context = context;
+	public MonitoringRecyclerViewAdapter(Activity activity, List<ServiceInside> list) {
+		this.activity = activity;
 		this.list = list;
 	}
 
@@ -52,24 +49,25 @@ public class MonitoringRecyclerViewAdapter extends RecyclerView.Adapter<Monitori
 	public void onBindViewHolder(ViewHolder holder, final int position) {
 		final ServiceInside serviceInside = list.get(position);
 		holder.tvBegin.setOnClickListener(new View.OnClickListener() {
+			public long lastTime;
+
 			@Override
 			public void onClick(View v) {
-				//开始监测
-				ApiManager.getInstance().hClientAccountApi.beginServicesinside(serviceInside.getId(), new DefaultCallback<Integer>(context, new AbstractBusiness<Integer>() {
-					@Override
-					public void handleData(Integer data) {
-						ToastUtil.show(context, "再次监测");
-						Intent intent = new Intent(context, MonitorActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						Bundle user = new Bundle();
-						user.putLong(Constants.INTENT_USER_ID, serviceInside.getUserId());
-						user.putString(Constants.INTENT_USER_NAME, serviceInside.getName());
-						user.putLong(Constants.INTENT_DELIVERY_TIME, serviceInside.getDeliveryTime().getTime());
-						user.putLong(Constants.INTENT_SERVICE_ID, serviceInside.getId());
-						intent.putExtra(Constants.BUNDLE_USER, user);
-						context.startActivity(intent);
-					}
-				}), this);
+				final long currentTimeMillis = System.currentTimeMillis();
+				if (currentTimeMillis - lastTime > 1000) {
+					//开始监测
+					ToastUtil.show(activity, "再次监测");
+					Intent intent = new Intent(activity, MonitorActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					Bundle user = new Bundle();
+					user.putLong(Constants.INTENT_USER_ID, serviceInside.getUserId());
+					user.putString(Constants.INTENT_USER_NAME, serviceInside.getName());
+					user.putLong(Constants.INTENT_DELIVERY_TIME, serviceInside.getDeliveryTime().getTime());
+					user.putLong(Constants.INTENT_SERVICE_ID, serviceInside.getId());
+					intent.putExtra(Constants.BUNDLE_USER, user);
+					activity.startActivity(intent);
+					lastTime = currentTimeMillis;
+				}
 			}
 		});
 		holder.tvBegin.setText("再次\n" + "监测");

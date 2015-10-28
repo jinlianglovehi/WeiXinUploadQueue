@@ -61,8 +61,8 @@ public class MonitoringFragment extends BaseFragment {
 		layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 		recyclerView = (RecyclerView) swipeRefreshLayout.findViewById(R.id.recycler_view);
 		recyclerView.setLayoutManager(layoutManager);
-		list = new ArrayList<ServiceInside>();
-		adapter = new MonitoringRecyclerViewAdapter(getActivity().getApplicationContext(), list);
+		list = new ArrayList<>();
+		adapter = new MonitoringRecyclerViewAdapter(getActivity(), list);
 		recyclerView.setAdapter(adapter);
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override

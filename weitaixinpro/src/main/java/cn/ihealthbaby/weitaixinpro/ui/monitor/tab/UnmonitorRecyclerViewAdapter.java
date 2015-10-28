@@ -1,6 +1,6 @@
 package cn.ihealthbaby.weitaixinpro.ui.monitor.tab;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +25,7 @@ import cn.ihealthbaby.weitaixinpro.ui.monitor.MonitorActivity;
  * Created by liuhongjian on 15/9/24 13:48.
  */
 public class UnmonitorRecyclerViewAdapter extends RecyclerView.Adapter<UnmonitorRecyclerViewAdapter.ViewHolder> {
-	private final Context context;
+	private final Activity activity;
 	private final List<ServiceInside> list;
 	@Bind(R.id.tv_begin)
 	TextView tvBegin;
@@ -36,8 +36,8 @@ public class UnmonitorRecyclerViewAdapter extends RecyclerView.Adapter<Unmonitor
 	@Bind(R.id.tv_time)
 	TextView tvTime;
 
-	public UnmonitorRecyclerViewAdapter(Context context, List<ServiceInside> list) {
-		this.context = context;
+	public UnmonitorRecyclerViewAdapter(Activity activity, List<ServiceInside> list) {
+		this.activity = activity;
 		this.list = list;
 	}
 
@@ -52,24 +52,30 @@ public class UnmonitorRecyclerViewAdapter extends RecyclerView.Adapter<Unmonitor
 	public void onBindViewHolder(ViewHolder holder, final int position) {
 		final ServiceInside serviceInside = list.get(position);
 		holder.tvBegin.setOnClickListener(new View.OnClickListener() {
+			public long lastTime;
+
 			@Override
 			public void onClick(View v) {
-				//开始监测
-				ApiManager.getInstance().hClientAccountApi.beginServicesinside(serviceInside.getId(), new DefaultCallback<Integer>(context, new AbstractBusiness<Integer>() {
-					@Override
-					public void handleData(Integer data) {
-						ToastUtil.show(context, "开始监测");
-						Intent intent = new Intent(context, MonitorActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						Bundle user = new Bundle();
-						user.putLong(Constants.INTENT_USER_ID, serviceInside.getUserId());
-						user.putString(Constants.INTENT_USER_NAME, serviceInside.getName());
-						user.putLong(Constants.INTENT_DELIVERY_TIME, serviceInside.getDeliveryTime().getTime());
-						user.putLong(Constants.INTENT_SERVICE_ID, serviceInside.getId());
-						intent.putExtra(Constants.BUNDLE_USER, user);
-						context.startActivity(intent);
-					}
-				}), this);
+				final long currentTimeMillis = System.currentTimeMillis();
+				if (currentTimeMillis - lastTime > 1000) {
+					//开始监测
+					ApiManager.getInstance().hClientAccountApi.beginServicesinside(serviceInside.getId(), new DefaultCallback<Integer>(activity, new AbstractBusiness<Integer>() {
+						@Override
+						public void handleData(Integer data) {
+							ToastUtil.show(activity, "开始监测");
+							Intent intent = new Intent(activity, MonitorActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							Bundle user = new Bundle();
+							user.putLong(Constants.INTENT_USER_ID, serviceInside.getUserId());
+							user.putString(Constants.INTENT_USER_NAME, serviceInside.getName());
+							user.putLong(Constants.INTENT_DELIVERY_TIME, serviceInside.getDeliveryTime().getTime());
+							user.putLong(Constants.INTENT_SERVICE_ID, serviceInside.getId());
+							intent.putExtra(Constants.BUNDLE_USER, user);
+							activity.startActivity(intent);
+						}
+					}), this);
+					lastTime = currentTimeMillis;
+				}
 			}
 		});
 		holder.tvBegin.setText("开始\n监测");
