@@ -57,8 +57,16 @@ public class RecordFragment extends BaseFragment {
 	}
 
 	private void notifyDataSetChanged() {
-		swipeRefreshLayout.setRefreshing(false);
-		adapter.notifyAllDataSetChanged();
+		stopRefreshing();
+		if (adapter != null) {
+			adapter.notifyAllDataSetChanged();
+		}
+	}
+
+	private void stopRefreshing() {
+		if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+			swipeRefreshLayout.setRefreshing(false);
+		}
 	}
 
 	@Nullable
@@ -88,7 +96,8 @@ public class RecordFragment extends BaseFragment {
 					isDeleteState = true;
 					adapter.setIsDelFalg(true);
 					swipeRefreshLayout.setRefreshing(false);
-					adapter.notifyDataSetChanged();
+//					adapter.notifyDataSetChanged();
+					notifyDataSetChanged();
 					tvCancel.setVisibility(View.VISIBLE);
 					tvCancel.setText("取消");
 				}
@@ -101,7 +110,8 @@ public class RecordFragment extends BaseFragment {
 				adapter.setIsDelFalg(false);
 				swipeRefreshLayout.setRefreshing(false);
 				adapter.initMap(adapter.getItemCount());
-				adapter.notifyDataSetChanged();
+//				adapter.notifyDataSetChanged();
+				notifyDataSetChanged();
 				function.setText("批量删除");
 				tvCancel.setVisibility(View.INVISIBLE);
 				tvCancel.setText("取消");
@@ -148,6 +158,7 @@ public class RecordFragment extends BaseFragment {
 	}
 
 	public void reset() {
+		stopRefreshing();
 		list.clear();
 		count = 0L;
 		request(FIRST_PAGE);
