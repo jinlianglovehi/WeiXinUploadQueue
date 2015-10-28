@@ -58,6 +58,8 @@ public class MonitorTabFragment extends BaseFragment {
 	void change2() {
 		ivMonitoring.setVisibility(View.VISIBLE);
 		ivUnmonitor.setVisibility(View.GONE);
+		monitoringFragment.stopRefreshing();
+		unmonitorFragment.stopRefreshing();
 		changeFragment(monitoringFragment);
 	}
 
@@ -65,6 +67,8 @@ public class MonitorTabFragment extends BaseFragment {
 	void change1() {
 		ivMonitoring.setVisibility(View.GONE);
 		ivUnmonitor.setVisibility(View.VISIBLE);
+		unmonitorFragment.stopRefreshing();
+		monitoringFragment.stopRefreshing();
 		changeFragment(unmonitorFragment);
 	}
 

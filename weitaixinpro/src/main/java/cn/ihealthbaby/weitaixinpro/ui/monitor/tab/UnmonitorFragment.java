@@ -91,6 +91,9 @@ public class UnmonitorFragment extends BaseFragment {
 	}
 
 	public void reset() {
+		//避免之前请求尚未结束,返回的数据对后续造成干扰
+		requestQueue.cancelAll(getRequestTag());
+		stopRefreshing();
 		list.clear();
 		currentPage = 0;
 		count = 0;
@@ -108,9 +111,7 @@ public class UnmonitorFragment extends BaseFragment {
 				@Override
 				public void handleResult(Result<PageData<ServiceInside>> result) {
 					super.handleResult(result);
-					if (swipeRefreshLayout.isRefreshing()) {
-						swipeRefreshLayout.setRefreshing(false);
-					}
+					stopRefreshing();
 				}
 
 				@Override
@@ -126,11 +127,18 @@ public class UnmonitorFragment extends BaseFragment {
 		}
 	}
 
+	/**
+	 * 切换时,正在刷新会影响事件的传递
+	 */
+	public void stopRefreshing() {
+		if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+			swipeRefreshLayout.setRefreshing(false);
+		}
+	}
+
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (swipeRefreshLayout.isRefreshing()) {
-			swipeRefreshLayout.setRefreshing(false);
-		}
+		stopRefreshing();
 	}
 }
