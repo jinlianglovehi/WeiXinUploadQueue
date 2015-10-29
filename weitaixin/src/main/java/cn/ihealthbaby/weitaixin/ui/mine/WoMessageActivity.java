@@ -227,24 +227,34 @@ public class WoMessageActivity extends BaseActivity {
                                 if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
                                     selectedView.setX(-adapter.recordDelete.getWidth());
                                 } else {
-                                    if (selectedView != null && selectedView.getX() >= -adapter.recordDelete.getWidth()) {
-                                        selectedView.setX(selectedView.getX() + distanceX);
+                                    if (selectedView != null /*&& selectedView.getX() >= -adapter.recordDelete.getWidth()*/) {
+//                                        selectedView.setX(selectedView.getX() + distanceX);
+                                        if (selectedView.getX() <= -adapter.recordDelete.getWidth()) {
+                                            selectedView.setX(-adapter.recordDelete.getWidth());
+                                        } else {
+                                            selectedView.setX(selectedView.getX() + distanceX);
+                                        }
                                     }
                                 }
                             }
                         } else {
-//                            float distanceY = event.getY() - oldY;
-//                            if (Math.abs(distanceX) > Math.abs(distanceY)&&selectedView.getX()<=0) {
-//                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
-//                                    selectedView.setX(0);
-//                                } else {
-//                                    if (selectedView != null) {
-//                                        selectedView.setX(selectedView.getX() + distanceX);
-//                                    }
-//                                }
-//                            }
+//                            LogUtil.d("selectedViewX", "selectedViewX==> " + selectedView.getX());
+                            float distanceY = event.getY() - oldY;
+                            if (Math.abs(distanceX) > Math.abs(distanceY) && selectedView.getX() <= 0) {
+                                if (Math.abs(event.getX() - oldXDis) >= adapter.recordDelete.getWidth() && selectedView != null) {
+                                    selectedView.setX(0);
+                                } else {
+                                    if (selectedView != null) {
+                                        if (selectedView.getX() >= 0) {
+                                            selectedView.setX(0);
+                                        } else {
+                                            selectedView.setX(selectedView.getX() + distanceX);
+                                        }
+                                    }
+                                }
+                            }
 
-                            adapter.cancel();
+//                            adapter.cancel();
                         }
                         oldX = event.getX();
                         oldY = event.getY();
