@@ -268,6 +268,9 @@ public class MeMainFragmentActivity extends BaseActivity {
         iv_tab_03.setSelected(false);
         iv_tab_04.setSelected(false);
         imageView.setSelected(true);
+        if (homePageFragment != null) {
+            homePageFragment.stopAnim();
+        }
         return true;
     }
 
