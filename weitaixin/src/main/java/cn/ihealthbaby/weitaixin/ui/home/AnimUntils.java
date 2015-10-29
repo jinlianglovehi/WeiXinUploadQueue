@@ -24,7 +24,7 @@ public class AnimUntils {
                 Animation.RELATIVE_TO_SELF, 0f);
         animationSet.setFillEnabled(true);
         animationSet.setFillAfter(true);
-        animationSet.setDuration(500);
+        animationSet.setDuration(300);
         animationSet.addAnimation(translateAnimation);
         translateAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -42,7 +42,7 @@ public class AnimUntils {
                         Animation.RELATIVE_TO_SELF, 0f);
                 animationSet2.setFillEnabled(true);
                 animationSet2.setFillAfter(true);
-                animationSet2.setDuration(500);
+                animationSet2.setDuration(300);
                 animationSet2.addAnimation(translateAnimation2);
                 translateAnimation2.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -60,7 +60,7 @@ public class AnimUntils {
                                 Animation.RELATIVE_TO_SELF, 0f);
                         animationSet3.setFillEnabled(true);
                         animationSet3.setFillAfter(true);
-                        animationSet3.setDuration(500);
+                        animationSet3.setDuration(300);
                         animationSet3.addAnimation(translateAnimation3);
                         animationSet3.setAnimationListener(new Animation.AnimationListener() {
                             @Override
@@ -111,7 +111,7 @@ public class AnimUntils {
                 Animation.RELATIVE_TO_SELF, 0f);
         animationSet.setFillEnabled(true);
         animationSet.setFillAfter(true);
-        animationSet.setDuration(500);
+        animationSet.setDuration(300);
         animationSet.addAnimation(translateAnimation);
         translateAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -129,7 +129,7 @@ public class AnimUntils {
                         Animation.RELATIVE_TO_SELF, 0f);
                 animationSet2.setFillEnabled(true);
                 animationSet2.setFillAfter(true);
-                animationSet2.setDuration(500);
+                animationSet2.setDuration(300);
                 animationSet2.addAnimation(translateAnimation2);
                 translateAnimation2.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -147,7 +147,7 @@ public class AnimUntils {
                                 Animation.RELATIVE_TO_SELF, 0f);
                         animationSet3.setFillEnabled(true);
                         animationSet3.setFillAfter(true);
-                        animationSet3.setDuration(500);
+                        animationSet3.setDuration(300);
                         animationSet3.addAnimation(translateAnimation3);
                         animationSet3.setAnimationListener(new Animation.AnimationListener() {
                             @Override

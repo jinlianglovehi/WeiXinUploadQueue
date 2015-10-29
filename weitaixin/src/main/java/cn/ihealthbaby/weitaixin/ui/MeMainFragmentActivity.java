@@ -206,6 +206,7 @@ public class MeMainFragmentActivity extends BaseActivity {
             if (SPUtil.isLogin(this)) {
                 homePageFragment = HomePageFragment.getInstance();
                 homePageFragment.getNumber();
+                homePageFragment.stopAnim();
                 homePageFragment.startAnim();
                 pullV();
                 showFragment(R.id.container, homePageFragment);
