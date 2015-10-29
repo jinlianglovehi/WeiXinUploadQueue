@@ -192,10 +192,22 @@ public class HomePageFragment extends BaseFragment {
         });
 
         rlPregnancyDate.startAnimation(animationSet);
+
     }
 
+    public void stopAnim() {
+        if (rlPregnancyDate != null && rlProduceDate != null && rltvMonitorDate != null) {
+            rlPregnancyDate.clearAnimation();
+            rlProduceDate.clearAnimation();
+            rltvMonitorDate.clearAnimation();
+        }
+    }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopAnim();
+    }
 
     @Nullable
     @Override

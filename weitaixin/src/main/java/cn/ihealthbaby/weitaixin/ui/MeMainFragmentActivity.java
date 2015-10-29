@@ -181,6 +181,13 @@ public class MeMainFragmentActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         pullV();
+        homePageFragment.startAnim();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        homePageFragment.stopAnim();
     }
 
 
