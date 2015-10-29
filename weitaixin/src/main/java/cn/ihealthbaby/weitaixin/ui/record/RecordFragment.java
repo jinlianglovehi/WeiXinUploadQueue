@@ -199,7 +199,7 @@ public class RecordFragment extends BaseFragment {
                                 }
                             }
                         } else {
-                            LogUtil.d("selectedViewX", "selectedViewX==> " + selectedView.getX());
+//                            LogUtil.d("selectedViewX", "selectedViewX==> " + selectedView.getX());
 //							if (selectedView.getX() <= 0) {
                             float distanceY = event.getY() - oldY;
                             if (Math.abs(distanceX) > Math.abs(distanceY) && selectedView.getX() <= 0) {
