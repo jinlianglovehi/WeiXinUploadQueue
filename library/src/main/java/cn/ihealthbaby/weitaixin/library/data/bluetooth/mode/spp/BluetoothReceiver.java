@@ -261,6 +261,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 				LogUtil.v(TAG, "onReceive BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED");
 				break;
 			case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+				listener.onActionAclDisConnected();
 				LogUtil.v(TAG, "onReceive BluetoothDevice.ACTION_ACL_DISCONNECTED");
 				break;
 			default:

@@ -88,4 +88,12 @@ public interface BluetoothListener {
 	 * @param pairingVariant
 	 */
 	void onPairingRequest(BluetoothDevice remoteDevice, String remoteName, String pairingKey, int pairingVariant);
+
+	/**
+	 *  以前蓝牙是连接的，蓝牙开始去关闭。
+	 */
+
+	void onActionAclDisConnected();
+
+
 }
