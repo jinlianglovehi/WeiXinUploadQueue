@@ -16,6 +16,8 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.parser.Parser;
@@ -39,6 +41,9 @@ public class TaiXinYiBluetoothService extends Service {
     private int mState;
     private Parser parser;
     private int RETRY_TIMES = 3;
+
+    //维护2个线程池的问题
+    public static ExecutorService pool = Executors.newFixedThreadPool(2);
     /**
      * 设备连接与否 通过蓝牙的链接状态
      */
@@ -121,7 +126,8 @@ public class TaiXinYiBluetoothService extends Service {
             return;
         }
         mConnectThread = new ConnectThread(device, secure);
-        mConnectThread.start();
+       // mConnectThread.start();
+        pool.execute(mConnectedThread);
         setState(STATE_CONNECTING);
     }
 
@@ -145,7 +151,8 @@ public class TaiXinYiBluetoothService extends Service {
         }
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket, socketType);
-        mConnectedThread.start();
+       // mConnectedThread.start();
+        pool.execute(mConnectedThread);
         setState(STATE_CONNECTED);
     }
 
