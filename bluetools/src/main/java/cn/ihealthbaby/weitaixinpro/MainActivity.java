@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixinpro;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -22,6 +23,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
+import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceiver;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
@@ -29,6 +32,7 @@ import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 
 public class MainActivity extends Activity {
 
+    private static final String TAG = "MainActivity";
     @Bind(R.id.connectBlue)
     Button connectBlue;//连接按钮
     @Bind(R.id.showBlueNum)
@@ -47,6 +51,7 @@ public class MainActivity extends Activity {
     private Set<BluetoothDevice> bondedDevices;
     private FixedRateCountDownTimer readDataTimer;
     private BluetoothDevice connectDevice;
+    private BluetoothReceiver bluetoothReceiver;
 
     /**
      * 使用静态的内部类，不会持有当前对象的引用
@@ -62,9 +67,9 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             MainActivity activity = mActivity.get();
             if (activity != null) {
-                switch (msg.arg1){
+                switch (msg.arg1) {
                     case Constants.MESSAGE_CONNECTION_LOST:
-                        Toast.makeText(MainActivity.this,"连接断开",Toast.LENGTH_SHORT).show();
+                        Log.i(TAG, "socket连接断开");
                         break;
                     case 1:
                         break;
@@ -85,6 +90,67 @@ public class MainActivity extends Activity {
         bindService(intent, bluetoothConnection, BIND_AUTO_CREATE);
         initTimeTask();
         adapter = BluetoothAdapter.getDefaultAdapter();
+        Log.i("", "");
+        //蓝牙的监听
+        initRecevier();
+    }
+
+    private void initRecevier() {
+
+        bluetoothReceiver = new BluetoothReceiver();
+        bluetoothReceiver.register(getApplicationContext());
+        bluetoothReceiver.setListener(new AbstractBluetoothListener() {
+
+
+            @Override
+            public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
+
+            }
+
+            @Override
+            public void onConnect(BluetoothDevice remoteDevice) {
+
+            }
+
+            @Override
+            public void onDisconnect(BluetoothDevice remoteDevice) {
+
+            }
+
+            @Override
+            public void onStateOn() {
+
+            }
+
+            @Override
+            public void onStateOFF() {
+
+            }
+
+            @Override
+            public void onRequestBluetoothEnable() {
+
+            }
+
+            @Override
+            public void onDiscoveryStarted() {
+
+            }
+
+            @Override
+            public void onDiscoveryFinished() {
+
+            }
+
+            @Override
+            public void onPairingRequest(BluetoothDevice remoteDevice, String remoteName, String pairingKey, int pairingVariant) {
+
+            }
+            @Override
+            public void onActionAclDisConnected() {// 断开链接
+                Log.i(TAG, "蓝牙设备断开，蓝牙设备关闭");
+            }
+        });
     }
 
 
@@ -106,7 +172,7 @@ public class MainActivity extends Activity {
             public void onTick(long millisUntilFinished, FHRPackage fhrPackage) {
                 Log.i("onTick心跳机制", "11111");
                 final int fhr = fhrPackage.getFHR1();
-                showBlueNum.setText("当前频率："+fhr + "");
+                showBlueNum.setText("当前频率：" + fhr + "");
             }
 
             @Override
@@ -135,22 +201,31 @@ public class MainActivity extends Activity {
     public void connectBlue() {
         //连接设备
 
-        if(taiXinYiService!=null) {
+        if (taiXinYiService != null) {
             taiXinYiService.connect(connectDevice, false);
-            Toast.makeText(getApplicationContext(),"连接成功",Toast.LENGTH_SHORT).show();
-        }else{
+            Toast.makeText(getApplicationContext(), "连接成功", Toast.LENGTH_SHORT).show();
+        } else {
             Toast.makeText(MainActivity.this
-            ,"服务未连接",Toast.LENGTH_SHORT).show();
+                    , "服务未连接", Toast.LENGTH_SHORT).show();
         }
     }
+
     @OnClick(R.id.disConnectBlue)
-    public void setDisConnectBlue(){
-        if(taiXinYiService!=null){
+    public void setDisConnectBlue() {
+        if (taiXinYiService != null) {
             taiXinYiService.stop();
             showBlueNum.setText("已经断开频率");
-            Toast.makeText(getApplicationContext(),"断开链接",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "断开链接", Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 当销毁的时候 断开链接
+        unbindService(bluetoothConnection);
+    }
+
     /**
      * 初始化蓝牙的服务
      */
@@ -160,9 +235,10 @@ public class MainActivity extends Activity {
             taiXinYiService = ((TaiXinYiBluetoothService.MyBinder) service).getBluetoothService();
             taiXinYiService.init(getApplicationContext(), handler);
         }
+
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            taiXinYiService=null;
+            taiXinYiService = null;
         }
     };
 
