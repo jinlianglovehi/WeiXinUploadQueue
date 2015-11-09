@@ -8,89 +8,87 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.parser.Parser;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 
+
 /**
  * Created by jinliang on 15/11/5.
  */
 @SuppressLint("LongLogTag")
 public class TaiXinYiBluetoothService extends Service {
-    private static final String TAG="TaiXinYiBluetoothService";
+    private static final String TAG = "TaiXinYiBluetoothService";
     // 蓝牙连接的三个状态
     public static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_CONNECTING = 1; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 2;  // now connected to a remote device
-    private  BluetoothAdapter mAdapter;
-    private  Handler mHandler;
+    private BluetoothAdapter mAdapter;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
+    private BluetoothDevice bindDevice;
+
+    private boolean secure=false;
     private int mState;
     private Parser parser;
     private int RETRY_TIMES = 3;
 
-    //维护2个线程池的问题
-    public static ExecutorService pool = Executors.newFixedThreadPool(2);
+
+    /**
+     * 服务的消息类型的总结
+     */
+
     /**
      * 设备连接与否 通过蓝牙的链接状态
      */
-    public static boolean isBluetoothOpen  =false ;
+    public static boolean isBluetoothOpen = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
-        Log.i(TAG,"--TaiXinYiBluetoothService  oncreate Method--");
-    }
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG,"--TaiXinYiBluetoothService  startCommand Method--");
-        return super.onStartCommand(intent, flags, startId);
+        Log.i(TAG, "--TaiXinYiBluetoothService  oncreate Method--");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG,"--onDestoryMethod()----");
+        Log.i(TAG, "--onDestoryMethod()----");
     }
 
     /**
      * 初始化的变量
+     *
      * @param
      * @return
      */
 
-    public void init(Context context,Handler handler){
-           // mAdapter = BluetoothAdapter.getDefaultAdapter();
-            mState = STATE_NONE;
-            mHandler = handler;
-            parser = new Parser(context, mHandler);
+    public void init(Context context) {
+        // mAdapter = BluetoothAdapter.getDefaultAdapter();
+        mState = STATE_NONE;
+       /// parser = new Parser(context);
     }
 
-    @Nullable
+
     @Override
     public IBinder onBind(Intent intent) {
         return myBinder;
     }
-    private  MyBinder myBinder = new MyBinder();
+
+    private MyBinder myBinder = new MyBinder();
 
     public class MyBinder extends Binder {
 
-        public TaiXinYiBluetoothService getBluetoothService(){
+        public TaiXinYiBluetoothService getBluetoothService() {
             return TaiXinYiBluetoothService.this;
         }
     }
@@ -111,26 +109,27 @@ public class TaiXinYiBluetoothService extends Service {
     private synchronized void setState(int state) {
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
 
     /**
      * Start the ConnectThread to initiate a connection to a remote device.
      *
      * @param device The BluetoothDevice to connect
-     * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
-    public synchronized void connect(BluetoothDevice device, boolean secure) {
+    public synchronized void connect(BluetoothDevice device, boolean issecure) {
         // Cancel any thread attempting to make a connection
         if (mState != STATE_NONE) {
             return;
         }
-        mConnectThread = new ConnectThread(device, secure);
-       // mConnectThread.start();
-        pool.execute(mConnectedThread);
+        bindDevice = device;
+        secure = issecure;
+        mConnectThread = new ConnectThread(device, issecure);
+        mConnectThread.start();
         setState(STATE_CONNECTING);
     }
 
+
+    //=========================下面是原有的方法 需要改进================
     /**
      * Start the ConnectedThread to begin managing a Bluetooth connection
      *
@@ -151,8 +150,7 @@ public class TaiXinYiBluetoothService extends Service {
         }
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket, socketType);
-       // mConnectedThread.start();
-        pool.execute(mConnectedThread);
+        mConnectedThread.start();
         setState(STATE_CONNECTED);
     }
 
@@ -197,8 +195,8 @@ public class TaiXinYiBluetoothService extends Service {
      */
     private void connectionFailed() {
         // Send a failure message back to the Activity
-        mHandler.obtainMessage(Constants.MESSAGE_STATE_FAIL, Constants.MESSAGE_CANNOT_CONNECT, -1).sendToTarget();
-
+        //mHandler.obtainMessage(Constants.MESSAGE_STATE_FAIL, Constants.MESSAGE_CANNOT_CONNECT, -1).sendToTarget();
+        //EventBus.getDefault().post(new BlueToothServiceEvent(ConstantUtils.connectionFailed));
     }
 
     /**
@@ -206,8 +204,7 @@ public class TaiXinYiBluetoothService extends Service {
      */
     private void connectionLost() {
         // Send a failure message back to the Activity
-        mHandler.obtainMessage(Constants.MESSAGE_STATE_FAIL, Constants.MESSAGE_CONNECTION_LOST, -1).sendToTarget();
-
+       // EventBus.getDefault().post(new BlueToothServiceEvent(ConstantUtils.connectionLost));
     }
 
     /**
@@ -319,7 +316,7 @@ public class TaiXinYiBluetoothService extends Service {
 
             while (start) {
 
-                Log.i(TAG , "连接中-----"+ mmSocket.isConnected());
+                Log.i(TAG, "连接中-----" + mmSocket.isConnected());
                 // 没有断开重连的机制。
 
                 try {
@@ -338,7 +335,7 @@ public class TaiXinYiBluetoothService extends Service {
         }
 
         /**
-        /**
+         * /**
          * Write to the connected OutStream.
          *
          * @param buffer The bytes to write
@@ -347,8 +344,8 @@ public class TaiXinYiBluetoothService extends Service {
             try {
                 mmOutStream.write(buffer);
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
-                        .sendToTarget();
+              //  mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
+               //         .sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }
@@ -369,7 +366,8 @@ public class TaiXinYiBluetoothService extends Service {
                 e.printStackTrace();
             }
         }
-        public void un_command_cancel(){
+
+        public void un_command_cancel() {
             start = false;
 
         }

@@ -200,7 +200,6 @@ public class MainActivity extends Activity {
     @OnClick(R.id.connectBlue)
     public void connectBlue() {
         //连接设备
-
         if (taiXinYiService != null) {
             taiXinYiService.connect(connectDevice, false);
             Toast.makeText(getApplicationContext(), "连接成功", Toast.LENGTH_SHORT).show();
@@ -233,7 +232,7 @@ public class MainActivity extends Activity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             taiXinYiService = ((TaiXinYiBluetoothService.MyBinder) service).getBluetoothService();
-            taiXinYiService.init(getApplicationContext(), handler);
+            taiXinYiService.init(getApplicationContext());
         }
 
         @Override
