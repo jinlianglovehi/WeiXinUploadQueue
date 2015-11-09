@@ -36,9 +36,11 @@
         <activity android:name=".ui.monitor.MonitorDetialActivity"/>
         <activity android:name=".ui.monitor.GuardianStateActivity"/>
         <activity android:name=".ui.monitor.LocalRecordPlayActivity"/>
+        <!-- 测试蓝牙的检测部分-->
 
         <service android:name=".service.ConfigService"/>
         <service android:name=".service.UploadService"/>
+        <service android:name=".blueservice.TaiXinYiBluetoothService"/>
     </application>
 
 </manifest>

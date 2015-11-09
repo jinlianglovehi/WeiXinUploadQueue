@@ -404,6 +404,11 @@ public class MonitorFragment extends BaseFragment {
 			}
 
 			@Override
+			public void onActionAclDisConnected() {
+
+			}
+
+			@Override
 			public void onConnect(BluetoothDevice remoteDevice) {
 				// TODO: 15/8/13 此处触发与期望不一致
 			}
