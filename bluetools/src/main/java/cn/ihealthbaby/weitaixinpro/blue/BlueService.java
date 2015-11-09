@@ -100,7 +100,7 @@ public class BlueService extends Service implements BlueToothInterface {
     }
 
     @Override
-    public void startRecord(Context context, String recordId) {
+    public void startRecord() {
         //parser = new MyParser(context);
 
         //parser.parsePackageData(inputStream);

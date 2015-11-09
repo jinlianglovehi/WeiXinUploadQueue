@@ -28,6 +28,8 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceive
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
+import cn.ihealthbaby.weitaixinpro.blue.BlueService;
+import de.greenrobot.event.EventBus;
 
 
 public class MainActivity extends Activity {
@@ -39,9 +41,38 @@ public class MainActivity extends Activity {
     TextView showBlueNum;
     @Bind(R.id.disConnectBlue)
     Button disConnectBlue;// 断开链接
+    /**
+     * 语音播放处理
+     */
+    @Bind(R.id.startVoice)
+    Button startVoicePlay;
+    @Bind(R.id.stopVoice)
+    Button stopVoicePlay;
+    @Bind(R.id.saveVoiceFile)
+    /**
+     * 语音文件的保存
+     */
+            Button saveVoiceFile;
+    @Bind(R.id.unSaveVoiceFile)
+    Button unSaveVoiceFile;
+
+    /**
+     * 音量的调节
+     */
+    @Bind(R.id.addVoice)
+    Button addVoice;
+    @Bind(R.id.reduceVoice)
+    Button reduceVoice;
+    /**
+     * 开始记录心跳
+     */
+    @Bind(R.id.startHeartRate)
+    Button startHeartRate;
+    @Bind(R.id.stopHeartRate)
+    Button stopHeartRate;
 
     private BluetoothDevice devide;
-    private TaiXinYiBluetoothService taiXinYiService;
+    private BlueService taiXinYiService;
     /**
      * 处理连接状态以及连接失败
      */
@@ -86,7 +117,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blue_data);
         ButterKnife.bind(this);
-        Intent intent = new Intent(MainActivity.this, TaiXinYiBluetoothService.class);
+        Intent intent = new Intent(MainActivity.this, BlueService.class);
         bindService(intent, bluetoothConnection, BIND_AUTO_CREATE);
         initTimeTask();
         adapter = BluetoothAdapter.getDefaultAdapter();
@@ -146,6 +177,7 @@ public class MainActivity extends Activity {
             public void onPairingRequest(BluetoothDevice remoteDevice, String remoteName, String pairingKey, int pairingVariant) {
 
             }
+
             @Override
             public void onActionAclDisConnected() {// 断开链接
                 Log.i(TAG, "蓝牙设备断开，蓝牙设备关闭");
@@ -211,17 +243,68 @@ public class MainActivity extends Activity {
 
     @OnClick(R.id.disConnectBlue)
     public void setDisConnectBlue() {
-        if (taiXinYiService != null) {
-            taiXinYiService.stop();
-            showBlueNum.setText("已经断开频率");
-            Toast.makeText(getApplicationContext(), "断开链接", Toast.LENGTH_SHORT).show();
-        }
+        taiXinYiService.disConnect();
+        showBlueNum.setText("已经断开频率");
+        Toast.makeText(getApplicationContext(), "断开链接", Toast.LENGTH_SHORT).show();
+
+    }
+
+    /**
+     * 声音的播放处理
+     */
+    @OnClick(R.id.startVoice)
+    public void startVoicePLay() {
+        taiXinYiService.startPlayVoice();
+
+    }
+
+    @OnClick(R.id.stopVoice)
+    public void stopVoicePlay() {
+        taiXinYiService.stopPlayVoice();
+    }
+
+    /**
+     * 音量的调节
+     */
+    @OnClick(R.id.addVoice)
+    public void addVoiceSize() {
+        taiXinYiService.adjectVoiceSize(10);
+    }
+
+    @OnClick(R.id.reduceVoice)
+    public void reduceVoiceSize() {
+        taiXinYiService.adjectVoiceSize(-10);
+    }
+
+    @OnClick(R.id.startHeartRate)
+    public void startHeartRate(){
+        taiXinYiService.startRecord();
+    }
+    @OnClick(R.id.stopHeartRate)
+    public void stopHeartRate(){
+        taiXinYiService.stopRecord();
+    }
+
+    /**
+     * 声音的保存处理
+     */
+
+    @OnClick(R.id.saveVoiceFile)
+    public void saveVoiceFile() {
+        String recordId = "test" + System.currentTimeMillis();
+        taiXinYiService.saveVoiceFile(getApplicationContext(), recordId);
+    }
+
+    @OnClick(R.id.unSaveVoiceFile)
+    public void unsaveVoiceFile() {
+        taiXinYiService.unSaveVoiceFile();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // 当销毁的时候 断开链接
+        EventBus.getDefault().unregister(this);
         unbindService(bluetoothConnection);
     }
 
@@ -231,8 +314,10 @@ public class MainActivity extends Activity {
     ServiceConnection bluetoothConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            taiXinYiService = ((TaiXinYiBluetoothService.MyBinder) service).getBluetoothService();
+            taiXinYiService = ((BlueService.MyBind) service).getService();
+            //绑定服务的时候必须进行初始化
             taiXinYiService.init(getApplicationContext());
+
         }
 
         @Override

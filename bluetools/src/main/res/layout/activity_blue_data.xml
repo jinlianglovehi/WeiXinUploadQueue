@@ -1,37 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_marginTop="10dp"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
 
     <TextView
         android:id="@+id/showBlueNum"
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
         android:layout_height="50dp"
-        android:text="频率"
-        />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="频率" />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/connectBlue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="连接蓝牙" />
+
+
+        <Button
+            android:id="@+id/disConnectBlue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="断开蓝牙" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/startHeartRate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="开始检测心率" />
+
+        <Button
+            android:id="@+id/stopHeartRate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="停止检测心率" />
+
+    </LinearLayout>
+
+
 
     <Button
-        android:id="@+id/connectBlue"
+        android:id="@+id/startVoice"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:background="#18cc18"
-        android:layout_margin="10dp"
-        android:layout_gravity="center_horizontal"
-        android:text="连接蓝牙"/>
+        android:layout_height="wrap_content"
+        android:text="打开语音播放" />
 
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/addVoice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="增加音量" />
+
+        <Button
+            android:id="@+id/reduceVoice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="减少音量" />
+    </LinearLayout>
 
     <Button
-        android:id="@+id/disConnectBlue"
-        android:layout_margin="10dp"
+        android:id="@+id/stopVoice"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#18cc18"
-        android:text="断开蓝牙"
-        />
+        android:layout_height="wrap_content"
+        android:text="停止语音播放" />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/saveVoiceFile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="保存语音文件" />
+
+        <Button
+            android:id="@+id/unSaveVoiceFile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="不保存语音" />
+    </LinearLayout>
+
+
 </LinearLayout>

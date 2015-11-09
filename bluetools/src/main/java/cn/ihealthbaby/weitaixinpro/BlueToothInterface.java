@@ -17,7 +17,7 @@ public interface BlueToothInterface {
     /**
      * 录制处理
      */
-    public void startRecord(Context context, String recordId);
+    public void startRecord();
     public void stopRecord();
 
     /**
@@ -31,7 +31,6 @@ public interface BlueToothInterface {
     /**
      * 声音的保存
      */
-
     public void  saveVoiceFile(Context context ,String recordId);
     public void  unSaveVoiceFile();
 
