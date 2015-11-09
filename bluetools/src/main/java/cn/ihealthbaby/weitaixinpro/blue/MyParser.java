@@ -30,15 +30,13 @@ import de.greenrobot.event.EventBus;
  */
 public class MyParser {
 
+    private static final String TAG = MyParser.class.getSimpleName();
     private  boolean startVoiceMonitor=false;
     private  boolean startVoicePlay =false;
     private  boolean startRecord = true; //true代表检测心率，false 不检测心率
 
-    private float currentVoiceVolumn =(AudioTrack.getMaxVolume() + AudioTrack.getMinVolume()) / 2;
-    public interface CallBack{
-       // boolean startVoiceMonitor();// 设置是否开始写入文件
-        String getRecordId();// 获取记录的id;
-    }
+    //语音步幅为： 1/10
+    private float currentVoiceVolumn =(AudioTrack.getMaxVolume()- AudioTrack.getMinVolume()) / 10;
 
     //header
     private static final int HEADER_0 = 0X55;
@@ -62,7 +60,7 @@ public class MyParser {
     private static final int CONTROLLER_VERSION_INFO = 0X3F;
     //版本初始信息
     private static final int VERSION_NONE = -1;
-    private static final String TAG = "Parser";
+
     public byte[] oneByte;
     public FileOutputStream fileOutputStream;
     public boolean needPlay;
@@ -91,6 +89,7 @@ public class MyParser {
         // AudioTrack.getMinVolume();
         audioTrack.setVolume(currentVoiceVolumn);
         // audioTrack.play();
+        LogUtil.i(TAG,"最大的语音声音："+AudioTrack.getMaxVolume() + "--最小的声音："+ AudioTrack.getMinVolume());
     }
 
     /**
@@ -163,7 +162,8 @@ public class MyParser {
                         validateData(fetalDataBufferV1);
                         if (startRecord) {
                             FHRPackage fhrPackage1 = parseFHR(fetalDataBufferV1, "1");
-                            DataStorage.fhrPackage = fhrPackage1;                        } else {
+                            DataStorage.fhrPackage = fhrPackage1;                        }
+                        else {
                             DataStorage.fhrPackage.recycle();
                         }
                         break;
@@ -199,7 +199,9 @@ public class MyParser {
                     case CONTROLLER_SOUND_V2:
                         int[] voiceAd = getVoiceAd(mmInStream);
                         byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
-                        audioTrack.write(adv, 0, adv.length);
+                        if(startVoicePlay){
+                            audioTrack.write(adv, 0, adv.length);
+                        }
                         if (startMonitor) {
                             if (fileOutputStream != null) {
                                 try {
