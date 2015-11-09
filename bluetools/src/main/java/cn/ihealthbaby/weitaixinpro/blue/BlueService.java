@@ -101,16 +101,11 @@ public class BlueService extends Service implements BlueToothInterface {
 
     @Override
     public void startRecord() {
-        //parser = new MyParser(context);
-
-        //parser.parsePackageData(inputStream);
         parser.setStartRecord(true);
-
     }
 
     @Override
     public void stopRecord() {
-        //EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.endRecord));
         parser.setStartRecord(false);
     }
 
@@ -132,13 +127,11 @@ public class BlueService extends Service implements BlueToothInterface {
 
     @Override
     public void saveVoiceFile(Context context, String recordId) {
-        //EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.startWriteVoiceFile, recordId));
         parser.saveVoiceFile(context, recordId);
     }
 
     @Override
     public void unSaveVoiceFile() {
-        // EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.stopWriteVoiceFile));
         parser.stopSaveVoiceFile();
     }
 

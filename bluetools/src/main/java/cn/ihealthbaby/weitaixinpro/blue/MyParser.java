@@ -85,8 +85,8 @@ public class MyParser {
         EventBus.getDefault().register(this);
         audioTrack = AudioPlayer.getInstance().getmAudioTrack();
         //获取播放的做大的声音        // AudioTrack.getMaxVolume();
-        // 获取播放的最小的声音
-        // AudioTrack.getMinVolume();
+        //获取播放的最小的声音
+        //AudioTrack.getMinVolume();
         audioTrack.setVolume(currentVoiceVolumn);
         // audioTrack.play();
         LogUtil.i(TAG,"最大的语音声音："+AudioTrack.getMaxVolume() + "--最小的声音："+ AudioTrack.getMinVolume());
