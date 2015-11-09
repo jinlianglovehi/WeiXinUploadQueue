@@ -43,11 +43,15 @@ public class BlueService extends Service implements BlueToothInterface {
      */
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
+    public void init(Context context){
+        parser = new MyParser(context);
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         mAdapter = BluetoothAdapter.getDefaultAdapter();
+
     }
 
     @Override
@@ -68,7 +72,7 @@ public class BlueService extends Service implements BlueToothInterface {
     }
 
     public class MyBind extends Binder {
-        BlueService getService() {
+        public  BlueService getService() {
             return BlueService.this;
         }
 
@@ -97,17 +101,11 @@ public class BlueService extends Service implements BlueToothInterface {
 
     @Override
     public void startRecord(Context context, String recordId) {
-        parser = new MyParser(context);
-        //TODO
+        //parser = new MyParser(context);
 
-        try {
-            parser.parsePackageData(inputStream);
-            parser.setStartRecord(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        //parser.parsePackageData(inputStream);
+        parser.setStartRecord(true);
+
     }
 
     @Override
@@ -135,12 +133,12 @@ public class BlueService extends Service implements BlueToothInterface {
     @Override
     public void saveVoiceFile(Context context, String recordId) {
         //EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.startWriteVoiceFile, recordId));
-        parser.saveVoiceFile(true,context,recordId);
+        parser.saveVoiceFile(context, recordId);
     }
 
     @Override
     public void unSaveVoiceFile() {
-       // EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.stopWriteVoiceFile));
+        // EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.stopWriteVoiceFile));
         parser.stopSaveVoiceFile();
     }
 
@@ -280,7 +278,6 @@ public class BlueService extends Service implements BlueToothInterface {
 
                 Log.i(TAG, "连接中-----" + mmSocket.isConnected());
                 // 没有断开重连的机制。
-
                 try {
                     parser.parsePackageData(mmInStream);
                     Log.i(TAG, "mmInStream.装配数据:" + mmInStream.available());
