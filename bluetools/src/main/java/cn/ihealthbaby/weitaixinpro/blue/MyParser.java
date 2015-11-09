@@ -447,7 +447,7 @@ public class MyParser {
         this.startRecord = startRecord;
     }
 
-    public void saveVoiceFile(boolean isSave,Context context, String recordId) {
+    public void saveVoiceFile(Context context, String recordId) {
         startMonitor = true;
         localRecordId = recordId;
         try {
