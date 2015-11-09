@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Set;
 
@@ -72,6 +73,8 @@ public class MainActivity extends Activity {
     Button startHeartRate;
     @Bind(R.id.stopHeartRate)
     Button stopHeartRate;
+    @Bind(R.id.reconnect)
+    Button reconnect;
 
     private BluetoothDevice devide;
     private BlueService taiXinYiService;
@@ -119,6 +122,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blue_data);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         Intent intent = new Intent(MainActivity.this, BlueService.class);
         bindService(intent, bluetoothConnection, BIND_AUTO_CREATE);
         initTimeTask();
@@ -251,6 +255,11 @@ public class MainActivity extends Activity {
 
     }
 
+    @OnClick(R.id.reconnect)
+    public void reconnect(){
+        taiXinYiService.reConnect(3);
+    }
+
     /**
      * 声音的播放处理
      */
@@ -279,11 +288,12 @@ public class MainActivity extends Activity {
     }
 
     @OnClick(R.id.startHeartRate)
-    public void startHeartRate(){
+    public void startHeartRate() {
         taiXinYiService.startRecord();
     }
+
     @OnClick(R.id.stopHeartRate)
-    public void stopHeartRate(){
+    public void stopHeartRate() {
         taiXinYiService.stopRecord();
     }
 
@@ -294,12 +304,22 @@ public class MainActivity extends Activity {
     @OnClick(R.id.saveVoiceFile)
     public void saveVoiceFile() {
         String recordId = "test" + System.currentTimeMillis();
-        taiXinYiService.saveVoiceFile(getApplicationContext(), recordId);
+        try {
+            taiXinYiService.saveVoiceFile(getApplicationContext(), recordId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(MainActivity.this,"保存语音文件操作失败",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick(R.id.unSaveVoiceFile)
     public void unsaveVoiceFile() {
-        taiXinYiService.unSaveVoiceFile();
+        try {
+            taiXinYiService.unSaveVoiceFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(MainActivity.this,"不保存语音文件操作失败",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -329,18 +349,17 @@ public class MainActivity extends Activity {
     };
 
 
-    public void onEventMainThread(BlueServiceEvent event){
+    public void onEventMainThread(BlueServiceEvent event) {
 
-        switch (event.getBlueServiceType()){
+        switch (event.getBlueServiceType()) {
             case BlueServiceEvent.connectLost:
-                LogUtil.i(TAG,"数据传输的socket 连接失败");
+                LogUtil.i(TAG, "数据传输的socket 连接失败");
                 Toast.makeText(MainActivity.this, "数据传输socket连接失败", Toast.LENGTH_SHORT).show();
                 break;
             case BlueServiceEvent.connectFail:
-                LogUtil.i(TAG,"设备连接不成功");
-                Toast.makeText(MainActivity.this,"设备连接不成功",Toast.LENGTH_SHORT).show();
+                LogUtil.i(TAG, "设备连接不成功");
+                Toast.makeText(MainActivity.this, "设备连接不成功", Toast.LENGTH_SHORT).show();
                 break;
-
         }
 
 
