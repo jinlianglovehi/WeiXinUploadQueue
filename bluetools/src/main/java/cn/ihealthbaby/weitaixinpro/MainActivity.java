@@ -26,9 +26,11 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.data.FHRPackage;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.AbstractBluetoothListener;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothReceiver;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.mode.spp.BluetoothScanner;
+import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixin.library.util.FixedRateCountDownTimer;
 import cn.ihealthbaby.weitaixinpro.blue.BlueService;
+import cn.ihealthbaby.weitaixinpro.blue.BlueServiceEvent;
 import de.greenrobot.event.EventBus;
 
 
@@ -326,4 +328,21 @@ public class MainActivity extends Activity {
         }
     };
 
+
+    public void onEventMainThread(BlueServiceEvent event){
+
+        switch (event.getBlueServiceType()){
+            case BlueServiceEvent.connectLost:
+                LogUtil.i(TAG,"数据传输的socket 连接失败");
+                Toast.makeText(MainActivity.this, "数据传输socket连接失败", Toast.LENGTH_SHORT).show();
+                break;
+            case BlueServiceEvent.connectFail:
+                LogUtil.i(TAG,"设备连接不成功");
+                Toast.makeText(MainActivity.this,"设备连接不成功",Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+
+
+    }
 }
