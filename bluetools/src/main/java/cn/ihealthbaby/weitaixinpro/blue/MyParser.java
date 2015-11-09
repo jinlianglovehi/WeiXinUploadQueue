@@ -30,14 +30,15 @@ import de.greenrobot.event.EventBus;
  */
 public class MyParser {
 
-    private boolean startVoiceMonitor = false;
-    private boolean startVoicePlay = false;
-    private boolean startRecord = true; //true代表检测心率，false 不检测心率
+    private  boolean startVoiceMonitor=false;
+    private  boolean startVoicePlay =false;
+    private  boolean startRecord = true; //true代表检测心率，false 不检测心率
 
-    private float currentVoiceVolumn = (AudioTrack.getMaxVolume() + AudioTrack.getMinVolume()) / 2;
-
-    public interface CallBack {
-        // boolean startVoiceMonitor();// 设置是否开始写入文件
+    private float currentVoiceVolumn =(AudioTrack.getMaxVolume() + AudioTrack.getMinVolume()) / 2;
+    public interface CallBack{
+       // boolean startVoiceMonitor();// 设置是否开始写入文件
+        String getRecordId();// 获取记录的id;
+    }
 
     //header
     private static final int HEADER_0 = 0X55;
@@ -169,10 +170,10 @@ public class MyParser {
                     //v2,胎心
                     case CONTROLLER_HEART_BEAT_RATE_V2:
                         mmInStream.read(fetalDataBufferV2);
-                        if (startRecord) {
+                        if (startRecord){
                             FHRPackage fhrPackage2 = parseFHR(fetalDataBufferV2, "2");
                             DataStorage.fhrPackage = fhrPackage2;
-                        } else {
+                        }else {
                             DataStorage.fhrPackage.recycle();
                         }
 
@@ -181,7 +182,7 @@ public class MyParser {
                     case CONTROLLER_SOUND_V1:
                         int[] voice = getVoice(mmInStream);
                         byte[] v = intForByte(ByteUtil.analysePackage(voice));
-                        if (startVoicePlay) {
+                        if(startVoicePlay){
                             audioTrack.write(v, 0, v.length);
                         }
                         if (startVoiceMonitor) {
