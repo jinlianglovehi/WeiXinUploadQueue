@@ -12,6 +12,7 @@ public class BlueServiceEvent {
     //连接设备失败
     public static final int connectFail =0x02;
 
+
     /**
      * 事件的类型
      */

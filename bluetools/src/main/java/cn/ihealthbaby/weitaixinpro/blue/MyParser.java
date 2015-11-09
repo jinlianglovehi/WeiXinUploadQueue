@@ -31,12 +31,12 @@ import de.greenrobot.event.EventBus;
 public class MyParser {
 
     private static final String TAG = MyParser.class.getSimpleName();
-    private  boolean startVoiceMonitor=false;
-    private  boolean startVoicePlay =false;
-    private  boolean startRecord = true; //true代表检测心率，false 不检测心率
+    private static boolean startVoiceMonitor = false;
+    private static boolean startVoicePlay = false;
+    private static boolean startRecord = true; //true代表检测心率，false 不检测心率
 
     //语音步幅为： 1/10
-    private float currentVoiceVolumn =(AudioTrack.getMaxVolume()- AudioTrack.getMinVolume()) / 10;
+    private float currentVoiceVolumn = (AudioTrack.getMaxVolume() - AudioTrack.getMinVolume()) / 10;
 
     //header
     private static final int HEADER_0 = 0X55;
@@ -61,22 +61,22 @@ public class MyParser {
     //版本初始信息
     private static final int VERSION_NONE = -1;
 
-    public byte[] oneByte;
-    public FileOutputStream fileOutputStream;
+    public static byte[] oneByte;
+    public static FileOutputStream fileOutputStream;
     public boolean needPlay;
-    private AudioTrack audioTrack;
+    private static AudioTrack audioTrack;
     private Context context;
     //
-    private byte[] fetalDataBufferV1 = new byte[4];
-    private byte[] fetalDataBufferV2 = new byte[7];
+    private static byte[] fetalDataBufferV1 = new byte[4];
+    private static byte[] fetalDataBufferV2 = new byte[7];
     //	private byte[] bytes321 = new byte[321];
 //	private byte[] bytes101 = new byte[101];
 //	private int[] soundDataBufferV1 = new int[321];
 //	private int[] soun1dDataBufferV2 = new int[101];
 //修改
-    private int[] soundDataBufferV1 = new int[320];
-    private int[] soundDataBufferV2 = new int[100];
-    private boolean startMonitor;
+    private static int[] soundDataBufferV1 = new int[320];
+    private static int[] soundDataBufferV2 = new int[100];
+    private static boolean startMonitor;
     private String localRecordId;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -89,7 +89,7 @@ public class MyParser {
         //AudioTrack.getMinVolume();
         audioTrack.setVolume(currentVoiceVolumn);
         // audioTrack.play();
-        LogUtil.i(TAG,"最大的语音声音："+AudioTrack.getMaxVolume() + "--最小的声音："+ AudioTrack.getMinVolume());
+        LogUtil.i(TAG, "最大的语音声音：" + AudioTrack.getMaxVolume() + "--最小的声音：" + AudioTrack.getMinVolume());
     }
 
     /**
@@ -98,7 +98,7 @@ public class MyParser {
      * @param buffer
      * @return
      */
-    public boolean validateData(byte[] buffer) throws ValidationParseException {
+    public static boolean validateData(byte[] buffer) throws ValidationParseException {
         int sum = 0;
         for (int i = 0; i < buffer.length - 1; i++) {
             sum += buffer[i];
@@ -111,7 +111,7 @@ public class MyParser {
         }
     }
 
-    public FHRPackage parseFHR(byte[] buffer, String version) throws FHRParseException {
+    public static FHRPackage parseFHR(byte[] buffer, String version) throws FHRParseException {
         switch (version) {
             case "1":
                 return parseFHBV1(buffer);
@@ -122,11 +122,11 @@ public class MyParser {
         }
     }
 
-    private int translate(byte oneByte) {
+    private static int translate(byte oneByte) {
         return oneByte & LAST2BYTE;
     }
 
-    private FHRPackage parseFHBV1(byte[] buffer) {
+    private static FHRPackage parseFHBV1(byte[] buffer) {
         FHRPackage FHRPackage1 = new FHRPackage();
         FHRPackage1.setTime(System.currentTimeMillis());
         FHRPackage1.setVersion("1");
@@ -136,7 +136,7 @@ public class MyParser {
         return FHRPackage1;
     }
 
-    private FHRPackage parseFHBV2(byte[] buffer) {
+    private static FHRPackage parseFHBV2(byte[] buffer) {
         FHRPackage FHRPackage2 = new FHRPackage();
         FHRPackage2.setTime(System.currentTimeMillis());
         FHRPackage2.setVersion("2");
@@ -147,7 +147,7 @@ public class MyParser {
         return FHRPackage2;
     }
 
-    public void parsePackageData(InputStream mmInStream) throws IOException, ParseException {
+    public static void parsePackageData(InputStream mmInStream) throws IOException, ParseException {
         oneByte = new byte[1];
         mmInStream.read(oneByte);
         if (translate(oneByte[0]) == 0x55) {
@@ -162,18 +162,18 @@ public class MyParser {
                         validateData(fetalDataBufferV1);
                         if (startRecord) {
                             FHRPackage fhrPackage1 = parseFHR(fetalDataBufferV1, "1");
-                            DataStorage.fhrPackage = fhrPackage1;                        }
-                        else {
+                            DataStorage.fhrPackage = fhrPackage1;
+                        } else {
                             DataStorage.fhrPackage.recycle();
                         }
                         break;
                     //v2,胎心
                     case CONTROLLER_HEART_BEAT_RATE_V2:
                         mmInStream.read(fetalDataBufferV2);
-                        if (startRecord){
+                        if (startRecord) {
                             FHRPackage fhrPackage2 = parseFHR(fetalDataBufferV2, "2");
                             DataStorage.fhrPackage = fhrPackage2;
-                        }else {
+                        } else {
                             DataStorage.fhrPackage.recycle();
                         }
 
@@ -182,7 +182,7 @@ public class MyParser {
                     case CONTROLLER_SOUND_V1:
                         int[] voice = getVoice(mmInStream);
                         byte[] v = intForByte(ByteUtil.analysePackage(voice));
-                        if(startVoicePlay){
+                        if (startVoicePlay) {
                             audioTrack.write(v, 0, v.length);
                         }
                         if (startVoiceMonitor) {
@@ -199,7 +199,7 @@ public class MyParser {
                     case CONTROLLER_SOUND_V2:
                         int[] voiceAd = getVoiceAd(mmInStream);
                         byte[] adv = intForByte(ByteUtil.anylyseData(voiceAd, 1));
-                        if(startVoicePlay){
+                        if (startVoicePlay) {
                             audioTrack.write(adv, 0, adv.length);
                         }
                         if (startMonitor) {
@@ -248,7 +248,7 @@ public class MyParser {
      * @param inputStream
      * @return
      */
-    private int[] getVoice(InputStream inputStream) {
+    private static int[] getVoice(InputStream inputStream) {
         for (int i = 0; i < 320; i++) {
             try {
                 soundDataBufferV1[i] = inputStream.read();
@@ -260,7 +260,7 @@ public class MyParser {
         return soundDataBufferV1;
     }
 
-    private int[] getVoiceAd(InputStream inputStream) {
+    private static int[] getVoiceAd(InputStream inputStream) {
         for (int i = 0; i < 100; i++) {
             try {
                 soundDataBufferV2[i] = inputStream.read();
@@ -278,7 +278,7 @@ public class MyParser {
      * @param ints
      * @return
      */
-    private byte[] intForByte(int[] ints) {
+    private static byte[] intForByte(int[] ints) {
         int size = ints.length;
         byte[] shorts = new byte[size];
         for (int i = 0; i < size; i++) {
@@ -423,8 +423,6 @@ public class MyParser {
 //                break;
 //        }
 //    }
-
-
     private void handleFileOnTerminate() {
         startMonitor = false;
         localRecordId = LocalRecordIdUtil.getSavedId(context);
@@ -447,28 +445,20 @@ public class MyParser {
         this.startRecord = startRecord;
     }
 
-    public void saveVoiceFile(Context context, String recordId) {
+    public void saveVoiceFile(Context context, String recordId) throws IOException {
         startMonitor = true;
         localRecordId = recordId;
-        try {
-            final File voiceFile = FileUtil.getVoiceFile(context, localRecordId);
-            if (voiceFile.createNewFile()) {
-                fileOutputStream = new FileOutputStream(voiceFile);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        final File voiceFile = FileUtil.getVoiceFile(context, localRecordId);
+        if (voiceFile.createNewFile()) {
+            fileOutputStream = new FileOutputStream(voiceFile);
         }
+
     }
 
-    protected void stopSaveVoiceFile(){
-        try {
-            if (fileOutputStream != null) {
-                fileOutputStream.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    protected void stopSaveVoiceFile() throws IOException {
+        if (fileOutputStream != null) {
+            fileOutputStream.close();
         }
 
 

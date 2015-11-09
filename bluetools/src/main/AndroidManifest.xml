@@ -20,8 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- 废弃的蓝牙服务-->
-        <service android:name=".TaiXinYiBluetoothService"/>
         <!-- 新的蓝牙服务-->
         <service android:name=".blue.BlueService"/>
     </application>

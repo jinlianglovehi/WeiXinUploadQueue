@@ -91,7 +91,8 @@ public class BlueService extends Service implements BlueToothInterface {
 
     @Override
     public void reConnect(int retryTime) {
-
+        //先停止当前，后重新启动新的线程
+        stop();
         RETRY_TIMES = retryTime;
         connect(bindDevice, secure);
     }
@@ -128,12 +129,12 @@ public class BlueService extends Service implements BlueToothInterface {
     }
 
     @Override
-    public void saveVoiceFile(Context context, String recordId) {
+    public void saveVoiceFile(Context context, String recordId) throws IOException {
         parser.saveVoiceFile(context, recordId);
     }
 
     @Override
-    public void unSaveVoiceFile() {
+    public void unSaveVoiceFile() throws IOException {
         parser.stopSaveVoiceFile();
     }
 

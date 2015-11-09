@@ -3,6 +3,8 @@ package cn.ihealthbaby.weitaixinpro.blue;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 
+import java.io.IOException;
+
 /**
  * Created by jinliang on 15/11/6.
  */
@@ -31,7 +33,7 @@ public interface BlueToothInterface {
     /**
      * 声音的保存
      */
-    public void  saveVoiceFile(Context context ,String recordId);
-    public void  unSaveVoiceFile();
+    public void  saveVoiceFile(Context context ,String recordId) throws IOException;
+    public void  unSaveVoiceFile() throws IOException;
 
 }
