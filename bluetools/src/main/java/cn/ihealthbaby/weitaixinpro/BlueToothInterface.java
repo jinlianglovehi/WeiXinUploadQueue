@@ -21,11 +21,18 @@ public interface BlueToothInterface {
     public void stopRecord();
 
     /**
-     * 声音处理
+     * 声音播放状态
      */
-    public void startVoice(Context context, String recordId) ;
-    public void stopVoice() ;
-    public void adjectVoiceSize(int rediect, int size);
+    public void startPlayVoice() ;
+    public void stopPlayVoice() ;
+    // rediect 大于0 代表是提高声音，小于0 代表降低声音
+    public void adjectVoiceSize(int rediect);
 
+    /**
+     * 声音的保存
+     */
+
+    public void  saveVoiceFile(Context context ,String recordId);
+    public void  unSaveVoiceFile();
 
 }

@@ -7,6 +7,20 @@ package cn.ihealthbaby.weitaixinpro.blue;
 public class BlueServiceEvent {
     private int  blueServiceType ;// 发送消息的类型
 
+    /**
+     * 事件的类型
+     */
+
+    public static final int STOP_WRITE_VOICE_FILE = 0x01;
+    //停止写入语音
+    public static final int stopWriteVoiceFile = 0x02;
+
+    // 开始记录心率
+    public static final int  startRecord=0x03;
+    // 停止记录心率
+    public static final int  endRecord =0x04 ;
+
+
     private  String recordId ;//记录的id
 
     private int  voiceVolume;//传输的是蓝牙的声音的大小

@@ -19,7 +19,6 @@ import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
 import cn.ihealthbaby.weitaixinpro.BlueToothInterface;
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by jinliang on 15/11/7.
@@ -103,6 +102,7 @@ public class BlueService extends Service implements BlueToothInterface {
 
         try {
             parser.parsePackageData(inputStream);
+            parser.setStartRecord(true);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -112,7 +112,8 @@ public class BlueService extends Service implements BlueToothInterface {
 
     @Override
     public void stopRecord() {
-        EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.endRecord));
+        //EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.endRecord));
+        parser.setStartRecord(false);
     }
 
     @Override
@@ -128,19 +129,19 @@ public class BlueService extends Service implements BlueToothInterface {
 
     @Override
     public void adjectVoiceSize(int rediect) {
-
         parser.adjectVoiceSize(rediect);
     }
 
     @Override
     public void saveVoiceFile(Context context, String recordId) {
-        EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.startWriteVoiceFile, recordId));
+        //EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.startWriteVoiceFile, recordId));
+        parser.saveVoiceFile(true,context,recordId);
     }
 
     @Override
     public void unSaveVoiceFile() {
-        EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.stopWriteVoiceFile));
-
+       // EventBus.getDefault().post(new BlueServiceEvent(BlueConstant.stopWriteVoiceFile));
+        parser.stopSaveVoiceFile();
     }
 
     /**
