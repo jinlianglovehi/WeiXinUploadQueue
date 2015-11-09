@@ -38,8 +38,6 @@ public class MyParser {
 
     public interface CallBack {
         // boolean startVoiceMonitor();// 设置是否开始写入文件
-        String getRecordId();// 获取记录的id;
-    }
 
     //header
     private static final int HEADER_0 = 0X55;
@@ -87,8 +85,7 @@ public class MyParser {
         this.context = context;
         EventBus.getDefault().register(this);
         audioTrack = AudioPlayer.getInstance().getmAudioTrack();
-        //获取播放的做大的声音
-        // AudioTrack.getMaxVolume();
+        //获取播放的做大的声音        // AudioTrack.getMaxVolume();
         // 获取播放的最小的声音
         // AudioTrack.getMinVolume();
         audioTrack.setVolume(currentVoiceVolumn);
@@ -165,8 +162,7 @@ public class MyParser {
                         validateData(fetalDataBufferV1);
                         if (startRecord) {
                             FHRPackage fhrPackage1 = parseFHR(fetalDataBufferV1, "1");
-                            DataStorage.fhrPackage = fhrPackage1;
-                        } else {
+                            DataStorage.fhrPackage = fhrPackage1;                        } else {
                             DataStorage.fhrPackage.recycle();
                         }
                         break;
