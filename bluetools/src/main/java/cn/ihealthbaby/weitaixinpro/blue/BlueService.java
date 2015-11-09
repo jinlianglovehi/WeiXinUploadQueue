@@ -18,13 +18,15 @@ import java.io.OutputStream;
 import cn.ihealthbaby.weitaixin.library.data.bluetooth.exception.ParseException;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
-import cn.ihealthbaby.weitaixinpro.BlueToothInterface;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by jinliang on 15/11/7.
  */
 public class BlueService extends Service implements BlueToothInterface {
     private static final String TAG = BlueService.class.getSimpleName();
+
+
 
     MyParser parser;
     InputStream inputStream = null;
@@ -217,11 +219,13 @@ public class BlueService extends Service implements BlueToothInterface {
      */
     private void connectionFailed() {
 
+        EventBus.getDefault().post(new BlueServiceEvent(BlueServiceEvent.connectFail))
+        ;
     }
 
-    //数据传输中失败
+    //设备连接失败
     private void connectionLost() {
-
+        EventBus.getDefault().post(new BlueServiceEvent(BlueServiceEvent.connectLost));
     }
 
     private synchronized void connected(BluetoothSocket socket, BluetoothDevice device, final String socketType) {

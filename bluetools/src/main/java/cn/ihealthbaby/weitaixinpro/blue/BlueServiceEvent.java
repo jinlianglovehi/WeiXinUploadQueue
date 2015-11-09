@@ -7,18 +7,27 @@ package cn.ihealthbaby.weitaixinpro.blue;
 public class BlueServiceEvent {
     private int  blueServiceType ;// 发送消息的类型
 
+   // 失去连接
+    public static final int connectLost =0x01 ;
+    //连接设备失败
+    public static final int connectFail =0x02;
+
     /**
      * 事件的类型
      */
+    //开始播放声音
+    // public static final int stopPlayVoice = 0x01;
+    //直接用方法调用
+    //public static final int adjustVoiceVolumn = 0x02;
+    //停止播放声音
+    //public static final int startPlayVoice = 0x03;
 
-    public static final int STOP_WRITE_VOICE_FILE = 0x01;
-    //停止写入语音
-    public static final int stopWriteVoiceFile = 0x02;
+    //开始语音写入语音文件
 
-    // 开始记录心率
-    public static final int  startRecord=0x03;
-    // 停止记录心率
-    public static final int  endRecord =0x04 ;
+    //开始保存语音的文件
+//    public static final int  startSaveVoiceFile =0x08;
+//    //不保存语音文件
+//    public static final int   unSaveVoiceFile =0x09;
 
 
     private  String recordId ;//记录的id

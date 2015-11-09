@@ -1,4 +1,4 @@
-package cn.ihealthbaby.weitaixinpro;
+package cn.ihealthbaby.weitaixinpro.blue;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
