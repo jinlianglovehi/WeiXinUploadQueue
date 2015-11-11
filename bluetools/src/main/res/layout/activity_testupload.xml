@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/startQueue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启队列"
+        />
+    <Button
+        android:id="@+id/addQueue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加一个任务"
+        />
+    <Button
+        android:id="@+id/addTaskStopOtherTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加一个任务，暂停其他的任务"
+        android:visibility="gone"
+        />
+    <Button
+        android:id="@+id/openOtherTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启其他任务"
+        />
+</LinearLayout>

@@ -136,59 +136,61 @@ public class MainActivity extends Activity {
 
         bluetoothReceiver = new BluetoothReceiver();
         bluetoothReceiver.register(getApplicationContext());
-        bluetoothReceiver.setListener(new AbstractBluetoothListener() {
+        bluetoothReceiver.setListener(
+                new AbstractBluetoothListener() {
 
 
-            @Override
-            public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
+                    @Override
+                    public void onFound(BluetoothDevice remoteDevice, String remoteName, short rssi, BluetoothClass bluetoothClass) {
 
-            }
+                    }
 
-            @Override
-            public void onConnect(BluetoothDevice remoteDevice) {
+                    @Override
+                    public void onConnect(BluetoothDevice remoteDevice) {
 
-            }
+                    }
 
-            @Override
-            public void onDisconnect(BluetoothDevice remoteDevice) {
+                    @Override
+                    public void onDisconnect(BluetoothDevice remoteDevice) {
 
-            }
+                    }
 
-            @Override
-            public void onStateOn() {
+                    @Override
+                    public void onStateOn() {
 
-            }
+                    }
 
-            @Override
-            public void onStateOFF() {
+                    @Override
+                    public void onStateOFF() {
 
-            }
+                    }
 
-            @Override
-            public void onRequestBluetoothEnable() {
+                    @Override
+                    public void onRequestBluetoothEnable() {
 
-            }
+                    }
 
-            @Override
-            public void onDiscoveryStarted() {
+                    @Override
+                    public void onDiscoveryStarted() {
 
-            }
+                    }
 
-            @Override
-            public void onDiscoveryFinished() {
+                    @Override
+                    public void onDiscoveryFinished() {
 
-            }
+                    }
 
-            @Override
-            public void onPairingRequest(BluetoothDevice remoteDevice, String remoteName, String pairingKey, int pairingVariant) {
+                    @Override
+                    public void onPairingRequest(BluetoothDevice remoteDevice, String remoteName, String pairingKey, int pairingVariant) {
 
-            }
+                    }
 
-            @Override
-            public void onActionAclDisConnected() {// 断开链接
-                Log.i(TAG, "蓝牙设备断开，蓝牙设备关闭");
-            }
-        });
+                    @Override
+                    public void onActionAclDisConnected() {// 断开链接
+                        Log.i(TAG, "蓝牙设备断开，蓝牙设备关闭");
+                    }
+                }
+        );
     }
 
 
@@ -242,8 +244,10 @@ public class MainActivity extends Activity {
             taiXinYiService.connect(connectDevice, false);
             Toast.makeText(getApplicationContext(), "连接成功", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(MainActivity.this
-                    , "服务未连接", Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                    MainActivity.this
+                    , "服务未连接", Toast.LENGTH_SHORT
+            ).show();
         }
     }
 
@@ -256,7 +260,7 @@ public class MainActivity extends Activity {
     }
 
     @OnClick(R.id.reconnect)
-    public void reconnect(){
+    public void reconnect() {
         taiXinYiService.reConnect(3);
     }
 
@@ -308,7 +312,7 @@ public class MainActivity extends Activity {
             taiXinYiService.saveVoiceFile(getApplicationContext(), recordId);
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(MainActivity.this,"保存语音文件操作失败",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "保存语音文件操作失败", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -318,7 +322,7 @@ public class MainActivity extends Activity {
             taiXinYiService.unSaveVoiceFile();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(MainActivity.this,"不保存语音文件操作失败",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "不保存语音文件操作失败", Toast.LENGTH_SHORT).show();
         }
     }
 

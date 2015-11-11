@@ -279,7 +279,6 @@ public class UploadFileUtils implements MulFileUploadInterface {
 //        }
     }
 
-
     @SuppressWarnings("unchecked")
     class Comparators implements Comparator {
         public int compare(Object arg0, Object arg1) {
