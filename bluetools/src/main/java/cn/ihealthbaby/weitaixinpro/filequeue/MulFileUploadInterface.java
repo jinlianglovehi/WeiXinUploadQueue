@@ -14,14 +14,16 @@ public interface MulFileUploadInterface {
      * 文件的操作
      * @param model
      */
-    void add(FileModel model);
+   // void add(FileModel model);
 
     /**
      * 移除一个Task任务
      * @param model
      */
-    void remove(FileModel model);
+   // void remove(FileModel model);
+    void add(Runnable runnable);
 
+    void remove(Runnable runnable);
     /**
      * 执行任务
      * @param model
@@ -38,9 +40,9 @@ public interface MulFileUploadInterface {
      */
     void stop();
 
-    void setTag(boolean isExecutor,String tag);
+   // void setTag(boolean isExecutor,String tag);
 
-    void setCancel(String localRecordId);
+    void setCancel(String localRecordId,Object tag);
 
 }
 

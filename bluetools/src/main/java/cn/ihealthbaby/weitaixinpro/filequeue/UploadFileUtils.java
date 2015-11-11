@@ -2,6 +2,7 @@ package cn.ihealthbaby.weitaixinpro.filequeue;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCancellationSignal;
@@ -13,9 +14,7 @@ import com.qiniu.android.storage.UploadOptions;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
+import java.util.Comparator;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +25,6 @@ import cn.ihealthbaby.weitaixin.library.data.database.dao.Record;
 import cn.ihealthbaby.weitaixin.library.data.database.dao.RecordBusinessDao;
 import cn.ihealthbaby.weitaixin.library.log.LogUtil;
 import cn.ihealthbaby.weitaixin.library.util.Constants;
-import cn.ihealthbaby.weitaixin.library.util.FileUtil;
 import cn.ihealthbaby.weitaixin.library.util.UploadUtil;
 
 /**
@@ -39,63 +37,74 @@ public class UploadFileUtils implements MulFileUploadInterface {
      * 一次任务执行所需的参数
      * userId 和 localRecordId
      */
-    private int threadSum = 3;
-    private static boolean startQueue = false;// 是否开启队列
+    private int THREAD_SUM = 1;
+    private int THREAD_TOTAL = 10;
 
-    private static ThreadPoolExecutor executor;//线程池
-    private BlockingQueue<ExecuteUploadThread> queue;//队列
+    private long KEEP_ALIVE_TIME = 30L;
+
     private Context context;
-    //private SynchronousQueue<FileModel> synchronousQueue = new SynchronousQueue<>();
 
     private static volatile int taskSuccessSum = 0;
     private static volatile int taskFailSum = 0;
 
-    private BlockingQueue<Runnable> workQueue;
-    ThreadPoolExecutor threadPoolExecutor;
+    //private BlockingQueue<Runnable> workQueue;
+    private PriorityBlockingQueue<Runnable> workQueue;
+    private ThreadPoolExecutor threadPoolExecutor;
 
-    private Map<String, Runnable> list;
 
     public UploadFileUtils(Context context) {
         this.context = context;
-        workQueue = new PriorityBlockingQueue<>();
-        threadPoolExecutor = new ThreadPoolExecutor(threadSum, 10,
-                30L, TimeUnit.MILLISECONDS, workQueue);
-        list = new Hashtable<>();
-
+        workQueue = new PriorityBlockingQueue<>(10,new Comparators());//优先级队列
+        //workQueue = new LinkedBlockingQueue<>();
+        threadPoolExecutor = new ThreadPoolExecutor(THREAD_SUM, THREAD_TOTAL, KEEP_ALIVE_TIME, TimeUnit.MILLISECONDS, workQueue);
     }
 
+    public void add(FileModel model,int priority) {
 
-    @Override
-    public void add(FileModel model) {
-        ExecuteUploadThread thread = new ExecuteUploadThread(model.getUserId(), model.getLocalRecordId());
+        Log.i(TAG, "--队列");
+        ExecuteUploadThread thread = new ExecuteUploadThread(model.getUserId(), model.getLocalRecordId(),1);
         thread.setTag("" + model.getLocalRecordId());
         //设置可执行操作
         thread.setExecuteState(true);
-        workQueue.offer(new ExecuteUploadThread(model.getUserId(), model.getLocalRecordId()));
-
+        workQueue.add(thread);
     }
 
 
-
-    @Override
     public void remove(FileModel model) {
         // 设置标签的对象取消的标签对象
         // workQueue.take()
-        for(ExecuteUploadThread currentThread: queue){
+        for (Runnable currentRun : workQueue) {
             //获取实体对象：
-            if(currentThread.getTag().equalsIgnoreCase(model.getLocalRecordId())){
+            ExecuteUploadThread currentThread = (ExecuteUploadThread) currentRun;
+            if (currentThread.getTag() == model.getTag()) {
                 workQueue.remove(currentThread);
             }
         }
     }
 
     @Override
+    public void add(Runnable runnable) {
+        workQueue.add(runnable);
+    }
+
+    @Override
+    public void remove(Runnable runnable) {
+        workQueue.remove(runnable);
+    }
+
+    @Override
     public void run() {
         while (true) {
+            //Log.i(TAG,"--run-isEmpty---"+ workQueue.isEmpty());
             if (!workQueue.isEmpty()) {
-                ExecuteUploadThread executeThread = (ExecuteUploadThread) workQueue.poll();
-                if (executeThread.isExecuteState()) {
-                    executor.execute(executeThread);
+               // Log.i(TAG, "--run----" + workQueue.isEmpty());
+               //   ExecuteUploadThread executeThread = (ExecuteUploadThread) workQueue.poll();
+                ExecuteUploadThread runnable = (ExecuteUploadThread) workQueue.poll();
+//                if (executeThread != null) {
+//                    threadPoolExecutor.execute(executeThread);
+//                }
+                if(runnable!=null){
+                    threadPoolExecutor.execute(runnable);
                 }
             }
         }
@@ -107,22 +116,12 @@ public class UploadFileUtils implements MulFileUploadInterface {
         threadPoolExecutor.shutdown();
     }
 
-    @Override
-    public void setTag(boolean isExecutor,String tag) {
-
-        for(ExecuteUploadThread currentThread: queue){
-           if(currentThread.getTag().equalsIgnoreCase(tag)){
-               currentThread.setExecuteState(isExecutor);
-               break;
-           }
-        }
-
-    }
 
     @Override
-    public void setCancel(String localRecordId) {
-        for(ExecuteUploadThread currentThread: queue){
-            if(currentThread.getTag().equalsIgnoreCase(localRecordId)){
+    public void setCancel(String localRecordId, Object tag) {
+        for (Runnable currentRun : workQueue) {
+            ExecuteUploadThread currentThread = (ExecuteUploadThread) currentRun;
+            if (currentThread.getTag() == tag) {
                 currentThread.setExecuteState(false);
                 break;
             }
@@ -132,19 +131,21 @@ public class UploadFileUtils implements MulFileUploadInterface {
     /**
      * 单任务的执行
      */
-    private class ExecuteUploadThread extends Thread {
+
+
+    private class ExecuteUploadThread implements Runnable {
         private long userId;
         private String localRecordId;
 
         private boolean executeState; //false停止执行， true可以执行
 
-        private String tag;// 设置唯一的标签
+        private Object tag;// 设置唯一的标签
 
-        public String getTag() {
+        public Object getTag() {
             return tag;
         }
 
-        public void setTag(String tag) {
+        public void setTag(Object tag) {
             this.tag = tag;
         }
 
@@ -154,6 +155,14 @@ public class UploadFileUtils implements MulFileUploadInterface {
 
         public void setExecuteState(boolean executeState) {
             this.executeState = executeState;
+        }
+
+        public int getPriority() {
+            return priority;
+        }
+
+        public void setPriority(int priority) {
+            this.priority = priority;
         }
 
         /**
@@ -171,20 +180,21 @@ public class UploadFileUtils implements MulFileUploadInterface {
         private UploadManager uploadManager;
         private UpCompletionHandler upCompletionHandler;
         private UploadOptions options;
+        private int priority; // 设置的优先级
 
-
-        public ExecuteUploadThread(long userId, String localRecordId) {
+        public ExecuteUploadThread(long userId, String localRecordId, int priority) {
             this.userId = userId;
-            this.tag = localRecordId;
             this.localRecordId = localRecordId;
+            this.priority =priority;
             initHandler(localRecordId);
+
         }
+
+
 
         @Override
         public void run() {
-            super.run();
-            File voiceFile = FileUtil.getVoiceFile(context, localRecordId);
-            upload(context, userId, voiceFile);
+            Log.i(TAG, "---线程执行----优先级:"+this.priority);
         }
 
 
@@ -209,12 +219,13 @@ public class UploadFileUtils implements MulFileUploadInterface {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            //TODO 上传本地  通过业务通知用户
+
                         }
-                        //TODO 七牛上传文件成功
-                        taskSuccessSum = taskSuccessSum + 1;
+
                     } else {
-                        //TODO 七牛上传文件失败
-                        taskFailSum = taskFailSum + 1;
+
                     }
                 }
             };
@@ -238,26 +249,60 @@ public class UploadFileUtils implements MulFileUploadInterface {
          * 请求上传key 和 上传token
          */
         private void upload(Context context, Long userId, final File file) {
-            apiManager.hClientAccountApi.getUploadToken(userId, 1, new DefaultCallback<UploadModel>(context, new AbstractBusiness<UploadModel>() {
-                @Override
-                public void handleData(UploadModel data) {
-                    LogUtil.d(TAG, data.toString());
-                    key = data.getKey();
-                    token = data.getToken();
-                    uploadManager.put(file, key, token, upCompletionHandler, options);
-                }
+            apiManager.hClientAccountApi.getUploadToken(
+                    userId, 1, new DefaultCallback<UploadModel>(
+                            context, new AbstractBusiness<UploadModel>() {
+                        @Override
+                        public void handleData(UploadModel data) {
+                            LogUtil.d(TAG, data.toString());
+                            key = data.getKey();
+                            token = data.getToken();
+                            uploadManager.put(file, key, token, upCompletionHandler, options);
+                        }
 
-                @Override
-                public void handleAllFailure(Context context) {
-                    super.handleAllFailure(context);
-                    //TODO 获取七牛上传的Token 失败
-                    taskFailSum = taskFailSum + 1;
+                        @Override
+                        public void handleAllFailure(Context context) {
+                            super.handleAllFailure(context);
+                            //TODO 获取七牛上传的Token 失败
+                            taskFailSum = taskFailSum + 1;
 
-                }
-            }), TAG);
+                        }
+                    }
+                    ), TAG
+            );
         }
-
+//
+//        @Override
+//        public int compareTo(ExecuteUploadThread another) {
+//            return this.priority > another.priority ? 1
+//                    : this.priority < another.priority ? -1 : 0;
+//        }
     }
 
 
+    @SuppressWarnings("unchecked")
+    class Comparators implements Comparator {
+        public int compare(Object arg0, Object arg1) {
+            int val1 = ((ExecuteUploadThread)arg0).getPriority();
+            int val2 = ((ExecuteUploadThread)arg1).getPriority();
+            return val1 < val2 ? 0 : 1;
+        }
+    }
+
+    /**
+     *    static final AtomicLong seq = new AtomicLong(0);
+     *   final long seqNum;
+     *   final E entry;
+     *   public FIFOEntry(E entry) {
+     *     seqNum = seq.getAndIncrement();
+     *     this.entry = entry;
+     *   }
+     *   public E getEntry() { return entry; }
+     *   public int compareTo(FIFOEntry<E> other) {
+     *     int res = entry.compareTo(other.entry);
+     *     if (res == 0 && other.entry != this.entry)
+     *       res = (seqNum < other.seqNum ? -1 : 1);
+     *     return res;
+     *   }
+     */
 }

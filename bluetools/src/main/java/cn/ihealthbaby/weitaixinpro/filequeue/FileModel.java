@@ -8,6 +8,8 @@ public class FileModel {
     private long userId;
     private String localRecordId;
 
+    private Object tag;
+
     public FileModel(String localRecordId, long userId) {
         this.localRecordId = localRecordId;
         this.userId = userId;
@@ -26,5 +28,13 @@ public class FileModel {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public Object getTag() {
+        return tag;
+    }
+
+    public void setTag(Object tag) {
+        this.tag = tag;
     }
 }
